@@ -5,7 +5,9 @@
   justify-content: center;
   align-items: center;
   height: auto;
+  flex-direction: column;
   background-color: $background;
+  height: 100%;
 }
 
 .card {
@@ -50,15 +52,15 @@
 }
 
 .input-email {
-    background: url(./../../../assets/images/icons/mail.svg) no-repeat 28px 17px;
-    padding-left: 80px;
-    box-sizing: border-box;
+  background: url(./../../../assets/images/icons/mail.svg) no-repeat 28px 17px;
+  padding-left: 80px;
+  box-sizing: border-box;
 }
 
 .input-password {
-    background: url(./../../../assets/images/icons/lock.svg) no-repeat 28px 17px;
-    padding-left: 80px;
-    box-sizing: border-box;
+  background: url(./../../../assets/images/icons/lock.svg) no-repeat 28px 17px;
+  padding-left: 80px;
+  box-sizing: border-box;
 }
 
 .forgot-password {
@@ -98,17 +100,21 @@ button {
 }
 
 .button-google {
-    width: 100%;
-    border: none;
-    color: $purple1;
-    transition: 75ms ease-in-out;
-    border: 1px solid transparent;
-    font-weight: 400;
+  width: 100%;
+  border: none;
+  color: $purple1;
+  transition: 75ms ease-in-out;
+  border: 1px solid transparent;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
 
-    &:hover {
-        border: 1px solid $purple1;
-        transition: 75ms ease-in-out;
-      }
+  &:hover {
+    border: 1px solid $purple1;
+    transition: 75ms ease-in-out;
+  }
 }
 
 .buttons-login {
@@ -138,6 +144,27 @@ button {
     &:hover {
       background-color: $purple2;
       color: white;
+      transition: 75ms ease-in-out;
+    }
+  }
+}
+
+.legal {
+  display: flex;
+  gap: 30px;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 21.6px;
+
+  button {
+    border: none;
+    background-color: transparent;
+    color: $purple2;
+    border: 1px solid transparent;
+    transition: 75ms ease-in-out;
+
+    &:hover {
+      border: 1px solid $text-gray;
       transition: 75ms ease-in-out;
     }
   }
