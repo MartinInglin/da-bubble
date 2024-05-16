@@ -1,61 +1,75 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
   FormControl,
-  FormsModule,
-  ReactiveFormsModule,
   Validators,
+  ReactiveFormsModule,
+  FormsModule,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { merge } from 'rxjs';
-import { MatInputModule } from '@angular/material/input';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    FormsModule,
+    RouterModule,
+    CommonModule,
     ReactiveFormsModule,
+    FormsModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  email = new FormControl('', [Validators.required, Validators.email]);
-  password = new FormControl('', [Validators.required]);
-  errorMessage = '';
+  form: FormGroup = new FormGroup({
+    name: new FormControl(''),
+    email: new FormControl(''),
+    password: new FormControl(''),
+    acceptTerms: new FormControl(false),
+  });
+  submitted = false;
 
-  constructor() {
-    merge(this.email.statusChanges, this.email.valueChanges)
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => this.updateErrorMessageEmail());
+  constructor(private formBuilder: FormBuilder) {}
 
-    merge(this.password.statusChanges, this.password.valueChanges)
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => this.updateErrorMessagePassword());
+  ngOnInit(): void {
+    this.form = this.formBuilder.group({
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(20),
+        ],
+      ],
+      email: ['', [Validators.required, Validators.email]],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(40),
+        ],
+      ],
+      acceptTerms: [false, Validators.requiredTrue],
+    });
   }
 
-  updateErrorMessageEmail() {
-    if (this.email.hasError('required')) {
-      this.errorMessage = 'Bitte geben Sie eine E-Mail-Adresse ein.';
-    } else if (this.email.hasError('email')) {
-      this.errorMessage = 'Diese E-Mail-Adresse ist nicht gültig.';
-    } else {
-      this.errorMessage = '';
+  get f(): { [key: string]: AbstractControl } {
+    return this.form.controls;
+  }
+
+  onSubmit(): void {
+    this.submitted = true;
+
+    if (this.form.invalid) {
+      return;
     }
-  }
 
-  updateErrorMessagePassword() {
-    if (this.password.hasError('required')) {
-      this.errorMessage = 'Bitte geben Sie ihr Passwort ein.';
-    }
-  }
-
-  onSubmit() {
-    console.log('Form submitted');
+    console.log(JSON.stringify(this.form.value, null, 2));
   }
 }

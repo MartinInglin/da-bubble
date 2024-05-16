@@ -1,48 +1,77 @@
 <div class="card-container">
-  <div class="card">
-    <h1>Anmeldung</h1>
-    <span>
-      Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit
-      verwendest.
-    </span>
-        <div class="input-section">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="card">
+      <div class="title">
+        <h1>Anmeldung</h1>
+      </div>
+
+      <span>
+        Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit
+        verwendest.
+      </span>
+
+      <div class="input-section">
+        <div>
           <input
-            type="email"
-            placeholder="beispielname@email.com"
+            type="text"
+            formControlName="email"
             class="input-email"
-            required
+            [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"
+            placeholder="beispielname@email.com"
           />
-          @if (email.invalid) {
-          <mat-error>{{ errorMessage }}</mat-error>
+          @if (submitted && f['email'].errors) {
+          <div class="invalid-feedback">
+            @if (f['email'].errors['required']) {
+            <div>Email-Adresse wird benötigt.</div>
+            } @if (f['email'].errors['email']) {
+            <div>Email-Adresse ist ungültig.</div>
+            }
+          </div>
           }
+        </div>
+
+        <div>
           <input
             type="password"
-            placeholder="Passwort"
+            formControlName="password"
             class="input-password"
-            required
+            [ngClass]="{ 'is-invalid': submitted && f['password'].errors }"
+            placeholder="Passwort"
           />
+          @if (submitted && f['password'].errors) {
+          <div class="invalid-feedback">
+            @if (f['password'].errors['required']) {
+            <div>Bitte gib ein Passwort ein.</div>
+            } @if (f['password'].errors['minlength']) {
+            <div>Passwort muss mindestens 6 Zeichen lang sein.</div>
+            } @if (f['password'].errors['maxlength']) {
+            <div>Passwort darf nicht über 40 Zeichen lang sein.</div>
+            }
+          </div>
+          }
         </div>
-        <p class="forgot-password">Passwort vergessen?</p>
+      </div>
 
-        <div class="or">
-          <div class="line"></div>
-          <p>ODER</p>
-          <div class="line"></div>
-        </div>
+      <p class="forgot-password">Passwort vergessen?</p>
 
-        <button class="button-google">
-          <img src="assets/images/icons/google.svg" alt="" /> Anmelden mit
-          Google
-        </button>
+      <div class="or">
+        <div class="line"></div>
+        <p>ODER</p>
+        <div class="line"></div>
+      </div>
 
-        <div class="buttons-login">
-          <button class="button-login" type="submit">Anmelden</button>
-          <button class="button-guest">Gäste-Login</button>
-        </div>
+      <button class="button-google">
+        <img src="assets/images/icons/google.svg" alt="" /> Anmelden mit Google
+      </button>
 
+      <div class="buttons-login">
+        <button class="button-login" type="submit">Anmelden</button>
+        <button class="button-guest-login">Gäste-Login</button>
+      </div>
+    </div>
     <div class="legal">
       <button class="button-imprint">Impressum</button>
       <button class="button-privacy-policy">Datenschutz</button>
     </div>
-  </div>
+  </form>
 </div>
