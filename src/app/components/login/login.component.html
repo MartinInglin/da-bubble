@@ -5,33 +5,44 @@
       Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit
       verwendest.
     </span>
-    <div class="input-section">
-      <input
-        type="email"
-        placeholder="beispielname@email.com"
-        class="input-email"
-      />
-      <input type="password" placeholder="Passwort" class="input-password" />
-    </div>
-    <p class="forgot-password">Passwort vergessen?</p>
+        <div class="input-section">
+          <input
+            type="email"
+            placeholder="beispielname@email.com"
+            class="input-email"
+            required
+          />
+          @if (email.invalid) {
+          <mat-error>{{ errorMessage }}</mat-error>
+          }
+          <input
+            type="password"
+            placeholder="Passwort"
+            class="input-password"
+            required
+          />
+        </div>
+        <p class="forgot-password">Passwort vergessen?</p>
 
-    <div class="or">
-      <div class="line"></div>
-      <p>ODER</p>
-      <div class="line"></div>
-    </div>
+        <div class="or">
+          <div class="line"></div>
+          <p>ODER</p>
+          <div class="line"></div>
+        </div>
 
-    <button class="button-google">
-      <img src="assets/images/icons/google.svg" alt="" /> Anmelden mit Google
-    </button>
+        <button class="button-google">
+          <img src="assets/images/icons/google.svg" alt="" /> Anmelden mit
+          Google
+        </button>
 
-    <div class="buttons-login">
-      <button class="button-login">Anmelden</button>
-      <button class="button-guest">Gäste-Login</button>
+        <div class="buttons-login">
+          <button class="button-login" type="submit">Anmelden</button>
+          <button class="button-guest">Gäste-Login</button>
+        </div>
+
+    <div class="legal">
+      <button class="button-imprint">Impressum</button>
+      <button class="button-privacy-policy">Datenschutz</button>
     </div>
-  </div>
-  <div class="legal">
-    <button class="button-imprint">Impressum</button>
-    <button class="button-privacy-policy">Datenschutz</button>
   </div>
 </div>
