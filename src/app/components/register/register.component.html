@@ -1,38 +1,105 @@
 <div class="card-container">
-  <div class="card">
-    <div class="title">
-      <img src="assets/images/icons/arrow_back.svg" alt="" />
-      <h1>Konto erstellen</h1>
-    </div>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="card">
+      <div class="title">
+        <div routerLink="">
+          <img src="assets/images/icons/arrow_back.svg" alt="" />
+        </div>
 
-    <span>
-      Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues
-      DABubble-Konto.
-    </span>
-    <div class="input-section">
-      <input type="text" placeholder="Name und Nachname" class="input-name" />
-      <input
-        type="email"
-        placeholder="beispielname@email.com"
-        class="input-email"
-      />
-      <input type="password" placeholder="Passwort" class="input-password" />
-    </div>
+        <h1>Konto erstellen</h1>
+      </div>
 
-    <div class="privacy-policy">
-      <label class="container">
-        <input type="checkbox" checked="checked" />
-        <span class="checkmark"></span>
-      </label>
-      <p>Ich stimme der <a>Datenschutzerklärung</a> zu.</p>
-    </div>
+      <span>
+        Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues
+        DABubble-Konto.
+      </span>
 
-    <div class="button">
-      <button class="button-forward">Weiter</button>
+      <div class="input-section">
+        <div>
+          <input
+            type="text"
+            formControlName="name"
+            class="input-name"
+            [ngClass]="{ 'is-invalid': submitted && f['name'].errors }"
+            placeholder="Name und Nachname"
+          />
+          @if (submitted && f['name'].errors) {
+          <div class="invalid-feedback">
+            @if (f['name'].errors['required']) {
+            <div>Bitte Namen eingeben.</div>
+            }
+          </div>
+          }
+        </div>
+
+        <div>
+          <input
+            type="text"
+            formControlName="email"
+            class="input-email"
+            [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"
+            placeholder="beispielname@email.com"
+          />
+          @if (submitted && f['email'].errors) {
+          <div class="invalid-feedback">
+            @if (f['email'].errors['required']) {
+            <div>Email-Adresse wird benötigt.</div>
+            } @if (f['email'].errors['email']) {
+            <div>Email-Adresse ist ungültig.</div>
+            }
+          </div>
+          }
+        </div>
+
+        <div>
+          <input
+            type="password"
+            formControlName="password"
+            class="input-password"
+            [ngClass]="{ 'is-invalid': submitted && f['password'].errors }"
+            placeholder="Passwort"
+          />
+          @if (submitted && f['password'].errors) {
+          <div class="invalid-feedback">
+            @if (f['password'].errors['required']) {
+            <div>Bitte gib ein Passwort ein.</div>
+            } @if (f['password'].errors['minlength']) {
+            <div>Passwort muss mindestens 6 Zeichen lang sein.</div>
+            } @if (f['password'].errors['maxlength']) {
+            <div>Passwort darf nicht über 40 Zeichen lang sein.</div>
+            }
+          </div>
+          }
+        </div>
+      </div>
+
+      <div class="privacy-policy">
+        <div class="privacy-policy-input">
+          <label class="container">
+          <input
+          checked="checked"
+            type="checkbox"
+            formControlName="acceptTerms"
+            class="checkmark"
+            [ngClass]="{ 'is-invalid': submitted && f['acceptTerms'].errors }"
+          />
+          <span class="checkmark"></span>
+        </label>
+
+          <p>Ich stimme der <a>Datenschutzerklärung</a> zu.</p>
+        </div>
+        @if (submitted && f['acceptTerms'].errors) {
+        <div class="invalid-feedback">Stimme der Datenschutzerklärung zu.</div>
+        }
+      </div>
+
+      <div class="button">
+        <button class="button-forward" type="submit">Weiter</button>
+      </div>
     </div>
-  </div>
-  <div class="legal">
-    <button class="button-imprint">Impressum</button>
-    <button class="button-privacy-policy">Datenschutz</button>
-  </div>
+    <div class="legal">
+      <button class="button-imprint">Impressum</button>
+      <button class="button-privacy-policy">Datenschutz</button>
+    </div>
+  </form>
 </div>
