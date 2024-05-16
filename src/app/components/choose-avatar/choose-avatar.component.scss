@@ -1,0 +1,151 @@
+@import "./../../../styles.scss";
+
+.card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  flex-direction: column;
+  background-color: $background;
+  height: 100%;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  border-radius: 30px;
+  padding: 50px;
+  box-sizing: border-box;
+  background-color: white;
+  margin: 30px 0;
+  max-width: 600px;
+}
+
+.title {
+  display: flex;
+  position: relative;
+  width: 100%;
+  justify-content: center;
+
+  img {
+    position: absolute;
+    left: -30px;
+    top: 12px;
+    padding: 5px;
+    border-radius: 50%;
+    transition: 75ms ease-in-out;
+
+    &:hover {
+      background-color: $background;
+      transition: 75ms ease-in-out;
+      cursor: pointer;
+    }
+  }
+}
+
+.name-user {
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 43.65px;
+}
+
+.text-choose-from-list {
+  width: 100%;
+  text-align: start;
+}
+
+.profile-image {
+  width: 168px;
+  height: 168px;
+}
+
+.images-avatars {
+  display: flex;
+  justify-content: space-between;
+  img {
+    height: 72px;
+    width: 72px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    transition: 75ms ease-in-out;
+
+    &:hover {
+      border: 1px solid $text-gray;
+      transition: 75ms ease-in-out;
+    }
+  }
+}
+
+.upload-image {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 30px;
+  margin: 20px 0;
+}
+
+.button-upload-image {
+  border: 1px solid $purple2;
+  color: $purple2;
+  background-color: white;
+  transition: 75ms ease-in-out;
+  font-weight: 700;
+
+  &:hover {
+    background-color: $purple2;
+    color: white;
+    transition: 75ms ease-in-out;
+  }
+}
+
+button {
+  border-radius: 25px;
+  padding: 12px 25px;
+  font-size: 18px;
+  line-height: 24.55px;
+  cursor: pointer;
+}
+
+.button {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.button-forward {
+  background-color: $purple1;
+  color: white;
+  border: none;
+  transition: 75ms ease-in-out;
+  font-weight: 700;
+
+  &:hover {
+    opacity: 0.5;
+    transition: 75ms ease-in-out;
+  }
+}
+
+.legal {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 21.6px;
+
+  button {
+    border: none;
+    background-color: transparent;
+    color: $purple2;
+    border: 1px solid transparent;
+    transition: 75ms ease-in-out;
+
+    &:hover {
+      border: 1px solid $text-gray;
+      transition: 75ms ease-in-out;
+    }
+  }
+}

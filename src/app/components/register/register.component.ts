@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -9,7 +9,7 @@ import {
   ReactiveFormsModule,
   FormsModule,
 } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -19,6 +19,7 @@ import { RouterModule } from '@angular/router';
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
+  router = inject(Router);
   form: FormGroup = new FormGroup({
     name: new FormControl(''),
     email: new FormControl(''),
@@ -64,5 +65,6 @@ export class RegisterComponent {
     }
 
     console.log(JSON.stringify(this.form.value, null, 2));
+    this.router.navigate(['/chooseAvatar']);
   }
 }
