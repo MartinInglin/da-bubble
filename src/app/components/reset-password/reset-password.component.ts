@@ -9,26 +9,18 @@ import {
   ReactiveFormsModule,
   FormsModule,
 } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-reset-password',
   standalone: true,
-  imports: [
-    MatButtonModule,
-    RouterModule,
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-  ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule],
+  templateUrl: './reset-password.component.html',
+  styleUrl: './reset-password.component.scss',
 })
-export class LoginComponent {
+export class ResetPasswordComponent {
   form: FormGroup = new FormGroup({
     email: new FormControl(''),
-    password: new FormControl(''),
   });
   submitted = false;
 
@@ -37,12 +29,6 @@ export class LoginComponent {
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: [
-        '',
-        [
-          Validators.required,
-        ],
-      ],
     });
   }
 

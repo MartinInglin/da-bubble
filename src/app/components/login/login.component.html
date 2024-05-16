@@ -42,17 +42,15 @@
           <div class="invalid-feedback">
             @if (f['password'].errors['required']) {
             <div>Bitte gib ein Passwort ein.</div>
-            } @if (f['password'].errors['minlength']) {
-            <div>Passwort muss mindestens 6 Zeichen lang sein.</div>
-            } @if (f['password'].errors['maxlength']) {
-            <div>Passwort darf nicht über 40 Zeichen lang sein.</div>
             }
           </div>
           }
         </div>
       </div>
 
-      <p class="forgot-password">Passwort vergessen?</p>
+      <p class="forgot-password" routerLink="reset-password">
+        Passwort vergessen?
+      </p>
 
       <div class="or">
         <div class="line"></div>
