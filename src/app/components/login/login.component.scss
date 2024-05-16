@@ -132,7 +132,7 @@ button {
   gap: 30px;
 
   .button-login {
-    background-color: $purple1;
+    background-color: $text-gray;
     color: white;
     border: none;
     transition: 75ms ease-in-out;
@@ -142,6 +142,10 @@ button {
       opacity: 0.5;
       transition: 75ms ease-in-out;
     }
+  }
+
+  .enable-button {
+    background-color: $purple1;
   }
 
   .button-guest-login {

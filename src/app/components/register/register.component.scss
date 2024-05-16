@@ -120,19 +120,23 @@ button {
   display: flex;
   justify-content: flex-end;
   width: 100%;
+}
 
-  .button-forward {
-    background-color: $purple1;
-    color: white;
-    border: none;
+.button-forward {
+  background-color: $text-gray;
+  color: white;
+  border: none;
+  transition: 75ms ease-in-out;
+  font-weight: 700;
+
+  &:hover {
+    opacity: 0.5;
     transition: 75ms ease-in-out;
-    font-weight: 700;
-
-    &:hover {
-      opacity: 0.5;
-      transition: 75ms ease-in-out;
-    }
   }
+}
+
+.enable-button {
+  background-color: $purple1;
 }
 
 .privacy-policy {

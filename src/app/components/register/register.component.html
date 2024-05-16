@@ -76,15 +76,15 @@
       <div class="privacy-policy">
         <div class="privacy-policy-input">
           <label class="container">
-          <input
-          checked="checked"
-            type="checkbox"
-            formControlName="acceptTerms"
-            class="checkmark"
-            [ngClass]="{ 'is-invalid': submitted && f['acceptTerms'].errors }"
-          />
-          <span class="checkmark"></span>
-        </label>
+            <input
+              checked="checked"
+              type="checkbox"
+              formControlName="acceptTerms"
+              class="checkmark"
+              [ngClass]="{ 'is-invalid': submitted && f['acceptTerms'].errors }"
+            />
+            <span class="checkmark"></span>
+          </label>
 
           <p>Ich stimme der <a>Datenschutzerklärung</a> zu.</p>
         </div>
@@ -94,7 +94,13 @@
       </div>
 
       <div class="button">
-        <button class="button-forward" type="submit">Weiter</button>
+        <button
+          class="button-forward"
+          type="submit"
+          [ngClass]="{ 'enable-button': form.valid }"
+        >
+          Weiter
+        </button>
       </div>
     </div>
     <div class="legal">

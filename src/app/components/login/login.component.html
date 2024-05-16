@@ -63,7 +63,13 @@
       </button>
 
       <div class="buttons-login">
-        <button class="button-login" type="submit">Anmelden</button>
+        <button
+          class="button-login"
+          type="submit"
+          [ngClass]="{ 'enable-button': form.valid }"
+        >
+          Anmelden
+        </button>
         <button class="button-guest-login">Gäste-Login</button>
       </div>
     </div>
