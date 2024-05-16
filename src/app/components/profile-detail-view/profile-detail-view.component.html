@@ -1,24 +1,30 @@
-<mat-card>
-    <mat-card-content>
-        <div class="detail-view-header">
-            <p>Profil</p>
-            <button mat-icon-button>
-                <mat-icon>close</mat-icon>
-            </button>
-        </div>
-        <div class="profile-container">
-            <img src="../../../assets/images/profile_badge.png">
-        </div>
-        <div class="name-container">
-            <p>Steffen Hoffmann</p>
-            <span><div></div>Aktiv</span>
-        </div>
-        <div class="mail-container">
-            <span><img src="../../../assets/images/icons/mail_black.svg"><p>E-Mail-Adresse</p></span>
-            <a href="mailto:thehoffman@beispiel.com" [innerHTML]="'thehoffman@beispiel.com'"></a>
-        </div>
-        <div class="message-button">
-            <button><img src="../../../assets/images/icons/chat_bubble.svg">Nachricht</button>
-        </div>
-    </mat-card-content>
-</mat-card>
+<section>
+    <mat-card>
+        <mat-card-content>
+            <div class="detail-view-header">
+                <p>Profil</p>
+                <button mat-icon-button>
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+            <div class="profile-container">
+                <img src="../../../assets/images/profile_badge.png">
+            </div>
+            <div class="name-container">
+                <p>Steffen Hoffmann</p>
+                <span>
+                    <div></div>Aktiv
+                </span>
+            </div>
+            <div class="mail-container">
+                <span><img src="../../../assets/images/icons/mail_black.svg">
+                    <p>E-Mail-Adresse</p>
+                </span>
+                <a href="mailto:thehoffman@beispiel.com" [innerHTML]="'thehoffman@beispiel.com'"></a>
+            </div>
+            <div class="message-button">
+                <button><img src="../../../assets/images/icons/chat_bubble.svg">Nachricht</button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</section>

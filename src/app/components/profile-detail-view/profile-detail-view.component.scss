@@ -1,5 +1,14 @@
 @import "./../../../styles.scss";
 
+section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+    background-color: rgba($color: #000000, $alpha: 0.04);
+}
+
 mat-card {
     width: 500px;
     height: 705px;
@@ -33,6 +42,13 @@ mat-card-content {
         display: flex;
         align-items: center;
         justify-content: center;
+        transition: scale 75ms ease-in-out;
+        
+        &:hover {
+            background-color: $background;
+            color: $purple1;
+            scale: 1.05;
+        }
     }
 
     mat-icon {
@@ -65,13 +81,13 @@ mat-card-content {
         font-size: 20px;
         font-weight: 400;
         line-height: 27.28px;
-        color: #92C83E;
+        color: $online-green;
         display: flex;
         align-items: center;
         gap: 15px;
 
         div {
-            background-color: #92C83E;
+            background-color: $online-green;
             height: 16px;
             width: 16px;
             border-radius: 100%;
