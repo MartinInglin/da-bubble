@@ -1,9 +1,18 @@
 @import "./../../../styles.scss";
 
+section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+    background-color: rgba($color: #000000, $alpha: 0.04);
+}
+
 mat-card {
-    width: 514px;
-    height: 294px;
-    border-radius: 30px 0px 30px 30px;
+    width: 710px;
+    height: fit-content;
+    border-radius: 30px;
     padding: 40px;
     font-family: 'Nunito';
 }
@@ -14,11 +23,10 @@ mat-card-content {
     gap: 20px;
 }
 
-
-.add-user-header {
+.header {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 20px;
 
     div {
         display: flex;
@@ -31,15 +39,6 @@ mat-card-content {
             line-height: 32.74px;
             margin: 0;
         }
-    }
-
-    span {
-        display: flex;
-        gap: 15px;
-        color: $purple2;
-        font-size: 18px;
-        font-weight: 400;
-        line-height: 24.55px;
     }
 
     button {
@@ -64,20 +63,29 @@ mat-card-content {
     }
 }
 
-form {
+mat-radio-group {
     display: flex;
     flex-direction: column;
     gap: 20px;
-}
 
-.input-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    mat-radio-button {
+        display: flex;
+        gap: 20px;
+        color: $purple1;
+
+        span {
+            font-size: 18px;
+            font-weight: 400px;
+            line-height: 24.55px;
+
+            span {
+                color: $purple1;
+            }
+        }
+    }
 
     input {
         height: 55px;
-        width: 434px;
         border-radius: 30px;
         border: solid 1px $light-purple-lines;
         padding-left: 15px;
@@ -102,10 +110,9 @@ form {
         align-items: center;
         justify-content: center;
         background-color: $purple1;
-        width: 147px;
+        width: 125px;
         height: 49px;
         border-radius: 25px;
-        gap: 10px;
         padding: 12px 25px 12px 25px;
         color: white;
         font-weight: 700;
@@ -119,4 +126,32 @@ form {
             cursor: pointer;
           }
     }
+}
+
+.mat-mdc-radio-button.mat-accent {
+    --mdc-radio-disabled-selected-icon-color: black;
+    --mdc-radio-disabled-unselected-icon-color: black;
+    --mdc-radio-unselected-hover-icon-color: #212121;
+    --mdc-radio-unselected-icon-color: rgba(0, 0, 0, 0.54);
+    --mdc-radio-unselected-pressed-icon-color: rgba(0, 0, 0, 0.54);
+    --mdc-radio-selected-focus-icon-color: #444df2;
+    --mdc-radio-selected-hover-icon-color: #444df2;
+    --mdc-radio-selected-icon-color: #444df2;
+    --mdc-radio-selected-pressed-icon-color: #444df2;
+    --mat-radio-ripple-color: black;
+    --mat-radio-checked-ripple-color: #444df2;
+    --mat-radio-disabled-label-color: rgba(0, 0, 0, 0.38);
+}
+
+html .mat-accent {
+    --mat-slider-ripple-color: #444df2;
+    --mat-slider-hover-state-layer-color: rgba(255, 64, 129, 0.05);
+    --mat-slider-focus-state-layer-color: rgba(255, 64, 129, 0.2);
+    --mdc-slider-handle-color: #444df2;
+    --mdc-slider-focus-handle-color: #444df2;
+    --mdc-slider-hover-handle-color: #444df2;
+    --mdc-slider-active-track-color: #444df2;
+    --mdc-slider-inactive-track-color: #444df2;
+    --mdc-slider-with-tick-marks-inactive-container-color: #444df2;
+    --mdc-slider-with-tick-marks-active-container-color: white;
 }
