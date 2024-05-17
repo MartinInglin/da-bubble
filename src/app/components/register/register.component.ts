@@ -67,6 +67,10 @@ export class RegisterComponent {
       return;
     }
 
+    const email = this.form.value.email;
+    const password = this.form.value.password;
+
+    this.authService.signUp(email, password)
     console.log(JSON.stringify(this.form.value, null, 2));
     this.router.navigate(['/chooseAvatar']);
   }

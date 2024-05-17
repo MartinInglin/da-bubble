@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { FirebaseApp } from '@angular/fire/app';
 import {
   Auth,
   createUserWithEmailAndPassword,
@@ -11,8 +12,8 @@ import {
 export class AuthService {
   private auth: Auth;
 
-  constructor() {
-    this.auth = getAuth();
+  constructor(private afApp: FirebaseApp) {
+    this.auth = getAuth(afApp);
   }
 
   signUp(email: string, password: string): Promise<void> {
