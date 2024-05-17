@@ -8,10 +8,14 @@ $light-purple-lines: #ADB0D9;
 
 html,
 body {
-  height: 100%;
+  max-height: 100vh;
+  background-color: #eceefe;
+    // width: 99%;
+
 }
 body {
   margin: 0;
+  padding: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
@@ -29,3 +33,4 @@ p {
   line-height: 24.55px;
   margin: 0;
 }
+

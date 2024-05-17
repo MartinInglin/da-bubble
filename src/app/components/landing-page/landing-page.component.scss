@@ -1,0 +1,210 @@
+// Content von LandingPage
+section {
+  overflow: hidden;
+  height: 100vh;
+  padding: 10px;
+  box-sizing: border-box; 
+}
+.Content {
+  display: flex;
+  max-width: 100%;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  gap: 10px;
+}
+
+
+
+// SideNav
+mat-drawer-container {
+  height: 800px;
+  border-radius: 30px;
+}
+.example-sidenav {
+  background-color: white;
+  width: 380px;
+  padding: 20px;
+}
+.head-side-menu {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  flex-direction: row;
+  margin-bottom: 20px;
+  gap: 20px;
+  span {
+    font-size: 24px;
+    font-weight: 700;
+  }
+  .head-side-menu-first {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    cursor: pointer;
+    img {
+      cursor: not-allowed;
+    }
+  }
+}
+
+.head-side-menu-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: none;
+  img {
+    height: 40px;
+    width: 40px;
+  }
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.199);
+    cursor: pointer;
+    border-radius: 30px;
+  }
+}
+
+.menuBtn {
+  position: absolute;
+  left: -148px;
+  bottom: 250px;
+  width: fit-content;
+  transform: rotate(270deg); 
+  z-index: 5;
+  display: flex;
+  gap: 20px;
+
+  button {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 23px 14px 23px 14px;
+    max-height: 50px;
+    gap: 15px;
+    width: 347px;
+    border-radius: 0 0 10px 10px;
+    box-shadow: -3px 0px 8px rgb(0, 0, 0);
+    font-size: 20px;
+    gap: 10px;
+    img {
+      transform: rotate(90deg);
+      margin-left: 10px;
+    }
+  }
+}
+// SideNav
+
+.mainContent {
+  width: 1879px;
+}
+
+.channels-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  height: 40px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.channel-head-first {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  gap: 35px;
+  width: fit-content;
+  cursor: pointer;
+  &:hover{
+    color: #535AF1;
+    img{
+      background-color: #535AF1;
+    }
+      }
+}
+.channels-list {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  width: fit-content;
+  justify-content: center;
+  height: 40px;
+  width: fit-content;
+  gap: 15px;
+  img {
+    height: 27px;
+  }
+  span {
+    font-size: 20px;
+    font-weight: 700;
+  }
+ 
+}
+.channels {
+  width: 100%;
+  tr {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+   
+  }
+  td {
+    height: 33px;
+    font-size: 18px;
+    width: 70%;
+    display: flex;
+    justify-content: start;
+    padding-left: 10px;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+   
+    &:hover{
+      color: #535AF1;
+      transform: scale(1.05);
+    }
+  }
+  
+}
+.contacts{
+  width: 100%;
+  
+  tr {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+   
+  }
+  td {
+    height: 58px;
+    font-size: 18px;
+    width: 70%;
+    display: flex;
+    justify-content: start;
+    padding-left: 10px;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    img{
+      height: 50px;
+      width: 50px;
+    }
+    span{
+      font-size: 18px;
+      
+    }
+    &:hover{
+      color: #535AF1;
+      border-radius: 10px;
+      background-color: #eceefe;
+      width: fit-content;
+
+    }
+  }
+}
