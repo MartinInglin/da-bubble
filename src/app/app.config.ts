@@ -8,22 +8,22 @@ import { getStorage, provideStorage } from '@angular/fire/storage';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyDi_vsxF7O51XBUbMubX5scAdQMGOivevw',
-  authDomain: 'da-bubble-bb34a.firebaseapp.com',
-  projectId: 'da-bubble-bb34a',
-  storageBucket: 'da-bubble-bb34a.appspot.com',
-  messagingSenderId: '396194731081',
-  appId: '1:396194731081:web:eba0ccc11274e62e9a5b98',
-};
-
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideAnimationsAsync(),
-    provideFirebaseApp(() => initializeApp(firebaseConfig)),
+    provideFirebaseApp(() =>
+      initializeApp({
+        projectId: 'da-bubble-bb34a',
+        appId: '1:396194731081:web:eba0ccc11274e62e9a5b98',
+        storageBucket: 'da-bubble-bb34a.appspot.com',
+        apiKey: 'AIzaSyDi_vsxF7O51XBUbMubX5scAdQMGOivevw',
+        authDomain: 'da-bubble-bb34a.firebaseapp.com',
+        messagingSenderId: '396194731081',
+      })
+    ),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
-    provideStorage(() => getStorage()), provideFirebaseApp(() => initializeApp({"projectId":"da-bubble-bb34a","appId":"1:396194731081:web:eba0ccc11274e62e9a5b98","storageBucket":"da-bubble-bb34a.appspot.com","apiKey":"AIzaSyDi_vsxF7O51XBUbMubX5scAdQMGOivevw","authDomain":"da-bubble-bb34a.firebaseapp.com","messagingSenderId":"396194731081"})), provideAuth(() => getAuth()), provideFirestore(() => getFirestore()), provideStorage(() => getStorage()),
+    provideStorage(() => getStorage()),
   ],
 };
