@@ -1,6 +1,13 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { RegistrationService } from '../../services/registration.service';
 
 @Component({
   selector: 'app-choose-avatar',
@@ -10,6 +17,9 @@ import { RouterModule } from '@angular/router';
   styleUrl: './choose-avatar.component.scss',
 })
 export class ChooseAvatarComponent {
+  authService = inject(AuthService);
+  registrationService = inject(RegistrationService);
+
   form: FormGroup = new FormGroup({
     avatar: new FormControl(''),
   });
@@ -25,11 +35,6 @@ export class ChooseAvatarComponent {
 
   onSubmit(): void {
     this.submitted = true;
-
-    if (this.form.invalid) {
-      return;
-    }
-
-    console.log(JSON.stringify(this.form.value, null, 2));
+    this.authService.signUp();
   }
 }

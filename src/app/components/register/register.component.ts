@@ -10,7 +10,7 @@ import {
   FormsModule,
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { RegistrationService } from '../../services/registration.service';
 
 @Component({
   selector: 'app-register',
@@ -21,8 +21,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class RegisterComponent {
   router = inject(Router);
-  authService = inject(AuthService);
-
+  registrationService = inject(RegistrationService);
 
   form: FormGroup = new FormGroup({
     name: new FormControl(''),
@@ -37,16 +36,19 @@ export class RegisterComponent {
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       name: [
-        '',
+        this.registrationService.getName() || '',
         [
           Validators.required,
-          Validators.minLength(6),
+          Validators.minLength(3),
           Validators.maxLength(20),
         ],
       ],
-      email: ['', [Validators.required, Validators.email]],
+      email: [
+        this.registrationService.getEmail() || '',
+        [Validators.required, Validators.email],
+      ],
       password: [
-        '',
+        this.registrationService.getPassword() || '',
         [
           Validators.required,
           Validators.minLength(6),
@@ -68,11 +70,9 @@ export class RegisterComponent {
       return;
     }
 
-    const email:string = this.form.value.email;
-    const password:string = this.form.value.password;
-    const name:string = this.form.value.name;
-
-    this.authService.signUp(name, email, password);
-
+    this.registrationService.setName(this.form.value.name);
+    this.registrationService.setEmail(this.form.value.email);
+    this.registrationService.setPassword(this.form.value.password);
+    this.router.navigate(['/chooseAvatar']);
   }
 }
