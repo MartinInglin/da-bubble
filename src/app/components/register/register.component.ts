@@ -10,6 +10,7 @@ import {
   FormsModule,
 } from '@angular/forms';
 import { Router, RouterLink, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -20,6 +21,7 @@ import { Router, RouterLink, RouterModule } from '@angular/router';
 })
 export class RegisterComponent {
   router = inject(Router);
+  authService = inject(AuthService)
   form: FormGroup = new FormGroup({
     name: new FormControl(''),
     email: new FormControl(''),
