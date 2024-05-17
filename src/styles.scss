@@ -7,6 +7,9 @@ $text-gray: #686868;
 $light-purple-lines: #ADB0D9;
 $online-green: #92C83E;
 
+* {
+  font-family: 'Nunito';
+}
 
 html,
 body {
@@ -36,6 +39,7 @@ h1 {
   line-height: 55.2px;
   text-align: center;
   color: $purple1;
+  font-family: 'Nunito';
 }
 
 p {
