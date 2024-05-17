@@ -6,7 +6,8 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { ChooseAvatarComponent } from './components/choose-avatar/choose-avatar.component';
 
 export const routes: Routes = [
-  { path: '', component: LoginComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'resetPassword', component: ResetPasswordComponent },
   { path: 'chooseAvatar', component: ChooseAvatarComponent },

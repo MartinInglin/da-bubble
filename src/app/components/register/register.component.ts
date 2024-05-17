@@ -23,6 +23,7 @@ export class RegisterComponent {
   router = inject(Router);
   authService = inject(AuthService);
 
+
   form: FormGroup = new FormGroup({
     name: new FormControl(''),
     email: new FormControl(''),
@@ -67,11 +68,11 @@ export class RegisterComponent {
       return;
     }
 
-    const email = this.form.value.email;
-    const password = this.form.value.password;
+    const email:string = this.form.value.email;
+    const password:string = this.form.value.password;
+    const name:string = this.form.value.name;
 
-    this.authService.signUp(email, password)
-    console.log(JSON.stringify(this.form.value, null, 2));
-    this.router.navigate(['/chooseAvatar']);
+    this.authService.signUp(name, email, password);
+
   }
 }
