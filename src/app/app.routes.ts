@@ -7,6 +7,7 @@ import { AddUserToNewChannelComponent } from './components/add-user-to-new-chann
 import { NewChannelComponent } from './components/new-channel/new-channel.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { ChooseAvatarComponent } from './components/choose-avatar/choose-avatar.component';
+import { LandingPageComponent } from './components/landing-page/landing-page.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -14,8 +15,9 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'resetPassword', component: ResetPasswordComponent },
   { path: 'chooseAvatar', component: ChooseAvatarComponent },
+  { path: 'landingPage', component: LandingPageComponent },
   { path: 'detailView', component: ProfileDetailViewComponent },
-  { path: 'addUserToChannel', component: AddUserToChannelComponent},
-  { path: 'addUserToNewChannel', component: AddUserToNewChannelComponent},
-  { path: 'newChannel', component: NewChannelComponent}
+  { path: 'addUserToChannel', component: AddUserToChannelComponent },
+  { path: 'addUserToNewChannel', component: AddUserToNewChannelComponent },
+  { path: 'newChannel', component: NewChannelComponent },
 ];

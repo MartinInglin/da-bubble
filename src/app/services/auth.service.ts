@@ -4,6 +4,7 @@ import {
   Auth,
   createUserWithEmailAndPassword,
   getAuth,
+  signInWithEmailAndPassword,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { FirebaseService } from './firebase.service';
@@ -18,7 +19,7 @@ export class AuthService {
   private router = inject(Router);
   firebaseService = inject(FirebaseService);
   registrationService = inject(RegistrationService);
-  snackbarError = inject(SnackbarErrorComponent)
+  snackbarError = inject(SnackbarErrorComponent);
 
   constructor(private afApp: FirebaseApp) {
     this.auth = getAuth(afApp);
@@ -41,7 +42,28 @@ export class AuthService {
       })
       .catch((error) => {
         console.error('Error during sign up:', error);
-        this.snackbarError.openSnackBar('Diese Mailadresse besteht bereits. Bitte melde dich an.', 'Schliessen');
+        this.snackbarError.openSnackBar(
+          'Diese Mailadresse besteht bereits. Bitte melde dich an.',
+          'Schliessen'
+        );
+      });
+  }
+
+  singIn(email: string, password: string): Promise<void> {
+    return signInWithEmailAndPassword(this.auth, email, password)
+      .then((userCredential) => {
+        const userSignedIn = userCredential.user;
+        console.log(userSignedIn);
+
+        this.router.navigate(['landingPage']);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        this.snackbarError.openSnackBar(
+          'Passwort und / oder E-Mail-Adresse stimmen nicht überein.',
+          'Schliessen'
+        );
       });
   }
 }

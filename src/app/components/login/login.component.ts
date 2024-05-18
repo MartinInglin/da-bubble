@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -11,6 +11,7 @@ import {
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +27,7 @@ import { RouterModule } from '@angular/router';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
+  authService = inject(AuthService);
   form: FormGroup = new FormGroup({
     email: new FormControl(''),
     password: new FormControl(''),
@@ -53,6 +55,6 @@ export class LoginComponent {
       return;
     }
 
-    console.log(JSON.stringify(this.form.value, null, 2));
+    this.authService.singIn(this.form.value.email, this.form.value.password);
   }
 }
