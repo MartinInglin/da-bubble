@@ -39,13 +39,13 @@ export class ChooseAvatarComponent {
     });
   }
 
-  onSubmit(): void {
-    this.submitted = true;
-    this.authService.signUp();
-  }
-
   setAvatar(imageURLAvatar: string) {
     this.selectedAvatar = imageURLAvatar;
     this.registrationService.setAvatar(imageURLAvatar);
+  }
+
+  onSubmit(): void {
+    this.submitted = true;
+    this.authService.signUp();
   }
 }

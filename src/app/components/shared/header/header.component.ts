@@ -1,13 +1,48 @@
-import { Component } from '@angular/core';
+
+
+
+import { Component, inject } from '@angular/core';
+import { AuthService } from '../../../services/auth.service';
+import { RouterModule } from '@angular/router';
+import { FirebaseService } from '../../../services/firebase.service';
+import { User } from '../../../models/user.class';
+
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
+  authService = inject(AuthService);
+  firebaseService = inject(FirebaseService);
 
-search(){};
+
+
+
+  currentUser: User =  new User();
+
+  ngOnInit(): void {
+
+    const storedUser = sessionStorage.getItem('currentUser');
+    if (storedUser) {
+      this.currentUser = JSON.parse(storedUser);
+    }
+
+    this.firebaseService.currentUser$.subscribe((user) => {
+      if (user) {
+        this.currentUser = user;
+      }
+      console.log('Current User:', this.currentUser);
+    });
+
+    // Assuming you have the userId stored somewhere (e.g., after login)
+    const userId = 'some-user-id';
+    this.firebaseService.getCurrentUser(userId);
+  }
+
+  search() {}
+
 }

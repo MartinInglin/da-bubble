@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -11,6 +11,7 @@ import {
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -26,10 +27,12 @@ import { RouterModule } from '@angular/router';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
+  authService = inject(AuthService);
   form: FormGroup = new FormGroup({
     email: new FormControl(''),
     password: new FormControl(''),
   });
+
   submitted = false;
 
   constructor(private formBuilder: FormBuilder) {}
@@ -37,12 +40,7 @@ export class LoginComponent {
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: [
-        '',
-        [
-          Validators.required,
-        ],
-      ],
+      password: ['', [Validators.required]],
     });
   }
 
@@ -57,6 +55,6 @@ export class LoginComponent {
       return;
     }
 
-    console.log(JSON.stringify(this.form.value, null, 2));
+    this.authService.signIn(this.form.value.email, this.form.value.password);
   }
 }

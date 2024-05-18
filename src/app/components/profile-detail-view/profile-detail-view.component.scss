@@ -49,13 +49,13 @@ mat-card-content {
             color: $purple1;
             scale: 1.05;
         }
+
+        img {
+            height: 13.5px;
+            width: 13.5px;
+        }
     }
 
-    mat-icon {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
 }
 
 .profile-container {
