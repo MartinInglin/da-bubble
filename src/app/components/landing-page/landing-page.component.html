@@ -56,7 +56,7 @@
           <table class="channels" *ngIf="showChannels">
             <tr *ngFor="let user of allUsers">
               <td>
-                <span># {{ user }}</span>
+                <span># {{ user.name }}</span>
               </td>
             </tr>
             <tr>
@@ -93,11 +93,8 @@
           <table class="contacts" *ngIf="showContacts">
             <tr *ngFor="let user of allUsers">
               <td>
-                <img
-                  src="./../../../assets/images/icons/Profile bild.svg"
-                  alt=""
-                />
-                <span>{{ user }} {{ user }}</span>
+                <img [src]="user.avatar" alt="Profilbild" /> 
+                <span>{{ user.name }}</span> 
               </td>
             </tr>
           </table>

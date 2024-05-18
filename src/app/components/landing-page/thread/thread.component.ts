@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input, EventEmitter} from '@angular/core';
+
+
 
 @Component({
   selector: 'app-thread',
@@ -9,6 +11,22 @@ import { Component } from '@angular/core';
   styleUrl: './thread.component.scss'
 })
 export class ThreadComponent {
-  comments: boolean = true;
-// comments: boolean = false;
+
+comments: boolean = false;
+
+@Input() openThreadEvent: EventEmitter<void> = new EventEmitter<void>();
+
+ngOnInit() {
+
+  
+ 
+}
+ 
+openThread(){
+  this.openThreadEvent.subscribe(() => { // Subscribe on component initialization
+    this.comments = true;
+  });
+}
+
+
 }
