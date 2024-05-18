@@ -1,27 +1,81 @@
 <div class="card-container">
-  <div class="card">
-    <h1>Anmeldung</h1>
-    <span>
-      Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit
-      verwendest.
-    </span>
-    <div class="input-section">
-      <input type="email" placeholder="beispielname@email.com" class="input-email"/>
-      <input type="password" placeholder="Passwort" class="input-password"/>
-    </div>
-    <p class="forgot-password">Passwort vergessen?</p>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="card">
+      <div class="title">
+        <h1>Anmeldung</h1>
+      </div>
 
-    <div class="or">
-      <div class="line"></div>
-      <p>ODER</p>
-      <div class="line"></div>
-    </div>
+      <span>
+        Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit
+        verwendest.
+      </span>
 
-    <button class="button-google">Anmelden mit Google</button>
+      <div class="input-section">
+        <div>
+          <input
+            type="text"
+            formControlName="email"
+            class="input-email"
+            [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"
+            placeholder="beispielname@email.com"
+          />
+          @if (submitted && f['email'].errors) {
+          <div class="invalid-feedback">
+            @if (f['email'].errors['required']) {
+            <div>Email-Adresse wird benötigt.</div>
+            } @if (f['email'].errors['email']) {
+            <div>Email-Adresse ist ungültig.</div>
+            }
+          </div>
+          }
+        </div>
 
-    <div class="buttons-login">
-      <button class="button-login">Anmelden</button>
-      <button class="button-guest">Gäste-Login</button>
+        <div>
+          <input
+            type="password"
+            formControlName="password"
+            class="input-password"
+            [ngClass]="{ 'is-invalid': submitted && f['password'].errors }"
+            placeholder="Passwort"
+          />
+          @if (submitted && f['password'].errors) {
+          <div class="invalid-feedback">
+            @if (f['password'].errors['required']) {
+            <div>Bitte gib ein Passwort ein.</div>
+            }
+          </div>
+          }
+        </div>
+      </div>
+
+      <p class="forgot-password" routerLink="/resetPassword">
+        Passwort vergessen?
+      </p>
+
+      <div class="or">
+        <div class="line"></div>
+        <p>ODER</p>
+        <div class="line"></div>
+      </div>
+
+      <button class="button-google">
+        <img src="assets/images/icons/google.svg" alt="" /> Anmelden mit Google
+      </button>
+
+      <div class="buttons-login">
+        <button
+          class="button-login"
+          type="submit"
+          [ngClass]="{ 'enable-button': form.valid }"
+        >
+          Anmelden
+        </button>
+        <button class="button-guest-login">Gäste-Login</button>
+      </div>
     </div>
-  </div>
+    <div class="legal">
+      <button class="button-imprint">Impressum</button>
+      <button class="button-privacy-policy">Datenschutz</button>
+    </div>
+  </form>
 </div>

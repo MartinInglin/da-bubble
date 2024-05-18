@@ -1,0 +1,28 @@
+<section>
+    <mat-card>
+        <mat-card-content>
+            <div class="header">
+                <div>
+                    <p>Leute Hinzufügen</p>
+                    <button mat-icon-button>
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <mat-radio-group class="select-container" (change)="people = $event.value === 'specific' ? true : false">
+                <mat-radio-button value="all">
+                    <span>Alle Mitglieder von <span>Office Team</span> hinzufügen</span>
+                </mat-radio-button>
+                <mat-radio-button value="specific">
+                    <span>Bestimmte Leute hinzufügen</span>
+                </mat-radio-button>
+                <input *ngIf="people" placeholder="Name eingeben">
+            </mat-radio-group>
+            <div class="button-container">
+                <div class="message-button">
+                    <button>Erstellen</button>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</section>

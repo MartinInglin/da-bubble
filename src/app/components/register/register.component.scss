@@ -1,0 +1,253 @@
+@import "./../../../styles.scss";
+
+.card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  flex-direction: column;
+  background-color: $background;
+  height: 100%;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+  border-radius: 30px;
+  padding: 50px;
+  box-sizing: border-box;
+  background-color: white;
+  margin: 30px 0;
+  max-width: 600px;
+
+  span {
+    font-size: 20px;
+    line-height: 24px;
+    font-weight: 400;
+  }
+}
+
+.title {
+  display: flex;
+  position: relative;
+  width: 100%;
+  justify-content: center;
+
+  img {
+    position: absolute;
+    left: 0;
+    top: 12px;
+    padding: 5px;
+    border-radius: 50%;
+    transition: 75ms ease-in-out;
+
+    &:hover {
+      background-color: $background;
+      transition: 75ms ease-in-out;
+      cursor: pointer;
+    }
+  }
+}
+
+.input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 100%;
+
+  input {
+    background-color: $background;
+    border: none;
+    border-radius: 100px;
+    height: 60px;
+    width: 100%;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 21.6px;
+    color: black;
+
+    &::placeholder {
+      color: $text-gray;
+    }
+  }
+}
+
+.input-name {
+  background: url(./../../../assets/images/icons/person_filled.svg) no-repeat
+    28px 17px;
+  padding-left: 80px;
+  box-sizing: border-box;
+}
+
+.input-email {
+  background: url(./../../../assets/images/icons/mail.svg) no-repeat 28px 17px;
+  padding-left: 80px;
+  box-sizing: border-box;
+}
+
+.input-password {
+  background: url(./../../../assets/images/icons/lock.svg) no-repeat 28px 17px;
+  padding-left: 80px;
+  box-sizing: border-box;
+}
+
+.forgot-password {
+  color: $purple2;
+  cursor: pointer;
+  padding: 5px 15px;
+  border-radius: 25px;
+  transition: 75ms ease-in-out;
+
+  &:hover {
+    background-color: $background;
+    color: $purple1;
+    font-weight: 500;
+    transition: 75ms ease-in-out;
+  }
+}
+
+button {
+  border-radius: 25px;
+  padding: 12px 25px;
+  font-size: 18px;
+  line-height: 24.55px;
+  cursor: pointer;
+}
+
+.button {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.button-forward {
+  background-color: $text-gray;
+  color: white;
+  border: none;
+  transition: 75ms ease-in-out;
+  font-weight: 700;
+
+  &:hover {
+    opacity: 0.5;
+    transition: 75ms ease-in-out;
+  }
+}
+
+.enable-button {
+  background-color: $purple1;
+}
+
+.privacy-policy {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  width: 100%;
+
+  a {
+    color: $purple2;
+    cursor: pointer;
+  }
+}
+
+.privacy-policy-input {
+  display: flex;
+  flex-direction: row;
+  gap: 25px;
+}
+
+.legal {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 21.6px;
+
+  button {
+    border: none;
+    background-color: transparent;
+    color: $purple2;
+    border: 1px solid transparent;
+    transition: 75ms ease-in-out;
+
+    &:hover {
+      border: 1px solid $text-gray;
+      transition: 75ms ease-in-out;
+    }
+  }
+}
+
+.invalid-feedback {
+  color: red;
+}
+
+/* Custon checkbox */
+/* The container */
+.container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #fff;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+  background-color: #f2f3f4;
+}
+
+input:focus ~ .checkmark {
+  border-color: $purple1;
+  box-shadow: 0px 0px 8px $purple2;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: 1px solid $purple1;
+  border-width: 0 4px 4px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
