@@ -34,6 +34,9 @@ export class RegisterComponent {
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
+    const userData = this.registrationService.getUserData()
+    console.log(userData);
+    
     this.form = this.formBuilder.group({
       name: [
         this.registrationService.getName() || '',
