@@ -122,6 +122,7 @@ button {
   justify-content: center;
   gap: 30px;
   background-color: $background;
+  border-radius: 100px;
 
   &:hover {
     border: 1px solid $purple1;

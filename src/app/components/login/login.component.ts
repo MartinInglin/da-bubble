@@ -30,6 +30,7 @@ export class LoginComponent {
     email: new FormControl(''),
     password: new FormControl(''),
   });
+
   submitted = false;
 
   constructor(private formBuilder: FormBuilder) {}
@@ -37,12 +38,7 @@ export class LoginComponent {
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: [
-        '',
-        [
-          Validators.required,
-        ],
-      ],
+      password: ['', [Validators.required]],
     });
   }
 

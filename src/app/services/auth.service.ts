@@ -8,6 +8,7 @@ import {
 import { Router } from '@angular/router';
 import { FirebaseService } from './firebase.service';
 import { RegistrationService } from './registration.service';
+import { SnackbarErrorComponent } from '../components/snackbar-error/snackbar-error.component';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +18,7 @@ export class AuthService {
   private router = inject(Router);
   firebaseService = inject(FirebaseService);
   registrationService = inject(RegistrationService);
+  snackbarError = inject(SnackbarErrorComponent)
 
   constructor(private afApp: FirebaseApp) {
     this.auth = getAuth(afApp);
@@ -32,13 +34,14 @@ export class AuthService {
     )
       .then((userCredential) => {
         const id = userCredential.user.uid;
-        this.firebaseService.createUser(id);
+        return this.firebaseService.createUser(id);
       })
       .then(() => {
         this.router.navigate(['/login']);
       })
       .catch((error) => {
         console.error('Error during sign up:', error);
+        this.snackbarError.openSnackBar('Diese Mailadresse besteht bereits. Bitte melde dich an.', 'Schliessen');
       });
   }
 }
