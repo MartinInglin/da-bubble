@@ -55,6 +55,6 @@ export class LoginComponent {
       return;
     }
 
-    this.authService.singIn(this.form.value.email, this.form.value.password);
+    this.authService.signIn(this.form.value.email, this.form.value.password);
   }
 }
