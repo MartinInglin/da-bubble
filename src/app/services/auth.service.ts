@@ -70,6 +70,7 @@ export class AuthService {
 
   signOut() {
     return signOut(this.auth).then(() => {
+      this.router.navigate(['login']);
     }).catch((error) => {
       this.snackbarError.openSnackBar('Logout hat nicht geklappt. Versuche es erneut.', 'Schliessen')
     });
