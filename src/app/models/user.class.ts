@@ -4,8 +4,10 @@ export class User {
   email: string;
   avatar: string;
 
-  constructor() {
-    (this.id = ''), (this.name = ''), (this.email = '');
-    this.avatar = '';
+  constructor(obj?: any) {
+    this.id = obj ? obj.id : '',
+    this.name = obj ? obj.name : '',
+    this.email = obj ? obj.email : '';
+    this.avatar = obj ? obj.avatar : '';
   }
 }

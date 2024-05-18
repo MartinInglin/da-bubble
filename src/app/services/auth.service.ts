@@ -74,17 +74,16 @@ export class AuthService {
     return signInWithEmailAndPassword(this.auth, email, password)
       .then((userCredential) => {
         const userSignedIn = userCredential.user;
+        const userId = userCredential.user.uid;
 
         if (userSignedIn.emailVerified) {
-          // Email is verified, proceed to landing page
+          this.firebaseService.getCurrentUser(userId);
           this.router.navigate(['landingPage']);
         } else {
-          // Email is not verified, show a snackbar message
           this.snackbarService.openSnackBar(
             'Bitte verifiziere deine E-Mail-Adresse, bevor du dich anmeldest.',
             'Schliessen'
           );
-          // Optionally, you can sign out the user to prevent further actions
           this.auth.signOut();
         }
       })
