@@ -1,0 +1,195 @@
+/* Styling for the main content container */
+#mainContent {
+  height: 780px;
+  background-color: white;
+  border-radius: 30px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Styling for the header section */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  width: 100%;
+  height: 100px;
+  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2);
+  margin-bottom: 50px;
+
+  /* Styling for the channel name */
+  .channelName {
+    width: fit-content;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 50px;
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  /* Styling for the channel members */
+  .channelMembers {
+    width: fit-content;
+    height: 40px;
+    margin-right: 50px;
+    display: flex;
+    padding: 10px;
+    align-items: center;
+    img {
+      height: 30px;
+    }
+  }
+}
+
+/* Styling for the input field */
+.inputContent {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+    /* Styling for the text area */
+.textArea {
+  height: 135px;
+  width: 90%;
+  border: 1px solid black;
+  border-radius: 20px;
+  padding: 10px;
+  textarea {
+    height: 80px;
+    border: none;
+    display: flex;
+    align-items: flex-start;
+    resize: none;
+    font-size: 20px;
+    padding-top: 10px;
+    padding-left: 10px;
+    &:focus {
+      border-color: transparent;
+      outline: none;
+    }
+  }
+
+  /* Styling for the icons */
+  .icons {
+    display: flex;
+    height: 45px;
+    align-items: start;
+    justify-content: space-between;
+    padding-left: 15px;
+    padding-right: 15px;
+    .buttons {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+    }
+    .addIcon {
+      border-right: 1px solid black; 
+      border-top: none; 
+      border-bottom: none;
+      border-left: none; 
+    }
+  }
+}
+
+/* Styling for the message content */
+.message-content {
+  height: 450px;
+  /* Styling for the line separator */
+  .dateLine {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .Line {
+    width: 95%;
+    background-color: #eceefe;
+    height: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    span {
+      z-index: 2;
+      height: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      border: 2px solid #eceefe;
+      border-radius: 30px;
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+  }
+}
+
+/* Styling for individual messages */
+.message {
+  display: flex;
+  width: 97%;
+  padding: 20px;
+  height: 141px;
+  align-items: center;
+
+  img {
+    height: 70px;
+    width: 70px;
+  }
+
+/* Styling for the message text */
+  .message-text {
+    width: fit-content;
+    background-color: #eceefe;
+    height: 35px;
+    border-radius: 0px 30px 30px 30px;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+  }
+
+/* Styling for the message name */
+  .message-name {
+    font-weight: 600;
+    margin-bottom: 5px;
+    font-size: 18px;
+  }
+
+  /* Styling for the message details */
+  .message-details {
+    margin-top: 10px;
+    display: flex;
+    width: fit-content;
+    gap: 20px;
+    a {
+      color: blue;
+      text-decoration: none;
+      font-weight: 550;
+    }
+    span {
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.425);
+    }
+  }
+
+  /* Styling for the message container */
+  .message-container {
+    display: flex;
+    align-items: start;
+    flex-direction: row;
+    width: 100%;
+    height: 110px;
+    padding: 10px;
+    gap: 30px;
+    &:hover {
+      background-color: #eceefe;
+      width: 100%;
+      .message-text {
+        background-color: white;
+      }
+    }
+  }
+}

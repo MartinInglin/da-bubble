@@ -1,0 +1,135 @@
+<section>
+
+    <!-- Header -->
+    <app-header></app-header>
+
+
+    <!-- MainContent -->
+    <div class="Content">
+        <!-- <img *ngIf="isDrawerOpen" src="./../../../assets/images/icons/menu_up.svg" alt="">
+                <img *ngIf="!isDrawerOpen" src="./../../../assets/images/icons/menu_down.svg" alt="">
+
+      MenuButton -->
+        <div class="menuBtn">
+            <button type="button" (click)="drawer.toggle()">
+
+                <div>
+                    <span>
+                        Workspace-Menü schließen
+                    </span>
+                    <img [src]="isOpen ? menuUp : menuDown" alt="Toggle Contacts">
+
+                </div>
+
+
+            </button>
+        </div>
+        <!-- SideNav -->
+        <nav>
+            <mat-drawer-container class="example-container" autosize>
+                <mat-drawer #drawer class="example-sidenav" mode="side">
+                    <div class="head-side-menu">
+                        <div class="head-side-menu-first">
+                            <img src="./../../../assets/images/icons/workspace_logo.png" alt="">
+                            <span>DevSpace</span>
+                        </div>
+                        <div class="head-side-menu-link">
+                            <img src="./../../../assets/images/icons/16. edit_square.svg" alt="">
+                        </div>
+
+                    </div>
+
+
+                    <div class="channels-head">
+                        <div class="channel-head-first" (click)="showChannels = !showChannels">
+                            <img src="./../../../assets/images/icons/arrow_drop_down.svg" alt="Toggle Contacts">
+                            <div class="channels-list">
+                                <img src="./../../../assets/images/icons/workspaces.svg" alt="">
+                                <span>Channels</span>
+                            </div>
+                        </div>
+                        <div class="head-side-menu-link">
+                            <img src="./../../../assets/images/icons/add_icon.svg" alt="">
+                        </div>
+                    </div>
+
+
+                    <table class="channels" *ngIf="showChannels">
+                        <tr *ngFor="let user of allUsers">
+                            <td>
+                                <span># {{user}}</span>
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="channel-add">
+                                <img src="./../../../assets/images/icons/add_circle.svg" alt="">
+                                <span>Channel hinzufügen</span>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- Strich -->
+                    <div class="channels-head">
+                        <div class="channel-head-first" (click)="showContacts = !showContacts">
+                            <img src="./../../../assets/images/icons/arrow_drop_down.svg" alt="Toggle Contacts">
+                            <div class="channels-list">
+                                <img src="./../../../assets/images/icons/account_circle.svg" alt="">
+                                <span>Direktnachrichten</span>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+
+                    <table class="contacts" *ngIf="showContacts">
+                        <tr *ngFor="let user of allUsers">
+                            <td>
+                                <img src="./../../../assets/images/icons/Profile bild.svg" alt="">
+                                <span>{{user}} {{user}}</span>
+                            </td>
+                        </tr>
+                      
+                    </table>
+
+                    <!-- Strich -->
+
+                    <!-- <div class="channelsList">
+                        <img src="./../../../assets/images/icons/arrow_drop_down.svg"
+                            (click)="showContacts = !showContacts" alt="Toggle Contacts">
+                            <div>
+                            <img src="./../../../assets/images/icons/add_icon.svg" alt="">
+                                Direktnachrichten
+                            </div>
+                            <img src="./../../../assets/images/icons/add_icon.svg" alt="">
+                           
+                    </div>
+
+
+                    <table class="contacts" *ngIf="showContacts">
+                        <tr routerLinkActive="router-link-active" matTooltipPosition="right"
+                            matTooltip="go to chat space">
+
+                            <img src="./../../../assets/images/icons/logo_da_bubble.png" alt="">
+                        </tr>
+                    </table> -->
+
+                </mat-drawer>
+            </mat-drawer-container>
+        </nav>
+        <!-- SideNav -->
+
+        <!-- ChatSpace -->
+        <app-main-content class="mainContent"></app-main-content>
+
+        <!-- CommentSection -->
+        <app-thread></app-thread>
+
+    </div>
+    <!-- MainContent -->
+
+
+
+</section>
