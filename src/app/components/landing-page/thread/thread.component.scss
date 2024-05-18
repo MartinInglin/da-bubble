@@ -1,6 +1,6 @@
 /* Set height of the aside element */
 aside {
-  height: 800px;
+  height: 770px;
 }
 
 /* Styling for the thread container */
@@ -13,7 +13,7 @@ aside {
 
 /* height thread container */
 .thread-content {
-  height: 600px;
+  height: 585px;
 }
 
 /* Header styling for the thread */
@@ -39,12 +39,11 @@ aside {
 
 /* Input section styling */
 .inputContent {
-  bottom: 25px;
   display: flex;
   width: 100%;
   height: 186px;
   justify-content: center;
-  margin: 8px 0px 8px 0px;
+  margin: 8px 0px 0px 0px;
 }
 
 /* Text area styling */
@@ -54,6 +53,7 @@ aside {
   border: 1px solid black;
   border-radius: 20px;
   padding: 10px;
+  margin-bottom: 100px;
   textarea {
     height: 80px;
     border: none;
@@ -82,6 +82,9 @@ aside {
       flex-direction: row;
     }
     .addIcon {
+      height: 30px;
+      display: flex;
+      align-items: center;
       border-right: 1px solid black; /* Nur rechter Rand */
       border-top: none; 
       border-bottom: none; 

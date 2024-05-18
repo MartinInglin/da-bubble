@@ -13,24 +13,18 @@ $online-green: #92c83e;
 
 html,
 body {
-<<<<<<< HEAD
-  max-height: 100vh;
-  background-color: #eceefe;
-    // width: 99%;
 
-=======
   height: 100%;
+  background-color: #eceefe;
   display: flex;
   flex-direction: column;
->>>>>>> fcf84ba240705653e58adf5d90dd54272f69a06c
+padding: 10px;
+overflow: hidden;
 }
 
 body {
   margin: 0;
-<<<<<<< HEAD
-  padding: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-=======
+
 }
 
 app-root {
@@ -44,7 +38,7 @@ app-register,
 app-reset-password,
 app-choose-avatar {
   flex: 1;
->>>>>>> fcf84ba240705653e58adf5d90dd54272f69a06c
+
 }
 
 h1 {
@@ -63,8 +57,8 @@ p {
   margin: 0;
 }
 
-<<<<<<< HEAD
-=======
+
+
 /* nunito-200 - latin */
 @font-face {
   font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
@@ -209,4 +203,4 @@ p {
   src: url("../src/assets/fonts/nunito-v26-latin/nunito-v26-latin-900italic.woff2")
     format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
->>>>>>> fcf84ba240705653e58adf5d90dd54272f69a06c
+

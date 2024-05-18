@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from './header/header.component';
+import { HeaderComponent } from '../shared/header/header.component';
 import { ThreadComponent } from './thread/thread.component';
 import { MainContentComponent } from './main-content/main-content.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [MatSidenavModule, MatButtonModule, CommonModule, HeaderComponent, ThreadComponent, MainContentComponent, MatIconModule],
+  imports: [MatSidenavModule, MatButtonModule, CommonModule, HeaderComponent, ThreadComponent, MainContentComponent, MatIconModule,],
   templateUrl: './landing-page.component.html',
   styleUrl: './landing-page.component.scss'
 })
