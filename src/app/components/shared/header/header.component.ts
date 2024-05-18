@@ -18,6 +18,12 @@ export class HeaderComponent {
   currentUser: User =  new User();
 
   ngOnInit(): void {
+
+    const storedUser = sessionStorage.getItem('currentUser');
+    if (storedUser) {
+      this.currentUser = JSON.parse(storedUser);
+    }
+
     this.firebaseService.currentUser$.subscribe((user) => {
       if (user) {
         this.currentUser = user;

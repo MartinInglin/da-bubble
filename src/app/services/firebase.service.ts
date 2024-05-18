@@ -18,7 +18,16 @@ export class FirebaseService {
   firestore = inject(Firestore);
   registrationService = inject(RegistrationService);
 
-  constructor() {}
+  constructor() {
+    const storedUser = sessionStorage.getItem('currentUser');
+    if (storedUser) {
+      try {
+        this.currentUserSubject.next(JSON.parse(storedUser));
+      } catch (error) {
+        console.error('Error parsing stored user data:', error);
+      }
+    }
+  }
 
   async createUser(id: string): Promise<void> {
     const userData = this.registrationService.getUserData();
@@ -37,6 +46,8 @@ export class FirebaseService {
     const unsub = onSnapshot(doc(this.firestore, 'users', userId), (doc) => {
       const userData = doc.data() as User;
       this.currentUserSubject.next(userData);
+
+      sessionStorage.setItem('currentUser', JSON.stringify(userData));
     });
   }
 }
