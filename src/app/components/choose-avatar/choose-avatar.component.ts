@@ -20,7 +20,7 @@ export class ChooseAvatarComponent {
   authService = inject(AuthService);
   registrationService = inject(RegistrationService);
 
-  selectedAvatar:string = '';
+  selectedAvatar: string = '';
 
   form: FormGroup = new FormGroup({
     avatar: new FormControl(''),
@@ -30,10 +30,9 @@ export class ChooseAvatarComponent {
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
-    const userData = this.registrationService.getUserData()
-    console.log(userData);
-
-    this.selectedAvatar = this.registrationService.getAvatar() || "assets/images/avatars/profile.svg";
+    this.selectedAvatar =
+      this.registrationService.getAvatar() ||
+      'assets/images/avatars/profile.svg';
 
     this.form = this.formBuilder.group({
       avatar: [this.registrationService.getAvatar() || ''],
@@ -46,7 +45,7 @@ export class ChooseAvatarComponent {
   }
 
   setAvatar(imageURLAvatar: string) {
+    this.selectedAvatar = imageURLAvatar;
     this.registrationService.setAvatar(imageURLAvatar);
-
   }
 }
