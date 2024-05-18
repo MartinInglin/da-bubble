@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   signInWithEmailAndPassword,
+  signOut,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { FirebaseService } from './firebase.service';
@@ -65,5 +66,12 @@ export class AuthService {
           'Schliessen'
         );
       });
+  }
+
+  signOut() {
+    return signOut(this.auth).then(() => {
+    }).catch((error) => {
+      this.snackbarError.openSnackBar('Logout hat nicht geklappt. Versuche es erneut.', 'Schliessen')
+    });
   }
 }

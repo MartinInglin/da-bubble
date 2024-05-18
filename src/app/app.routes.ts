@@ -9,13 +9,23 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { ChooseAvatarComponent } from './components/choose-avatar/choose-avatar.component';
 import { LandingPageComponent } from './components/landing-page/landing-page.component';
 
+import { AuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
+
+const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['/login']);
+
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'resetPassword', component: ResetPasswordComponent },
   { path: 'chooseAvatar', component: ChooseAvatarComponent },
-  { path: 'landingPage', component: LandingPageComponent },
+
+  {
+    path: 'landingPage',
+    component: LandingPageComponent,
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+  },
   { path: 'detailView', component: ProfileDetailViewComponent },
   { path: 'addUserToChannel', component: AddUserToChannelComponent },
   { path: 'addUserToNewChannel', component: AddUserToNewChannelComponent },
