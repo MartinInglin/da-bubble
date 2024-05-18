@@ -2,9 +2,11 @@ import { Injectable, inject } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import {
   Auth,
+  browserSessionPersistence,
   createUserWithEmailAndPassword,
   getAuth,
   sendEmailVerification,
+  setPersistence,
   signInWithEmailAndPassword,
   signOut,
   user,
@@ -71,30 +73,30 @@ export class AuthService {
   }
 
   signIn(email: string, password: string): Promise<void> {
-    return signInWithEmailAndPassword(this.auth, email, password)
-      .then((userCredential) => {
-        const userSignedIn = userCredential.user;
-        const userId = userCredential.user.uid;
+    return this.auth.setPersistence(browserSessionPersistence).then(() => {
+      return signInWithEmailAndPassword(this.auth, email, password)
+        .then((userCredential) => {
+          const userSignedIn = userCredential.user;
+          const userId = userCredential.user.uid;
 
-        if (userSignedIn.emailVerified) {
-          this.firebaseService.getCurrentUser(userId);
-          this.router.navigate(['landingPage']);
-        } else {
+          if (userSignedIn.emailVerified) {
+            this.firebaseService.getCurrentUser(userId);
+            this.router.navigate(['landingPage']);
+          } else {
+            this.snackbarService.openSnackBar(
+              'Bitte verifiziere deine E-Mail-Adresse, bevor du dich anmeldest.',
+              'Schliessen'
+            );
+            this.auth.signOut();
+          }
+        })
+        .catch((error) => {
           this.snackbarService.openSnackBar(
-            'Bitte verifiziere deine E-Mail-Adresse, bevor du dich anmeldest.',
+            'Passwort und / oder E-Mail-Adresse stimmen nicht überein.',
             'Schliessen'
           );
-          this.auth.signOut();
-        }
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        this.snackbarService.openSnackBar(
-          'Passwort und / oder E-Mail-Adresse stimmen nicht überein.',
-          'Schliessen'
-        );
-      });
+        });
+    });
   }
 
   signOut() {
