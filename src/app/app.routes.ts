@@ -2,6 +2,9 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ProfileDetailViewComponent } from './components/profile-detail-view/profile-detail-view.component';
+import { AddUserToChannelComponent } from './components/add-user-to-channel/add-user-to-channel.component';
+import { AddUserToNewChannelComponent } from './components/add-user-to-new-channel/add-user-to-new-channel.component';
+import { NewChannelComponent } from './components/new-channel/new-channel.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { ChooseAvatarComponent } from './components/choose-avatar/choose-avatar.component';
 
@@ -12,4 +15,7 @@ export const routes: Routes = [
   { path: 'resetPassword', component: ResetPasswordComponent },
   { path: 'chooseAvatar', component: ChooseAvatarComponent },
   { path: 'detailView', component: ProfileDetailViewComponent },
+  { path: 'addUserToChannel', component: AddUserToChannelComponent},
+  { path: 'addUserToNewChannel', component: AddUserToNewChannelComponent},
+  { path: 'newChannel', component: NewChannelComponent}
 ];
