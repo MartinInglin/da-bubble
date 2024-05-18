@@ -16,11 +16,11 @@ const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['/login']);
 
 
 export const routes: Routes = [
-  // { path: '', redirectTo: '/login', pathMatch: 'full' },
-  // { path: 'login', component: LoginComponent },
-  // { path: 'register', component: RegisterComponent },
-  // { path: 'resetPassword', component: ResetPasswordComponent },
-  // { path: 'chooseAvatar', component: ChooseAvatarComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'resetPassword', component: ResetPasswordComponent },
+  { path: 'chooseAvatar', component: ChooseAvatarComponent },
 
   // {
   //   path: '',
@@ -30,7 +30,7 @@ export const routes: Routes = [
   // },
   { path: 'detailView', component: ProfileDetailViewComponent },
 
-  { path: '', component: LandingPageComponent },
+  { path: 'landingPage', component: LandingPageComponent },
 
 
   { path: 'addUserToChannel', component: AddUserToChannelComponent },
