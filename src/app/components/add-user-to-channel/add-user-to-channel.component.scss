@@ -55,12 +55,11 @@ mat-card-content {
             color: $purple1;
             scale: 1.05;
         }
-    }
 
-    mat-icon {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        img {
+            height: 13.5px;
+            width: 13.5px;
+        }
     }
 }
 
