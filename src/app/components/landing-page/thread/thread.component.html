@@ -1,13 +1,19 @@
+<!-- Aside element conditionally rendered based on 'comments' property -->
 <aside *ngIf="comments">
+
+    <!-- Container for the thread -->
     <div id="thread">
 
-        <div class="thread-content"> 
+        <!-- Thread content -->
+        <div class="thread-content">
+
+            <!-- Header of the thread -->
             <div class="head-thread">
                 <span>Thread</span>
                 <a href=""># Entwicklerteam</a>
             </div>
 
-
+            <!-- Individual message within the thread -->
             <div class="message">
                 <div class="message-container">
                     <img src="./../../../../assets/images/icons/Profile bild.svg" alt="">
@@ -24,7 +30,9 @@
 
                     </div>
                 </div>
+                <!-- Details and actions for the message -->
                 <div class="message-details">
+                    <!-- Link to reply to the message -->
                     <a href="">Antworten</a>
                     <div class="line-antwort"></div>
                 </div>
@@ -33,21 +41,23 @@
 
         </div>
 
-
+        <!-- Input section for adding new messages -->
         <div class="inputContent">
             <div class="textArea" placeholder="Nachricht an #Entwicklerteam">
                 <textarea name="" id=""></textarea>
 
-
+                <!-- Icons for additional options -->
                 <div class="icons">
                     <div class="buttons">
                         <div class="addIcon">
+                            <!-- Icon for adding attachments -->
                             <img src="./../../../../assets/images/icons/add_icon.svg" alt="">
                         </div>
+                        <!-- Icon for adding emojis -->
                         <img src="./../../../../assets/images/icons/smiley-Icon.svg" alt="">
                         <img src="./../../../../assets/images/icons/link_icon.svg" alt="">
                     </div>
-
+                    <!-- Icon for sending the message -->
                     <img src="./../../../../assets/images/icons/send_icon.svg" alt="">
 
                 </div>

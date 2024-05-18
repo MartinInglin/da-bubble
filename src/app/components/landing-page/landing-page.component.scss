@@ -1,10 +1,12 @@
-// Content von LandingPage
+/* Content styling */
 section {
   overflow: hidden;
   height: 100vh;
   padding: 10px;
-  box-sizing: border-box; 
+  box-sizing: border-box;
 }
+
+/* Content container */
 .Content {
   display: flex;
   max-width: 100%;
@@ -14,18 +16,20 @@ section {
   gap: 10px;
 }
 
-
-
-// SideNav
+/* Side navigation container */
 mat-drawer-container {
   height: 800px;
   border-radius: 30px;
 }
+
+/* Side navigation */
 .example-sidenav {
   background-color: white;
   width: 380px;
   padding: 20px;
 }
+
+/* Side navigation header */
 .head-side-menu {
   display: flex;
   align-items: center;
@@ -44,11 +48,12 @@ mat-drawer-container {
     gap: 25px;
     cursor: pointer;
     img {
-      cursor: not-allowed;
+      cursor: auto;
     }
   }
 }
 
+/* Styling for the link in the side navigation header */
 .head-side-menu-link {
   display: flex;
   align-items: center;
@@ -65,16 +70,18 @@ mat-drawer-container {
   }
 }
 
+/* Menu button */
 .menuBtn {
   position: absolute;
   left: -148px;
   bottom: 250px;
   width: fit-content;
-  transform: rotate(270deg); 
+  transform: rotate(270deg);
   z-index: 5;
   display: flex;
   gap: 20px;
 
+  /* Styling for buttons inside the menu button */
   button {
     background-color: white;
     display: flex;
@@ -94,12 +101,13 @@ mat-drawer-container {
     }
   }
 }
-// SideNav
 
+/* Width Main content */
 .mainContent {
   width: 1879px;
 }
 
+/* Styling for the header of channels */
 .channels-head {
   display: flex;
   align-items: center;
@@ -117,13 +125,15 @@ mat-drawer-container {
   gap: 35px;
   width: fit-content;
   cursor: pointer;
-  &:hover{
-    color: #535AF1;
-    img{
-      background-color: #535AF1;
+  &:hover {
+    color: #535af1;
+    img {
+      background-color: #535af1;
     }
-      }
+  }
 }
+
+/* Styling for the channels list */
 .channels-list {
   display: flex;
   align-items: center;
@@ -140,8 +150,9 @@ mat-drawer-container {
     font-size: 20px;
     font-weight: 700;
   }
- 
 }
+
+/* Styling for table data in channels and contacts */
 .channels {
   width: 100%;
   tr {
@@ -150,7 +161,6 @@ mat-drawer-container {
     align-items: center;
     width: 100%;
     margin-bottom: 10px;
-   
   }
   td {
     height: 33px;
@@ -162,24 +172,22 @@ mat-drawer-container {
     align-items: center;
     gap: 10px;
     cursor: pointer;
-   
-    &:hover{
-      color: #535AF1;
+/* Hover effect for table data in channels and contacts */
+    &:hover {
+      color: #535af1;
       transform: scale(1.05);
     }
   }
-  
 }
-.contacts{
+.contacts {
   width: 100%;
-  
+
   tr {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     margin-bottom: 10px;
-   
   }
   td {
     height: 58px;
@@ -191,20 +199,18 @@ mat-drawer-container {
     align-items: center;
     gap: 10px;
     cursor: pointer;
-    img{
+    img {
       height: 50px;
       width: 50px;
     }
-    span{
+    span {
       font-size: 18px;
-      
     }
-    &:hover{
-      color: #535AF1;
+    &:hover {
+      color: #535af1;
       border-radius: 10px;
       background-color: #eceefe;
       width: fit-content;
-
     }
   }
 }

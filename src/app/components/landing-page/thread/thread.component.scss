@@ -1,25 +1,28 @@
-// Thread
+/* Set height of the aside element */
 aside {
   height: 800px;
 }
 
+/* Styling for the thread container */
 #thread {
   height: 100%;
   background-color: white;
   width: 435px;
   border-radius: 30px;
 }
-// Thread
+
+/* height thread container */
 .thread-content {
   height: 600px;
 }
+
+/* Header styling for the thread */
 .head-thread {
   padding: 6px;
   display: flex;
   justify-content: start;
   align-items: center;
-  width: 100%;
-  height: 100px;
+  height: 98px;
   box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2);
   width: 97%;
   gap: 5px;
@@ -34,6 +37,7 @@ aside {
   }
 }
 
+/* Input section styling */
 .inputContent {
   bottom: 25px;
   display: flex;
@@ -42,6 +46,8 @@ aside {
   justify-content: center;
   margin: 8px 0px 8px 0px;
 }
+
+/* Text area styling */
 .textArea {
   height: 135px;
   width: 85%;
@@ -77,13 +83,14 @@ aside {
     }
     .addIcon {
       border-right: 1px solid black; /* Nur rechter Rand */
-      border-top: none; /* Kein oberer Rand */
-      border-bottom: none; /* Kein unterer Rand */
-      border-left: none; /* Kein linker Rand */
+      border-top: none; 
+      border-bottom: none; 
+      border-left: none; 
     }
   }
 }
 
+/* Styling for individual messages */
 .message {
   display: flex;
   width: 90%;
