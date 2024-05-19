@@ -7,9 +7,9 @@ import { HeaderComponent } from '../shared/header/header.component';
 import { ThreadComponent } from './thread/thread.component';
 import { MainContentComponent } from './main-content/main-content.component';
 import { MatIconModule } from '@angular/material/icon';
-import { FirebaseService } from '../../services/firebase.service';
 import { User } from '../../models/user.class';
 import { Subscription } from 'rxjs';
+import { UsersService } from '../../services/firestore/users.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -30,7 +30,7 @@ import { Subscription } from 'rxjs';
   styleUrl: './landing-page.component.scss',
 })
 export class LandingPageComponent implements OnInit {
-  firebaseService = inject(FirebaseService);
+  usersService = inject(UsersService);
 
   private userSubscription: Subscription = new Subscription;
   currentUser: User | null = new User();
@@ -49,12 +49,12 @@ export class LandingPageComponent implements OnInit {
 constructor(){}
 
   ngOnInit(): void {
-    this.userSubscription = this.firebaseService.currentUser$.subscribe((user) => {
+    this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       this.currentUser = user;
       console.log('Current User:', this.currentUser);
     });
 
-    this.firebaseService.getAllUsers().then((users) => {
+    this.usersService.getAllUsers().then((users) => {
       this.allUsers = users;
       console.log('All Users:', this.allUsers);
     }).catch((error) => {

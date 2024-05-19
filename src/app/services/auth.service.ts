@@ -12,9 +12,9 @@ import {
   user,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { FirebaseService } from './firebase.service';
 import { RegistrationService } from './registration.service';
 import { SnackbarService } from './snackbar.service';
+import { UsersService } from './firestore/users.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +22,7 @@ import { SnackbarService } from './snackbar.service';
 export class AuthService {
   private auth: Auth;
   private router = inject(Router);
-  firebaseService = inject(FirebaseService);
+  usersService = inject(UsersService);
   registrationService = inject(RegistrationService);
   snackbarService = inject(SnackbarService);
 
@@ -43,7 +43,7 @@ export class AuthService {
           return sendEmailVerification(userCredential.user)
             .then(() => {
               const id = userCredential.user.uid;
-              return this.firebaseService.createUser(id);
+              return this.usersService.createUser(id);
             })
             .then(() => {
               this.router.navigate(['/login']);
@@ -80,7 +80,7 @@ export class AuthService {
           const userId = userCredential.user.uid;
 
           if (userSignedIn.emailVerified) {
-            this.firebaseService.getCurrentUser(userId);
+            this.usersService.getCurrentUser(userId);
             this.router.navigate(['landingPage']);
           } else {
             this.snackbarService.openSnackBar(

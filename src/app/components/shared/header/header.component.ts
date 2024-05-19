@@ -4,9 +4,9 @@
 import { Component, inject } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
 import { RouterModule } from '@angular/router';
-import { FirebaseService } from '../../../services/firebase.service';
 import { User } from '../../../models/user.class';
 import { Subscription } from 'rxjs';
+import { UsersService } from '../../../services/firestore/users.service';
 
 
 @Component({
@@ -18,13 +18,13 @@ import { Subscription } from 'rxjs';
 })
 export class HeaderComponent {
   authService = inject(AuthService);
-  firebaseService = inject(FirebaseService);
+  usersService = inject(UsersService);
 
   private userSubscription: Subscription = new Subscription;
   currentUser: User =  new User();
 
   ngOnInit(): void {
-    this. userSubscription = this.firebaseService.currentUser$.subscribe((user) => {
+    this. userSubscription = this.usersService.currentUser$.subscribe((user) => {
       if (user) {
         this.currentUser = user;
       }

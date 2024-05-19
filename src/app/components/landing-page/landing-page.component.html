@@ -1,8 +1,6 @@
 <section>
   <!-- MainContent -->
   <div class="Content">
-
-
     <div class="menuBtn">
       <button type="button" (click)="drawer.toggle()">
         <div>
@@ -60,7 +58,7 @@
               </td>
             </tr>
             <tr>
-              <td class="channel-add" (click)="firebaseService.createChannel('new channel', [{id: 'Q45E5n7Rv6SK2XAzYqk0TobAG222', avatar: 'assets/images/avatars/avatar_1.svg'}])"> <!--Hard coded function to create new channel. Must be moved and changed.-->
+              <td class="channel-add">
                 <img
                   src="./../../../assets/images/icons/add_circle.svg"
                   alt=""
@@ -69,8 +67,6 @@
               </td>
             </tr>
           </table>
-
-          <button *ngIf="currentUser" (click)="firebaseService.removeUserFromChannel('LD3ajDGP04KlAhp88zep', currentUser.id)">Remove channel</button>
 
           <!-- Strich -->
           <div class="channels-head">
@@ -95,13 +91,11 @@
           <table class="contacts" *ngIf="showContacts">
             <tr *ngFor="let user of allUsers">
               <td>
-                <img [src]="user.avatar" alt="Profilbild" /> 
-                <span>{{ user.name }}</span> 
+                <img [src]="user.avatar" alt="Profilbild" />
+                <span>{{ user.name }}</span>
               </td>
             </tr>
           </table>
-
-        
         </mat-drawer>
       </mat-drawer-container>
     </nav>

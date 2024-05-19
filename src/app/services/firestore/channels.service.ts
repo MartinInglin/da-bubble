@@ -1,66 +1,15 @@
 import { Injectable, inject } from '@angular/core';
-import {
-  Firestore,
-  doc,
-  onSnapshot,
-  setDoc,
-  getDocs,
-  collection,
-  updateDoc,
-  arrayUnion,
-  getDoc,
-} from '@angular/fire/firestore';
-import { User } from '../models/user.class';
-import { RegistrationService } from './registration.service';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { Channel } from '../models/channel.class';
+import { Firestore, arrayUnion, collection, doc, getDoc, setDoc, updateDoc } from '@angular/fire/firestore';
+import { Channel } from '../../models/channel.class';
+import { User } from '../../models/user.class';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class FirebaseService {
-  user: User = new User();
-
-  private currentUserSubject: BehaviorSubject<User | null> =
-    new BehaviorSubject<User | null>(null);
-  public currentUser$: Observable<User | null> =
-    this.currentUserSubject.asObservable();
-
+export class ChannelsService {
   firestore = inject(Firestore);
-  registrationService = inject(RegistrationService);
 
-  constructor() {
-    const storedUser = sessionStorage.getItem('currentUser');
-    if (storedUser) {
-      try {
-        this.currentUserSubject.next(JSON.parse(storedUser));
-      } catch (error) {
-        console.error('Error parsing stored user data:', error);
-      }
-    }
-  }
-
-  async createUser(id: string): Promise<void> {
-    const userData = this.registrationService.getUserData();
-
-    const user = {
-      id: id,
-      name: userData.name,
-      email: userData.email,
-      avatar: userData.avatar,
-    };
-
-    await setDoc(doc(this.firestore, 'users', id), user);
-  }
-
-  getCurrentUser(userId: string) {
-    const unsub = onSnapshot(doc(this.firestore, 'users', userId), (doc) => {
-      const userData = doc.data() as User;
-      this.currentUserSubject.next(userData);
-
-      sessionStorage.setItem('currentUser', JSON.stringify(userData));
-    });
-  }
+  constructor() { }
 
   async createChannel(name: string, users: Partial<User>[]): Promise<void> {
     const channelRef = collection(this.firestore, 'channels');
@@ -95,11 +44,9 @@ export class FirebaseService {
   }
 
   async removeUserFromChannel(channelId: string, currentUserId:string): Promise<void> {
-    debugger;
     if (currentUserId) {
 
       const userDocRef = doc(this.firestore, 'users', currentUserId);
-  
       const userDoc = await getDoc(userDocRef);
   
       if (userDoc.exists()) {
@@ -117,7 +64,6 @@ export class FirebaseService {
     }
 
     const channelDocRef = doc(this.firestore, 'channels', channelId)
-
     const channelDoc = await getDoc(channelDocRef)
 
     if (channelDoc.exists()) {
@@ -140,15 +86,5 @@ export class FirebaseService {
 
   getIndexOfUser(users: any[], userId: string): number {
     return users.findIndex((user:any) => user.id === userId);
-  }
-
-  async getAllUsers(): Promise<User[]> {
-    const users: User[] = [];
-    const querySnapshot = await getDocs(collection(this.firestore, 'users'));
-    querySnapshot.forEach((doc) => {
-      const userData = doc.data() as User;
-      users.push(userData);
-    });
-    return users;
   }
 }
