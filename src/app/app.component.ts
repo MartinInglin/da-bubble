@@ -16,6 +16,7 @@ import { ChannelInfoComponent } from './components/channel-info/channel-info.com
 import { ChannelInfoEditComponent } from './components/channel-info/channel-info-edit/channel-info-edit.component';
 import { MembersComponent } from './components/members/members.component';
 import { EditMessageComponent } from './components/edit-message/edit-message.component';
+import { UserMenuComponent } from './components/user-menu/user-menu.component';
 
 
 
@@ -36,6 +37,7 @@ import { EditMessageComponent } from './components/edit-message/edit-message.com
     MembersComponent,
     ChannelInfoEditComponent,
     EditMessageComponent,
+    UserMenuComponent,
     LandingPageComponent
   ],
 
