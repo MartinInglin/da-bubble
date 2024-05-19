@@ -1,8 +1,18 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, doc, onSnapshot, setDoc, getDocs, collection } from '@angular/fire/firestore';
+import {
+  Firestore,
+  doc,
+  onSnapshot,
+  setDoc,
+  getDocs,
+  collection,
+  updateDoc,
+  arrayUnion,
+} from '@angular/fire/firestore';
 import { User } from '../models/user.class';
 import { RegistrationService } from './registration.service';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Channel } from '../models/channel.class';
 
 @Injectable({
   providedIn: 'root',
@@ -46,12 +56,42 @@ export class FirebaseService {
     const unsub = onSnapshot(doc(this.firestore, 'users', userId), (doc) => {
       const userData = doc.data() as User;
       this.currentUserSubject.next(userData);
+      console.log(userData);
 
       sessionStorage.setItem('currentUser', JSON.stringify(userData));
     });
   }
 
-  
+  async createChannel(name: string, users: string[]): Promise<void> {
+    const channelRef = collection(this.firestore, 'channels');
+    const newDocRef = doc(channelRef);
+
+    const channelData: Channel = {
+      id: newDocRef.id,
+      name: name,
+      users: users,
+      posts: [],
+    };
+
+    await setDoc(newDocRef, channelData);
+
+    this.updateUsersToChannel(channelData.id, channelData.name, users);
+  }
+
+  async updateUsersToChannel(channelId: String, name: String, userIds: string[]) {
+    const channel = {
+      id: channelId,
+      name: name,
+    };
+
+    for (const userId of userIds) {
+      const userDocRef = doc(this.firestore,'users', userId);
+      await updateDoc(userDocRef, {
+        channels: arrayUnion(channel)
+      });
+    }
+  }
+
   async getAllUsers(): Promise<User[]> {
     const users: User[] = [];
     const querySnapshot = await getDocs(collection(this.firestore, 'users'));

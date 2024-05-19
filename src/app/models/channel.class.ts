@@ -1,9 +1,13 @@
 export class Channel {
   id: string;
-  users: [];
+  name: string;
+  users: string[];
   posts: [];
 
-  constructor() {
-    (this.id = ''), (this.users = []), (this.posts = []);
+  constructor(obj?:any) {
+    this.id = obj ? obj.id : '',
+    this.name = obj ? obj.name : '',
+    this.users = obj ? obj.channels : [],
+    this.posts = obj ? obj.posts : []
   }
 }
