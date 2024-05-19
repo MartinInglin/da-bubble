@@ -1,4 +1,4 @@
-@import "./../../../styles.scss";
+@import "./../../../../styles.scss";
 
 section {
     display: flex;
@@ -86,7 +86,29 @@ mat-card-content {
             font-weight: 400;
             line-height: 24.55px;
         }
+
+        input {
+            height: 60px;
+            width: 100%;
+            border-radius: 30px;
+            border: solid 1px $light-purple-lines;
+            padding-left: 15px;
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 24.55px;
+    
+            &::placeholder {
+                color: $text-gray;
+                font-family: 'Nunito';
+            }
+        }
     }
+}
+
+.input-channel-name {
+    background: url(./../../../../assets/images/icons/tag.svg) no-repeat 28px 16.5px;
+    box-sizing: border-box;
+    padding-left: 60px !important;
 }
 
 .edit-container {
@@ -113,6 +135,7 @@ mat-card-content {
             scale: 1.05;
         }
     }
+
 }
 
 
@@ -133,6 +156,21 @@ mat-card-content {
     hr {
         width: 719px;
         border: 1px solid $light-purple-lines;
+    }
+
+    input {
+        height: 60px;
+        border-radius: 30px;
+        border: solid 1px $light-purple-lines;
+        padding-left: 15px;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24.55px;
+
+        &::placeholder {
+            color: $text-gray;
+            font-family: 'Nunito';
+        }
     }
 }
 

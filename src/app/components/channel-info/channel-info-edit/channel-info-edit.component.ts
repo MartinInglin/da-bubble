@@ -5,9 +5,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
-
 @Component({
-  selector: 'app-channel-info',
+  selector: 'app-channel-info-edit',
   standalone: true,
   imports: [
     CommonModule,
@@ -16,9 +15,9 @@ import { MatButtonModule } from '@angular/material/button';
     MatIconModule,
     MatButtonModule,
   ],
-  templateUrl: './channel-info.component.html',
-  styleUrl: './channel-info.component.scss'
+  templateUrl: './channel-info-edit.component.html',
+  styleUrl: './channel-info-edit.component.scss'
 })
-export class ChannelInfoComponent {
+export class ChannelInfoEditComponent {
 
 }
