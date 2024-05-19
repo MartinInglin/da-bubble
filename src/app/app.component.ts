@@ -14,6 +14,8 @@ import { NewChannelComponent } from './components/new-channel/new-channel.compon
 import { AddUserToNewChannelComponent } from './components/add-user-to-new-channel/add-user-to-new-channel.component';
 import { ChannelInfoComponent } from './components/channel-info/channel-info.component';
 import { ChannelInfoEditComponent } from './components/channel-info/channel-info-edit/channel-info-edit.component';
+import { MembersComponent } from './components/members/members.component';
+
 
 
 
@@ -22,7 +24,7 @@ import { ChannelInfoEditComponent } from './components/channel-info/channel-info
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, ProfileDetailViewComponent, AddUserToChannelComponent, NewChannelComponent, AddUserToNewChannelComponent, ChannelInfoComponent, ChannelInfoEditComponent, LandingPageComponent],
+  imports: [RouterOutlet, HeaderComponent, ProfileDetailViewComponent, AddUserToChannelComponent, NewChannelComponent, AddUserToNewChannelComponent, ChannelInfoComponent,MembersComponent, ChannelInfoEditComponent, LandingPageComponent],
 
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

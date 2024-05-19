@@ -7,12 +7,14 @@ import { AddUserToNewChannelComponent } from './components/add-user-to-new-chann
 import { NewChannelComponent } from './components/new-channel/new-channel.component';
 import { ChannelInfoComponent } from './components/channel-info/channel-info.component';
 import { ChannelInfoEditComponent } from './components/channel-info/channel-info-edit/channel-info-edit.component';
+import { MembersComponent } from './components/members/members.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { ChooseAvatarComponent } from './components/choose-avatar/choose-avatar.component';
 import { LandingPageComponent } from './components/landing-page/landing-page.component';
 
 
 import { AuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
+
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['/login']);
 
@@ -40,5 +42,6 @@ export const routes: Routes = [
   { path: 'newChannel', component: NewChannelComponent },
   { path: 'channelInfo', component: ChannelInfoComponent},
   { path: 'channelInfoEdit', component: ChannelInfoEditComponent},
+  { path: 'members', component: MembersComponent}
 
 ];
