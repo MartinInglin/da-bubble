@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChannelInfoComponent } from './channel-info.component';
+import { ChannelInfoEditComponent } from './channel-info-edit.component';
 
-describe('ChannelInfoComponent', () => {
-  let component: ChannelInfoComponent;
-  let fixture: ComponentFixture<ChannelInfoComponent>;
+describe('ChannelInfoEditComponent', () => {
+  let component: ChannelInfoEditComponent;
+  let fixture: ComponentFixture<ChannelInfoEditComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ChannelInfoComponent]
+      imports: [ChannelInfoEditComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(ChannelInfoComponent);
+    fixture = TestBed.createComponent(ChannelInfoEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
