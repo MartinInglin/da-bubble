@@ -12,6 +12,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { ChooseAvatarComponent } from './components/choose-avatar/choose-avatar.component';
 import { LandingPageComponent } from './components/landing-page/landing-page.component';
 import { EditMessageComponent } from './components/edit-message/edit-message.component';
+import { UserMenuComponent } from './components/user-menu/user-menu.component';
 
 import { AuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 
@@ -42,6 +43,7 @@ export const routes: Routes = [
   { path: 'channelInfo', component: ChannelInfoComponent},
   { path: 'channelInfoEdit', component: ChannelInfoEditComponent},
   { path: 'members', component: MembersComponent},
-  { path: 'editMessage', component: EditMessageComponent}
+  { path: 'editMessage', component: EditMessageComponent},
+  { path: 'userMenu', component: UserMenuComponent}
 
 ];
