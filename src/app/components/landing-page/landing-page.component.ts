@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { User } from '../../models/user.class';
 import { Subscription } from 'rxjs';
 import { UsersService } from '../../services/firestore/users.service';
+import { ChannelsService } from '../../services/firestore/channels.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -23,7 +24,6 @@ import { UsersService } from '../../services/firestore/users.service';
     MainContentComponent,
     MatIconModule,
     HeaderComponent,
-    
   ],
 
   templateUrl: './landing-page.component.html',
@@ -31,8 +31,9 @@ import { UsersService } from '../../services/firestore/users.service';
 })
 export class LandingPageComponent implements OnInit {
   usersService = inject(UsersService);
+  channelsService = inject(ChannelsService);
 
-  private userSubscription: Subscription = new Subscription;
+  private userSubscription: Subscription = new Subscription();
   currentUser: User | null = new User();
 
   showContacts: boolean = false;
@@ -46,7 +47,7 @@ export class LandingPageComponent implements OnInit {
   menuUp: any = './../../../assets/images/icons/add_circle.svg';
   menuDown: any = './../../../assets/images/icons/menu_down.svg';
 
-constructor(){}
+  constructor() {}
 
   ngOnInit(): void {
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
@@ -54,13 +55,15 @@ constructor(){}
       console.log('Current User:', this.currentUser);
     });
 
-    this.usersService.getAllUsers().then((users) => {
-      this.allUsers = users;
-      console.log('All Users:', this.allUsers);
-    }).catch((error) => {
-      console.error('Error fetching all users:', error);
-    });
-  
+    this.usersService
+      .getAllUsers()
+      .then((users) => {
+        this.allUsers = users;
+        console.log('All Users:', this.allUsers);
+      })
+      .catch((error) => {
+        console.error('Error fetching all users:', error);
+      });
   }
 
   showContactsSide() {}
