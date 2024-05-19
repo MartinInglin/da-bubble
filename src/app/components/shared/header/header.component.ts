@@ -1,3 +1,6 @@
+
+
+
 import { Component, inject } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
 import { RouterModule } from '@angular/router';
@@ -5,10 +8,11 @@ import { FirebaseService } from '../../../services/firebase.service';
 import { User } from '../../../models/user.class';
 import { Subscription } from 'rxjs';
 
+
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule],
+  imports: [],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })

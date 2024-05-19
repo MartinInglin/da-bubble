@@ -1,6 +1,6 @@
 /* Styling for the main content container */
 #mainContent {
-  height: 780px;
+  height: 750px;
   background-color: white;
   border-radius: 30px;
   padding: 10px;
@@ -50,6 +50,7 @@ header {
   width: 100%;
   display: flex;
   justify-content: center;
+  margin-bottom: 10px;
 }
 
     /* Styling for the text area */
@@ -88,6 +89,9 @@ header {
       flex-direction: row;
     }
     .addIcon {
+      height: 30px;
+      display: flex;
+      align-items: center;
       border-right: 1px solid black; 
       border-top: none; 
       border-bottom: none;

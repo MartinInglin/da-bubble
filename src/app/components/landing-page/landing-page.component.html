@@ -1,10 +1,8 @@
 <section>
   <!-- MainContent -->
   <div class="Content">
-    <!-- <img *ngIf="isDrawerOpen" src="./../../../assets/images/icons/menu_up.svg" alt="">
-                <img *ngIf="!isDrawerOpen" src="./../../../assets/images/icons/menu_down.svg" alt="">
 
-      MenuButton -->
+
     <div class="menuBtn">
       <button type="button" (click)="drawer.toggle()">
         <div>
@@ -58,7 +56,7 @@
           <table class="channels" *ngIf="showChannels">
             <tr *ngFor="let user of allUsers">
               <td>
-                <span># {{ user }}</span>
+                <span># {{ user.name }}</span>
               </td>
             </tr>
             <tr>
@@ -95,36 +93,13 @@
           <table class="contacts" *ngIf="showContacts">
             <tr *ngFor="let user of allUsers">
               <td>
-                <img
-                  src="./../../../assets/images/icons/Profile bild.svg"
-                  alt=""
-                />
-                <span>{{ user }} {{ user }}</span>
+                <img [src]="user.avatar" alt="Profilbild" /> 
+                <span>{{ user.name }}</span> 
               </td>
             </tr>
           </table>
 
-          <!-- Strich -->
-
-          <!-- <div class="channelsList">
-                        <img src="./../../../assets/images/icons/arrow_drop_down.svg"
-                            (click)="showContacts = !showContacts" alt="Toggle Contacts">
-                            <div>
-                            <img src="./../../../assets/images/icons/add_icon.svg" alt="">
-                                Direktnachrichten
-                            </div>
-                            <img src="./../../../assets/images/icons/add_icon.svg" alt="">
-                           
-                    </div>
-
-
-                    <table class="contacts" *ngIf="showContacts">
-                        <tr routerLinkActive="router-link-active" matTooltipPosition="right"
-                            matTooltip="go to chat space">
-
-                            <img src="./../../../assets/images/icons/logo_da_bubble.png" alt="">
-                        </tr>
-                    </table> -->
+        
         </mat-drawer>
       </mat-drawer-container>
     </nav>

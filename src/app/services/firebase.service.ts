@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, doc, onSnapshot, setDoc } from '@angular/fire/firestore';
+import { Firestore, doc, onSnapshot, setDoc, getDocs, collection } from '@angular/fire/firestore';
 import { User } from '../models/user.class';
 import { RegistrationService } from './registration.service';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -49,5 +49,16 @@ export class FirebaseService {
 
       sessionStorage.setItem('currentUser', JSON.stringify(userData));
     });
+  }
+
+  
+  async getAllUsers(): Promise<User[]> {
+    const users: User[] = [];
+    const querySnapshot = await getDocs(collection(this.firestore, 'users'));
+    querySnapshot.forEach((doc) => {
+      const userData = doc.data() as User;
+      users.push(userData);
+    });
+    return users;
   }
 }
