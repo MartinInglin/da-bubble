@@ -3,6 +3,7 @@ import { AuthService } from '../../../services/auth.service';
 import { RouterModule } from '@angular/router';
 import { FirebaseService } from '../../../services/firebase.service';
 import { User } from '../../../models/user.class';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -15,26 +16,23 @@ export class HeaderComponent {
   authService = inject(AuthService);
   firebaseService = inject(FirebaseService);
 
+  private userSubscription: Subscription = new Subscription;
   currentUser: User =  new User();
 
   ngOnInit(): void {
-
-    const storedUser = sessionStorage.getItem('currentUser');
-    if (storedUser) {
-      this.currentUser = JSON.parse(storedUser);
-    }
-
-    this.firebaseService.currentUser$.subscribe((user) => {
+    this. userSubscription = this.firebaseService.currentUser$.subscribe((user) => {
       if (user) {
         this.currentUser = user;
       }
       console.log('Current User:', this.currentUser);
     });
-
-    // Assuming you have the userId stored somewhere (e.g., after login)
-    const userId = 'some-user-id';
-    this.firebaseService.getCurrentUser(userId);
   }
 
   search() {}
+
+  ngOnDestroy(): void {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
+  }
 }

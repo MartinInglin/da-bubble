@@ -7,6 +7,7 @@ import { MainContentComponent } from './main-content/main-content.component';
 import { MatIconModule } from '@angular/material/icon';
 import { FirebaseService } from '../../services/firebase.service';
 import { User } from '../../models/user.class';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-landing-page',
@@ -25,6 +26,7 @@ import { User } from '../../models/user.class';
 export class LandingPageComponent {
   firebaseService = inject(FirebaseService);
 
+  private userSubscription: Subscription = new Subscription;
   currentUser: User | null = new User();
 
   showContacts: boolean = false;
@@ -38,7 +40,7 @@ export class LandingPageComponent {
   menuDown: any = './../../../assets/images/icons/menu_down.svg';
 
   ngOnInit(): void {
-    this.firebaseService.currentUser$.subscribe((user) => {
+    this.userSubscription = this.firebaseService.currentUser$.subscribe((user) => {
       this.currentUser = user;
       console.log('Current User:', this.currentUser);
     });
@@ -48,5 +50,11 @@ export class LandingPageComponent {
 
   toggle() {
     this.isOpen = !this.isOpen; // Hier wird der Wert von isOpen umgeschaltet
+  }
+
+  ngOnDestroy(): void {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
   }
 }
