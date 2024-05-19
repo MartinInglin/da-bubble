@@ -61,7 +61,6 @@
             </tr>
             <tr>
               <td class="channel-add" (click)="firebaseService.createChannel('new channel', [{id: 'Q45E5n7Rv6SK2XAzYqk0TobAG222', avatar: 'assets/images/avatars/avatar_1.svg'}])"> <!--Hard coded function to create new channel. Must be moved and changed.-->
-
                 <img
                   src="./../../../assets/images/icons/add_circle.svg"
                   alt=""
@@ -70,6 +69,8 @@
               </td>
             </tr>
           </table>
+
+          <button *ngIf="currentUser" (click)="firebaseService.removeUserFromChannel('LD3ajDGP04KlAhp88zep', currentUser.id)">Remove channel</button>
 
           <!-- Strich -->
           <div class="channels-head">

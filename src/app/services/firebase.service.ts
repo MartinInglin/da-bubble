@@ -26,9 +26,6 @@ export class FirebaseService {
   public currentUser$: Observable<User | null> =
     this.currentUserSubject.asObservable();
 
-  private userSubscription: Subscription = new Subscription();
-  currentUser: User | null = new User();
-
   firestore = inject(Firestore);
   registrationService = inject(RegistrationService);
 
@@ -41,12 +38,6 @@ export class FirebaseService {
         console.error('Error parsing stored user data:', error);
       }
     }
-  }
-
-  ngOnInit(): void {
-    this.userSubscription = this.currentUser$.subscribe((user) => {
-      this.currentUser = user;
-    });
   }
 
   async createUser(id: string): Promise<void> {
@@ -103,10 +94,11 @@ export class FirebaseService {
     }
   }
 
-  async removeUserFromChannel(channelId: string): Promise<void> {
-    if (this.currentUser) {
-      const userId = this.currentUser.id;
-      const userDocRef = doc(this.firestore, 'users', userId);
+  async removeUserFromChannel(channelId: string, currentUserId:string): Promise<void> {
+    debugger;
+    if (currentUserId) {
+
+      const userDocRef = doc(this.firestore, 'users', currentUserId);
   
       const userDoc = await getDoc(userDocRef);
   
@@ -123,10 +115,31 @@ export class FirebaseService {
         }
       }
     }
+
+    const channelDocRef = doc(this.firestore, 'channels', channelId)
+
+    const channelDoc = await getDoc(channelDocRef)
+
+    if (channelDoc.exists()) {
+      const channelData = channelDoc.data();
+      const users = channelData['users'] || [];
+
+      const indexOfUser = this.getIndexOfUser(users, currentUserId)
+
+      if (indexOfUser !== -1) {
+        users.splice(indexOfUser, 1);
+
+        await updateDoc(channelDocRef, {users: users})
+      }
+    }
   }
   
   getIndexOfChannel(channels: any[], channelId: string): number {
     return channels.findIndex((channel: any) => channel.id === channelId);
+  }
+
+  getIndexOfUser(users: any[], userId: string): number {
+    return users.findIndex((user:any) => user.id === userId);
   }
 
   async getAllUsers(): Promise<User[]> {
@@ -137,11 +150,5 @@ export class FirebaseService {
       users.push(userData);
     });
     return users;
-  }
-
-  ngOnDestroy(): void {
-    if (this.userSubscription) {
-      this.userSubscription.unsubscribe();
-    }
   }
 }

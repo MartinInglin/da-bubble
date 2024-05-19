@@ -4,7 +4,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 
 import { HeaderComponent } from '../shared/header/header.component';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { ThreadComponent } from './thread/thread.component';
 import { MainContentComponent } from './main-content/main-content.component';
 import { MatIconModule } from '@angular/material/icon';
