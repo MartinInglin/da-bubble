@@ -1,13 +1,19 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, arrayUnion, collection, doc, getDoc, setDoc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, arrayUnion, collection, doc, getDoc, onSnapshot, setDoc, updateDoc } from '@angular/fire/firestore';
 import { Channel } from '../../models/channel.class';
 import { User } from '../../models/user.class';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChannelsService {
   firestore = inject(Firestore);
+
+  private channelSubject: BehaviorSubject<Channel | null> =
+  new BehaviorSubject<Channel | null>(null);
+public channelSubject$: Observable<Channel | null> =
+  this.channelSubject.asObservable();
 
   constructor() { }
 
@@ -86,5 +92,14 @@ export class ChannelsService {
 
   getIndexOfUser(users: any[], userId: string): number {
     return users.findIndex((user:any) => user.id === userId);
+  }
+
+  getDataChannel(idChannel:string) {
+    const unsub = onSnapshot(doc(this.firestore, 'channels', idChannel), (doc) => {
+      const channelData = doc.data() as Channel;
+      this.channelSubject.next(channelData);
+      console.log(channelData);
+      
+    });
   }
 }
