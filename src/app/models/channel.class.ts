@@ -1,7 +1,7 @@
 export class Channel {
   id: string;
   name: string;
-  users: string[];
+  users: object[];
   posts: [];
 
   constructor(obj?:any) {

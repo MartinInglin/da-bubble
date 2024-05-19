@@ -11,7 +11,7 @@ import {
 } from '@angular/fire/firestore';
 import { User } from '../models/user.class';
 import { RegistrationService } from './registration.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { Channel } from '../models/channel.class';
 
 @Injectable({
@@ -25,6 +25,9 @@ export class FirebaseService {
   public currentUser$: Observable<User | null> =
     this.currentUserSubject.asObservable();
 
+    private userSubscription: Subscription = new Subscription;
+    currentUser: User | null = new User();
+
   firestore = inject(Firestore);
   registrationService = inject(RegistrationService);
 
@@ -37,6 +40,12 @@ export class FirebaseService {
         console.error('Error parsing stored user data:', error);
       }
     }
+  }
+
+  ngOnInit(): void {
+    this.userSubscription = this.currentUser$.subscribe((user) => {
+      this.currentUser = user;
+    });  
   }
 
   async createUser(id: string): Promise<void> {
@@ -56,13 +65,12 @@ export class FirebaseService {
     const unsub = onSnapshot(doc(this.firestore, 'users', userId), (doc) => {
       const userData = doc.data() as User;
       this.currentUserSubject.next(userData);
-      console.log(userData);
 
       sessionStorage.setItem('currentUser', JSON.stringify(userData));
     });
   }
 
-  async createChannel(name: string, users: string[]): Promise<void> {
+  async createChannel(name: string, users: Partial<User>[]): Promise<void> {
     const channelRef = collection(this.firestore, 'channels');
     const newDocRef = doc(channelRef);
 
@@ -74,11 +82,11 @@ export class FirebaseService {
     };
 
     await setDoc(newDocRef, channelData);
-
-    this.updateUsersToChannel(channelData.id, channelData.name, users);
+    const userIds = users.map(user => user.id).filter((id): id is string => !!id);
+    this.addUsersToChannel(channelData.id, channelData.name, userIds);
   }
 
-  async updateUsersToChannel(channelId: String, name: String, userIds: string[]) {
+  async addUsersToChannel(channelId: string, name: string, userIds: string[]) {
     const channel = {
       id: channelId,
       name: name,
@@ -92,6 +100,16 @@ export class FirebaseService {
     }
   }
 
+  removeUserFromChannel(channelId:string) {
+    if (this.currentUser) {
+      const userId = this.currentUser.id
+      const userDocRef = doc(this.firestore,'users', userId);
+
+
+    }
+
+  }
+
   async getAllUsers(): Promise<User[]> {
     const users: User[] = [];
     const querySnapshot = await getDocs(collection(this.firestore, 'users'));
@@ -100,5 +118,11 @@ export class FirebaseService {
       users.push(userData);
     });
     return users;
+  }
+
+  ngOnDestroy(): void {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
   }
 }
