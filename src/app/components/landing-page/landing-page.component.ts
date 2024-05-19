@@ -34,20 +34,24 @@ export class LandingPageComponent implements OnInit {
   channelsService = inject(ChannelsService);
 
   private userSubscription: Subscription = new Subscription();
+  private allUsersSubscription: Subscription = new Subscription();
   currentUser: User | null = new User();
+  allUsers: User[] | null = [];
 
   showContacts: boolean = false;
   showChannels: boolean = true;
   isOpen: boolean = false;
   drawer: any;
   loading: boolean = true;
-  user: any = new User();
-  allUsers: any = [];
+  //user: any = new User();
+  //allUsers: any = [];
   users: any = [];
   menuUp: any = './../../../assets/images/icons/add_circle.svg';
   menuDown: any = './../../../assets/images/icons/menu_down.svg';
 
-  constructor() {}
+  constructor() {
+    this.usersService.getAllUsers();
+  }
 
   ngOnInit(): void {
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
@@ -55,15 +59,23 @@ export class LandingPageComponent implements OnInit {
       console.log('Current User:', this.currentUser);
     });
 
-    this.usersService
-      .getAllUsers()
-      .then((users) => {
-        this.allUsers = users;
-        console.log('All Users:', this.allUsers);
-      })
-      .catch((error) => {
-        console.error('Error fetching all users:', error);
-      });
+    this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe((allUsers) => {
+      this.allUsers = allUsers;
+      console.log('All Users:', this.allUsers);
+      
+    })
+
+
+
+    // this.usersService
+    //   .getAllUsers()
+    //   .then((users) => {
+    //     this.allUsers = users;
+    //     console.log('All Users:', this.allUsers);
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error fetching all users:', error);
+    //   });
   }
 
   showContactsSide() {}
@@ -75,6 +87,9 @@ export class LandingPageComponent implements OnInit {
   ngOnDestroy(): void {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
+    }
+    if (this.allUsersSubscription) {
+      this.allUsersSubscription.unsubscribe();
     }
   }
 }

@@ -25,6 +25,11 @@ export class UsersService {
   public currentUser$: Observable<User | null> =
     this.currentUserSubject.asObservable();
 
+  private allUsersSubject: BehaviorSubject<User[] | null> =
+    new BehaviorSubject<User[] | null>(null);
+  public allUsersSubject$: Observable<User[] | null> =
+    this.allUsersSubject.asObservable();
+
   firestore = inject(Firestore);
   registrationService = inject(RegistrationService);
 
@@ -61,13 +66,22 @@ export class UsersService {
     });
   }
 
-  async getAllUsers(): Promise<User[]> {
-    const users: User[] = [];
-    const querySnapshot = await getDocs(collection(this.firestore, 'users'));
-    querySnapshot.forEach((doc) => {
-      const userData = doc.data() as User;
-      users.push(userData);
+  getAllUsers(): void {
+    const collectionRef = collection(this.firestore, 'users');
+
+    onSnapshot(collectionRef, (snapshot) => {
+      const data = snapshot.docs.map((doc) => new User({ id: doc.id, ...doc.data() }));
+      this.allUsersSubject.next(data);
     });
-    return users;
   }
+
+  // async getAllUsers(): Promise<User[]> {
+  //   const users: User[] = [];
+  //   const querySnapshot = await getDocs(collection(this.firestore, 'users'));
+  //   querySnapshot.forEach((doc) => {
+  //     const userData = doc.data() as User;
+  //     users.push(userData);
+  //   });
+  //   return users;
+  // }
 }
