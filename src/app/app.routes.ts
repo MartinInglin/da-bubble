@@ -11,10 +11,9 @@ import { MembersComponent } from './components/members/members.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { ChooseAvatarComponent } from './components/choose-avatar/choose-avatar.component';
 import { LandingPageComponent } from './components/landing-page/landing-page.component';
-
+import { EditMessageComponent } from './components/edit-message/edit-message.component';
 
 import { AuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
-
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['/login']);
 
@@ -42,6 +41,7 @@ export const routes: Routes = [
   { path: 'newChannel', component: NewChannelComponent },
   { path: 'channelInfo', component: ChannelInfoComponent},
   { path: 'channelInfoEdit', component: ChannelInfoEditComponent},
-  { path: 'members', component: MembersComponent}
+  { path: 'members', component: MembersComponent},
+  { path: 'editMessage', component: EditMessageComponent}
 
 ];
