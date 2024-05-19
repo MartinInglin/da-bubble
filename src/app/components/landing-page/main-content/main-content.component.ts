@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, inject } from '@angular/core';
+import { ChannelsService } from '../../../services/firestore/channels.service';
 
 @Component({
   selector: 'app-main-content',
@@ -9,6 +10,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 
 })
 export class MainContentComponent {
+  channelsService = inject(ChannelsService);
 
   @Output() openThreadEvent = new EventEmitter<boolean>(); // Event to signal thread opening
 

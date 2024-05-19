@@ -1,4 +1,5 @@
 import { MinimalChannel } from "../interfaces/minimal-channel";
+import { MinimalUser } from "../interfaces/minimal-user";
 
 export class User {
   id: string;
@@ -6,7 +7,7 @@ export class User {
   email: string;
   avatar: string;
   channels: MinimalChannel[];
-  directMessages: any[];
+  directMessages: MinimalUser[];
 
   constructor(obj?: any) {
     this.id = obj?.id || '';
@@ -14,6 +15,7 @@ export class User {
     this.email = obj?.email || '';
     this.avatar = obj?.avatar || '';
     this.channels = obj?.channels?.map((channel: any) => ({ id: channel.id, name: channel.name })) || [];
-    this.directMessages = obj?.directMessages || [];
+    this.directMessages = obj?.directMessages?.map((user: any) => ({ id: user.id, avatar: user.avatar })) || [];
   }
 }
+

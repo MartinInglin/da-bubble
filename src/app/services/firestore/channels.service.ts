@@ -10,8 +10,10 @@ import {
   updateDoc,
 } from '@angular/fire/firestore';
 import { Channel } from '../../models/channel.class';
-import { User } from '../../models/user.class';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { MinimalUser } from '../../interfaces/minimal-user';
+import { Post } from '../../models/post.class';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +28,7 @@ export class ChannelsService {
 
   constructor() {}
 
-  async createChannel(name: string, users: Partial<User>[]): Promise<void> {
+  async createChannel(name: string, users: MinimalUser[]): Promise<void> {
     const channelRef = collection(this.firestore, 'channels');
     const newDocRef = doc(channelRef);
 
@@ -114,5 +116,26 @@ export class ChannelsService {
         console.log(channelData);
       }
     );
+  }
+
+  async savePost(channelId: string, message: string) {
+    const channelRef = doc(this.firestore, 'channels', channelId);
+
+    const post: Post = {
+      id: this.createId(),
+      message: message,
+      timestamp: this.getUTXTimestamp(),
+      reactions: [],
+    };
+
+    await updateDoc(channelRef, { posts: post });
+  }
+
+  createId(): string {
+    return uuidv4();
+  }
+
+  getUTXTimestamp(): number {
+    return Date.now();
   }
 }
