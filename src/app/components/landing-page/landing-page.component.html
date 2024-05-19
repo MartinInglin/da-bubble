@@ -53,7 +53,7 @@
 
           <table class="channels" *ngIf="showChannels">
             <tr *ngFor="let channel of currentUser?.channels">
-              <td (click)="channelsService.getDataChannel(channel.id)">
+              <td (click)="channelsService.changePropertiesChannel(channel.id, { name: 'New Channel Name' })">
                 <span># {{ channel.name }}</span>
               </td>
             </tr>

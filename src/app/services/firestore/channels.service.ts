@@ -28,7 +28,11 @@ export class ChannelsService {
 
   constructor() {}
 
-  async createChannel(name: string, description: string, users: MinimalUser[]): Promise<void> {
+  async createChannel(
+    name: string,
+    description: string,
+    users: MinimalUser[]
+  ): Promise<void> {
     const channelRef = collection(this.firestore, 'channels');
     const newDocRef = doc(channelRef);
 
@@ -138,5 +142,16 @@ export class ChannelsService {
 
   getUTXTimestamp(): number {
     return Date.now();
+  }
+
+  async changePropertiesChannel(channelId: string, changes: Partial<Channel>): Promise<void> {
+    const docRef = doc(this.firestore, 'channels', channelId);
+
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      await updateDoc(docRef, changes);
+    } else {
+      console.log('No such document!');
+    }
   }
 }
