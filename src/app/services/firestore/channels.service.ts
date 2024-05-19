@@ -5,15 +5,18 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
   onSnapshot,
   setDoc,
   updateDoc,
+  writeBatch,
 } from '@angular/fire/firestore';
 import { Channel } from '../../models/channel.class';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { MinimalUser } from '../../interfaces/minimal-user';
 import { Post } from '../../models/post.class';
 import { v4 as uuidv4 } from 'uuid';
+import { User } from '../../models/user.class';
 
 @Injectable({
   providedIn: 'root',
@@ -123,6 +126,50 @@ export class ChannelsService {
     );
   }
 
+  async changePropertiesChannel(channelId: string, changes: Partial<Channel>): Promise<void> {
+    const docRef = doc(this.firestore, 'channels', channelId);
+
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      await updateDoc(docRef, changes);
+    } else {
+      console.log('No such document!');
+    }
+
+    if (changes.name) {
+      this.changeNameChannelOnUsers(changes.name, channelId)
+    }
+  }
+
+  async changeNameChannelOnUsers(newNameChannel: string, channelId: string): Promise<void> {
+    const collectionRef = collection(this.firestore, 'users');
+    const querySnapshot = await getDocs(collectionRef);
+
+    const batch = writeBatch(this.firestore);
+
+    querySnapshot.forEach((docSnapshot) => {
+      const userData = docSnapshot.data() as User;
+      const channels = userData.channels;
+
+      let updated = false;
+
+      const updatedChannels = channels.map((channel) => {
+        if (channel.id === channelId) {
+          updated = true;
+          return { ...channel, name: newNameChannel };
+        }
+        return channel;
+      });
+
+      if (updated) {
+        const userDocRef = doc(this.firestore, 'users', docSnapshot.id);
+        batch.update(userDocRef, { channels: updatedChannels });
+      }
+    });
+
+    await batch.commit();
+  }
+
   async savePost(channelId: string, message: string) {
     const channelRef = doc(this.firestore, 'channels', channelId);
 
@@ -142,16 +189,5 @@ export class ChannelsService {
 
   getUTXTimestamp(): number {
     return Date.now();
-  }
-
-  async changePropertiesChannel(channelId: string, changes: Partial<Channel>): Promise<void> {
-    const docRef = doc(this.firestore, 'channels', channelId);
-
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      await updateDoc(docRef, changes);
-    } else {
-      console.log('No such document!');
-    }
   }
 }
