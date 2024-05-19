@@ -28,13 +28,14 @@ export class ChannelsService {
 
   constructor() {}
 
-  async createChannel(name: string, users: MinimalUser[]): Promise<void> {
+  async createChannel(name: string, description: string, users: MinimalUser[]): Promise<void> {
     const channelRef = collection(this.firestore, 'channels');
     const newDocRef = doc(channelRef);
 
     const channelData: Channel = {
       id: newDocRef.id,
       name: name,
+      description: description,
       users: users,
       posts: [],
     };
