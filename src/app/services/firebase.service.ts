@@ -8,6 +8,7 @@ import {
   collection,
   updateDoc,
   arrayUnion,
+  getDoc,
 } from '@angular/fire/firestore';
 import { User } from '../models/user.class';
 import { RegistrationService } from './registration.service';
@@ -25,8 +26,8 @@ export class FirebaseService {
   public currentUser$: Observable<User | null> =
     this.currentUserSubject.asObservable();
 
-    private userSubscription: Subscription = new Subscription;
-    currentUser: User | null = new User();
+  private userSubscription: Subscription = new Subscription();
+  currentUser: User | null = new User();
 
   firestore = inject(Firestore);
   registrationService = inject(RegistrationService);
@@ -45,7 +46,7 @@ export class FirebaseService {
   ngOnInit(): void {
     this.userSubscription = this.currentUser$.subscribe((user) => {
       this.currentUser = user;
-    });  
+    });
   }
 
   async createUser(id: string): Promise<void> {
@@ -82,7 +83,9 @@ export class FirebaseService {
     };
 
     await setDoc(newDocRef, channelData);
-    const userIds = users.map(user => user.id).filter((id): id is string => !!id);
+    const userIds = users
+      .map((user) => user.id)
+      .filter((id): id is string => !!id);
     this.addUsersToChannel(channelData.id, channelData.name, userIds);
   }
 
@@ -93,21 +96,37 @@ export class FirebaseService {
     };
 
     for (const userId of userIds) {
-      const userDocRef = doc(this.firestore,'users', userId);
+      const userDocRef = doc(this.firestore, 'users', userId);
       await updateDoc(userDocRef, {
-        channels: arrayUnion(channel)
+        channels: arrayUnion(channel),
       });
     }
   }
 
-  removeUserFromChannel(channelId:string) {
+  async removeUserFromChannel(channelId: string): Promise<void> {
     if (this.currentUser) {
-      const userId = this.currentUser.id
-      const userDocRef = doc(this.firestore,'users', userId);
-
-
+      const userId = this.currentUser.id;
+      const userDocRef = doc(this.firestore, 'users', userId);
+  
+      const userDoc = await getDoc(userDocRef);
+  
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        const channels = userData['channels'] || [];
+  
+        const indexOfChannel = this.getIndexOfChannel(channels, channelId);
+  
+        if (indexOfChannel !== -1) {
+          channels.splice(indexOfChannel, 1);
+  
+          await updateDoc(userDocRef, { channels: channels });
+        }
+      }
     }
-
+  }
+  
+  getIndexOfChannel(channels: any[], channelId: string): number {
+    return channels.findIndex((channel: any) => channel.id === channelId);
   }
 
   async getAllUsers(): Promise<User[]> {
