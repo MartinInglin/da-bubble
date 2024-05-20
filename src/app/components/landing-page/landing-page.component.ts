@@ -35,6 +35,7 @@ export class LandingPageComponent implements OnInit {
 
   private userSubscription: Subscription = new Subscription();
   private allUsersSubscription: Subscription = new Subscription();
+  
   currentUser: User = new User();
   allUsers: User[] = [];
 

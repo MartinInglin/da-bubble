@@ -186,6 +186,7 @@ export class ChannelsService {
       message: message,
       timestamp: this.getUTXTimestamp(),
       reactions: [],
+      edited: false
     };
 
     await updateDoc(channelRef, { posts: arrayUnion(post) });
@@ -197,5 +198,38 @@ export class ChannelsService {
 
   getUTXTimestamp(): number {
     return Date.now();
+  }
+
+  async editPost(channelId: string, postIndex: number, newMessage: string): Promise<void> {
+    try {
+      const channelRef = doc(this.firestore, 'channels', channelId);
+
+      const channelDoc = await getDoc(channelRef);
+      if (!channelDoc.exists()) {
+        console.error('Thread does not exist');
+        return;
+      }
+
+      const threadData = channelDoc.data();
+      const posts: Post[] = threadData['posts'];
+
+      if (postIndex >= posts.length || postIndex < 0) {
+        console.error('Invalid post index');
+        return;
+      }
+
+      posts[postIndex] = {
+        ...posts[postIndex],
+        message: newMessage,
+        timestamp: this.getUTXTimestamp(),
+        edited: true,
+      };
+
+      await updateDoc(channelRef, { posts });
+
+      console.log('Post successfully updated!');
+    } catch (error) {
+      console.error('Error updating post: ', error);
+    }
   }
 }

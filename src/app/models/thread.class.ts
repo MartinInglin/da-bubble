@@ -1,13 +1,13 @@
-import { Post } from "./post.class";
+import { Post } from './post.class';
 
 export class Thread {
-    id: string;
-    name: string;
-    posts: Post[];
+  id: string;
+  name: string;
+  posts: Post[];
 
-    constructor(obj?: any) {
-        this.id = obj?.id || '';
-        this.name = obj?.name || '';
-        this.posts = obj?.posts?.map((post: any) => new Post(post)) || [];
-      }
+  constructor(obj?: any) {
+    this.id = obj?.id || '';
+    this.name = obj?.name || '';
+    this.posts = obj?.posts?.map((post: any) => new Post(post)) || [];
+  }
 }
