@@ -52,12 +52,12 @@
           </div>
 
           <table class="channels" *ngIf="showChannels">
-            <tr *ngFor="let channel of currentUser?.channels">
+            <tr *ngFor="let channel of currentUser.channels">
               <td (click)="channelsService.getDataChannel(channel.id)">
                 <span># {{ channel.name }}</span>
               </td>
             </tr>
-            <tr>
+            <tr (click)="channelsService.createChannel('New channel', '', [{id: 'TcAat3YkSidLkpz5nxJdGO6IGLl1', avatar: 'assets/images/avatars/avatar_4.svg'}])">
               <td class="channel-add">
                 <img
                   src="./../../../assets/images/icons/add_circle.svg"

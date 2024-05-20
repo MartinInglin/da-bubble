@@ -31,6 +31,17 @@ export class ChannelsService {
 
   constructor() {}
 
+  getDataChannel(idChannel: string) {
+    const unsub = onSnapshot(
+      doc(this.firestore, 'channels', idChannel),
+      (doc) => {
+        const channelData = doc.data() as Channel;
+        this.channelSubject.next(channelData);
+        console.log(channelData);
+      }
+    );
+  }
+
   async createChannel(
     name: string,
     description: string,
@@ -115,18 +126,10 @@ export class ChannelsService {
     return users.findIndex((user: any) => user.id === userId);
   }
 
-  getDataChannel(idChannel: string) {
-    const unsub = onSnapshot(
-      doc(this.firestore, 'channels', idChannel),
-      (doc) => {
-        const channelData = doc.data() as Channel;
-        this.channelSubject.next(channelData);
-        console.log(channelData);
-      }
-    );
-  }
-
-  async changePropertiesChannel(channelId: string, changes: Partial<Channel>): Promise<void> {
+  async changePropertiesChannel(
+    channelId: string,
+    changes: Partial<Channel>
+  ): Promise<void> {
     const docRef = doc(this.firestore, 'channels', channelId);
 
     const docSnap = await getDoc(docRef);
@@ -137,11 +140,14 @@ export class ChannelsService {
     }
 
     if (changes.name) {
-      this.changeNameChannelOnUsers(changes.name, channelId)
+      this.changeNameChannelOnUsers(changes.name, channelId);
     }
   }
 
-  async changeNameChannelOnUsers(newNameChannel: string, channelId: string): Promise<void> {
+  async changeNameChannelOnUsers(
+    newNameChannel: string,
+    channelId: string
+  ): Promise<void> {
     const collectionRef = collection(this.firestore, 'users');
     const querySnapshot = await getDocs(collectionRef);
 
@@ -170,17 +176,19 @@ export class ChannelsService {
     await batch.commit();
   }
 
-  async savePost(channelId: string, message: string) {
+  async savePost(channelId: string, message: string, currentUser: User) {
     const channelRef = doc(this.firestore, 'channels', channelId);
 
     const post: Post = {
       id: this.createId(),
+      name: currentUser.name,
+      avatar: currentUser.avatar,
       message: message,
       timestamp: this.getUTXTimestamp(),
       reactions: [],
     };
 
-    await updateDoc(channelRef, { posts: post });
+    await updateDoc(channelRef, { posts: arrayUnion(post) });
   }
 
   createId(): string {

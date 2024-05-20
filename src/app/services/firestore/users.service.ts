@@ -4,7 +4,6 @@ import {
   doc,
   onSnapshot,
   setDoc,
-  getDocs,
   collection,
 } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
@@ -52,6 +51,7 @@ export class UsersService {
       name: userData.name,
       email: userData.email,
       avatar: userData.avatar,
+      channels: [],
     };
 
     await setDoc(doc(this.firestore, 'users', id), user);

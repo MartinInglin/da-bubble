@@ -35,8 +35,8 @@ export class LandingPageComponent implements OnInit {
 
   private userSubscription: Subscription = new Subscription();
   private allUsersSubscription: Subscription = new Subscription();
-  currentUser: User | null = new User();
-  allUsers: User[] | null = [];
+  currentUser: User = new User();
+  allUsers: User[] = [];
 
   showContacts: boolean = false;
   showChannels: boolean = true;
@@ -55,12 +55,12 @@ export class LandingPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
-      this.currentUser = user;
+      this.currentUser = user ?? new User;
       console.log('Current User:', this.currentUser);
     });
 
     this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe((allUsers) => {
-      this.allUsers = allUsers;
+      this.allUsers = allUsers ?? [];
       console.log('All Users:', this.allUsers);
       
     })

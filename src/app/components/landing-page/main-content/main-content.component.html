@@ -40,7 +40,7 @@
 
                     <div class="message-details">
                         <!-- Message actions and time details -->
-                        <a href="">Antworten</a>
+                        <a routerLink="/landingPage" (click)="threadsService.createThread(selectedChannel, 0)">Antworten</a>
                         <span>Letzte Antwort 14.56</span>
                     </div>
                 </div>
@@ -63,7 +63,7 @@
                     <img src="./../../../../assets/images/icons/link_icon.svg" alt="">
                 </div>
 
-                <img src="./../../../../assets/images/icons/send_icon.svg" alt="" (click)="channelsService.savePost('87WCRmaywIa7EzfzS355', 'The Message')">
+                <img src="./../../../../assets/images/icons/send_icon.svg" alt="" (click)="channelsService.savePost('Y8wiky5VAP7IuEwia10Y', 'The Message', currentUser)">
 
             </div>
         </div>

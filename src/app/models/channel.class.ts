@@ -13,8 +13,8 @@ export class Channel {
     this.name = obj?.name || '';
     this.description = obj?.description || '';
     this.users =
-      obj?.users?.map((user: any) => ({ id: user.id, avatar: user.avatar })) ||
+      obj?.users?.map((user: MinimalUser) => ({ id: user.id, avatar: user.avatar })) ||
       [];
-    this.posts = obj?.posts?.map((post: any) => new Post(post)) || [];
+    this.posts = obj?.posts?.map((post: Post) => new Post(post)) || [];
   }
 }
