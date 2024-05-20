@@ -17,6 +17,7 @@ import { ChannelInfoEditComponent } from './components/channel-info/channel-info
 import { MembersComponent } from './components/members/members.component';
 import { EditMessageComponent } from './components/edit-message/edit-message.component';
 import { UserMenuComponent } from './components/user-menu/user-menu.component';
+import { CurrentUserComponent } from './components/current-user/current-user.component';
 
 
 
@@ -38,6 +39,7 @@ import { UserMenuComponent } from './components/user-menu/user-menu.component';
     ChannelInfoEditComponent,
     EditMessageComponent,
     UserMenuComponent,
+    CurrentUserComponent,
     LandingPageComponent
   ],
 

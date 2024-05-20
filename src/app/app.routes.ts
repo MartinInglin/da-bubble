@@ -13,8 +13,10 @@ import { ChooseAvatarComponent } from './components/choose-avatar/choose-avatar.
 import { LandingPageComponent } from './components/landing-page/landing-page.component';
 import { EditMessageComponent } from './components/edit-message/edit-message.component';
 import { UserMenuComponent } from './components/user-menu/user-menu.component';
+import { CurrentUserComponent } from './components/current-user/current-user.component';
 
 import { AuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
+
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['/login']);
 
@@ -44,6 +46,7 @@ export const routes: Routes = [
   { path: 'channelInfoEdit', component: ChannelInfoEditComponent},
   { path: 'members', component: MembersComponent},
   { path: 'editMessage', component: EditMessageComponent},
-  { path: 'userMenu', component: UserMenuComponent}
+  { path: 'userMenu', component: UserMenuComponent},
+  { path: 'currentUser', component: CurrentUserComponent}
 
 ];
