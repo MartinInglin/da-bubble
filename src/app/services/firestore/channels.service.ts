@@ -62,10 +62,10 @@ export class ChannelsService {
     const userIds = users
       .map((user) => user.id)
       .filter((id): id is string => !!id);
-    this.addUsersToChannel(channelData.id, channelData.name, userIds);
+    this.addChannelToUsers(channelData.id, channelData.name, userIds);
   }
 
-  async addUsersToChannel(channelId: string, name: string, userIds: string[]) {
+  async addChannelToUsers(channelId: string, name: string, userIds: string[]) {
     const channel = {
       id: channelId,
       name: name,
@@ -210,8 +210,8 @@ export class ChannelsService {
         return;
       }
 
-      const threadData = channelDoc.data();
-      const posts: Post[] = threadData['posts'];
+      const channelData = channelDoc.data();
+      const posts: Post[] = channelData['posts'];
 
       if (postIndex >= posts.length || postIndex < 0) {
         console.error('Invalid post index');

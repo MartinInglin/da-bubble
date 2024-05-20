@@ -57,7 +57,7 @@
                 <span># {{ channel.name }}</span>
               </td>
             </tr>
-            <tr (click)="channelsService.createChannel('New channel', '', [{id: 'TcAat3YkSidLkpz5nxJdGO6IGLl1', avatar: 'assets/images/avatars/avatar_4.svg'}])">
+            <tr (click)="channelsService.createChannel('New channel', '', [{id: 'TcAat3YkSidLkpz5nxJdGO6IGLl1', avatar: 'assets/images/avatars/avatar_4.svg', name: ''}])">
               <td class="channel-add">
                 <img
                   src="./../../../assets/images/icons/add_circle.svg"
@@ -90,7 +90,7 @@
 
           <table class="contacts" *ngIf="showContacts">
             <tr *ngFor="let user of allUsers">
-              <td>
+              <td (click)="directMessagesService.getDataDirectMessage('c1mygyDNsVRPpp1ASs7E2IsceOv1', currentUser)">
                 <img [src]="user.avatar" alt="Profilbild" />
                 <span>{{ user.name }}</span>
               </td>

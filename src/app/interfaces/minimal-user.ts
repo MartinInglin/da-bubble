@@ -1,4 +1,5 @@
 export interface MinimalUser {
     id: string,
-    avatar: string
+    avatar: string,
+    name: string,
 }

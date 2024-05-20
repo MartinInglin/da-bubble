@@ -11,6 +11,7 @@ import { User } from '../../models/user.class';
 import { Subscription } from 'rxjs';
 import { UsersService } from '../../services/firestore/users.service';
 import { ChannelsService } from '../../services/firestore/channels.service';
+import { DirectMessagesService } from '../../services/firestore/direct-messages.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -32,6 +33,7 @@ import { ChannelsService } from '../../services/firestore/channels.service';
 export class LandingPageComponent implements OnInit {
   usersService = inject(UsersService);
   channelsService = inject(ChannelsService);
+  directMessagesService = inject(DirectMessagesService)
 
   private userSubscription: Subscription = new Subscription();
   private allUsersSubscription: Subscription = new Subscription();

@@ -33,43 +33,75 @@ export class AuthService {
   signUp(): Promise<void> {
     const userData = this.registrationService.getUserData();
 
-    return createUserWithEmailAndPassword(
-      this.auth,
-      userData.email,
-      userData.password
-    )
-      .then((userCredential) => {
-        if (userCredential.user) {
-          return sendEmailVerification(userCredential.user)
-            .then(() => {
-              const id = userCredential.user.uid;
-              return this.usersService.createUser(id);
-            })
-            .then(() => {
+    return (
+      createUserWithEmailAndPassword(
+        this.auth,
+        userData.email,
+        userData.password
+      )
+        //exchange after testing from here to Line 70
+        .then((userCredential) => {
+          if (userCredential.user) {
+            const id = userCredential.user.uid;
+            return this.usersService.createUser(id).then(() => {
               this.router.navigate(['/login']);
               this.snackbarService.openSnackBar(
-                'Bestätigungs-E-Mail gesendet. Bitte überprüfe deine Mailbox.',
-                'Schliessen'
+                'User successfully created. Please log in.',
+                'Close'
               );
             });
-        } else {
-          throw new Error('No user credential found');
-        }
-      })
-      .catch((error) => {
-        console.error('Error during sign up:', error);
-        if (error.code === 'auth/email-already-in-use') {
-          this.snackbarService.openSnackBar(
-            'Diese Mailadresse besteht bereits. Bitte melde dich an.',
-            'Schliessen'
-          );
-        } else {
-          this.snackbarService.openSnackBar(
-            'Error during sign up: ' + error.message,
-            'Close'
-          );
-        }
-      });
+          } else {
+            throw new Error('No user credential found');
+          }
+        })
+        .catch((error) => {
+          console.error('Error during sign up:', error);
+          if (error.code === 'auth/email-already-in-use') {
+            this.snackbarService.openSnackBar(
+              'This email address is already in use. Please log in.',
+              'Close'
+            );
+          } else {
+            this.snackbarService.openSnackBar(
+              'Error during sign up: ' + error.message,
+              'Close'
+            );
+          }
+        })
+    );
+
+    // .then((userCredential) => {
+    //   if (userCredential.user) {
+    //     return sendEmailVerification(userCredential.user)
+    //       .then(() => {
+    //         const id = userCredential.user.uid;
+    //         return this.usersService.createUser(id);
+    //       })
+    //       .then(() => {
+    //         this.router.navigate(['/login']);
+    //         this.snackbarService.openSnackBar(
+    //           'Bestätigungs-E-Mail gesendet. Bitte überprüfe deine Mailbox.',
+    //           'Schliessen'
+    //         );
+    //       });
+    //   } else {
+    //     throw new Error('No user credential found');
+    //   }
+    // })
+    // .catch((error) => {
+    //   console.error('Error during sign up:', error);
+    //   if (error.code === 'auth/email-already-in-use') {
+    //     this.snackbarService.openSnackBar(
+    //       'Diese Mailadresse besteht bereits. Bitte melde dich an.',
+    //       'Schliessen'
+    //     );
+    //   } else {
+    //     this.snackbarService.openSnackBar(
+    //       'Error during sign up: ' + error.message,
+    //       'Close'
+    //     );
+    //   }
+    // });
   }
 
   signIn(email: string, password: string): Promise<void> {
@@ -79,16 +111,20 @@ export class AuthService {
           const userSignedIn = userCredential.user;
           const userId = userCredential.user.uid;
 
-          if (userSignedIn.emailVerified) {
-            this.usersService.getCurrentUser(userId);
-            this.router.navigate(['landingPage']);
-          } else {
-            this.snackbarService.openSnackBar(
-              'Bitte verifiziere deine E-Mail-Adresse, bevor du dich anmeldest.',
-              'Schliessen'
-            );
-            this.auth.signOut();
-          }
+          //exchange after testing from here to line 117
+          this.usersService.getCurrentUser(userId);
+          this.router.navigate(['landingPage']);
+
+          // if (userSignedIn.emailVerified) {
+          //   this.usersService.getCurrentUser(userId);
+          //   this.router.navigate(['landingPage']);
+          // } else {
+          //   this.snackbarService.openSnackBar(
+          //     'Bitte verifiziere deine E-Mail-Adresse, bevor du dich anmeldest.',
+          //     'Schliessen'
+          //   );
+          //   this.auth.signOut();
+          // }
         })
         .catch((error) => {
           this.snackbarService.openSnackBar(
