@@ -1,0 +1,30 @@
+<section>
+    <mat-card>
+        <mat-card-content>
+            <div class="detail-view-header">
+                <p>Profil</p>
+                <button mat-icon-button>
+                    <img src="./../../../assets/images/icons/close.svg">
+                </button>
+            </div>
+            <div class="profile-container">
+                <img src="../../../assets/images/avatars/avatar_3.svg">
+            </div>
+            <div class="name-container">
+                <span class="edit-container">
+                    <p>Frederik Beck</p>
+                    <button>Bearbeiten</button>
+                </span>
+                <span class="status">
+                    <div></div>Aktiv
+                </span>
+            </div>
+            <div class="mail-container">
+                <span><img src="../../../assets/images/icons/mail_black.svg">
+                    <p>E-Mail-Adresse</p>
+                </span>
+                <a href="mailto:fred.beck@email.com" [innerHTML]="'fred.beck@email.com'"></a>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</section>

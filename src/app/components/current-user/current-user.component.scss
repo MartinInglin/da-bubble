@@ -1,0 +1,178 @@
+@import "./../../../styles.scss";
+
+section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+    background-color: rgba($color: #000000, $alpha: 0.04);
+}
+
+mat-card {
+    width: 500px;
+    height: fit-content;
+    border-radius: 30px;
+    padding: 40px;
+    font-family: 'Nunito';
+}
+
+mat-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 45px;
+}
+
+.detail-view-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+
+    p {
+        font-size: 24px;
+        font-weight: 700px;
+        line-height: 32.74px;
+        margin: 0;
+    }
+
+    button {
+        height: 40px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: scale 75ms ease-in-out;
+        
+        &:hover {
+            background-color: $background;
+            scale: 1.05;
+        }
+
+        img {
+            height: 13.5px;
+            width: 13.5px;
+        }
+    }
+
+}
+
+.profile-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+        height: 200px;
+        width: 200px;
+    }
+}
+
+.name-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    .edit-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        p {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 43.65px;
+        }
+
+        button {
+            border: none;
+            background-color: white;
+            color: $purple3;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 24.55px;
+            transition: scale 75ms ease-in-out;
+
+            &:hover {
+                cursor: pointer;
+                scale: 1.05;
+            }
+        }
+    }
+
+    .status {
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 27.28px;
+        color: $online-green;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+
+        div {
+            background-color: $online-green;
+            height: 16px;
+            width: 16px;
+            border-radius: 100%;
+        }
+    }
+}
+
+.mail-container {
+    display: flex;
+    gap: 15px;
+    flex-direction: column;
+
+    span {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+
+        p {
+            margin: 0;
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 27.28px;
+        }
+    }
+
+    a {
+        text-decoration: none;
+        color: #1381FF;
+        padding-left: 50px;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 24.55px;
+    }
+}
+
+.message-button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: $purple1;
+        width: 164px;
+        height: 49px;
+        border-radius: 50px;
+        gap: 10px;
+        padding: 12px 25px 12px 25px;
+        color: white;
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 24.55px;
+        border: none;
+
+        &:hover {
+            opacity: 0.5;
+            transition: 75ms ease-in-out;
+            cursor: pointer;
+          }
+    }
+}
