@@ -1,5 +1,5 @@
 <section>
-    <mat-card>
+    <mat-card *ngIf="currentUser">
         <mat-card-content>
             <div class="detail-view-header">
                 <p>Profil</p>
@@ -8,11 +8,11 @@
                 </button>
             </div>
             <div class="profile-container">
-                <img src="../../../assets/images/avatars/avatar_3.svg">
+                <img [src]="currentUser.avatar" alt="User Avatar">
             </div>
             <div class="name-container">
                 <span class="edit-container">
-                    <p>Frederik Beck</p>
+                    <p>{{ currentUser.name }}</p>
                     <button>Bearbeiten</button>
                 </span>
                 <span class="status">
@@ -23,7 +23,7 @@
                 <span><img src="../../../assets/images/icons/mail_black.svg">
                     <p>E-Mail-Adresse</p>
                 </span>
-                <a href="mailto:fred.beck@email.com" [innerHTML]="'fred.beck@email.com'"></a>
+                <a [href]="'mailto:' + currentUser.email" [innerHTML]="currentUser.email"></a>
             </div>
         </mat-card-content>
     </mat-card>
