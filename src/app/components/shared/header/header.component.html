@@ -29,8 +29,8 @@
   <button routerLink="/register">Registrieren</button> -->
 
   <div class="user">
-    <span>{{ currentUser.id }}</span>
-    <img src="./../../../assets/images/icons/Profile bild.svg" alt="USER" />
+    <span>{{ currentUser.name }}</span>
+    <img (click)="openDialog()" [src]="currentUser.avatar" alt="USER" />
   </div>
 </header>
 

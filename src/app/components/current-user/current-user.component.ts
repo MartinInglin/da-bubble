@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { UserMenuComponent } from '../user-menu/user-menu.component';
 import { UsersService } from '../../services/firestore/users.service';
 import { User } from '../../models/user.class';
 import { Subscription } from 'rxjs';
@@ -15,6 +16,7 @@ import { Subscription } from 'rxjs';
     MatCardModule,
     MatIconModule,
     MatButtonModule,
+    UserMenuComponent
   ],
   templateUrl: './current-user.component.html',
   styleUrls: ['./current-user.component.scss']

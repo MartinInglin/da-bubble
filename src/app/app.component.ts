@@ -40,7 +40,7 @@ import { CurrentUserComponent } from './components/current-user/current-user.com
     EditMessageComponent,
     UserMenuComponent,
     CurrentUserComponent,
-    LandingPageComponent
+    LandingPageComponent,
   ],
 
   templateUrl: './app.component.html',
