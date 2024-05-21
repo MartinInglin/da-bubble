@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
-
+import { Channel } from '../../models/channel.class';
 import { HeaderComponent } from '../shared/header/header.component';
 import { ThreadComponent } from './thread/thread.component';
 import { MainContentComponent } from './main-content/main-content.component';
@@ -25,6 +25,7 @@ import { DirectMessagesService } from '../../services/firestore/direct-messages.
     MainContentComponent,
     MatIconModule,
     HeaderComponent,
+  
   ],
 
   templateUrl: './landing-page.component.html',
@@ -37,23 +38,28 @@ export class LandingPageComponent implements OnInit {
 
   private userSubscription: Subscription = new Subscription();
   private allUsersSubscription: Subscription = new Subscription();
+  private allChannelsSubscription: Subscription = new Subscription();
+
   
   currentUser: User = new User();
   allUsers: User[] = [];
+  allChannels: Channel[] = [];
 
   showContacts: boolean = false;
   showChannels: boolean = true;
   isOpen: boolean = false;
   drawer: any;
   loading: boolean = true;
-  //user: any = new User();
-  //allUsers: any = [];
+
   users: any = [];
+  menuOpen: string ='Workspace-Menü öffnen';
+  menuClosed: string ='Workspace-Menü schliessen';
   menuUp: any = './../../../assets/images/icons/add_circle.svg';
   menuDown: any = './../../../assets/images/icons/menu_down.svg';
 
   constructor() {
     this.usersService.getAllUsers();
+    this.channelsService.getAllChannels(); 
   }
 
   ngOnInit(): void {
@@ -66,25 +72,27 @@ export class LandingPageComponent implements OnInit {
       this.allUsers = allUsers ?? [];
       console.log('All Users:', this.allUsers);
       
-    })
+    });
+
+    this.allChannelsSubscription = this.channelsService.channelSubject$.subscribe((channel) => {
+      if (channel) {
+        // Überprüfe, ob der empfangene Kanal nicht null ist
+        this.allChannels.push(channel); // Füge den Kanal zum Array hinzu
+        console.log('All Channels:', this.allChannels);
+      }
+    });
 
 
-
-    // this.usersService
-    //   .getAllUsers()
-    //   .then((users) => {
-    //     this.allUsers = users;
-    //     console.log('All Users:', this.allUsers);
-    //   })
-    //   .catch((error) => {
-    //     console.error('Error fetching all users:', error);
-    //   });
   }
 
   showContactsSide() {}
 
-  toggle() {
-    this.isOpen = !this.isOpen; // Hier wird der Wert von isOpen umgeschaltet
+  toggle(drawer: any): void {
+    this.isOpen = !this.isOpen;
+    console.log('Menu status toggled:', this.isOpen);
+    if (drawer) {
+      drawer.toggle(); // Ensure this method exists and works as expected
+    }
   }
 
   ngOnDestroy(): void {
@@ -93,6 +101,9 @@ export class LandingPageComponent implements OnInit {
     }
     if (this.allUsersSubscription) {
       this.allUsersSubscription.unsubscribe();
+    }
+    if (this.allChannelsSubscription) {
+      this.allChannelsSubscription.unsubscribe();
     }
   }
 }

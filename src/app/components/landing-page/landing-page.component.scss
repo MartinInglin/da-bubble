@@ -90,15 +90,22 @@ mat-drawer-container {
     max-height: 50px;
     gap: 15px;
     width: 347px;
-    border-radius: 0 0 10px 10px;
+    border-radius: 0 0 20px 20px;
+    border: none;
     box-shadow: -3px 0px 8px rgb(0, 0, 0);
     font-size: 20px;
-    gap: 10px;
+    // gap: 10px;
     img {
       transform: rotate(90deg);
       margin-left: 10px;
     }
   }
+}
+.menu-btn-content{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
 }
 
 /* Width Main content */
@@ -115,6 +122,7 @@ mat-drawer-container {
   height: 40px;
   padding: 10px;
   margin-bottom: 10px;
+ 
 }
 .channel-head-first {
   display: flex;
@@ -124,10 +132,18 @@ mat-drawer-container {
   gap: 35px;
   width: fit-content;
   cursor: pointer;
-  &:hover {
-    color: #535af1;
-    img {
-      background-color: #535af1;
+  &:hover{
+    .drop-down-img,
+    .arrow-drop-down{
+      content: url("./../../../assets/images/icons/arrow_drop_down_blue.svg");
+      transform: scale(1.1);
+    }
+    .contact-list-account-img{
+      content: url("./../../../assets/images/icons/account_circle_blue.svg");
+      height: 27px;
+    }
+    .contacts-list{
+      color: blue;
     }
   }
 }
@@ -148,6 +164,45 @@ mat-drawer-container {
   span {
     font-size: 20px;
     font-weight: 700;
+  }
+  &:hover {
+    img {
+      content: url("./../../../assets/images/icons/workspace_blue.svg");
+
+    }
+    color: #535af1;
+
+  }
+}
+.contacts-list {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  width: fit-content;
+  justify-content: center;
+  height: 40px;
+  width: fit-content;
+  gap: 15px;
+  img {
+    height: 27px;
+  }
+  span {
+    font-size: 20px;
+    font-weight: 700;
+  }
+  &:hover {
+    img {
+      content: url("./../../../assets/images/icons/account_circle_blue.svg");
+      
+    }
+    color: blue;
+  }
+}
+.channel-add {
+  &:hover {
+    img {
+      content: url("./../../../assets/images/icons/add_circle_blue.svg");
+    }
   }
 }
 
@@ -171,11 +226,15 @@ mat-drawer-container {
     align-items: center;
     gap: 10px;
     cursor: pointer;
-/* Hover effect for table data in channels and contacts */
+    /* Hover effect for table data in channels and contacts */
     &:hover {
       color: #535af1;
       transform: scale(1.05);
     }
+  }
+  .span-hashtag{
+    font-weight: 700;
+    font-size: 21px;
   }
 }
 .contacts {
@@ -210,6 +269,7 @@ mat-drawer-container {
       border-radius: 10px;
       background-color: #eceefe;
       width: fit-content;
+      padding-right: 10px;
     }
   }
 }

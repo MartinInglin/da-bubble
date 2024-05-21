@@ -63,6 +63,7 @@ header {
   textarea {
     height: 80px;
     border: none;
+    width: 90%;
     display: flex;
     align-items: flex-start;
     resize: none;
@@ -196,4 +197,55 @@ header {
       }
     }
   }
+}
+
+.emoji-container {
+  display: flex; /* Verwendet Flexbox */
+  flex-wrap: wrap; /* Zeilenumbruch, wenn der Platz nicht ausreicht */
+}
+
+.emoji {
+  margin-right: 10px; /* Abstand zwischen den Emojis */
+  margin-bottom: 5px; /* Abstand zwischen den Zeilen */
+}
+
+
+cdk-overlay-connected-position-bounding-box {
+  border-radius: 30px;
+  height: fit-content;
+
+}
+.link-container {
+  display: flex; /* Verwendet Flexbox */
+width: fit-content;
+padding: 10px;
+align-items: center;
+justify-content: center;
+}
+
+.links {
+  // margin-right: 10px; /* Abstand zwischen den Emojis */
+  // margin-bottom: 5px; /* Abstand zwischen den Zeilen */
+  td{
+    width: 100%;
+    padding: 10px;
+    // display: flex;
+    // align-items: center;
+    // justify-content: center;
+    cursor: pointer;
+    &:hover{
+background-color: #eceefe;
+// padding: 10px;
+    }
+    img{
+      height: 40px;
+    }
+  }
+}
+
+
+.mdc-button{
+  min-width: 10px;
+  width: 40px;
+  height: 40px;
 }

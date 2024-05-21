@@ -26,6 +26,7 @@ export class ChannelsService {
 
   private channelSubject: BehaviorSubject<Channel | null> =
     new BehaviorSubject<Channel | null>(null);
+    
   public channelSubject$: Observable<Channel | null> =
     this.channelSubject.asObservable();
 
@@ -40,6 +41,14 @@ export class ChannelsService {
         console.log(channelData);
       }
     );
+  }
+
+  getAllChannels() {
+    const collectionRef = collection(this.firestore, 'channels');
+    onSnapshot(collectionRef, (snapshot) => {
+      const channel = snapshot.docs.map((doc) => new Channel({ id: doc.id, ...doc.data() }))[0]; // Erhalte nur das erste Kanalobjekt
+      this.channelSubject.next(channel);
+    });
   }
 
   async createChannel(
