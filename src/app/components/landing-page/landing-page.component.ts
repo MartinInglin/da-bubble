@@ -54,7 +54,7 @@ export class LandingPageComponent implements OnInit {
   users: any = [];
   menuOpen: string ='Workspace-Menü öffnen';
   menuClosed: string ='Workspace-Menü schliessen';
-  menuUp: any = './../../../assets/images/icons/add_circle.svg';
+  menuUp: any = './../../../assets/images/icons/menu_up.svg';
   menuDown: any = './../../../assets/images/icons/menu_down.svg';
 
   constructor() {
