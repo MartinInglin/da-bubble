@@ -3,10 +3,12 @@ import {
   Firestore,
   arrayUnion,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
   onSnapshot,
+  runTransaction,
   setDoc,
   updateDoc,
   writeBatch,
@@ -26,7 +28,7 @@ export class ChannelsService {
 
   private channelSubject: BehaviorSubject<Channel | null> =
     new BehaviorSubject<Channel | null>(null);
-    
+
   public channelSubject$: Observable<Channel | null> =
     this.channelSubject.asObservable();
 
@@ -46,7 +48,9 @@ export class ChannelsService {
   getAllChannels() {
     const collectionRef = collection(this.firestore, 'channels');
     onSnapshot(collectionRef, (snapshot) => {
-      const channel = snapshot.docs.map((doc) => new Channel({ id: doc.id, ...doc.data() }))[0]; // Erhalte nur das erste Kanalobjekt
+      const channel = snapshot.docs.map(
+        (doc) => new Channel({ id: doc.id, ...doc.data() })
+      )[0]; // Erhalte nur das erste Kanalobjekt
       this.channelSubject.next(channel);
     });
   }
@@ -88,43 +92,48 @@ export class ChannelsService {
     }
   }
 
-  async removeUserFromChannel(
-    channelId: string,
-    currentUserId: string
-  ): Promise<void> {
-    if (currentUserId) {
-      const userDocRef = doc(this.firestore, 'users', currentUserId);
-      const userDoc = await getDoc(userDocRef);
-
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        const channels = userData['channels'] || [];
-
-        const indexOfChannel = this.getIndexOfChannel(channels, channelId);
-
-        if (indexOfChannel !== -1) {
-          channels.splice(indexOfChannel, 1);
-
-          await updateDoc(userDocRef, { channels: channels });
-        }
-      }
-    }
-
+  async removeUserFromChannel(channelId: string, currentUserId: string): Promise<void> {
     const channelDocRef = doc(this.firestore, 'channels', channelId);
-    const channelDoc = await getDoc(channelDocRef);
+    const userDocRef = doc(this.firestore, 'users', currentUserId);
 
-    if (channelDoc.exists()) {
-      const channelData = channelDoc.data();
-      const users = channelData['users'] || [];
+    await runTransaction(this.firestore, async (transaction) => {
+      const channelDoc = await transaction.get(channelDocRef);
+      const userDoc = await transaction.get(userDocRef);
 
-      const indexOfUser = this.getIndexOfUser(users, currentUserId);
-
-      if (indexOfUser !== -1) {
-        users.splice(indexOfUser, 1);
-
-        await updateDoc(channelDocRef, { users: users });
+      if (!channelDoc.exists()) {
+        throw new Error('Channel does not exist');
       }
-    }
+
+      if (!userDoc.exists()) {
+        throw new Error('User does not exist');
+      }
+
+      const channelData = channelDoc.data() as Channel;
+      const users = channelData.users || [];
+      const userIndex = this.getIndexOfUser(users, currentUserId);
+
+      if (userIndex === -1) {
+        throw new Error('User not found in channel');
+      }
+
+      users.splice(userIndex, 1);
+      transaction.update(channelDocRef, { users });
+
+      if (users.length === 0) {
+        transaction.delete(channelDocRef);
+      }
+
+      const userData = userDoc.data();
+      const channels = userData['channels'] || [];
+      const channelIndex = this.getIndexOfChannel(channels, channelId);
+
+      if (channelIndex !== -1) {
+        channels.splice(channelIndex, 1);
+        transaction.update(userDocRef, { channels });
+      }
+    });
+
+    console.log('User removed from channel and channel deleted if no users left');
   }
 
   getIndexOfChannel(channels: any[], channelId: string): number {
@@ -133,6 +142,16 @@ export class ChannelsService {
 
   getIndexOfUser(users: any[], userId: string): number {
     return users.findIndex((user: any) => user.id === userId);
+  }
+
+  checkIfChannelNoUsers(channelId: string, channelData: Channel) {
+    if (channelData.users.length == 0) {
+      this.deleteChannel(channelId);
+    }
+  }
+
+  async deleteChannel(channelId: string) {
+    await deleteDoc(doc(this.firestore, 'channels', channelId));
   }
 
   async changePropertiesChannel(
@@ -195,7 +214,7 @@ export class ChannelsService {
       message: message,
       timestamp: this.getUTXTimestamp(),
       reactions: [],
-      edited: false
+      edited: false,
     };
 
     await updateDoc(channelRef, { posts: arrayUnion(post) });
@@ -209,7 +228,11 @@ export class ChannelsService {
     return Date.now();
   }
 
-  async editPost(channelId: string, postIndex: number, newMessage: string): Promise<void> {
+  async editPost(
+    channelId: string,
+    postIndex: number,
+    newMessage: string
+  ): Promise<void> {
     try {
       const channelRef = doc(this.firestore, 'channels', channelId);
 
