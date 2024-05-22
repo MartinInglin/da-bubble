@@ -58,7 +58,11 @@
         <div class="line"></div>
       </div>
 
-      <button class="button-google">
+      <button
+        class="button-google"
+        type="button"
+        (click)="authService.loginByGoogle()"
+      >
         <img src="assets/images/icons/google.svg" alt="" /> Anmelden mit Google
       </button>
 
@@ -70,7 +74,13 @@
         >
           Anmelden
         </button>
-        <button [routerLink]="['/landingPage']" class="button-guest-login" (click)="authService.signInGuestUser()">Gäste-Login</button>
+        <button
+          [routerLink]="['/landingPage']"
+          class="button-guest-login"
+          (click)="authService.signInGuestUser()"
+        >
+          Gäste-Login
+        </button>
       </div>
     </div>
     <div class="legal">
