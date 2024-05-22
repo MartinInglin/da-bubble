@@ -7,6 +7,7 @@ import { UserMenuComponent } from '../user-menu/user-menu.component';
 import { UsersService } from '../../services/firestore/users.service';
 import { User } from '../../models/user.class';
 import { Subscription } from 'rxjs';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-current-user',
@@ -26,7 +27,10 @@ export class CurrentUserComponent implements OnInit {
   
   currentUser: User | null = null;
 
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    public dialogRef: MatDialogRef<CurrentUserComponent>
+  ) {}
 
   ngOnInit(): void {
     const userSubscription = this.usersService.currentUser$.subscribe(user => {
@@ -38,5 +42,9 @@ export class CurrentUserComponent implements OnInit {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
     }
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 }
