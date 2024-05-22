@@ -9,9 +9,10 @@ import { Channel } from '../../../models/channel.class';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
-import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule} from '@angular/material/dialog';
 import { ChannelInfoComponent } from '../../channel-info/channel-info.component';
 import { MembersComponent } from '../../members/members.component';
+import { ProfileDetailViewComponent } from '../../profile-detail-view/profile-detail-view.component';
 declare const twemoji: any; // Deklariere Twemoji als Modul
 
 @Component({
@@ -92,6 +93,12 @@ export class MainContentComponent implements OnInit, OnDestroy {
   openMembersDialog(): void {
     const dialogRef = this.dialog.open(MembersComponent, {
       width: '415px',
+    });
+  }
+
+  openDetailViewDialog(): void {
+    const dialogRef = this.dialog.open(ProfileDetailViewComponent, {
+      width: '500px',
     });
   }
 
