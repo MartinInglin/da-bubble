@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-channel-info-edit',
@@ -20,4 +21,9 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class ChannelInfoEditComponent {
 
+constructor(public dialogRef: MatDialogRef<ChannelInfoEditComponent>) {}
+
+onNoClick(): void {
+  this.dialogRef.close();
+}
 }
