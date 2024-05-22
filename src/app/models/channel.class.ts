@@ -12,7 +12,8 @@ export class Channel {
     this.id = obj?.id || '';
     this.name = obj?.name || '';
     this.description = obj?.description || '';
-    this.users = obj?.users?.map((user: MinimalUser) => new MinimalUser(user)) || [];
-    this.posts = obj?.posts?.map((post: Post) => new Post(post)) || [];
+    this.users = obj?.users?.map((user: MinimalUser) => new MinimalUser(user)) || [new MinimalUser()];
+    this.posts = obj?.posts?.map((post: Post) => new Post(post)) || [new Post()];
   }
 }
+
