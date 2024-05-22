@@ -3,6 +3,7 @@ section {
   overflow: hidden;
   box-sizing: border-box;
   overflow: hidden;
+  margin-bottom: 30px;
 }
 
 /* Content container */
@@ -14,11 +15,15 @@ section {
   align-items: center;
   gap: 10px;
   max-height: 99vh;
+  // padding-bottom: 30px;
 }
 
 /* Side navigation container */
-mat-drawer-container {
+nav{
   height: 90vh;
+}
+mat-drawer-container {
+  height: 85.5vh;
   overflow: hidden;
   border-radius: 30px;
 }
