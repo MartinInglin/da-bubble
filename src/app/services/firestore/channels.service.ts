@@ -34,6 +34,11 @@ export class ChannelsService {
 
   constructor() {}
 
+  /**
+   * This function gets the data of a selected channel. It therefore needs the id of the requested channel. The data is provided as an observable that any component can subscribe to.
+   * 
+   * @param idChannel string
+   */
   getDataChannel(idChannel: string) {
     const unsub = onSnapshot(
       doc(this.firestore, 'channels', idChannel),
@@ -45,16 +50,26 @@ export class ChannelsService {
     );
   }
 
+  /**
+   * 
+   */
   getAllChannels() {
     const collectionRef = collection(this.firestore, 'channels');
     onSnapshot(collectionRef, (snapshot) => {
       const channel = snapshot.docs.map(
         (doc) => new Channel({ id: doc.id, ...doc.data() })
-      )[0]; // Erhalte nur das erste Kanalobjekt
+      )[0];
       this.channelSubject.next(channel);
     });
   }
 
+  /**
+   * This function creates a new channel. It therefore needs a name, a description and the users which a minimalized. For display purposes they need an id, a name and the URL of their avatar.
+   * 
+   * @param name string
+   * @param description string
+   * @param users object which contains id as string, name as string an avatar URL as string.
+   */
   async createChannel(
     name: string,
     description: string,
@@ -78,6 +93,13 @@ export class ChannelsService {
     this.addChannelToUsers(channelData.id, channelData.name, userIds);
   }
 
+  /**
+   * This function adds the newly created channel to the users. So on every user there is stored to which channels he has access.
+   * 
+   * @param channelId string
+   * @param name string
+   * @param userIds array of strings
+   */
   async addChannelToUsers(channelId: string, name: string, userIds: string[]) {
     const channel = {
       id: channelId,
@@ -92,6 +114,12 @@ export class ChannelsService {
     }
   }
 
+  /**
+   * This function removes a user from a channel. There are two processes going on. On one hand the user is removed from the channel and on the other hand the channel is removed from the user. If there is no user in the channel left, then the channel is deleted. The runTransaction guarantees that data is consistent if a transaction fails.
+   * 
+   * @param channelId string
+   * @param currentUserId string
+   */
   async removeUserFromChannel(channelId: string, currentUserId: string): Promise<void> {
     const channelDocRef = doc(this.firestore, 'channels', channelId);
     const userDocRef = doc(this.firestore, 'users', currentUserId);
@@ -136,24 +164,55 @@ export class ChannelsService {
     console.log('User removed from channel and channel deleted if no users left');
   }
 
-  getIndexOfChannel(channels: any[], channelId: string): number {
-    return channels.findIndex((channel: any) => channel.id === channelId);
+  /**
+   * This function gets the index of a channel stored on the user.
+   * 
+   * @param channels array
+   * @param channelId string
+   * @returns 
+   */
+  getIndexOfChannel(channels: Channel[], channelId: string): number {
+    return channels.findIndex((channel: Channel) => channel.id === channelId);
   }
 
-  getIndexOfUser(users: any[], userId: string): number {
-    return users.findIndex((user: any) => user.id === userId);
+  /**
+   * This function gets the index of a user stored on the channel.
+   * 
+   * @param users array
+   * @param userId string
+   * @returns 
+   */
+  getIndexOfUser(users: User[], userId: string): number {
+    return users.findIndex((user: User) => user.id === userId);
   }
 
+  /**
+   * This function checks if there are any users left on the channel. If there are no more users the channel document is deleted.
+   * 
+   * @param channelId  string
+   * @param channelData object
+   */
   checkIfChannelNoUsers(channelId: string, channelData: Channel) {
     if (channelData.users.length == 0) {
       this.deleteChannel(channelId);
     }
   }
 
+  /**
+   * This function deletes a channels document.
+   * 
+   * @param channelId string
+   */
   async deleteChannel(channelId: string) {
     await deleteDoc(doc(this.firestore, 'channels', channelId));
   }
 
+  /**
+   * This function changes the properties of a channel like its name, its users or its description. The changes can be sent partially so the object does not have to be complete.
+   * 
+   * @param channelId string
+   * @param changes object of class Channel which can be partial
+   */
   async changePropertiesChannel(
     channelId: string,
     changes: Partial<Channel>
@@ -172,6 +231,12 @@ export class ChannelsService {
     }
   }
 
+  /**
+   * This function changes the name of the channel stored on the users.
+   * 
+   * @param newNameChannel string
+   * @param channelId string
+   */
   async changeNameChannelOnUsers(
     newNameChannel: string,
     channelId: string
@@ -204,6 +269,13 @@ export class ChannelsService {
     await batch.commit();
   }
 
+  /**
+   * This function saves a post a user writes in a channel.
+   * 
+   * @param channelId string
+   * @param message string
+   * @param currentUser object of type user.
+   */
   async savePost(channelId: string, message: string, currentUser: User) {
     const channelRef = doc(this.firestore, 'channels', channelId);
 
@@ -220,14 +292,32 @@ export class ChannelsService {
     await updateDoc(channelRef, { posts: arrayUnion(post) });
   }
 
+  /**
+   * This function creates a unique id.
+   * 
+   * @returns id as string
+   */
   createId(): string {
     return uuidv4();
   }
 
+  /**
+   * This function gets the actual UTX timestamp.
+   * 
+   * @returns UTX timestamp as number
+   */
   getUTXTimestamp(): number {
     return Date.now();
   }
 
+  /**
+   * This function is there if the user edits a post. The timestamp is updated and the variable edited is set to true so a message (edited) can be displayed.
+   * 
+   * @param channelId string
+   * @param postIndex number
+   * @param newMessage string
+   * @returns -
+   */
   async editPost(
     channelId: string,
     postIndex: number,

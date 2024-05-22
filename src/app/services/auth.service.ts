@@ -30,6 +30,11 @@ export class AuthService {
     this.auth = getAuth(afApp);
   }
 
+  /**
+   * This function is for the registration process of the user. It firstly creates a user in firebase auth and then calls for creating a user in the firestore. If successful it navigates the user to the login page.
+   *
+   * @returns Starts creating a user in firestore.
+   */
   signUp(): Promise<void> {
     const userData = this.registrationService.getUserData();
 
@@ -104,6 +109,13 @@ export class AuthService {
     // });
   }
 
+  /**
+   * This function is there to sign in the user. It then navigates the user to the landing page.
+   *
+   * @param email string
+   * @param password string
+   * @returns Calls the fire auth function to sign in with email and password.
+   */
   signIn(email: string, password: string): Promise<void> {
     return this.auth.setPersistence(browserSessionPersistence).then(() => {
       return signInWithEmailAndPassword(this.auth, email, password)
@@ -135,6 +147,11 @@ export class AuthService {
     });
   }
 
+  /**
+   * This function signs out the user. If successful it navigates the user to the login page.
+   * 
+   * @returns Calls the signOut function of fire auth.
+   */
   signOut() {
     return signOut(this.auth)
       .then(() => {

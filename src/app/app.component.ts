@@ -1,10 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-
-
-
-
 import { LandingPageComponent } from './components/landing-page/landing-page.component';
 
 import { HeaderComponent } from './components/shared/header/header.component';
@@ -18,11 +14,6 @@ import { MembersComponent } from './components/members/members.component';
 import { EditMessageComponent } from './components/edit-message/edit-message.component';
 import { UserMenuComponent } from './components/user-menu/user-menu.component';
 import { CurrentUserComponent } from './components/current-user/current-user.component';
-
-
-
-
-
 
 @Component({
   selector: 'app-root',

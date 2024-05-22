@@ -30,6 +30,12 @@ export class DirectMessagesService {
 
   constructor() {}
 
+  /**
+   * This function gets the data of a direct message. If the user clicks on a user it first checks if a conversation already exists. If not it creates a document and then fetches the data.
+   * 
+   * @param userId string 
+   * @param currentUser objecet User
+   */
   async getDataDirectMessage(userId: string, currentUser: User) {
     const idDirectMessage = await this.getIdDirectMessage(userId);
 
@@ -46,7 +52,12 @@ export class DirectMessagesService {
       this.createDirectMessage(userId, currentUser);
     }
   }
-
+/**
+ * This function gets the ID of the document of the direct message.
+ * 
+ * @param userId string of user you want to chat with
+ * @returns string of document ID
+ */
   async getIdDirectMessage(userId: string): Promise<string | null> {
     try {
       const collectionRef = collection(this.firestore, 'directMessages');
@@ -69,6 +80,12 @@ export class DirectMessagesService {
     }
   }
 
+  /**
+   * This function creates a new document in case there was no conversation started between the two users.
+   * 
+   * @param userId string
+   * @param currentUser objecet User
+   */
   async createDirectMessage(userId: string, currentUser: User): Promise<void> {
     const directMessageRef = collection(this.firestore, 'directMessages');
     const newDocRef = doc(directMessageRef);
@@ -98,6 +115,13 @@ export class DirectMessagesService {
     }
   }
 
+  /**
+   * This function creates a minimal user. This is needed to store on the document of the channel. Minimal user contains the properties of the interface minimalUser
+   * 
+   * @param userId string
+   * @param currentUser objecet User
+   * @returns object minimalUser
+   */
   async createMinimalUsers(
     userId: string,
     currentUser: User
@@ -133,6 +157,13 @@ export class DirectMessagesService {
     }
   }
 
+  /**
+   * This function saves a post in the document of the corresponding direct message.
+   * 
+   * @param directMessageId string
+   * @param message string
+   * @param currentUser object User
+   */
   async savePost(directMessageId: string, message: string, currentUser: User) {
     const directMessageRef = doc(
       this.firestore,
@@ -153,14 +184,31 @@ export class DirectMessagesService {
     await updateDoc(directMessageRef, { posts: arrayUnion(post) });
   }
 
+  /**
+   * This function creates a unique ID. It is needed to store the post in the document.
+   * @returns ID as string
+   */
   createId(): string {
     return uuidv4();
   }
 
+  /**
+   * This function gets the actual UTX timestamp.
+   * 
+   * @returns UTX timestamp as number
+   */
   getUTXTimestamp(): number {
     return Date.now();
   }
 
+  /**
+   * This function is needed if a user edits a post. The timestamp is updated and the variable "edited" is set to true so edited can be displayed.
+   * 
+   * @param directMessageId string
+   * @param postIndex number
+   * @param newMessage string
+   * @returns objecet as post
+   */
   async editPost(
     directMessageId: string,
     postIndex: number,

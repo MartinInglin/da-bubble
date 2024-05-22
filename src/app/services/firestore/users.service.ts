@@ -24,8 +24,9 @@ export class UsersService {
   public currentUser$: Observable<User | null> =
     this.currentUserSubject.asObservable();
 
-  private allUsersSubject: BehaviorSubject<User[] | null> =
-    new BehaviorSubject<User[] | null>(null);
+  private allUsersSubject: BehaviorSubject<User[] | null> = new BehaviorSubject<
+    User[] | null
+  >(null);
   public allUsersSubject$: Observable<User[] | null> =
     this.allUsersSubject.asObservable();
 
@@ -43,20 +44,30 @@ export class UsersService {
     }
   }
 
-  async createUser(id: string): Promise<void> {
+  /**
+   * This function creates a new user document in the collection users.
+   *
+   * @param UserId string
+   */
+  async createUser(UserId: string): Promise<void> {
     const userData = this.registrationService.getUserData();
 
     const user = {
-      id: id,
+      id: UserId,
       name: userData.name,
       email: userData.email,
       avatar: userData.avatar,
       channels: [],
     };
 
-    await setDoc(doc(this.firestore, 'users', id), user);
+    await setDoc(doc(this.firestore, 'users', UserId), user);
   }
 
+  /**
+   * This function gets the object of the current user and stores it as an obeservable. Every component that needs this data can subscribe to it.
+   *
+   * @param userId string
+   */
   getCurrentUser(userId: string) {
     const unsub = onSnapshot(doc(this.firestore, 'users', userId), (doc) => {
       const userData = doc.data() as User;
@@ -66,22 +77,17 @@ export class UsersService {
     });
   }
 
+  /**
+   * This function gets the data of all users and stores it as an observable. Every component that needs this data can subscribe to it.
+   */
   getAllUsers(): void {
     const collectionRef = collection(this.firestore, 'users');
 
     onSnapshot(collectionRef, (snapshot) => {
-      const data = snapshot.docs.map((doc) => new User({ id: doc.id, ...doc.data() }));
+      const data = snapshot.docs.map(
+        (doc) => new User({ id: doc.id, ...doc.data() })
+      );
       this.allUsersSubject.next(data);
     });
   }
-
-  // async getAllUsers(): Promise<User[]> {
-  //   const users: User[] = [];
-  //   const querySnapshot = await getDocs(collection(this.firestore, 'users'));
-  //   querySnapshot.forEach((doc) => {
-  //     const userData = doc.data() as User;
-  //     users.push(userData);
-  //   });
-  //   return users;
-  // }
 }
