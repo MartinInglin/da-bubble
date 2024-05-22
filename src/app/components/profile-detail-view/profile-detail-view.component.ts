@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-profile-detail-view',
@@ -17,4 +18,12 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './profile-detail-view.component.scss'
 })
 export class ProfileDetailViewComponent {
+  constructor(
+    public dialogRef: MatDialogRef<ProfileDetailViewComponent>
+  ) {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+  
 }

@@ -4,7 +4,8 @@ import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ProfileDetailViewComponent } from '../profile-detail-view/profile-detail-view.component';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 
 @Component({
@@ -20,10 +21,18 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   templateUrl: './members.component.html',
   styleUrl: './members.component.scss'
 })
+
 export class MembersComponent {
   constructor(
+    private dialog: MatDialog,
     public dialogRef: MatDialogRef<MembersComponent>
-  ) { }
+  ) {}
+
+  openDetailViewDialog(): void {
+    const dialogRef = this.dialog.open(ProfileDetailViewComponent, {
+      width: '500px',
+    });
+  }
 
   onNoClick(): void {
     this.dialogRef.close();
