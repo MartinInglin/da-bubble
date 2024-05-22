@@ -28,15 +28,15 @@ export const routes: Routes = [
   { path: 'resetPassword', component: ResetPasswordComponent },
   { path: 'chooseAvatar', component: ChooseAvatarComponent },
 
-  {
-    path: 'landingPage',
-    component: LandingPageComponent,
-    canActivate: [AuthGuard],
-    data: { authGuardPipe: redirectUnauthorizedToLogin },
-  },
+  // {
+  //   path: 'landingPage',
+  //   component: LandingPageComponent,
+  //   canActivate: [AuthGuard],
+  //   data: { authGuardPipe: redirectUnauthorizedToLogin },
+  // },
   { path: 'detailView', component: ProfileDetailViewComponent },
 
- // { path: 'landingPage', component: LandingPageComponent },
+ { path: 'landingPage', component: LandingPageComponent },
 
 
   { path: 'addUserToChannel', component: AddUserToChannelComponent },
