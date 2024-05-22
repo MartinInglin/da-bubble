@@ -10,14 +10,16 @@ section {
   display: flex;
   max-width: 100%;
   flex-direction: row;
-  justify-content: start;
+  justify-content: center;
   align-items: center;
   gap: 10px;
+  max-height: 99vh;
 }
 
 /* Side navigation container */
 mat-drawer-container {
-  height: 770px;
+  height: 90vh;
+  overflow: hidden;
   border-radius: 30px;
 }
 
@@ -110,7 +112,12 @@ mat-drawer-container {
 
 /* Width Main content */
 .mainContent {
-  width: 1879px;
+  width: 1924px;
+// background-color: #535af1;
+  height: 90vh;
+  // display: flex;
+  // align-items: center;
+  // justify-content: center;
 }
 
 /* Styling for the header of channels */

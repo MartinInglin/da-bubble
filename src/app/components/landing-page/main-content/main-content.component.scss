@@ -1,11 +1,15 @@
 /* Styling for the main content container */
 #mainContent {
-  height: 750px;
+  max-height: 90vh;
+  height: 100%;
   background-color: white;
   border-radius: 30px;
-  padding: 10px;
+  // padding: 10px;
   display: flex;
   flex-direction: column;
+  max-width: 1920px;
+  margin-bottom: 100px;
+  overflow: hidden;
 }
 
 /* Styling for the header section */
@@ -50,7 +54,9 @@ header {
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 50px;
+  // background-color: aqua;
+  // position: relative;
 }
 
     /* Styling for the text area */
@@ -103,7 +109,7 @@ header {
 
 /* Styling for the message content */
 .message-content {
-  height: 450px;
+  height: 100vh;
   /* Styling for the line separator */
   .dateLine {
     width: 100%;
