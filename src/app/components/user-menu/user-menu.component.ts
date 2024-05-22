@@ -1,23 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { CurrentUserComponent } from '../current-user/current-user.component';
-import { MAT_DIALOG_DATA,  MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-user-menu',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    MatCardModule,
-    MatDialogModule
-  ],
+  imports: [CommonModule, RouterModule, MatCardModule, MatDialogModule],
   templateUrl: './user-menu.component.html',
-  styleUrl: './user-menu.component.scss'
+  styleUrl: './user-menu.component.scss',
 })
 export class UserMenuComponent {
+  authService = inject(AuthService);
 
   constructor(
     private dialog: MatDialog,
@@ -33,9 +35,12 @@ export class UserMenuComponent {
       width: '500px',
       position: {
         top: '100px',
-        right: '50px'
+        right: '50px',
       },
     });
   }
 
+  signOUt() {
+    this.authService.signOut();
+  }
 }

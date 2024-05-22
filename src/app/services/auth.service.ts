@@ -2,6 +2,8 @@ import { Injectable, inject } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import {
   Auth,
+  GoogleAuthProvider,
+  UserCredential,
   browserSessionPersistence,
   createUserWithEmailAndPassword,
   getAuth,
@@ -9,6 +11,7 @@ import {
   sendPasswordResetEmail,
   setPersistence,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
   updatePassword,
   user,
@@ -28,8 +31,8 @@ export class AuthService {
   registrationService = inject(RegistrationService);
   snackbarService = inject(SnackbarService);
 
-  constructor(private afApp: FirebaseApp) {
-    this.auth = getAuth(afApp);
+  constructor() {
+    this.auth = getAuth();
   }
 
   /**
@@ -157,8 +160,8 @@ export class AuthService {
   signOut() {
     return signOut(this.auth)
       .then(() => {
-        localStorage.removeItem('currentUser');
-        this.router.navigate(['login']);
+        sessionStorage.removeItem('currentUser');
+        this.router.navigate(['/login']);
       })
       .catch((error) => {
         this.snackbarService.openSnackBar(
@@ -205,11 +208,22 @@ export class AuthService {
   }
 
   signInGuestUser() {
-    const email:string = "a@b.ch";
-    const password:string = "afopsdnv230lsdksofj_12gerte"
-    console.log("Guest signed in");
-    
+    const email: string = 'a@b.ch';
+    const password: string = 'afopsdnv230lsdksofj_12gerte';
+    console.log('Guest signed in');
 
     this.signIn(email, password);
+  }
+
+  loginByGoogle(): Promise<void> {
+    return signInWithPopup(this.auth, new GoogleAuthProvider())
+      .then((result: UserCredential) => {
+        console.log("Logged in with google account");
+
+        this.router.navigate(['landingPage']);
+      })
+      .catch((error) => {
+        console.error('Error during Google sign-in:', error);
+      });
   }
 }

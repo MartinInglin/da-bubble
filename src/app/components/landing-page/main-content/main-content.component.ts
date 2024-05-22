@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Output, inject, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Output,
+  inject,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import { ChannelsService } from '../../../services/firestore/channels.service';
 import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -9,7 +16,7 @@ import { Channel } from '../../../models/channel.class';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
-import { MatDialog, MatDialogModule} from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ChannelInfoComponent } from '../../channel-info/channel-info.component';
 import { MembersComponent } from '../../members/members.component';
 import { ProfileDetailViewComponent } from '../../profile-detail-view/profile-detail-view.component';
@@ -18,7 +25,13 @@ declare const twemoji: any; // Deklariere Twemoji als Modul
 @Component({
   selector: 'app-main-content',
   standalone: true,
-  imports: [RouterModule, MatButtonModule, MatMenuModule, CommonModule, MatDialogModule],
+  imports: [
+    RouterModule,
+    MatButtonModule,
+    MatMenuModule,
+    CommonModule,
+    MatDialogModule,
+  ],
   templateUrl: './main-content.component.html',
   styleUrl: './main-content.component.scss',
 })
@@ -34,27 +47,39 @@ export class MainContentComponent implements OnInit, OnDestroy {
   selectedChannel: Channel = new Channel();
   allUsers: User[] = [];
   userId: any;
-  emojis: string[] = ["😊", "❤️", "😂", "🎉", "🌟", "🎈", "🌈", "🍕", "🚀", "⚡"];
+  emojis: string[] = [
+    '😊',
+    '❤️',
+    '😂',
+    '🎉',
+    '🌟',
+    '🎈',
+    '🌈',
+    '🍕',
+    '🚀',
+    '⚡',
+  ];
   // currentChannel: Channel | null = null;
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog) {}
 
   @Output() openThreadEvent = new EventEmitter<boolean>(); // Event to signal thread opening
 
   ngOnInit(): void {
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       this.currentUser = user ?? new User();
-      console.log('Current User:', this.currentUser);
     });
-    this.channelSubscription = this.channelsService.channelSubject$.subscribe((channel) => {
-      this.selectedChannel = channel ?? new Channel();
-      console.log('Current Channel:', this.selectedChannel);
-    });
+    this.channelSubscription = this.channelsService.channelSubject$.subscribe(
+      (channel) => {
+        this.selectedChannel = channel ?? new Channel();
+      }
+    );
 
-    this.usersSubscription = this.usersService.allUsersSubject$.subscribe((users) => {
-      this.allUsers = users ?? []; // Benutzerdaten aktualisieren
-      console.log('All Users:', this.allUsers);
-    });
+    this.usersSubscription = this.usersService.allUsersSubject$.subscribe(
+      (users) => {
+        this.allUsers = users ?? []; // Benutzerdaten aktualisieren
+      }
+    );
   }
 
   openThread() {
@@ -102,6 +127,5 @@ export class MainContentComponent implements OnInit, OnDestroy {
       width: '500px',
     });
   }
-
 
 }

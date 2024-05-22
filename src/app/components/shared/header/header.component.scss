@@ -68,7 +68,16 @@ header {
 @media (max-width: 1500px) {
   .searchBar {
     input {
+<<<<<<< HEAD
       width: 500px;
+=======
+      width: 20px; /*previousley 989px. Changed for testing purposes*/
+      height: 70px;
+      border-radius: 42px;
+      padding-left: 20px;
+      font-size: 32px;
+      border: none;
+>>>>>>> 05a5e0239d104a110b9db7a98c25f601d83a11fd
     }
   }
 }
