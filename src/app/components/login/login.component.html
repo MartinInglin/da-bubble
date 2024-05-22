@@ -70,7 +70,7 @@
         >
           Anmelden
         </button>
-        <button [routerLink]="['/landingPage']" class="button-guest-login">Gäste-Login</button>
+        <button [routerLink]="['/landingPage']" class="button-guest-login" (click)="authService.signInGuestUser()">Gäste-Login</button>
       </div>
     </div>
     <div class="legal">

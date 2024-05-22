@@ -203,4 +203,13 @@ export class AuthService {
         });
     }
   }
+
+  signInGuestUser() {
+    const email:string = "a@b.ch";
+    const password:string = "afopsdnv230lsdksofj_12gerte"
+    console.log("Guest signed in");
+    
+
+    this.signIn(email, password);
+  }
 }
