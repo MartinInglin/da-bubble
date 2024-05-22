@@ -11,12 +11,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ChannelInfoComponent } from '../../channel-info/channel-info.component';
+import { MembersComponent } from '../../members/members.component';
 declare const twemoji: any; // Deklariere Twemoji als Modul
 
 @Component({
   selector: 'app-main-content',
   standalone: true,
-  imports: [RouterModule, MatButtonModule, MatMenuModule, CommonModule, MatDialogModule,],
+  imports: [RouterModule, MatButtonModule, MatMenuModule, CommonModule, MatDialogModule],
   templateUrl: './main-content.component.html',
   styleUrl: './main-content.component.scss',
 })
@@ -85,6 +86,12 @@ export class MainContentComponent implements OnInit, OnDestroy {
   openChannelInfoDialog(): void {
     const dialogRef = this.dialog.open(ChannelInfoComponent, {
       width: '872px',
+    });
+  }
+
+  openMembersDialog(): void {
+    const dialogRef = this.dialog.open(MembersComponent, {
+      width: '415px',
     });
   }
 

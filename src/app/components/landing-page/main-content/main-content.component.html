@@ -6,7 +6,7 @@
            {{selectedChannel.name}}
            <!-- {{currentUser}} -->
         </div>
-        <div class="channelMembers">
+        <div (click)="openMembersDialog()" class="channelMembers">
             <!-- Profile pictures of channel members which are part of the group -->
             {{selectedChannel.users}}
             <!-- <img src="{{selectedChannel.users.avatar}}" alt=""> -->

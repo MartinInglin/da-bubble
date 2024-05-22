@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 
 @Component({
@@ -20,5 +21,11 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './members.component.scss'
 })
 export class MembersComponent {
+  constructor(
+    public dialogRef: MatDialogRef<MembersComponent>
+  ) { }
 
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 }
