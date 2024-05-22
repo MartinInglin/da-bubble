@@ -14,6 +14,12 @@ export class ThreadsService {
 
   constructor() {}
 
+  /**
+   * This function creates a new thread if the user clicks on a post in a channel.
+   * 
+   * @param channelData object as channel
+   * @param postIndex number
+   */
   async createThread(channelData: Channel, postIndex:number): Promise<void> {
     debugger;
     try {
@@ -36,6 +42,14 @@ export class ThreadsService {
     }
   }
 
+  /**
+   * This function saves a post on a thread.
+   * 
+   * @param channelId string
+   * @param threadId string
+   * @param message string
+   * @param currentUser object as user
+   */
   async savePost(channelId: string, threadId: string, message: string, currentUser: User) {
     const channelRef = doc(this.firestore, 'channels', channelId);
     const threadRef = doc(channelRef, 'threads', threadId);
@@ -53,14 +67,32 @@ export class ThreadsService {
     await updateDoc(threadRef, { posts: arrayUnion(post) });
   }
 
+  /**
+   * This function creates a unique ID. It is needed to store the post in the document.
+   * @returns ID as string
+   */
   createId(): string {
     return uuidv4();
   }
 
+  /**
+   * This function gets the actual UTX timestamp.
+   * 
+   * @returns UTX timestamp as number
+   */
   getUTXTimestamp(): number {
     return Date.now();
   }
 
+  /**
+   * This function is needed if a user edits a post. The timestamp is updated and the variable "edited" is set to true so edited can be displayed.
+   * 
+   * @param channelId string
+   * @param threadId string
+   * @param postIndex number
+   * @param newMessage string
+   * @returns object as post
+   */
   async editPost(channelId: string, threadId: string, postIndex: number, newMessage: string): Promise<void> {
     try {
       const channelRef = doc(this.firestore, 'channels', channelId);

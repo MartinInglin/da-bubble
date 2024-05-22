@@ -12,6 +12,8 @@ import { Subscription } from 'rxjs';
 import { UsersService } from '../../services/firestore/users.service';
 import { ChannelsService } from '../../services/firestore/channels.service';
 import { DirectMessagesService } from '../../services/firestore/direct-messages.service';
+import { NewChannelComponent } from '../new-channel/new-channel.component';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-landing-page',
@@ -25,7 +27,8 @@ import { DirectMessagesService } from '../../services/firestore/direct-messages.
     MainContentComponent,
     MatIconModule,
     HeaderComponent,
-  
+    NewChannelComponent,
+    MatDialogModule,
   ],
 
   templateUrl: './landing-page.component.html',
@@ -40,7 +43,6 @@ export class LandingPageComponent implements OnInit {
   private allUsersSubscription: Subscription = new Subscription();
   private allChannelsSubscription: Subscription = new Subscription();
 
-  
   currentUser: User = new User();
   allUsers: User[] = [];
   allChannels: Channel[] = [];
@@ -52,14 +54,14 @@ export class LandingPageComponent implements OnInit {
   loading: boolean = true;
 
   users: any = [];
-  menuOpen: string ='Workspace-Menü öffnen';
-  menuClosed: string ='Workspace-Menü schliessen';
+  menuOpen: string = 'Workspace-Menü öffnen';
+  menuClosed: string = 'Workspace-Menü schliessen';
   menuUp: any = './../../../assets/images/icons/menu_up.svg';
   menuDown: any = './../../../assets/images/icons/menu_down.svg';
 
-  constructor() {
+  constructor(private dialog: MatDialog) {
     this.usersService.getAllUsers();
-    this.channelsService.getAllChannels(); 
+    this.channelsService.getAllChannels();
   }
 
   ngOnInit(): void {
@@ -71,7 +73,7 @@ export class LandingPageComponent implements OnInit {
     this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe((allUsers) => {
       this.allUsers = allUsers ?? [];
       console.log('All Users:', this.allUsers);
-      
+
     });
 
     this.allChannelsSubscription = this.channelsService.channelSubject$.subscribe((channel) => {
@@ -87,7 +89,7 @@ export class LandingPageComponent implements OnInit {
 
   }
 
-  showContactsSide() {}
+  showContactsSide() { }
 
   toggle(drawer: any): void {
     this.isOpen = !this.isOpen;
@@ -107,5 +109,12 @@ export class LandingPageComponent implements OnInit {
     if (this.allChannelsSubscription) {
       this.allChannelsSubscription.unsubscribe();
     }
+  }
+
+  openNewChannelDialog(): void {
+    const dialogRef = this.dialog.open(NewChannelComponent, {
+      width: '872px',
+      height: '539px'
+    });
   }
 }

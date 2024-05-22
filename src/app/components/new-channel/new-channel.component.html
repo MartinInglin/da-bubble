@@ -4,7 +4,7 @@
             <div class="header">
                 <div>
                     <p>Channel erstellen</p>
-                    <button mat-icon-button>
+                    <button mat-icon-button (click)="onNoClick()">
                         <img src="./../../../assets/images/icons/close.svg">
                     </button>
                 </div>
@@ -22,7 +22,7 @@
                 </div>
                 <div class="button-container">
                     <div class="message-button">
-                        <button>Erstellen</button>
+                        <button (click)="onNoClick()">Erstellen</button>
                     </div>
                 </div>
             </form>

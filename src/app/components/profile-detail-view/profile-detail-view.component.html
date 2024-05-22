@@ -3,7 +3,7 @@
         <mat-card-content>
             <div class="detail-view-header">
                 <p>Profil</p>
-                <button mat-icon-button>
+                <button (click)="onNoClick()" mat-icon-button>
                     <img src="./../../../assets/images/icons/close.svg">
                 </button>
             </div>
@@ -22,7 +22,7 @@
                 </span>
                 <a href="mailto:thehoffman@beispiel.com" [innerHTML]="'thehoffman@beispiel.com'"></a>
             </div>
-            <div class="message-button">
+            <div (click)="onNoClick()" class="message-button">
                 <button><img src="../../../assets/images/icons/chat_bubble.svg">Nachricht</button>
             </div>
         </mat-card-content>

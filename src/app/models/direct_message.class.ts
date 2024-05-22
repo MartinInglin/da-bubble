@@ -1,4 +1,4 @@
-import { MinimalUser } from "../interfaces/minimal-user";
+import { MinimalUser } from "../models/minimal_user.class";
 import { Post } from "./post.class";
 
 export class DirectMessage {

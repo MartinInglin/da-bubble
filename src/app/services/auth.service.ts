@@ -6,9 +6,11 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   sendEmailVerification,
+  sendPasswordResetEmail,
   setPersistence,
   signInWithEmailAndPassword,
   signOut,
+  updatePassword,
   user,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
@@ -30,6 +32,11 @@ export class AuthService {
     this.auth = getAuth(afApp);
   }
 
+  /**
+   * This function is for the registration process of the user. It firstly creates a user in firebase auth and then calls for creating a user in the firestore. If successful it navigates the user to the login page.
+   *
+   * @returns Starts creating a user in firestore.
+   */
   signUp(): Promise<void> {
     const userData = this.registrationService.getUserData();
 
@@ -104,6 +111,13 @@ export class AuthService {
     // });
   }
 
+  /**
+   * This function is there to sign in the user. It then navigates the user to the landing page.
+   *
+   * @param email string
+   * @param password string
+   * @returns Calls the fire auth function to sign in with email and password.
+   */
   signIn(email: string, password: string): Promise<void> {
     return this.auth.setPersistence(browserSessionPersistence).then(() => {
       return signInWithEmailAndPassword(this.auth, email, password)
@@ -135,6 +149,11 @@ export class AuthService {
     });
   }
 
+  /**
+   * This function signs out the user. If successful it navigates the user to the login page.
+   *
+   * @returns Calls the signOut function of fire auth.
+   */
   signOut() {
     return signOut(this.auth)
       .then(() => {
@@ -147,5 +166,50 @@ export class AuthService {
           'Schliessen'
         );
       });
+  }
+
+  resetForgottenPassword(email: string) {
+    sendPasswordResetEmail(this.auth, email)
+      .then(() => {
+        this.snackbarService.openSnackBar(
+          'Wir haben dir eine Email zum Zurücksetzen des Passwortes gesendet. Bitte überprüfe auch deinen Spam-Ordner.',
+          'Schliessen'
+        );
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+      });
+  }
+
+  changePassword(password: string) {
+    const currentUser = this.auth.currentUser;
+
+    if (currentUser) {
+      updatePassword(currentUser, password)
+        .then(() => {
+          this.snackbarService.openSnackBar(
+            'Deine neues Passwort wurde gespeichert.',
+            'Schliessen'
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          this.snackbarService.openSnackBar(
+            'Etwas ist leider schief gelaufen. Bitte versuche es noch einmal oder wende dich an den Support.',
+            'Schliessen'
+          );
+        });
+    }
+  }
+
+  signInGuestUser() {
+    const email:string = "a@b.ch";
+    const password:string = "afopsdnv230lsdksofj_12gerte"
+    console.log("Guest signed in");
+    
+
+    this.signIn(email, password);
   }
 }

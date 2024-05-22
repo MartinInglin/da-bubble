@@ -4,6 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-new-channel',
@@ -19,5 +20,11 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './new-channel.component.scss'
 })
 export class NewChannelComponent {
+  constructor(
+    public dialogRef: MatDialogRef<NewChannelComponent>
+  ) {}
 
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 }

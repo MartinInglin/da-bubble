@@ -32,7 +32,7 @@
               </div>
             </div>
             <div class="head-side-menu-link">
-              <img src="./../../../assets/images/icons/add_icon.svg" alt="" />
+              <img (click)="openNewChannelDialog()" src="./../../../assets/images/icons/add_icon.svg" alt="" />
             </div>
           </div>
 
@@ -45,7 +45,7 @@
             <tr>
               <td class="channel-add">
                 <img src="./../../../assets/images/icons/add_circle.svg" alt="" />
-                <span>Channel hinzufügen</span>
+                <span (click)="openNewChannelDialog()">Channel hinzufügen</span>
               </td>
             </tr>
           </table>

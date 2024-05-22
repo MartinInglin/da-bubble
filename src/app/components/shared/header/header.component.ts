@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { User } from '../../../models/user.class';
 import { Subscription } from 'rxjs';
 import { UsersService } from '../../../services/firestore/users.service';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { UserMenuComponent } from '../../user-menu/user-menu.component';
@@ -32,6 +32,7 @@ export class HeaderComponent {
 
   private userSubscription: Subscription = new Subscription;
   currentUser: User =  new User();
+  dialogRef: MatDialogRef<UserMenuComponent> | null = null;
 
   ngOnInit(): void {
     this. userSubscription = this.usersService.currentUser$.subscribe((user) => {
@@ -48,9 +49,14 @@ export class HeaderComponent {
       this.userSubscription.unsubscribe();
     }
   }
+
   openDialog(): void {
     const dialogRef = this.dialog.open(UserMenuComponent, {
       width: '282px',
+      position: {
+        top: '100px',
+        right: '50px'
+      },
     });
   }
 }

@@ -1,4 +1,4 @@
-import { MinimalUser } from '../interfaces/minimal-user';
+import { MinimalUser } from '../models/minimal_user.class';
 import { Post } from './post.class';
 
 export class Channel {
@@ -12,9 +12,8 @@ export class Channel {
     this.id = obj?.id || '';
     this.name = obj?.name || '';
     this.description = obj?.description || '';
-    this.users =
-      obj?.users?.map((user: MinimalUser) => ({ id: user.id, avatar: user.avatar })) ||
-      [];
-    this.posts = obj?.posts?.map((post: Post) => new Post(post)) || [];
+    this.users = obj?.users?.map((user: MinimalUser) => new MinimalUser(user)) || [new MinimalUser()];
+    this.posts = obj?.posts?.map((post: Post) => new Post(post)) || [new Post()];
   }
 }
+
