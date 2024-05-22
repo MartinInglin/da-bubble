@@ -10,6 +10,7 @@ import {
   setPersistence,
   signInWithEmailAndPassword,
   signOut,
+  updatePassword,
   user,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
@@ -150,7 +151,7 @@ export class AuthService {
 
   /**
    * This function signs out the user. If successful it navigates the user to the login page.
-   * 
+   *
    * @returns Calls the signOut function of fire auth.
    */
   signOut() {
@@ -169,16 +170,37 @@ export class AuthService {
 
   resetForgottenPassword(email: string) {
     sendPasswordResetEmail(this.auth, email)
-  .then(() => {
-    this.snackbarService.openSnackBar(
-      'Wir haben dir eine Email zum Zurücksetzen des Passwortes gesendet. Bitte überprüfe auch deinen Spam-Ordner.',
-      'Schliessen'
-    );
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // ..
-  });
+      .then(() => {
+        this.snackbarService.openSnackBar(
+          'Wir haben dir eine Email zum Zurücksetzen des Passwortes gesendet. Bitte überprüfe auch deinen Spam-Ordner.',
+          'Schliessen'
+        );
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+      });
+  }
+
+  changePassword(password: string) {
+    const currentUser = this.auth.currentUser;
+
+    if (currentUser) {
+      updatePassword(currentUser, password)
+        .then(() => {
+          this.snackbarService.openSnackBar(
+            'Deine neues Passwort wurde gespeichert.',
+            'Schliessen'
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          this.snackbarService.openSnackBar(
+            'Etwas ist leider schief gelaufen. Bitte versuche es noch einmal oder wende dich an den Support.',
+            'Schliessen'
+          );
+        });
+    }
   }
 }
