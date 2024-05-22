@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -10,6 +10,7 @@ import {
   FormsModule,
 } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -19,6 +20,7 @@ import { RouterModule } from '@angular/router';
   styleUrl: './reset-password.component.scss',
 })
 export class ResetPasswordComponent {
+  authService = inject(AuthService)
   form: FormGroup = new FormGroup({
     email: new FormControl(''),
   });
@@ -42,7 +44,6 @@ export class ResetPasswordComponent {
     if (this.form.invalid) {
       return;
     }
-
-    console.log(JSON.stringify(this.form.value, null, 2));
+    this.authService.resetForgottenPassword(this.form.value.email)
   }
 }

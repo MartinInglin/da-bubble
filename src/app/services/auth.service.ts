@@ -6,6 +6,7 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   sendEmailVerification,
+  sendPasswordResetEmail,
   setPersistence,
   signInWithEmailAndPassword,
   signOut,
@@ -164,5 +165,20 @@ export class AuthService {
           'Schliessen'
         );
       });
+  }
+
+  resetForgottenPassword(email: string) {
+    sendPasswordResetEmail(this.auth, email)
+  .then(() => {
+    this.snackbarService.openSnackBar(
+      'Wir haben dir eine Email zum Zurücksetzen des Passwortes gesendet. Bitte überprüfe auch deinen Spam-Ordner.',
+      'Schliessen'
+    );
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // ..
+  });
   }
 }
