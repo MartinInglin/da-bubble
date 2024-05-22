@@ -4,7 +4,7 @@
             <div class="header">
                 <div>
                     <p><img src="./../../../assets/images/icons/tag.svg"> Entwicklerteam</p>
-                    <button mat-icon-button>
+                    <button (click)="onNoClick()" mat-icon-button>
                         <img src="./../../../assets/images/icons/close.svg">
                     </button>
                 </div>
@@ -27,7 +27,7 @@
             </div>
             <div class="button-container">
                 <div class="message-button">
-                    <button>Channel verlassen</button>
+                    <button (click)="onNoClick()">Channel verlassen</button>
                 </div>
             </div>
         </mat-card-content>

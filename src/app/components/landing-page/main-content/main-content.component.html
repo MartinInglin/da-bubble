@@ -2,7 +2,7 @@
 <main id="mainContent">
     <!-- Header section with channel name and contact information -->
     <header>
-        <div class="channelName">
+        <div (click)="openChannelInfoDialog()" class="channelName">
            {{selectedChannel.name}}
            <!-- {{currentUser}} -->
         </div>

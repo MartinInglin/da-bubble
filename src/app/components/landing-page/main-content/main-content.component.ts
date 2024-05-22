@@ -9,16 +9,18 @@ import { Channel } from '../../../models/channel.class';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { ChannelInfoComponent } from '../../channel-info/channel-info.component';
 declare const twemoji: any; // Deklariere Twemoji als Modul
 
 @Component({
   selector: 'app-main-content',
   standalone: true,
-  imports: [RouterModule, MatButtonModule, MatMenuModule, CommonModule],
+  imports: [RouterModule, MatButtonModule, MatMenuModule, CommonModule, MatDialogModule,],
   templateUrl: './main-content.component.html',
   styleUrl: './main-content.component.scss',
 })
-export class MainContentComponent implements OnInit, OnDestroy  {
+export class MainContentComponent implements OnInit, OnDestroy {
   channelsService = inject(ChannelsService);
   usersService = inject(UsersService);
   threadsService = inject(ThreadsService);
@@ -30,8 +32,10 @@ export class MainContentComponent implements OnInit, OnDestroy  {
   selectedChannel: Channel = new Channel();
   allUsers: User[] = [];
   userId: any;
-  emojis: string[] = ["😊","❤️","😂","🎉","🌟","🎈","🌈","🍕","🚀","⚡"];
+  emojis: string[] = ["😊", "❤️", "😂", "🎉", "🌟", "🎈", "🌈", "🍕", "🚀", "⚡"];
   // currentChannel: Channel | null = null;
+
+  constructor(private dialog: MatDialog) { }
 
   @Output() openThreadEvent = new EventEmitter<boolean>(); // Event to signal thread opening
 
@@ -71,11 +75,17 @@ export class MainContentComponent implements OnInit, OnDestroy  {
     return twemoji.parse(emoji);
   }
 
-linkContactInMessage(x: string) {
-     let messageTextarea = document.getElementById('message-textarea');
+  linkContactInMessage(x: string) {
+    let messageTextarea = document.getElementById('message-textarea');
     if (messageTextarea) {
-    messageTextarea.textContent += '@' + x + ' '; // Append the name to the textarea with a space
+      messageTextarea.textContent += '@' + x + ' '; // Append the name to the textarea with a space
     }
-    }
-    
+  }
+
+  openChannelInfoDialog(): void {
+    const dialogRef = this.dialog.open(ChannelInfoComponent, {
+      width: '872px',
+    });
+  }
+
 }
