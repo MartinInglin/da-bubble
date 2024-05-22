@@ -1,65 +1,81 @@
 header {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-direction: row;
-    margin-bottom: 10px;
-    height: 90px;
-  }
+  width: 100%;
+  // background-color: aqua;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  margin-bottom: 10px;
+  max-width: 2320px;
+  height: 90px;
+}
 .user {
-    height: 70px;
-    padding-right: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 10px;
-    width: 340px;
-    color: white;
-    span {
-      font-size: 32px;
-      color: black;
-      white-space: nowrap;
+  height: 70px;
+  padding-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  width: 340px;
+  color: white;
+  span {
+    font-size: 32px;
+    color: black;
+    white-space: nowrap;
 
-      font-weight: 700;
-    }
-    img {
-      height: 70px;
-    }
+    font-weight: 700;
   }
-  
-  .logo {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    width: fit-content;
-    padding: 10px;
-    gap: 10px;
-    width: 242px;
-    padding-left: 10px;
+  img {
+    height: 70px;
   }
-  
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  width: fit-content;
+  padding: 10px;
+  gap: 10px;
+  width: 242px;
+  padding-left: 10px;
+}
+
+.searchBar {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+
+  input {
+    width: 989px;
+    height: 70px;
+    border-radius: 42px;
+    padding-left: 20px;
+    font-size: 32px;
+    border: none;
+  }
+  img {
+    position: relative;
+    right: 60px; /* Abstand vom rechten Rand des Eingabefeldes */
+    width: 30px; /* Größe des Icons */
+    height: 35px; /* Größe des Icons */
+    width: 35px;
+    pointer-events: none; /* Damit das Bild nicht klickbar ist */
+  }
+}
+@media (max-width: 1500px) {
   .searchBar {
-    width: fit-content;
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-  
     input {
-      width: 989px;
-      height: 70px;
-      border-radius: 42px;
-      padding-left: 20px;
-      font-size: 32px;
-      border: none;
-    }
-    img {
-      position: relative;
-      right: 60px; /* Abstand vom rechten Rand des Eingabefeldes */
-      width: 30px; /* Größe des Icons */
-      height: 35px; /* Größe des Icons */
-      width: 35px;
-      pointer-events: none; /* Damit das Bild nicht klickbar ist */
+      width: 500px;
     }
   }
+}
+@media (max-width: 950px) {
+  .searchBar {
+    input {
+      width: 350px;
+    }
+  }
+}

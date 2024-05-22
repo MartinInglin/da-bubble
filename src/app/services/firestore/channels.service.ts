@@ -32,6 +32,8 @@ export class ChannelsService {
   public channelSubject$: Observable<Channel | null> =
     this.channelSubject.asObservable();
 
+
+
   constructor() {}
 
   getDataChannel(idChannel: string) {
@@ -54,6 +56,7 @@ export class ChannelsService {
       this.channelSubject.next(channel);
     });
   }
+
 
   async createChannel(
     name: string,

@@ -18,7 +18,7 @@ declare const twemoji: any; // Deklariere Twemoji als Modul
   templateUrl: './main-content.component.html',
   styleUrl: './main-content.component.scss',
 })
-export class MainContentComponent implements OnInit, OnDestroy  {
+export class MainContentComponent implements OnInit, OnDestroy {
   channelsService = inject(ChannelsService);
   usersService = inject(UsersService);
   threadsService = inject(ThreadsService);
@@ -30,7 +30,7 @@ export class MainContentComponent implements OnInit, OnDestroy  {
   selectedChannel: Channel = new Channel();
   allUsers: User[] = [];
   userId: any;
-  emojis: string[] = ["😊","❤️","😂","🎉","🌟","🎈","🌈","🍕","🚀","⚡"];
+  emojis: string[] = ["😊", "❤️", "😂", "🎉", "🌟", "🎈", "🌈", "🍕", "🚀", "⚡"];
   // currentChannel: Channel | null = null;
 
   @Output() openThreadEvent = new EventEmitter<boolean>(); // Event to signal thread opening
@@ -71,11 +71,11 @@ export class MainContentComponent implements OnInit, OnDestroy  {
     return twemoji.parse(emoji);
   }
 
-linkContactInMessage(x: string) {
-     let messageTextarea = document.getElementById('message-textarea');
+  linkContactInMessage(x: string) {
+    let messageTextarea = document.getElementById('message-textarea');
     if (messageTextarea) {
-    messageTextarea.textContent += '@' + x + ' '; // Append the name to the textarea with a space
+      messageTextarea.textContent += '@' + x + ' '; // Append the name to the textarea with a space
     }
-    }
-    
+  }
+
 }

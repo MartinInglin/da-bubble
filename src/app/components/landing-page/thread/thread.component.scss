@@ -1,11 +1,11 @@
 /* Set height of the aside element */
 aside {
-  max-height:100%;
+  max-height: 100%;
 }
 
 /* Styling for the thread container */
 #thread {
-height: 85.5vh;
+  height: 85.5vh;
   background-color: white;
   width: 435px;
   border-radius: 30px;
@@ -17,7 +17,7 @@ height: 85.5vh;
 
 /* height thread container */
 .thread-content {
-height: auto;
+  height: auto;
 }
 
 /* Header styling for the thread */
@@ -43,10 +43,12 @@ height: auto;
 
 /* Input section styling */
 .inputContent {
-  display: flex;
   width: 100%;
-align-items: center;
+  display: flex;
+  align-items: center;
   justify-content: center;
+  margin-bottom: 30px;
+
 }
 
 /* Text area styling */
@@ -56,7 +58,6 @@ align-items: center;
   border: 1px solid black;
   border-radius: 20px;
   padding: 10px;
-  margin-bottom: 50px;
   textarea {
     height: 80px;
     border: none;
@@ -89,9 +90,9 @@ align-items: center;
       display: flex;
       align-items: center;
       border-right: 1px solid black; /* Nur rechter Rand */
-      border-top: none; 
-      border-bottom: none; 
-      border-left: none; 
+      border-top: none;
+      border-bottom: none;
+      border-left: none;
     }
   }
 }
@@ -99,7 +100,9 @@ align-items: center;
 /* Styling for individual messages */
 .message {
   display: flex;
-  width: 90%;
+  max-width: 100%;
+  width: 398px;
+  // background-color: aqua;
   padding: 20px;
   height: 141px;
   align-items: center;
@@ -165,4 +168,56 @@ align-items: center;
       }
     }
   }
+}
+
+
+.emoji-container {
+  display: flex; /* Verwendet Flexbox */
+  flex-wrap: wrap; /* Zeilenumbruch, wenn der Platz nicht ausreicht */
+}
+
+.emoji {
+  margin-right: 10px; /* Abstand zwischen den Emojis */
+  margin-bottom: 5px; /* Abstand zwischen den Zeilen */
+}
+
+
+cdk-overlay-connected-position-bounding-box {
+  border-radius: 30px;
+  height: fit-content;
+
+}
+.link-container {
+  display: flex; /* Verwendet Flexbox */
+width: fit-content;
+padding: 10px;
+align-items: center;
+justify-content: center;
+}
+
+.links {
+  // margin-right: 10px; /* Abstand zwischen den Emojis */
+  // margin-bottom: 5px; /* Abstand zwischen den Zeilen */
+  td{
+    width: 100%;
+    padding: 10px;
+    // display: flex;
+    // align-items: center;
+    // justify-content: center;
+    cursor: pointer;
+    &:hover{
+background-color: #eceefe;
+// padding: 10px;
+    }
+    img{
+      height: 40px;
+    }
+  }
+}
+
+
+.mdc-button{
+  min-width: 10px;
+  width: 40px;
+  height: 40px;
 }

@@ -9,9 +9,7 @@
         <div class="channelMembers">
             <!-- Profile pictures of channel members which are part of the group -->
             {{selectedChannel.users}}
-            <!-- <img src="{{selectedChannel.users.avatar}}" alt=""> -->
-            <img src="./../../../../assets/images/icons/Profile bild.svg" alt="">
-            <img src="./../../../../assets/images/icons/Profile bild.svg" alt="">
+           
         </div>
     </header>
 
@@ -21,7 +19,7 @@
         <div class="dateLine">
             <div class="Line">
                 <span>
-                    Datum
+                    
                 </span>
             </div>
         </div>
@@ -29,23 +27,23 @@
         <div class="message">
             <div class="message-container" (click)="openThread()">
                 <!-- Profile picture of the message author -->
-                <img src="./../../../../assets/images/icons/Profile bild.svg" alt="">
+                <img src="" alt="">
                 <!-- Message box -->
                 <div class="message-box">
                     <div class="message-name">
                         <!-- Name of the message author -->
-                        <span>Name Nachmane</span>
+                        <span></span>
                     </div>
                     <div class="message-text">
                         <!-- Text of the message -->
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                     
                     </div>
 
                     <div class="message-details">
                         <!-- Message actions and time details -->
                         <a routerLink="/landingPage"
                             (click)="threadsService.createThread(selectedChannel, 0)">Antworten</a>
-                        <span>Letzte Antwort 14.56</span>
+                        <span>Letzte Antwort </span>
                     </div>
                 </div>
             </div>
@@ -66,6 +64,7 @@
 
                         <img src="./../../../../assets/images/icons/add_icon.svg" alt="">
                     </div>
+
                     <!-- Liste für Emojis -->
                     <button mat-button [matMenuTriggerFor]="aboveMenu"><img
                             src="./../../../../assets/images/icons/smiley-Icon.svg" alt=""></button>
@@ -73,9 +72,8 @@
                         <div class="emoji-container">
                             <span *ngFor="let emoji of emojis" class="emoji" mat-menu-item>{{emoji}}</span>
                         </div>
-
-
                     </mat-menu>
+
                     <!-- Liste für Verlinkungen von Kontakten -->
                     <button mat-button [matMenuTriggerFor]="contactLinks"><img
                             src="./../../../../assets/images/icons/link_icon.svg" alt="">

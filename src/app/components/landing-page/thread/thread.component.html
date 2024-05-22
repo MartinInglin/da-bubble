@@ -10,21 +10,21 @@
             <!-- Header of the thread -->
             <div class="head-thread">
                 <span>Thread</span>
-                <a href=""># Entwicklerteam</a>
+                <a href="">{{threadId}}</a>
             </div>
 
             <!-- Individual message within the thread -->
             <div class="message">
                 <div class="message-container">
-                    <img src="./../../../../assets/images/icons/Profile bild.svg" alt="">
+                    <img src="" alt="">
 
                     <div class="message-box">
                         <div class="message-name">
-                            <span>Name Nachmane</span>
-                            <span class="second-span">14:25</span>
+                            <span></span>
+                            <span class="second-span"></span>
                         </div>
                         <div class="message-text">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                            
                         </div>
 
 
@@ -41,29 +41,65 @@
 
         </div>
 
-        <!-- Input section for adding new messages -->
-        <div class="inputContent">
-            <div class="textArea" placeholder="Nachricht an #Entwicklerteam">
-                <textarea name="" id=""></textarea>
-
-                <!-- Icons for additional options -->
+        
+    
+            <div class="inputContent">
+                <div class="textArea">
+                    <textarea name="" id="message-textarea" placeholder=""></textarea>
+      
+    
                 <div class="icons">
                     <div class="buttons">
                         <div class="addIcon">
-                            <!-- Icon for adding attachments -->
+    
                             <img src="./../../../../assets/images/icons/add_icon.svg" alt="">
                         </div>
-                        <!-- Icon for adding emojis -->
-                        <img src="./../../../../assets/images/icons/smiley-Icon.svg" alt="">
-                        <img src="./../../../../assets/images/icons/link_icon.svg" alt="">
+    
+                        <!-- Liste für Emojis -->
+                        <button mat-button [matMenuTriggerFor]="aboveMenu"><img
+                                src="./../../../../assets/images/icons/smiley-Icon.svg" alt=""></button>
+                        <mat-menu #aboveMenu="matMenu" yPosition="above">
+                            <div class="emoji-container">
+                                <span *ngFor="let emoji of emojis" class="emoji" mat-menu-item>{{emoji}}</span>
+                            </div>
+                        </mat-menu>
+    
+                        <!-- Liste für Verlinkungen von Kontakten -->
+                        <button mat-button [matMenuTriggerFor]="contactLinks"><img
+                                src="./../../../../assets/images/icons/link_icon.svg" alt="">
+                        </button>
+                        <mat-menu #contactLinks="matMenu" yPosition="above">
+    
+                            <div class="link-container">
+    
+                                <table class="links">
+                                    <tr *ngFor="let user of allUsers">
+                                        <td (click)="linkContactInMessage(user.name)">
+                                            <img [src]="user.avatar" alt="Profilbild" />
+                                            <span>{{ user.name }}</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+    
+    
+                        </mat-menu>
+    
+    
+    
                     </div>
                     <!-- Icon for sending the message -->
-                    <img src="./../../../../assets/images/icons/send_icon.svg" alt="">
 
+                    <a (click)="channelsService.savePost('Y8wiky5VAP7IuEwia10Y', 'The Message', currentUser)">
+                        <img src="./../../../../assets/images/icons/send_icon.svg" alt="">
+    
+                    </a>
+    
                 </div>
+            
             </div>
-        </div>
 
+        </div>
 
     </div>
 
