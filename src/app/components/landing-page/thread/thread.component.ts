@@ -12,7 +12,7 @@ import { Component, Input, EventEmitter, OnInit} from '@angular/core';
 })
 export class ThreadComponent implements OnInit {
 
-comments: boolean = false;
+comments: boolean = true;
 
 @Input() openThreadEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 

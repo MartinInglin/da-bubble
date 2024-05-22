@@ -31,7 +31,7 @@ export class MainContentComponent implements OnInit, OnDestroy  {
   allUsers: User[] = [];
   userId: any;
   emojis: string[] = ["😊","❤️","😂","🎉","🌟","🎈","🌈","🍕","🚀","⚡"];
-
+  // currentChannel: Channel | null = null;
 
   @Output() openThreadEvent = new EventEmitter<boolean>(); // Event to signal thread opening
 

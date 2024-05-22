@@ -1,19 +1,23 @@
 /* Set height of the aside element */
 aside {
-  height: 770px;
+  max-height:100%;
 }
 
 /* Styling for the thread container */
 #thread {
-  height: 100%;
+height: 85.5vh;
   background-color: white;
   width: 435px;
   border-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
 }
 
 /* height thread container */
 .thread-content {
-  height: 585px;
+height: auto;
 }
 
 /* Header styling for the thread */
@@ -22,7 +26,7 @@ aside {
   display: flex;
   justify-content: start;
   align-items: center;
-  height: 98px;
+  height: 88px;
   box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2);
   width: 97%;
   gap: 5px;
@@ -41,9 +45,8 @@ aside {
 .inputContent {
   display: flex;
   width: 100%;
-  height: 186px;
+align-items: center;
   justify-content: center;
-  margin: 8px 0px 0px 0px;
 }
 
 /* Text area styling */
@@ -53,7 +56,7 @@ aside {
   border: 1px solid black;
   border-radius: 20px;
   padding: 10px;
-  margin-bottom: 100px;
+  margin-bottom: 50px;
   textarea {
     height: 80px;
     border: none;
