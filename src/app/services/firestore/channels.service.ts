@@ -182,8 +182,8 @@ export class ChannelsService {
    * @param userId string
    * @returns 
    */
-  getIndexOfUser(users: User[], userId: string): number {
-    return users.findIndex((user: User) => user.id === userId);
+  getIndexOfUser(users: MinimalUser[], userId: string): number {
+    return users.findIndex((user: MinimalUser) => user.id === userId);
   }
 
   /**

@@ -1,113 +1,118 @@
 <!-- Main content of the document -->
 <main id="mainContent">
-    <!-- Header section with channel name and contact information -->
-    <header>
-        <div (click)="openChannelInfoDialog()" class="channelName">
-           {{selectedChannel.name}}
-           <!-- {{currentUser}} -->
-        </div>
-        <div (click)="openMembersDialog()" class="channelMembers">
-            <!-- Profile pictures of channel members which are part of the group -->
-            {{selectedChannel.users}}
-            <!-- <img src="{{selectedChannel.users.avatar}}" alt=""> -->
-            <img src="./../../../../assets/images/icons/Profile bild.svg" alt="">
-            <img src="./../../../../assets/images/icons/Profile bild.svg" alt="">
-        </div>
-    </header>
-
-    <!-- Message Content  -->
-    <div class="message-content">
-        <!-- Date line for messages -->
-        <div class="dateLine">
-            <div class="Line">
-                <span>
-                    Datum
-                </span>
-            </div>
-        </div>
-        <!--  -->
-        <div class="message">
-            <div class="message-container" (click)="openThread()">
-                <!-- Profile picture of the message author -->
-                <img src="./../../../../assets/images/icons/Profile bild.svg" alt="">
-                <!-- Message box -->
-                <div class="message-box">
-                    <div class="message-name">
-                        <!-- Name of the message author -->
-                        <span>Name Nachmane</span>
-                    </div>
-                    <div class="message-text">
-                        <!-- Text of the message -->
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    </div>
-
-                    <div class="message-details">
-                        <!-- Message actions and time details -->
-                        <a routerLink="/landingPage"
-                            (click)="threadsService.createThread(selectedChannel, 0)">Antworten</a>
-                        <span>Letzte Antwort 14.56</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <!-- Header section with channel name and contact information -->
+  <header>
+    <div (click)="openChannelInfoDialog()" class="channelName">
+      {{ selectedChannel.name }}
+      <!-- {{currentUser}} -->
     </div>
+    <div (click)="openMembersDialog()" class="channelMembers">
+      <!-- Profile pictures of channel members which are part of the group -->
+      <img src="{{ selectedChannel.users[0].avatar }}" alt="" />
 
-    <!-- Input Feld am unteren rand des Containers -->
-    <div class="inputContent">
-        <div class="textArea">
-            <textarea name="" id="message-textarea" placeholder="Nachricht an #Entwicklerteam"></textarea>
-
-            <!--Icons -->
-
-
-            <div class="icons">
-                <div class="buttons">
-                    <div class="addIcon">
-
-                        <img src="./../../../../assets/images/icons/add_icon.svg" alt="">
-                    </div>
-                    <!-- Liste für Emojis -->
-                    <button mat-button [matMenuTriggerFor]="aboveMenu"><img
-                            src="./../../../../assets/images/icons/smiley-Icon.svg" alt=""></button>
-                    <mat-menu #aboveMenu="matMenu" yPosition="above">
-                        <div class="emoji-container">
-                            <span *ngFor="let emoji of emojis" class="emoji" mat-menu-item>{{emoji}}</span>
-                        </div>
-
-
-                    </mat-menu>
-                    <!-- Liste für Verlinkungen von Kontakten -->
-                    <button mat-button [matMenuTriggerFor]="contactLinks"><img
-                            src="./../../../../assets/images/icons/link_icon.svg" alt="">
-                    </button>
-                    <mat-menu #contactLinks="matMenu" yPosition="above">
-
-                        <div class="link-container">
-
-                            <table class="links">
-                                <tr *ngFor="let user of allUsers">
-                                    <td (click)="linkContactInMessage(user.name)">
-                                        <img [src]="user.avatar" alt="Profilbild" />
-                                        <span>{{ user.name }}</span>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-
-
-                    </mat-menu>
-
-
-
-                </div>
-                <a (click)="channelsService.savePost('Y8wiky5VAP7IuEwia10Y', 'The Message', currentUser)">
-                    <img src="./../../../../assets/images/icons/send_icon.svg" alt="">
-
-                </a>
-
-            </div>
-        </div>
+      <!-- <img src="{{selectedChannel.users.avatar}}" alt=""> -->
+      <img src="./../../../../assets/images/icons/Profile bild.svg" alt="" />
+      <img src="./../../../../assets/images/icons/Profile bild.svg" alt="" />
     </div>
+  </header>
 
+  <!-- Message Content  -->
+  <div class="message-content">
+    <!-- Date line for messages -->
+    <div class="dateLine">
+      <div class="Line">
+        <span> Datum </span>
+      </div>
+    </div>
+    <!--  -->
+    <div class="message">
+      <div class="message-container" (click)="openThread()">
+        <!-- Profile picture of the message author -->
+        <img src="./../../../../assets/images/icons/Profile bild.svg" alt="" />
+        <!-- Message box -->
+        <div class="message-box">
+          <div class="message-name">
+            <!-- Name of the message author -->
+            <span>Name Nachmane</span>
+          </div>
+          <div class="message-text">
+            <!-- Text of the message -->
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          </div>
 
+          <div class="message-details">
+            <!-- Message actions and time details -->
+            <a
+              routerLink="/landingPage"
+              (click)="threadsService.createThread(selectedChannel, 0)"
+              >Antworten</a
+            >
+            <span>Letzte Antwort 14.56</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input Feld am unteren rand des Containers -->
+  <div class="inputContent">
+    <div class="textArea">
+      <textarea
+        name=""
+        id="message-textarea"
+        placeholder="Nachricht an #Entwicklerteam"
+      ></textarea>
+
+      <!--Icons -->
+
+      <div class="icons">
+        <div class="buttons">
+          <div class="addIcon">
+            <img src="./../../../../assets/images/icons/add_icon.svg" alt="" />
+          </div>
+          <!-- Liste für Emojis -->
+          <button mat-button [matMenuTriggerFor]="aboveMenu">
+            <img
+              src="./../../../../assets/images/icons/smiley-Icon.svg"
+              alt=""
+            />
+          </button>
+          <mat-menu #aboveMenu="matMenu" yPosition="above">
+            <div class="emoji-container">
+              <span *ngFor="let emoji of emojis" class="emoji" mat-menu-item>{{
+                emoji
+              }}</span>
+            </div>
+          </mat-menu>
+          <!-- Liste für Verlinkungen von Kontakten -->
+          <button mat-button [matMenuTriggerFor]="contactLinks">
+            <img src="./../../../../assets/images/icons/link_icon.svg" alt="" />
+          </button>
+          <mat-menu #contactLinks="matMenu" yPosition="above">
+            <div class="link-container">
+              <table class="links">
+                <tr *ngFor="let user of allUsers">
+                  <td (click)="linkContactInMessage(user.name)">
+                    <img [src]="user.avatar" alt="Profilbild" />
+                    <span>{{ user.name }}</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </mat-menu>
+        </div>
+        <a
+          (click)="
+            channelsService.savePost(
+              'Y8wiky5VAP7IuEwia10Y',
+              'The Message',
+              currentUser
+            )
+          "
+        >
+          <img src="./../../../../assets/images/icons/send_icon.svg" alt="" />
+        </a>
+      </div>
+    </div>
+  </div>
 </main>
