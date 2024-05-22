@@ -1,5 +1,5 @@
 import { MinimalChannel } from "../interfaces/minimal-channel";
-import { MinimalUser } from "../interfaces/minimal-user";
+import { MinimalUser } from "../models/minimal_user.class";
 
 export class User {
   id: string;

@@ -15,7 +15,7 @@ import {
 } from '@angular/fire/firestore';
 import { Channel } from '../../models/channel.class';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { MinimalUser } from '../../interfaces/minimal-user';
+import { MinimalUser } from '../../models/minimal_user.class';
 import { Post } from '../../models/post.class';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../../models/user.class';
@@ -68,7 +68,7 @@ export class ChannelsService {
    * 
    * @param name string
    * @param description string
-   * @param users object which contains id as string, name as string an avatar URL as string.
+   * @param users object as MinimalUser which contains id as string, name as string an avatar URL as string.
    */
   async createChannel(
     name: string,

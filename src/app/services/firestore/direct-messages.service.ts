@@ -12,7 +12,7 @@ import {
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DirectMessage } from '../../models/direct_message.class';
-import { MinimalUser } from '../../interfaces/minimal-user';
+import { MinimalUser } from '../../models/minimal_user.class';
 import { User } from '../../models/user.class';
 import { Post } from '../../models/post.class';
 import { v4 as uuidv4 } from 'uuid';
