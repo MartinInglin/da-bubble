@@ -5,8 +5,9 @@
 
 
     <!-- Header section with channel name and contact information -->
+
     <header *ngIf="channelSelected">
-        <div (click)="openChannelInfoDialog()" class="channelName" >
+        <div (click)="openChannelInfoDialog(selectedChannel.id)" class="channelName">
             {{ selectedChannel.name }}
 
         </div>
@@ -128,7 +129,7 @@
     
     <!-- Header section with channel name and contact information -->
     <header *ngIf="chatSelected">
-        <div (click)="openChannelInfoDialog()" class="channelName" *ngIf="directMessage && directMessage.users && directMessage.users.length > 0">
+        <div (click)="openChannelInfoDialog(selectedChannel.id)" class="channelName" *ngIf="directMessage && directMessage.users && directMessage.users.length > 0">
             {{directMessage.users[0].name}}
 
         </div>

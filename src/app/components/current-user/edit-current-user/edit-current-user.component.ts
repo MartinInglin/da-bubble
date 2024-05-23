@@ -1,5 +1,6 @@
 import { Component} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'; 
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,7 +18,8 @@ import { Subscription } from 'rxjs';
     MatCardModule,
     MatIconModule,
     MatButtonModule,
-    UserMenuComponent
+    UserMenuComponent,
+    FormsModule
   ],
   templateUrl: './edit-current-user.component.html',
   styleUrl: './edit-current-user.component.scss'
@@ -26,6 +28,8 @@ export class EditCurrentUserComponent {
   private userSubscription: Subscription = new Subscription();
   
   currentUser: User | null = null;
+  updatedName: string = '';
+  updatedEmail: string = '';
 
   constructor(
     private usersService: UsersService,
@@ -33,9 +37,24 @@ export class EditCurrentUserComponent {
   ) {}
 
   ngOnInit(): void {
-    const userSubscription = this.usersService.currentUser$.subscribe(user => {
+    this.userSubscription = this.usersService.currentUser$.subscribe(user => {
       this.currentUser = user;
+      if (user) {
+        this.updatedName = user.name;
+        this.updatedEmail = user.email;
+      }
     });
+  }
+
+  async saveChanges(): Promise<void> {
+    if (this.currentUser) {
+      const updatedData = {
+        name: this.updatedName,
+        email: this.updatedEmail
+      };
+      await this.usersService.updateUser(this.currentUser.id, updatedData);
+      this.dialogRef.close();
+    }
   }
 
   ngOnDestroy(): void {

@@ -4,8 +4,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
-import { AddUserToNewChannelComponent } from '../add-user-to-new-channel/add-user-to-new-channel.component';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { ChannelsService } from '../../services/firestore/channels.service';
 
 @Component({
   selector: 'app-new-channel',
@@ -22,15 +22,21 @@ import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dial
   styleUrl: './new-channel.component.scss'
 })
 export class NewChannelComponent {
+  channelName: string = '';
+  channelDescription: string = '';
+
   constructor(
     private dialog: MatDialog,
+    private channelsService: ChannelsService,
     public dialogRef: MatDialogRef<NewChannelComponent>
   ) {}
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(AddUserToNewChannelComponent, {
-      width: '710px'
-    });
+  createChannel(): void {
+    if (this.channelName.trim()) {
+      this.channelsService.createChannel(this.channelName, this.channelDescription, [])
+        .then(() => this.dialogRef.close())
+        .catch(error => console.error('Error creating channel: ', error));
+    }
   }
 
   onNoClick(): void {

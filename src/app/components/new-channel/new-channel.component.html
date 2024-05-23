@@ -16,13 +16,13 @@
             <form>
                 <div class="input-container">
                     <p><b>Channel-Name</b></p>
-                    <input placeholder="z.B Kooperationsprojekte" class="input-channel">
+                    <input [(ngModel)]="channelName" placeholder="z.B Kooperationsprojekte" class="input-channel" name="channelName">
                     <p><b>Beschreibung</b> (optional)</p>
-                    <input placeholder="Dein Text hier">
+                    <input [(ngModel)]="channelDescription" placeholder="Dein Text hier" name="channelDescription">
                 </div>
                 <div class="button-container">
                     <div class="message-button">
-                        <button (click)="onNoClick(); openDialog()">Erstellen</button>
+                        <button (click)="createChannel()">Erstellen</button>
                     </div>
                 </div>
             </form>

@@ -87,4 +87,9 @@ export class UsersService {
       this.allUsersSubject.next(data);
     });
   }
+
+  async updateUser(userId: string, updatedData: Partial<User>): Promise<void> {
+    const userRef = doc(this.firestore, 'users', userId);
+    await setDoc(userRef, updatedData, { merge: true });
+  }
 }
