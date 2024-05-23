@@ -17,7 +17,7 @@ import { Channel } from '../../../models/channel.class';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ChannelInfoComponent } from '../../channel-info/channel-info.component';
 import { MembersComponent } from '../../members/members.component';
 import { ProfileDetailViewComponent } from '../../profile-detail-view/profile-detail-view.component';
@@ -132,9 +132,10 @@ export class MainContentComponent implements OnInit, OnDestroy {
   
 
 
-  openChannelInfoDialog(): void {
+  openChannelInfoDialog(channelId: string): void {
     const dialogRef = this.dialog.open(ChannelInfoComponent, {
       width: '872px',
+      data: { channelId: channelId },
     });
   }
 

@@ -6,7 +6,7 @@
 
     <!-- Header section with channel name and contact information -->
     <header>
-        <div (click)="openChannelInfoDialog()" class="channelName">
+        <div (click)="openChannelInfoDialog(selectedChannel.id)" class="channelName">
             {{ selectedChannel.name }}
 
         </div>
