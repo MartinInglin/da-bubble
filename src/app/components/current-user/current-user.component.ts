@@ -7,7 +7,8 @@ import { UserMenuComponent } from '../user-menu/user-menu.component';
 import { UsersService } from '../../services/firestore/users.service';
 import { User } from '../../models/user.class';
 import { Subscription } from 'rxjs';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { EditCurrentUserComponent } from './edit-current-user/edit-current-user.component';
 
 @Component({
   selector: 'app-current-user',
@@ -17,20 +18,22 @@ import { MatDialogRef } from '@angular/material/dialog';
     MatCardModule,
     MatIconModule,
     MatButtonModule,
-    UserMenuComponent
+    UserMenuComponent,
+    MatDialogModule
   ],
   templateUrl: './current-user.component.html',
   styleUrls: ['./current-user.component.scss']
 })
 export class CurrentUserComponent implements OnInit {
   private userSubscription: Subscription = new Subscription();
-  
+
   currentUser: User | null = null;
 
   constructor(
     private usersService: UsersService,
+    private dialog: MatDialog,
     public dialogRef: MatDialogRef<CurrentUserComponent>
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const userSubscription = this.usersService.currentUser$.subscribe(user => {
@@ -42,6 +45,16 @@ export class CurrentUserComponent implements OnInit {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
     }
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(EditCurrentUserComponent, {
+      width: '500px',
+      position: {
+        top: '100px',
+        right: '50px',
+      },
+    });
   }
 
   onNoClick(): void {

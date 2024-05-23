@@ -13,7 +13,7 @@
             <div class="name-container">
                 <span class="edit-container">
                     <p>{{ currentUser.name }}</p>
-                    <button>Bearbeiten</button>
+                    <button (click)="openDialog(); onNoClick()">Bearbeiten</button>
                 </span>
                 <span class="status">
                     <div></div>Aktiv

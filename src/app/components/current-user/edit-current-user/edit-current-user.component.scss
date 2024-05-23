@@ -1,0 +1,144 @@
+@import "./../../../../styles.scss";
+
+mat-card {
+    width: 500px;
+    height: fit-content;
+    padding: 40px;
+    font-family: 'Nunito';
+}
+
+mat-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 45px;
+}
+
+.detail-view-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+
+    p {
+        font-size: 24px;
+        font-weight: 700px;
+        line-height: 32.74px;
+        margin: 0;
+    }
+
+    button {
+        height: 40px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: scale 75ms ease-in-out;
+        
+        &:hover {
+            background-color: $background;
+            scale: 1.05;
+        }
+
+        img {
+            height: 13.5px;
+            width: 13.5px;
+        }
+    }
+
+}
+
+.profile-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+        height: 200px;
+        width: 200px;
+    }
+}
+
+.edit-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+        input {
+            height: 52px;
+            width: 100%;
+            border-radius: 30px;
+            border: solid 1px $light-purple-lines;
+            padding-left: 15px;
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 24.55px;
+    
+            &::placeholder {
+                color: $text-gray;
+                font-family: 'Nunito';
+            }
+        }
+}
+
+.name-container {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+
+    p {
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 27.28px;
+    }
+
+    img {
+        height: 25px;
+        width: 25px;
+    }
+}
+
+.button-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+
+    .cancel {
+        height: 49px;
+        width: 141px;
+        border-radius: 50px;
+        background-color: white;
+        border: solid 1px #797EF3;
+        color: #797EF3;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 24.55px;
+        text-align: center;
+
+        &:hover {
+            cursor: pointer;
+            background-color: #797EF3;
+            color: white;
+        }
+    }
+
+    .save {
+        height: 49px;
+        width: 141px;
+        border-radius: 50px;
+        background-color: #444DF2;
+        border: solid 1px #444DF2;
+        color: white;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 24.55px;
+        text-align: center;
+
+        &:hover {
+            cursor: pointer;
+            opacity: 0.5;
+            color: white;
+        }
+    }
+}
