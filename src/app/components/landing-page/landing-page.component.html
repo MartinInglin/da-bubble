@@ -65,7 +65,7 @@
 
           <table class="contacts" *ngIf="showContacts">
             <tr *ngFor="let user of allUsers">
-              <td (click)="directMessagesService.getDataDirectMessage('c1mygyDNsVRPpp1ASs7E2IsceOv1', currentUser)">
+              <td (click)="directMessagesService.getDataDirectMessage(user.id , currentUser)">
                 <img [src]="user.avatar" alt="Profilbild" />
                 <span>{{ user.name }}</span>
               </td>

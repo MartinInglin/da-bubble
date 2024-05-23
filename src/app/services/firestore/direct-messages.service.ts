@@ -22,11 +22,15 @@ import { v4 as uuidv4 } from 'uuid';
 })
 export class DirectMessagesService {
   firestore = inject(Firestore);
+  // directMessage$ = this.directMessageSubject.asObservable();
 
-  private directMessageSubject: BehaviorSubject<DirectMessage | null> =
-    new BehaviorSubject<DirectMessage | null>(null);
-  public directMessageSubject$: Observable<DirectMessage | null> =
-    this.directMessageSubject.asObservable();
+  // private directMessageSubject: BehaviorSubject<DirectMessage | null> =
+  //   new BehaviorSubject<DirectMessage | null>(null);
+  // public directMessageSubject$: Observable<DirectMessage | null> =
+  //   this.directMessageSubject.asObservable();
+
+  private directMessageSubject: BehaviorSubject<DirectMessage | null> = new BehaviorSubject<DirectMessage | null>(null);
+  public directMessage$ = this.directMessageSubject.asObservable();
 
   constructor() {}
 

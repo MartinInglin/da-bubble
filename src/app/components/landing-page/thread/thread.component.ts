@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, EventEmitter, OnInit, inject} from '@angular/core';
+import { Component, Input, EventEmitter, OnInit, inject, Output } from '@angular/core';
 import { User } from '../../../models/user.class';
 import { ThreadsService } from '../../../services/firestore/threads.service';
 import { FormsModule } from '@angular/forms';
@@ -10,17 +10,19 @@ import { ChannelsService } from '../../../services/firestore/channels.service';
 import { UsersService } from '../../../services/firestore/users.service';
 import { Subscription } from 'rxjs';
 import { Channel } from '../../../models/channel.class';
+import { DirectMessage } from '../../../models/direct_message.class';
+import { MainContentComponent } from '../main-content/main-content.component';
 
 @Component({
   selector: 'app-thread',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, MatButtonModule, MatMenuModule,],
+  imports: [CommonModule, FormsModule, RouterModule, MatButtonModule, MatMenuModule,MainContentComponent],
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss'
 })
 export class ThreadComponent implements OnInit {
   allUsers: User[] = [];
-  comments: boolean = false;
+  comments: boolean = true;
   message: string = '';
   currentUser: User = new User();
   emojis: string[] = ["😊", "❤️", "😂", "🎉", "🌟", "🎈", "🌈", "🍕", "🚀", "⚡"];
@@ -37,38 +39,30 @@ export class ThreadComponent implements OnInit {
 
 
 
-
+  @Output() commentsChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() openThreadEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() channelId: string = ''; // Kanal-ID als Eingabe für die Thread-Komponente
   @Input() threadId: string = ''; // Thread-ID als Eingabe für die Thread-Komponente
-  // @Input() currentUser: User | null = null; // Aktueller Benutzer als Eingabe für die Thread-Komponente
 
-  constructor(private threadsService: ThreadsService,  private channelService: ChannelsService, private userService: UsersService) { }
+  constructor(private threadsService: ThreadsService, private channelService: ChannelsService, private userService: UsersService) { }
 
   ngOnInit(): void {
 
-    this.openThreadEvent.subscribe((isOpen) => {
-      if (isOpen) {
-        this.openThread();
-      }
-    });
 
- 
+
+
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       this.currentUser = user ?? new User();
-      console.log('Current User:', this.currentUser);
     });
 
     this.usersSubscription = this.usersService.allUsersSubject$.subscribe((users) => {
       this.allUsers = users ?? []; // Benutzerdaten aktualisieren
-      console.log('All Users:', this.allUsers);
     });
     this.channelSubscription = this.channelsService.channelSubject$.subscribe(
       (channel) => {
         this.selectedChannel = channel ?? new Channel();
       }
     );
-
   }
 
 
@@ -78,14 +72,21 @@ export class ThreadComponent implements OnInit {
     this.channelSubscription.unsubscribe();
   }
 
-
-  openThread() {
-    // this.openThreadEvent.subscribe(() => { // Subscribe on component initialization
+  toggleComments() {
     this.comments = true;
-    console.log('thread öffnet sich');
-
-    ;
   }
+
+
+  directMessage = new DirectMessage({
+    id: '123',
+    users: [
+      { id: '1', avatar: 'path_to_avatar1' },
+      { id: '2', avatar: 'path_to_avatar2' },
+      // more users...
+    ],
+    posts: []
+  });
+
 
   savePost() {
 
@@ -104,11 +105,9 @@ export class ThreadComponent implements OnInit {
     }
   }
 
-  // onClickCreateThread(){
-  //   this.openThread();
-  // }
 
-  
+
+
 
 }
 

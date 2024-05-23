@@ -79,16 +79,6 @@ export class LandingPageComponent implements OnInit {
 
     });
 
-   
-
-    this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
-      this.currentUser = user ?? new User;
-      console.log('Current User:', this.currentUser);
-      if (this.currentUser) {
-        // Alle Kanäle abrufen
-        this.channelsService.getAllChannels();
-      }
-    });
 
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       if (user) {

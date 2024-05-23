@@ -52,8 +52,14 @@ header {
     display: flex;
     padding: 10px;
     align-items: center;
+    cursor: pointer;
     img {
       height: 30px;
+      padding: 10px;
+      &:hover{
+        background-color:#eceefe;
+        border-radius: 30px;
+      }
     }
   }
 }

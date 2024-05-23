@@ -21,6 +21,9 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ChannelInfoComponent } from '../../channel-info/channel-info.component';
 import { MembersComponent } from '../../members/members.component';
 import { ProfileDetailViewComponent } from '../../profile-detail-view/profile-detail-view.component';
+import { DirectMessagesService } from '../../../services/firestore/direct-messages.service';
+import { DirectMessage } from '../../../models/direct_message.class';
+
 declare const twemoji: any; // Deklariere Twemoji als Modul
 
 @Component({
@@ -47,11 +50,13 @@ export class MainContentComponent implements OnInit, OnDestroy {
   private userSubscription: Subscription = new Subscription();
   private channelSubscription: Subscription = new Subscription();
   private usersSubscription: Subscription = new Subscription();
+  private directMessageSubscription: Subscription = new Subscription();
 
   currentUser: User = new User();
   selectedChannel: Channel = new Channel();
   allUsers: User[] = [];
   userId: any;
+  directMessage: DirectMessage | null = null;
   emojis: string[] = [
     '😊',
     '❤️',
@@ -64,9 +69,13 @@ export class MainContentComponent implements OnInit, OnDestroy {
     '🚀',
     '⚡',
   ];
-  // currentChannel: Channel | null = null;
+  currentChannel: Channel | null = null;
 
-  constructor(private dialog: MatDialog, private threadService: ThreadsService) {}
+  channelSelected: boolean = true;
+  chatSelected: boolean = false;
+
+
+  constructor(private dialog: MatDialog, private threadService: ThreadsService, private directMessagesService: DirectMessagesService) {}
 
   // @Output() openThreadEvent = new EventEmitter<boolean>(); // Event to signal thread opening
 
@@ -88,6 +97,15 @@ export class MainContentComponent implements OnInit, OnDestroy {
         this.allUsers = users ?? []; // Benutzerdaten aktualisieren
       }
     );
+
+    this.directMessageSubscription = this.directMessagesService.directMessage$.subscribe((directMessage: DirectMessage | null) => {
+      this.directMessage = directMessage;
+      this.chatSelected = !!directMessage; // Update chatSelected based on the existence of a direct message
+      if (this.chatSelected) {
+        this.channelSelected = false;
+    }
+    });
+
   }
 
   openThread(): void {
@@ -103,6 +121,9 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
     if (this.usersSubscription) {
       this.usersSubscription.unsubscribe(); // Benutzerabonnement aufheben
+    }
+    if (this.directMessageSubscription) {
+      this.directMessageSubscription.unsubscribe();
     }
   }
   showEmoji(emoji: string): string {
