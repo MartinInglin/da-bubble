@@ -39,7 +39,7 @@
           <table class="channels" *ngIf="showChannels">
             <tr *ngFor="let channel of allChannels">
               <td (click)="channelsService.getDataChannel(channel.id)">
-                <span class="span-hashtag">#</span> <span>{{ channel.name }}</span>
+                <span class="span-hashtag">#</span> <span>{{currentUser.channels[i].id }}</span>
               </td>
             </tr>
             <tr>
@@ -77,10 +77,10 @@
     <!-- SideNav -->
 
     <!-- ChatSpace -->
-    <app-main-content class="mainContent"></app-main-content>
+    <app-main-content  class="mainContent" ></app-main-content>
 
     <!-- CommentSection -->
-    <app-thread class="threadContent"></app-thread>
+    <app-thread  class="threadContent"></app-thread>
   </div>
   <!-- MainContent -->
 </section>

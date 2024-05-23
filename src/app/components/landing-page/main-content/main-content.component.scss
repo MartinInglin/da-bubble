@@ -9,7 +9,16 @@
   max-width: 1920px;
   margin-bottom: 100px;
   overflow: hidden;
-
+  a {
+    cursor: pointer;
+    &:hover {
+      background-color: #0c0c0c0e;
+      border-radius: 20px;
+      border: none;
+      display: flex;
+      align-items: center;
+    }
+  }
 }
 
 /* Styling for the header section */
@@ -57,7 +66,7 @@ header {
   margin-bottom: 30px;
 }
 
-    /* Styling for the text area */
+/* Styling for the text area */
 .textArea {
   height: 135px;
   width: 90%;
@@ -95,12 +104,16 @@ header {
     }
     .addIcon {
       height: 30px;
+      width: 30px;
       display: flex;
       align-items: center;
-      border-right: 1px solid black; 
-      border-top: none; 
+      justify-content: center;
+      border-top: none;
       border-bottom: none;
-      border-left: none; 
+      border-left: none;
+      cursor: pointer;
+      background-color: none;
+      margin-right: 5px;
     }
   }
 }
@@ -149,7 +162,7 @@ header {
     width: 70px;
   }
 
-/* Styling for the message text */
+  /* Styling for the message text */
   .message-text {
     width: fit-content;
     background-color: #eceefe;
@@ -160,7 +173,7 @@ header {
     padding: 10px;
   }
 
-/* Styling for the message name */
+  /* Styling for the message name */
   .message-name {
     font-weight: 600;
     margin-bottom: 5px;
@@ -204,52 +217,57 @@ header {
 }
 
 .emoji-container {
-  display: flex; /* Verwendet Flexbox */
-  flex-wrap: wrap; /* Zeilenumbruch, wenn der Platz nicht ausreicht */
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .emoji {
-  margin-right: 10px; /* Abstand zwischen den Emojis */
-  margin-bottom: 5px; /* Abstand zwischen den Zeilen */
+  margin-right: 10px;
+  margin-bottom: 5px;
 }
-
 
 cdk-overlay-connected-position-bounding-box {
   border-radius: 30px;
   height: fit-content;
-
 }
 .link-container {
-  display: flex; /* Verwendet Flexbox */
-width: fit-content;
-padding: 10px;
-align-items: center;
-justify-content: center;
+  display: flex;
+  width: fit-content;
+  padding: 10px;
+  align-items: center;
+  justify-content: center;
 }
 
 .links {
-  // margin-right: 10px; /* Abstand zwischen den Emojis */
-  // margin-bottom: 5px; /* Abstand zwischen den Zeilen */
-  td{
+  td {
     width: 100%;
     padding: 10px;
-    // display: flex;
-    // align-items: center;
-    // justify-content: center;
     cursor: pointer;
-    &:hover{
-background-color: #eceefe;
-// padding: 10px;
-    }
-    img{
+    img {
       height: 40px;
     }
   }
 }
 
-
-.mdc-button{
+.mdc-button {
   min-width: 10px;
   width: 40px;
   height: 40px;
+  &:hover {
+    background-color: #0c0c0c02;
+
+    border-radius: 20px;
+    border: none;
+  }
+}
+
+.link-emojis {
+  margin-top: 5px;
+}
+
+
+.seperator{
+  height: 30px;
+  width: 1px;
+  background-color: black;
 }

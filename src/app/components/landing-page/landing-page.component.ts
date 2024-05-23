@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, EventEmitter, OnInit, inject } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
@@ -35,6 +35,8 @@ import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dial
   styleUrl: './landing-page.component.scss',
 })
 export class LandingPageComponent implements OnInit {
+  openThreadEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  
   usersService = inject(UsersService);
   channelsService = inject(ChannelsService);
   directMessagesService = inject(DirectMessagesService)
@@ -46,6 +48,7 @@ export class LandingPageComponent implements OnInit {
   currentUser: User = new User();
   allUsers: User[] = [];
   allChannels: Channel[] = [];
+  i :any = [] = '';
 
   showContacts: boolean = false;
   showChannels: boolean = true;
@@ -76,18 +79,37 @@ export class LandingPageComponent implements OnInit {
 
     });
 
-    this.allChannelsSubscription = this.channelsService.channelSubject$.subscribe((channel) => {
-      if (channel) {
-        // Überprüfe, ob der empfangene Kanal nicht null ist
-        this.allChannels.push(channel); // Füge den Kanal zum Array hinzu
-        console.log('All Channels:', this.allChannels);
+   
+
+    this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
+      this.currentUser = user ?? new User;
+      console.log('Current User:', this.currentUser);
+      if (this.currentUser) {
+        // Alle Kanäle abrufen
+        this.channelsService.getAllChannels();
       }
     });
 
-
-
+    this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
+      if (user) {
+        // Überprüfe, ob ein Benutzerobjekt vorhanden ist
+        this.currentUser = user; // Weise das Benutzerobjekt direkt zu
+        console.log('Current User:', this.currentUser);
+        if (this.currentUser) {
+          // Alle Kanäle abrufen
+          this.channelsService.getAllChannels();
+        }
+      }
+    });
+    
 
   }
+
+  getAllChannelsForUser(userId: string): void {
+    // Hier kannst du die Kanäle abrufen, denen der Benutzer beigetreten ist, basierend auf der Benutzer-ID
+  }
+
+
 
   showContactsSide() { }
 

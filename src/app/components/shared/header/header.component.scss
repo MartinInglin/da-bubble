@@ -1,6 +1,5 @@
 header {
   width: 100%;
-  // background-color: aqua;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -58,26 +57,17 @@ header {
   }
   img {
     position: relative;
-    right: 60px; /* Abstand vom rechten Rand des Eingabefeldes */
-    width: 30px; /* Größe des Icons */
-    height: 35px; /* Größe des Icons */
+    right: 60px; 
+    width: 30px;
+    height: 35px; 
     width: 35px;
-    pointer-events: none; /* Damit das Bild nicht klickbar ist */
+    pointer-events: none; 
   }
 }
 @media (max-width: 1500px) {
   .searchBar {
     input {
-<<<<<<< HEAD
       width: 500px;
-=======
-      width: 20px; /*previousley 989px. Changed for testing purposes*/
-      height: 70px;
-      border-radius: 42px;
-      padding-left: 20px;
-      font-size: 32px;
-      border: none;
->>>>>>> 05a5e0239d104a110b9db7a98c25f601d83a11fd
     }
   }
 }

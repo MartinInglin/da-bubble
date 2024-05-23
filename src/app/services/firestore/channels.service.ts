@@ -60,7 +60,7 @@ export class ChannelsService {
     onSnapshot(collectionRef, (snapshot) => {
       const channel = snapshot.docs.map(
         (doc) => new Channel({ id: doc.id, ...doc.data() })
-      )[0];
+      )[5];
       this.channelSubject.next(channel);
     });
   }

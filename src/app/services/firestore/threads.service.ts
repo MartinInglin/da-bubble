@@ -21,7 +21,7 @@ export class ThreadsService {
    * @param postIndex number
    */
   async createThread(channelData: Channel, postIndex:number): Promise<void> {
-    debugger;
+
     try {
       const channelRef = doc(this.firestore, 'channels', channelData.id);
       const threadsCollectionRef = collection(channelRef, 'threads');

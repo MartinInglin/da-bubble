@@ -9,7 +9,7 @@ import { RouterModule } from '@angular/router';
 import { ChannelsService } from '../../../services/firestore/channels.service';
 import { UsersService } from '../../../services/firestore/users.service';
 import { Subscription } from 'rxjs';
-
+import { Channel } from '../../../models/channel.class';
 
 @Component({
   selector: 'app-thread',
@@ -20,17 +20,21 @@ import { Subscription } from 'rxjs';
 })
 export class ThreadComponent implements OnInit {
   allUsers: User[] = [];
-  comments: boolean = true;
+  comments: boolean = false;
   message: string = '';
   currentUser: User = new User();
   emojis: string[] = ["😊", "❤️", "😂", "🎉", "🌟", "🎈", "🌈", "🍕", "🚀", "⚡"];
   userId: any;
+  selectedChannel: Channel = new Channel();
+
 
   channelsService = inject(ChannelsService);
   usersService = inject(UsersService);
 
   private usersSubscription: Subscription = new Subscription();
   private userSubscription: Subscription = new Subscription();
+  private channelSubscription: Subscription = new Subscription();
+
 
 
 
@@ -39,11 +43,17 @@ export class ThreadComponent implements OnInit {
   @Input() threadId: string = ''; // Thread-ID als Eingabe für die Thread-Komponente
   // @Input() currentUser: User | null = null; // Aktueller Benutzer als Eingabe für die Thread-Komponente
 
+  constructor(private threadsService: ThreadsService,  private channelService: ChannelsService, private userService: UsersService) { }
 
   ngOnInit(): void {
 
-    // this.openThreadEvent.subscribe(() => { // Abonnieren des Ereignisses beim Initialisieren der Komponente
-    // this.openThread();
+    this.openThreadEvent.subscribe((isOpen) => {
+      if (isOpen) {
+        this.openThread();
+      }
+    });
+
+ 
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       this.currentUser = user ?? new User();
       console.log('Current User:', this.currentUser);
@@ -53,9 +63,21 @@ export class ThreadComponent implements OnInit {
       this.allUsers = users ?? []; // Benutzerdaten aktualisieren
       console.log('All Users:', this.allUsers);
     });
+    this.channelSubscription = this.channelsService.channelSubject$.subscribe(
+      (channel) => {
+        this.selectedChannel = channel ?? new Channel();
+      }
+    );
 
   }
-  constructor(private threadsService: ThreadsService) { }
+
+
+  ngOnDestroy(): void {
+    this.userSubscription.unsubscribe();
+    this.usersSubscription.unsubscribe();
+    this.channelSubscription.unsubscribe();
+  }
+
 
   openThread() {
     // this.openThreadEvent.subscribe(() => { // Subscribe on component initialization
@@ -81,6 +103,12 @@ export class ThreadComponent implements OnInit {
       messageTextarea.textContent += '@' + x + ' '; // Append the name to the textarea with a space
     }
   }
+
+  // onClickCreateThread(){
+  //   this.openThread();
+  // }
+
+  
 
 }
 

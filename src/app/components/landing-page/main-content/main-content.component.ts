@@ -2,6 +2,7 @@ import {
   Component,
   EventEmitter,
   Output,
+  Input,
   inject,
   OnInit,
   OnDestroy,
@@ -36,6 +37,9 @@ declare const twemoji: any; // Deklariere Twemoji als Modul
   styleUrl: './main-content.component.scss',
 })
 export class MainContentComponent implements OnInit, OnDestroy {
+
+  // @Output() openThreadEvent: EventEmitter<void> = new EventEmitter<void>();
+
   channelsService = inject(ChannelsService);
   usersService = inject(UsersService);
   threadsService = inject(ThreadsService);
@@ -43,6 +47,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   private userSubscription: Subscription = new Subscription();
   private channelSubscription: Subscription = new Subscription();
   private usersSubscription: Subscription = new Subscription();
+
   currentUser: User = new User();
   selectedChannel: Channel = new Channel();
   allUsers: User[] = [];
@@ -61,9 +66,12 @@ export class MainContentComponent implements OnInit, OnDestroy {
   ];
   // currentChannel: Channel | null = null;
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog, private threadService: ThreadsService) {}
 
-  @Output() openThreadEvent = new EventEmitter<boolean>(); // Event to signal thread opening
+  // @Output() openThreadEvent = new EventEmitter<boolean>(); // Event to signal thread opening
+
+  @Output() openThreadEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+
 
   ngOnInit(): void {
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
@@ -82,8 +90,8 @@ export class MainContentComponent implements OnInit, OnDestroy {
     );
   }
 
-  openThread() {
-    this.openThreadEvent.emit(true); // Emit an event when the user opens the thread
+  openThread(): void {
+    this.openThreadEvent.emit();
   }
 
   ngOnDestroy(): void {
@@ -109,6 +117,20 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
   }
 
+ 
+
+  onClickCreateThread(channelData: Channel, postIndex: number): void {
+    this.openThreadEvent.emit(true); // Hier wird das Event ausgelöst
+    this.threadService.createThread(channelData, postIndex)
+      .then(() => {
+        console.log('Thread erfolgreich erstellt!');
+      })
+      .catch((error) => {
+        console.error('Fehler beim Erstellen des Threads: ', error);
+      });
+  }
+  
+
 
   openChannelInfoDialog(): void {
     const dialogRef = this.dialog.open(ChannelInfoComponent, {
@@ -127,5 +149,32 @@ export class MainContentComponent implements OnInit, OnDestroy {
       width: '500px',
     });
   }
+
+
+  formatDate(timestamp: number): string {
+    const daysOfWeek = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+    const date = new Date(timestamp);
+    const today = new Date(); // Aktuelles Datum
+    const dayOfWeekIndex = date.getDay(); // Hole den Wochentag als Zahl (0-6)
+    
+    // Überprüfe, ob das Datum heute ist
+    if (date.toDateString() === today.toDateString()) {
+      return 'heute'; // Gib 'heute' zurück, wenn das Datum heute ist
+    } else {
+      return daysOfWeek[dayOfWeekIndex]; // Andernfalls gib den Namen des Wochentags zurück
+    }
+  }
+  
+  
+  
+  formatDateTime(timestamp: number): string {
+    const date = new Date(timestamp);
+    const hours = date.getHours(); // Hole die Stunden aus dem Datum
+    const minutes = date.getMinutes(); // Hole die Minuten aus dem Datum
+    // const seconds = date.getSeconds(); // Hole die Sekunden aus dem Datum
+    return ` ${hours}:${minutes} Uhr`; // Gib die Uhrzeit im Format "Stunden:Minuten:Sekunden" zurück
+  }
+  
+  
 
 }
