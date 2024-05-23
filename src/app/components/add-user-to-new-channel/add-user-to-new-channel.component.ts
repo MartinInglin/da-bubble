@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-add-user-to-new-channel',
@@ -22,4 +23,12 @@ import { MatRadioModule } from '@angular/material/radio';
 })
 export class AddUserToNewChannelComponent {
   people: boolean = false;
+
+  constructor(
+    public dialogRef: MatDialogRef<AddUserToNewChannelComponent>
+  ) { }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 }

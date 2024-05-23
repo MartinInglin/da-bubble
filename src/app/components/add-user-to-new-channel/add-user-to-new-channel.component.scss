@@ -1,18 +1,7 @@
 @import "./../../../styles.scss";
-
-section {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    width: 100%;
-    background-color: rgba($color: #000000, $alpha: 0.04);
-}
-
 mat-card {
     width: 710px;
     height: fit-content;
-    border-radius: 30px;
     padding: 40px;
     font-family: 'Nunito';
 }

@@ -4,7 +4,7 @@
             <div class="header">
                 <div>
                     <p>Leute Hinzufügen</p>
-                    <button mat-icon-button>
+                    <button (click)="onNoClick()" mat-icon-button>
                         <img src="./../../../assets/images/icons/close.svg">
                     </button>
                 </div>
@@ -20,7 +20,7 @@
             </mat-radio-group>
             <div class="button-container">
                 <div class="message-button">
-                    <button>Erstellen</button>
+                    <button (click)="onNoClick()">Erstellen</button>
                 </div>
             </div>
         </mat-card-content>
