@@ -15,16 +15,16 @@
                     <img src="./../../../../assets/images/icons/account_circle.svg">
                     <p>Vollständiger Name</p>
                 </div>
-                <input class="name-input" placeholder="{{ currentUser.name }}">
+                <input class="name-input" placeholder="{{ currentUser.name }}" [(ngModel)]="updatedName">
                 <div class="name-container">
                     <img src="./../../../../assets/images/icons/mail_black.svg">
                     <p>E-Mail-Adresse</p>
                 </div>
-                <input class="name-input" placeholder="{{ currentUser.email }}">
+                <input class="name-input" placeholder="{{ currentUser.email }}" [(ngModel)]="updatedEmail">
             </div>
             <div class="button-container" (click)="onNoClick()">
-                <button class="cancel">Abbrechen</button>
-                <button class="save">Speichern</button>
+                <button class="cancel" (click)="onNoClick()">Abbrechen</button>
+                <button class="save" (click)="saveChanges()">Speichern</button>
             </div>
         </mat-card-content>
     </mat-card>
