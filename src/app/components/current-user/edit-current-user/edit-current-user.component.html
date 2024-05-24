@@ -16,11 +16,11 @@
                     <p>Vollständiger Name</p>
                 </div>
                 <input class="name-input" placeholder="{{ currentUser.name }}" [(ngModel)]="updatedName">
-                <div class="name-container">
+                <div *ngIf="!currentUser.isGoogleAccount"class="name-container">
                     <img src="./../../../../assets/images/icons/mail_black.svg">
                     <p>E-Mail-Adresse</p>
                 </div>
-                <input class="name-input" type="email" placeholder="{{ currentUser.email }}" [(ngModel)]="updatedEmail">
+                <input *ngIf="!currentUser.isGoogleAccount" class="name-input" type="email" placeholder="{{ currentUser.email }}" [(ngModel)]="updatedEmail">
             </div>
             <div class="button-container" (click)="onNoClick()">
                 <button class="cancel" (click)="onNoClick()">Abbrechen</button>
