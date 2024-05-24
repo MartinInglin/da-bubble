@@ -1,12 +1,13 @@
-import { Component} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; 
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { UserMenuComponent } from '../../user-menu/user-menu.component';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { UsersService } from '../../../services/firestore/users.service';
+import { AuthService } from '../../../services/auth.service';
 import { User } from '../../../models/user.class';
 import { Subscription } from 'rxjs';
 
@@ -19,20 +20,27 @@ import { Subscription } from 'rxjs';
     MatIconModule,
     MatButtonModule,
     UserMenuComponent,
-    FormsModule
+    FormsModule,
+    MatDialogModule
   ],
   templateUrl: './edit-current-user.component.html',
-  styleUrl: './edit-current-user.component.scss'
+  styleUrls: ['./edit-current-user.component.scss']
 })
-export class EditCurrentUserComponent {
+export class EditCurrentUserComponent implements OnInit, OnDestroy {
   private userSubscription: Subscription = new Subscription();
+  private originalEmail: string = '';
   
   currentUser: User | null = null;
   updatedName: string = '';
   updatedEmail: string = '';
+  wantChangeMail: boolean = false;
+  password: string = '';
+  passwordIsFalse: boolean = false;
+  isPasswordVerified: boolean = false;
 
   constructor(
     private usersService: UsersService,
+    private authService: AuthService,
     public dialogRef: MatDialogRef<EditCurrentUserComponent>
   ) {}
 
@@ -42,19 +50,47 @@ export class EditCurrentUserComponent {
       if (user) {
         this.updatedName = user.name;
         this.updatedEmail = user.email;
+        this.originalEmail = user.email;
       }
     });
   }
 
   async saveChanges(): Promise<void> {
     if (this.currentUser) {
+      if (this.currentUser.email !== this.updatedEmail) {
+        this.wantChangeMail = true;
+      }
+
+      if (this.wantChangeMail && !this.isPasswordVerified) {
+        return;
+      }
+
       const updatedData = {
         name: this.updatedName,
-        email: this.updatedEmail
+        email: this.wantChangeMail ? this.currentUser.email : this.updatedEmail
       };
+
       await this.usersService.updateUser(this.currentUser.id, updatedData);
       this.dialogRef.close();
     }
+  }
+
+  async verifyPassword(): Promise<void> {
+    if (this.currentUser && this.password) {
+      const isValid = await this.authService.verifyPassword(this.currentUser.email, this.password);
+      this.isPasswordVerified = isValid;
+      if (isValid) {
+        this.updatedEmail = this.updatedEmail;
+        this.saveChanges();
+      } else {
+        this.passwordIsFalse = true;
+      }
+    }
+  }
+
+  cancelChanges(): void {
+    this.wantChangeMail = false;
+    this.updatedEmail = this.originalEmail;
   }
 
   ngOnDestroy(): void {
@@ -64,6 +100,8 @@ export class EditCurrentUserComponent {
   }
 
   onNoClick(): void {
-    this.dialogRef.close();
+    if (!this.wantChangeMail) {
+      this.dialogRef.close();
+    }
   }
 }

@@ -238,4 +238,15 @@ export class AuthService {
         });
     }
   }
+
+  async verifyPassword(email: string, password: string): Promise<boolean> {
+    try {
+      await signInWithEmailAndPassword(this.auth, email, password);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
 }
+

@@ -1,5 +1,5 @@
 <section>
-    <mat-card *ngIf="currentUser">
+    <mat-card *ngIf="currentUser" class="edit-user-card">
         <mat-card-content>
             <div class="detail-view-header">
                 <p>Profil</p>
@@ -20,11 +20,25 @@
                     <img src="./../../../../assets/images/icons/mail_black.svg">
                     <p>E-Mail-Adresse</p>
                 </div>
-                <input class="name-input" placeholder="{{ currentUser.email }}" [(ngModel)]="updatedEmail">
+                <input class="name-input" type="email" placeholder="{{ currentUser.email }}" [(ngModel)]="updatedEmail">
             </div>
             <div class="button-container" (click)="onNoClick()">
                 <button class="cancel" (click)="onNoClick()">Abbrechen</button>
                 <button class="save" (click)="saveChanges()">Speichern</button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="change-mail-card" *ngIf="wantChangeMail">
+        <mat-card-content>
+            <div class="change-mail-container">
+                <p>Bitte gib dein Passwort ein um die Änderung zu bestätigen!</p>
+                <input type="password" placeholder="Passwort eingeben" [(ngModel)]="password">
+                <p *ngIf="passwordIsFalse" class="wrong">Bitte richtiges Passwort eingeben!</p>
+                <div class="button-container">
+                    <button class="cancel" (click)="cancelChanges()">Abbrechen</button>
+                    <button class="save" (click)="verifyPassword()">Bestätigen</button>
+                </div>
+                
             </div>
         </mat-card-content>
     </mat-card>

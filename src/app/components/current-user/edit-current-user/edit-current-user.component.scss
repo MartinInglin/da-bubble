@@ -1,16 +1,17 @@
 @import "./../../../../styles.scss";
 
-mat-card {
+.edit-user-card {
     width: 500px;
     height: fit-content;
     padding: 40px;
     font-family: 'Nunito';
-}
 
-mat-card-content {
-    display: flex;
-    flex-direction: column;
-    gap: 45px;
+
+    mat-card-content {
+        display: flex;
+        flex-direction: column;
+        gap: 45px;
+    }
 }
 
 .detail-view-header {
@@ -33,7 +34,7 @@ mat-card-content {
         align-items: center;
         justify-content: center;
         transition: scale 75ms ease-in-out;
-        
+
         &:hover {
             background-color: $background;
             scale: 1.05;
@@ -64,21 +65,21 @@ mat-card-content {
     flex-direction: column;
     gap: 16px;
 
-        input {
-            height: 52px;
-            width: 100%;
-            border-radius: 30px;
-            border: solid 1px $light-purple-lines;
-            padding-left: 15px;
-            font-size: 18px;
-            font-weight: 400;
-            line-height: 24.55px;
-    
-            &::placeholder {
-                color: $text-gray;
-                font-family: 'Nunito';
-            }
+    input {
+        height: 52px;
+        width: 100%;
+        border-radius: 30px;
+        border: solid 1px $light-purple-lines;
+        padding-left: 15px;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24.55px;
+
+        &::placeholder {
+            color: $text-gray;
+            font-family: 'Nunito';
         }
+    }
 }
 
 .name-container {
@@ -141,4 +142,70 @@ mat-card-content {
             color: white;
         }
     }
+}
+
+.change-mail-card {
+    position: absolute;
+    padding: 40px;
+    top: 72.2%;
+    left: 50%;
+    width: 100%;
+    max-width: 480px;
+    border-radius: 30px;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+
+    mat-card-content {
+        display: flex;
+        flex-direction: column;
+        gap: 45px;
+    }
+}
+
+.change-mail-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+
+    input {
+        height: 52px;
+        width: 100%;
+        border-radius: 30px;
+        border: solid 1px $light-purple-lines;
+        padding-left: 15px;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24.55px;
+
+        &::placeholder {
+            color: $text-gray;
+            font-family: 'Nunito';
+        }
+    }
+
+    button {
+        height: 49px;
+        width: 141px;
+        border-radius: 50px;
+        background-color: #444DF2;
+        border: solid 1px #444DF2;
+        color: white;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 24.55px;
+        text-align: center;
+
+        &:hover {
+            cursor: pointer;
+            opacity: 0.5;
+            color: white;
+        }
+    }
+}
+
+.wrong {
+    color: red;
+    font-size: 14px;
 }

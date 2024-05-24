@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { CurrentUserComponent } from '../current-user/current-user.component';
 import {
-  MAT_DIALOG_DATA,
   MatDialog,
   MatDialogModule,
   MatDialogRef,
