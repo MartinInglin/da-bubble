@@ -52,12 +52,14 @@ export class UsersService {
   async createUser(userId: string): Promise<void> {
     const userData = this.registrationService.getUserData();
 
-    const user = {
+    const user: User = {
       id: userId,
       name: userData.name,
       email: userData.email,
       avatar: userData.avatar,
+      directMessages: [],
       channels: [],
+      isGoogleAccount: false
     };
 
     await setDoc(doc(this.firestore, 'users', userId), user);
@@ -71,15 +73,18 @@ export class UsersService {
     const userEmail = googleUser.email;
     const userAvatar = "assets/images/avatars/profile.svg";
 
-    const user = {
-      id: userId,
-      name: userName,
-      email: userEmail,
-      avatar: userAvatar,
-      channels: [],
-    };
-
-    await setDoc(doc(this.firestore, 'users', userId), user);
+    if (userName && userEmail) {
+      const user: User = {
+        id: userId,
+        name: userName,
+        email: userEmail,
+        avatar: userAvatar,
+        directMessages: [],
+        channels: [],
+        isGoogleAccount: true,
+      };
+      await setDoc(doc(this.firestore, 'users', userId), user);
+    }
   }
 
   /**

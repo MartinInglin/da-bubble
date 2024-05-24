@@ -8,6 +8,7 @@ export class User {
   avatar: string;
   channels: MinimalChannel[];
   directMessages: MinimalUser[];
+  isGoogleAccount: boolean;
 
   constructor(obj?: any) {
     this.id = obj?.id || '';
@@ -16,6 +17,7 @@ export class User {
     this.avatar = obj?.avatar || '';
     this.channels = obj?.channels?.map((channel: any) => ({ id: channel.id, name: channel.name })) || [];
     this.directMessages = obj?.directMessages?.map((user: any) => ({ id: user.id, avatar: user.avatar })) || [];
+    this.isGoogleAccount = obj?.isGoogleAccount || false;
   }
 }
 
