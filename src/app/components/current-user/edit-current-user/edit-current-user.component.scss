@@ -136,6 +136,11 @@
         line-height: 24.55px;
         text-align: center;
 
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed !important;
+        }
+
         &:hover {
             cursor: pointer;
             opacity: 0.5;

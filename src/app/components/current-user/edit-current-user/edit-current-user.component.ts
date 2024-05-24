@@ -89,6 +89,11 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
     }
   }
 
+  isValidEmail(): boolean {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(this.updatedEmail);
+  }
+  
   cancelChanges(): void {
     this.wantChangeMail = false;
     this.updatedEmail = this.originalEmail;

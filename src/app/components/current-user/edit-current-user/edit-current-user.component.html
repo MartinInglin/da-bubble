@@ -20,11 +20,12 @@
                     <img src="./../../../../assets/images/icons/mail_black.svg">
                     <p>E-Mail-Adresse</p>
                 </div>
-                <input *ngIf="!currentUser.isGoogleAccount" class="name-input" type="email" placeholder="{{ currentUser.email }}" [(ngModel)]="updatedEmail">
+                <input *ngIf="!currentUser.isGoogleAccount" id="mail" class="name-input" type="email" placeholder="{{ currentUser.email }}" [(ngModel)]="updatedEmail">
+                <p class="wrong" id="wrong-mail" *ngIf="!isValidEmail()">Bitte gültige E-Mail-Adresse eingeben!</p>
             </div>
             <div class="button-container" (click)="onNoClick()">
                 <button class="cancel" (click)="onNoClick()">Abbrechen</button>
-                <button class="save" (click)="saveChanges()">Speichern</button>
+                <button class="save" [disabled]="!isValidEmail()" (click)="saveChanges()">Speichern</button>
             </div>
         </mat-card-content>
     </mat-card>
