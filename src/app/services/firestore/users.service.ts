@@ -9,6 +9,7 @@ import {
 import { User } from '../../models/user.class';
 import { RegistrationService } from '../registration.service';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { UserCredential } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -46,20 +47,39 @@ export class UsersService {
   /**
    * This function creates a new user document in the collection users.
    * 
-   * @param UserId string
+   * @param userId string
    */
-  async createUser(UserId: string): Promise<void> {
+  async createUser(userId: string): Promise<void> {
     const userData = this.registrationService.getUserData();
 
     const user = {
-      id: UserId,
+      id: userId,
       name: userData.name,
       email: userData.email,
       avatar: userData.avatar,
       channels: [],
     };
 
-    await setDoc(doc(this.firestore, 'users', UserId), user);
+    await setDoc(doc(this.firestore, 'users', userId), user);
+  }
+
+  async createUserGoogle(userCredential: UserCredential) {
+    const googleUser = userCredential.user;
+
+    const userId = googleUser.uid;
+    const userName = googleUser.displayName;
+    const userEmail = googleUser.email;
+    const userAvatar = "assets/images/avatars/profile.svg";
+
+    const user = {
+      id: userId,
+      name: userName,
+      email: userEmail,
+      avatar: userAvatar,
+      channels: [],
+    };
+
+    await setDoc(doc(this.firestore, 'users', userId), user);
   }
 
   /**

@@ -6,6 +6,7 @@ import {
   UserCredential,
   browserSessionPersistence,
   createUserWithEmailAndPassword,
+  getAdditionalUserInfo,
   getAuth,
   sendEmailVerification,
   sendPasswordResetEmail,
@@ -121,27 +122,11 @@ export class AuthService {
    * @param password string
    * @returns Calls the fire auth function to sign in with email and password.
    */
-  signIn(email: string, password: string): Promise<void> {
+  signInWithEmail(email: string, password: string): Promise<void> {
     return this.auth.setPersistence(browserSessionPersistence).then(() => {
       return signInWithEmailAndPassword(this.auth, email, password)
         .then((userCredential) => {
-          const userSignedIn = userCredential.user;
-          const userId = userCredential.user.uid;
-
-          //exchange after testing from here to line 117
-          this.usersService.getCurrentUser(userId);
-          this.router.navigate(['landingPage']);
-
-          // if (userSignedIn.emailVerified) {
-          //   this.usersService.getCurrentUser(userId);
-          //   this.router.navigate(['landingPage']);
-          // } else {
-          //   this.snackbarService.openSnackBar(
-          //     'Bitte verifiziere deine E-Mail-Adresse, bevor du dich anmeldest.',
-          //     'Schliessen'
-          //   );
-          //   this.auth.signOut();
-          // }
+          this.signIn(userCredential);
         })
         .catch((error) => {
           this.snackbarService.openSnackBar(
@@ -150,6 +135,53 @@ export class AuthService {
           );
         });
     });
+  }
+
+  signInByGoogle(): Promise<void> {
+    return signInWithPopup(this.auth, new GoogleAuthProvider())
+      .then((result: UserCredential) => {
+        const user = result.user;
+        if (user) {
+          const userId = user.uid;
+          const additionalUserInfo = getAdditionalUserInfo(result);
+
+          if (additionalUserInfo?.isNewUser) {
+            this.usersService.createUserGoogle(result);
+          }
+          this.signIn(result);
+        }
+      })
+      .catch((error) => {
+        console.error('Error during Google sign-in:', error);
+      });
+  }
+
+  signInGuestUser() {
+    const email: string = 'a@b.ch';
+    const password: string = 'afopsdnv230lsdksofj_12gerte';
+    console.log('Guest signed in');
+
+    this.signInWithEmail(email, password);
+  }
+
+  signIn(userCredential: UserCredential) {
+    const userSignedIn = userCredential.user;
+    const userId = userCredential.user.uid;
+
+    //exchange after testing from here to line 117
+    this.usersService.getCurrentUser(userId);
+    this.router.navigate(['/landingPage']);
+
+    // if (userSignedIn.emailVerified) {
+    //   this.usersService.getCurrentUser(userId);
+    //   this.router.navigate(['landingPage']);
+    // } else {
+    //   this.snackbarService.openSnackBar(
+    //     'Bitte verifiziere deine E-Mail-Adresse, bevor du dich anmeldest.',
+    //     'Schliessen'
+    //   );
+    //   this.auth.signOut();
+    // }
   }
 
   /**
@@ -205,25 +237,5 @@ export class AuthService {
           );
         });
     }
-  }
-
-  signInGuestUser() {
-    const email: string = 'a@b.ch';
-    const password: string = 'afopsdnv230lsdksofj_12gerte';
-    console.log('Guest signed in');
-
-    this.signIn(email, password);
-  }
-
-  loginByGoogle(): Promise<void> {
-    return signInWithPopup(this.auth, new GoogleAuthProvider())
-      .then((result: UserCredential) => {
-        console.log("Logged in with google account");
-
-        this.router.navigate(['landingPage']);
-      })
-      .catch((error) => {
-        console.error('Error during Google sign-in:', error);
-      });
   }
 }

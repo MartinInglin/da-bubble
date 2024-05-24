@@ -55,6 +55,10 @@ export class LoginComponent {
       return;
     }
 
-    this.authService.signIn(this.form.value.email, this.form.value.password);
+    this.authService.signInWithEmail(this.form.value.email, this.form.value.password);
+  }
+
+  signInByGoogle() {
+    this.authService.signInByGoogle();
   }
 }
