@@ -1,10 +1,19 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, arrayUnion, collection, doc, getDoc, setDoc, updateDoc } from '@angular/fire/firestore';
+import {
+  Firestore,
+  arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from '@angular/fire/firestore';
 import { Thread } from '../../models/thread.class';
 import { Post } from '../../models/post.class';
 import { Channel } from '../../models/channel.class';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../../models/user.class';
+import { Reaction } from '../../models/reaction.class';
 
 @Injectable({
   providedIn: 'root',
@@ -16,17 +25,16 @@ export class ThreadsService {
 
   /**
    * This function creates a new thread if the user clicks on a post in a channel.
-   * 
+   *
    * @param channelData object as channel
    * @param postIndex number
    */
-  async createThread(channelData: Channel, postIndex:number): Promise<void> {
-
+  async createThread(channelData: Channel, postIndex: number): Promise<void> {
     try {
       const channelRef = doc(this.firestore, 'channels', channelData.id);
       const threadsCollectionRef = collection(channelRef, 'threads');
 
-      const post:Post = channelData.posts[postIndex]
+      const post: Post = channelData.posts[postIndex];
 
       const threadData: Thread = {
         id: post.id,
@@ -44,13 +52,18 @@ export class ThreadsService {
 
   /**
    * This function saves a post on a thread.
-   * 
+   *
    * @param channelId string
    * @param threadId string
    * @param message string
    * @param currentUser object as user
    */
-  async savePost(channelId: string, threadId: string, message: string, currentUser: User) {
+  async savePost(
+    channelId: string,
+    threadId: string,
+    message: string,
+    currentUser: User
+  ) {
     const channelRef = doc(this.firestore, 'channels', channelId);
     const threadRef = doc(channelRef, 'threads', threadId);
 
@@ -77,7 +90,7 @@ export class ThreadsService {
 
   /**
    * This function gets the actual UTX timestamp.
-   * 
+   *
    * @returns UTX timestamp as number
    */
   getUTXTimestamp(): number {
@@ -86,14 +99,19 @@ export class ThreadsService {
 
   /**
    * This function is needed if a user edits a post. The timestamp is updated and the variable "edited" is set to true so edited can be displayed.
-   * 
+   *
    * @param channelId string
    * @param threadId string
    * @param postIndex number
    * @param newMessage string
    * @returns object as post
    */
-  async editPost(channelId: string, threadId: string, postIndex: number, newMessage: string): Promise<void> {
+  async editPost(
+    channelId: string,
+    threadId: string,
+    postIndex: number,
+    newMessage: string
+  ): Promise<void> {
     try {
       const channelRef = doc(this.firestore, 'channels', channelId);
       const threadRef = doc(channelRef, 'threads', threadId);
@@ -125,5 +143,50 @@ export class ThreadsService {
     } catch (error) {
       console.error('Error updating post: ', error);
     }
+  }
+
+  async saveReaction(
+    currentUser: User,
+    directMessageId: string,
+    postIndex: number,
+    reactionIcon: string
+  ) {
+    const directMessageRef = doc(this.firestore, 'channels', directMessageId);
+    const directMessageDoc = await getDoc(directMessageRef);
+
+    if (!directMessageDoc.exists()) {
+      console.error('Thread does not exist');
+      return;
+    }
+
+    const directMessageData = directMessageDoc.data();
+    const post: Post = directMessageData['posts'][postIndex];
+
+    const reactionIndex = this.userHasCommented(currentUser.id, post);
+
+    if (typeof reactionIndex === 'number') {
+      post.reactions[reactionIndex].reaction = reactionIcon;
+    } else {
+      this.createNewReaction(currentUser, reactionIcon, post);
+    }
+  }
+
+  userHasCommented(currentUserId: string, post: Post): boolean | number {
+    for (let i = 0; i < post.reactions.length; i++) {
+      if (post.reactions[i].userId === currentUserId) {
+        return i;
+      }
+    }
+    return false;
+  }
+
+  createNewReaction(currentUser: User, reactionIcon: string, post: Post) {
+    const reaction: Reaction = {
+      userName: currentUser.name,
+      userId: currentUser.id,
+      reaction: reactionIcon,
+    };
+
+    post.reactions.push(reaction);
   }
 }
