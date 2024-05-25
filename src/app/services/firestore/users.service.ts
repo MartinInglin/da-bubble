@@ -65,6 +65,11 @@ export class UsersService {
     await setDoc(doc(this.firestore, 'users', userId), user);
   }
 
+  /**
+   * This function creates a user in firestore if the user signs in with a google account.
+   * 
+   * @param userCredential object from firebase authentication
+   */
   async createUserGoogle(userCredential: UserCredential) {
     const googleUser = userCredential.user;
 
