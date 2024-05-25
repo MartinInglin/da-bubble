@@ -22,22 +22,17 @@ import { v4 as uuidv4 } from 'uuid';
 })
 export class DirectMessagesService {
   firestore = inject(Firestore);
-  // directMessage$ = this.directMessageSubject.asObservable();
 
-  // private directMessageSubject: BehaviorSubject<DirectMessage | null> =
-  //   new BehaviorSubject<DirectMessage | null>(null);
-  // public directMessageSubject$: Observable<DirectMessage | null> =
-  //   this.directMessageSubject.asObservable();
-
-  private directMessageSubject: BehaviorSubject<DirectMessage | null> = new BehaviorSubject<DirectMessage | null>(null);
+  private directMessageSubject: BehaviorSubject<DirectMessage | null> =
+    new BehaviorSubject<DirectMessage | null>(null);
   public directMessage$ = this.directMessageSubject.asObservable();
 
   constructor() {}
 
   /**
    * This function gets the data of a direct message. If the user clicks on a user it first checks if a conversation already exists. If not it creates a document and then fetches the data.
-   * 
-   * @param userId string 
+   *
+   * @param userId string
    * @param currentUser objecet User
    */
   async getDataDirectMessage(userId: string, currentUser: User) {
@@ -56,12 +51,12 @@ export class DirectMessagesService {
       this.createDirectMessage(userId, currentUser);
     }
   }
-/**
- * This function gets the ID of the document of the direct message.
- * 
- * @param userId string of user you want to chat with
- * @returns string of document ID
- */
+  /**
+   * This function gets the ID of the document of the direct message.
+   *
+   * @param userId string of user you want to chat with
+   * @returns string of document ID
+   */
   async getIdDirectMessage(userId: string): Promise<string | null> {
     try {
       const collectionRef = collection(this.firestore, 'directMessages');
@@ -86,7 +81,7 @@ export class DirectMessagesService {
 
   /**
    * This function creates a new document in case there was no conversation started between the two users.
-   * 
+   *
    * @param userId string
    * @param currentUser objecet User
    */
@@ -121,7 +116,7 @@ export class DirectMessagesService {
 
   /**
    * This function creates a minimal user. This is needed to store on the document of the channel. Minimal user contains the properties of the interface minimalUser
-   * 
+   *
    * @param userId string
    * @param currentUser objecet User
    * @returns object minimalUser
@@ -163,7 +158,7 @@ export class DirectMessagesService {
 
   /**
    * This function saves a post in the document of the corresponding direct message.
-   * 
+   *
    * @param directMessageId string
    * @param message string
    * @param currentUser object User
@@ -183,6 +178,7 @@ export class DirectMessagesService {
       timestamp: this.getUTXTimestamp(),
       reactions: [],
       edited: false,
+      files: [],
     };
 
     await updateDoc(directMessageRef, { posts: arrayUnion(post) });
@@ -198,7 +194,7 @@ export class DirectMessagesService {
 
   /**
    * This function gets the actual UTX timestamp.
-   * 
+   *
    * @returns UTX timestamp as number
    */
   getUTXTimestamp(): number {
@@ -207,7 +203,7 @@ export class DirectMessagesService {
 
   /**
    * This function is needed if a user edits a post. The timestamp is updated and the variable "edited" is set to true so edited can be displayed.
-   * 
+   *
    * @param directMessageId string
    * @param postIndex number
    * @param newMessage string

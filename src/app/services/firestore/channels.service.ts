@@ -20,12 +20,15 @@ import { Post } from '../../models/post.class';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../../models/user.class';
 import { Reaction } from '../../models/reaction.class';
+import { StorageService } from '../storage.service';
+import { MinimalFile } from '../../models/minimal_file.class';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChannelsService {
   firestore = inject(Firestore);
+  storageService = inject(StorageService);
 
   private channelSubject: BehaviorSubject<Channel | null> =
     new BehaviorSubject<Channel | null>(null);
@@ -293,6 +296,7 @@ export class ChannelsService {
       timestamp: this.getUTXTimestamp(),
       reactions: [],
       edited: false,
+      files: [],
     };
 
     await updateDoc(channelRef, { posts: arrayUnion(post) });
@@ -383,7 +387,7 @@ export class ChannelsService {
     if (typeof reactionIndex === 'number') {
       post.reactions[reactionIndex].reaction = reactionIcon;
     } else {
-      this.createNewReaction(currentUser, reactionIcon, post)
+      this.createNewReaction(currentUser, reactionIcon, post);
     }
   }
 
@@ -404,5 +408,28 @@ export class ChannelsService {
     };
 
     post.reactions.push(reaction);
+  }
+
+  async safeFileOnPost(channelId: string, postIndex: number, file: File) {
+    const channelRef = doc(this.firestore, channelId);
+    const channelDoc = await getDoc(channelRef);
+    const channelData = channelDoc.data();
+
+    if (channelData) {
+      const posts = channelData['posts'] || [];
+      const post: Post = posts[postIndex];
+
+      const fileData: MinimalFile = {
+        name: file.name,
+        url: file.webkitRelativePath,
+      };
+
+      post.files.push(fileData);
+
+      await setDoc(channelRef, { posts }, { merge: true });
+
+      const postId = post.id
+      this.storageService.saveFile(postId, file)
+    }
   }
 }

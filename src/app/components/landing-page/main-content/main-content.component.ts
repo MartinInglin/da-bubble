@@ -23,6 +23,7 @@ import { MembersComponent } from '../../members/members.component';
 import { ProfileDetailViewComponent } from '../../profile-detail-view/profile-detail-view.component';
 import { DirectMessagesService } from '../../../services/firestore/direct-messages.service';
 import { DirectMessage } from '../../../models/direct_message.class';
+import { StorageService } from '../../../services/storage.service';
 
 declare const twemoji: any; // Deklariere Twemoji als Modul
 
@@ -46,6 +47,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   channelsService = inject(ChannelsService);
   usersService = inject(UsersService);
   threadsService = inject(ThreadsService);
+  storageService = inject(StorageService);
 
   private userSubscription: Subscription = new Subscription();
   private channelSubscription: Subscription = new Subscription();
@@ -196,7 +198,4 @@ export class MainContentComponent implements OnInit, OnDestroy {
     // const seconds = date.getSeconds(); // Hole die Sekunden aus dem Datum
     return ` ${hours}:${minutes} Uhr`; // Gib die Uhrzeit im Format "Stunden:Minuten:Sekunden" zurück
   }
-  
-  
-
 }
