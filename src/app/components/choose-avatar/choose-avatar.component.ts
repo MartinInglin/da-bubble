@@ -8,6 +8,7 @@ import {
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { RegistrationService } from '../../services/registration.service';
+import { SnackbarService } from '../../services/snackbar.service';
 
 @Component({
   selector: 'app-choose-avatar',
@@ -19,6 +20,7 @@ import { RegistrationService } from '../../services/registration.service';
 export class ChooseAvatarComponent {
   authService = inject(AuthService);
   registrationService = inject(RegistrationService);
+  snackbarService = inject(SnackbarService);
 
   @ViewChild('fileInput') fileInput!: ElementRef;
 
@@ -57,8 +59,15 @@ export class ChooseAvatarComponent {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.file = input.files[0];
-      this.registrationService.setAvatarFile(this.file);
-      this.displayImagePreview();
+      if (this.file.type === 'image/jpeg' || this.file.type === 'image/png') {
+        this.registrationService.setAvatarFile(this.file);
+        this.displayImagePreview();
+      } else {
+        this.snackbarService.openSnackBar(
+          'Bitte wähle ein Dateiformat jpg oder png.',
+          'Schliessen'
+        );
+      }
     }
   }
 
