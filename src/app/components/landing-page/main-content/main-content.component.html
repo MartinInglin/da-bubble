@@ -209,6 +209,7 @@
         name=""
         id="message-textarea"
         placeholder="Nachricht an #Entwicklerteam"
+        [(ngModel)]="message"
       ></textarea>
 
       <div class="icons">
@@ -262,7 +263,7 @@
           </div>
         </div>
 
-        <a>
+        <a (click)="savePost()">
           <img src="./../../../../assets/images/icons/send_icon.svg" alt="" />
         </a>
       </div>

@@ -30,6 +30,7 @@ import { ProfileDetailViewComponent } from '../../profile-detail-view/profile-de
 import { DirectMessagesService } from '../../../services/firestore/direct-messages.service';
 import { DirectMessage } from '../../../models/direct_message.class';
 import { StorageService } from '../../../services/storage.service';
+import { FormsModule } from '@angular/forms';
 
 declare const twemoji: any; // Deklariere Twemoji als Modul
 
@@ -42,6 +43,7 @@ declare const twemoji: any; // Deklariere Twemoji als Modul
     MatMenuModule,
     CommonModule,
     MatDialogModule,
+    FormsModule
   ],
   templateUrl: './main-content.component.html',
   styleUrl: './main-content.component.scss',
@@ -80,6 +82,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   channelSelected: boolean = true;
   chatSelected: boolean = false;
   files: File[] = [];
+  message: string = '';
 
   constructor(
     private dialog: MatDialog,
@@ -211,10 +214,11 @@ export class MainContentComponent implements OnInit, OnDestroy {
     return ` ${hours}:${minutes} Uhr`; // Gib die Uhrzeit im Format "Stunden:Minuten:Sekunden" zurück
   }
 
-  savePost(message: string) {
+  savePost() {
+    debugger;
     this.channelsService.savePost(
       this.selectedChannel.id,
-      message,
+      this.message,
       this.currentUser,
       this.files
     );
