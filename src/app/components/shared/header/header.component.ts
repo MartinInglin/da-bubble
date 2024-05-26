@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { User } from '../../../models/user.class';
 import { Subscription } from 'rxjs';
 import { UsersService } from '../../../services/firestore/users.service';
@@ -8,8 +9,6 @@ import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dial
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { UserMenuComponent } from '../../user-menu/user-menu.component';
-
-
 
 @Component({
   selector: 'app-header',
@@ -19,37 +18,46 @@ import { UserMenuComponent } from '../../user-menu/user-menu.component';
     MatDialogModule,
     UserMenuComponent,
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    CommonModule
   ],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss',
+  styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent {
-  constructor(private dialog: MatDialog) {}
+export class HeaderComponent implements OnInit, OnDestroy {
+  constructor(private dialog: MatDialog, private router: Router) {}
 
   authService = inject(AuthService);
   usersService = inject(UsersService);
 
-  private userSubscription: Subscription = new Subscription;
-  currentUser: User =  new User();
+  private userSubscription: Subscription = new Subscription();
+  private routeSubscription: Subscription = new Subscription();
+  currentUser: User = new User();
   dialogRef: MatDialogRef<UserMenuComponent> | null = null;
   isDialogOpen = false;
+  showRegisterElement = false;
   menuDown = './../../../../assets/images/icons/keyboard_arrow_down.svg';
 
-
   ngOnInit(): void {
-    this. userSubscription = this.usersService.currentUser$.subscribe((user) => {
+    this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       if (user) {
         this.currentUser = user;
       }
     });
-  }
 
-  search() {}
+    this.routeSubscription = this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.showRegisterElement = event.url === '/' || event.url === '/login';
+      }
+    });
+  }
 
   ngOnDestroy(): void {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
+    }
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
     }
   }
 
@@ -61,13 +69,22 @@ export class HeaderComponent {
         right: '50px'
       },
     });
-    dialogRef.componentInstance.currentUser = new User(this.currentUser)
+    dialogRef.componentInstance.currentUser = new User(this.currentUser);
 
     this.isDialogOpen = true;
 
-    // Reset isDialogOpen to false when the dialog is closed
     dialogRef.afterClosed().subscribe(() => {
       this.isDialogOpen = false;
     });
   }
+
+  onMouseOver(): void {
+    this.menuDown = './../../../../assets/images/icons/keyboard_arrow_down_blue.svg';
+  }
+
+  onMouseOut(): void {
+    this.menuDown = './../../../../assets/images/icons/keyboard_arrow_down.svg';
+  }
+
+  search(): void {}
 }

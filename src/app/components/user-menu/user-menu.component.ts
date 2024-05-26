@@ -43,5 +43,6 @@ export class UserMenuComponent {
 
   signOUt() {
     this.authService.signOut(this.currentUser.id);
+    this.currentUser.isSignedIn = false;
   }
 }

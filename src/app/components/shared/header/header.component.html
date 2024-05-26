@@ -1,5 +1,4 @@
 <header>
-
   <div class="logo">
     <img
       src="assets/images/icons/logo_da_bubble.png"
@@ -11,13 +10,12 @@
     />
   </div>
 
-  <div class="searchBar">
+  <div *ngIf="this.currentUser.isSignedIn" class="searchBar">
     <input
       type="text"
       id="searchBar"
       placeholder="Code learning durchsuchen..."
     />
-
     <img
       src="assets/images/icons/search.svg"
       alt="Search"
@@ -25,7 +23,7 @@
     />
   </div>
 
-  <div class="user" (click)="openDialog()">
+  <div *ngIf="this.currentUser.isSignedIn" class="user" (click)="openDialog()" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()">
     <span>{{ currentUser.name }}</span>
     <img class="avatar" [src]="currentUser.avatar" alt="USER" />
     <img 
@@ -34,6 +32,9 @@
       alt="MENU" 
     />
   </div>
-  
-</header>
 
+  <div *ngIf="showRegisterElement" class="register">
+    <p>Neu bei DABubble?</p>
+    <a routerLink="/register">Konto erstellen</a>
+  </div>
+</header>
