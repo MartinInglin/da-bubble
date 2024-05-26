@@ -25,12 +25,15 @@
     />
   </div>
 
-  <!-- <button (click)="authService.signOut()">Logout</button>
-  <button routerLink="/register">Registrieren</button> -->
-
-  <div class="user">
+  <div class="user" (click)="openDialog()">
     <span>{{ currentUser.name }}</span>
-    <img (click)="openDialog()" [src]="currentUser.avatar" alt="USER" />
+    <img class="avatar" [src]="currentUser.avatar" alt="USER" />
+    <img 
+      class="menuDropDown" 
+      [src]="menuDown" 
+      alt="MENU" 
+    />
   </div>
+  
 </header>
 

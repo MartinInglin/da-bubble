@@ -20,19 +20,25 @@ header {
   padding: 10px;
   width: 340px;
   color: white;
+  cursor: pointer;
+
   span {
     font-size: 32px;
     color: black;
     white-space: nowrap;
-
     font-weight: 700;
   }
   img {
-    height: 70px;
-    
+    max-height: 70px;
+
     &:hover {
       cursor: pointer;
     }
+  }
+}
+.menuDrowDown {
+  img {
+    height: 30px !important;
   }
 }
 
@@ -65,11 +71,10 @@ header {
 
   img {
     position: relative;
-    right: 60px; 
+    right: 60px;
     width: 30px;
-    height: 35px; 
+    height: 35px;
     width: 35px;
-    pointer-events: none; 
+    pointer-events: none;
   }
 }
-

@@ -33,6 +33,9 @@ export class HeaderComponent {
   private userSubscription: Subscription = new Subscription;
   currentUser: User =  new User();
   dialogRef: MatDialogRef<UserMenuComponent> | null = null;
+  isDialogOpen = false;
+  menuDown = './../../../../assets/images/icons/keyboard_arrow_down.svg';
+
 
   ngOnInit(): void {
     this. userSubscription = this.usersService.currentUser$.subscribe((user) => {
@@ -57,6 +60,13 @@ export class HeaderComponent {
         top: '100px',
         right: '50px'
       },
+    });
+
+    this.isDialogOpen = true;
+
+    // Reset isDialogOpen to false when the dialog is closed
+    dialogRef.afterClosed().subscribe(() => {
+      this.isDialogOpen = false;
     });
   }
 }

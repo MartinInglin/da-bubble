@@ -30,6 +30,7 @@ import { ProfileDetailViewComponent } from '../../profile-detail-view/profile-de
 import { DirectMessagesService } from '../../../services/firestore/direct-messages.service';
 import { DirectMessage } from '../../../models/direct_message.class';
 import { StorageService } from '../../../services/storage.service';
+import { FormsModule } from '@angular/forms';
 
 declare const twemoji: any; // Deklariere Twemoji als Modul
 
@@ -42,6 +43,7 @@ declare const twemoji: any; // Deklariere Twemoji als Modul
     MatMenuModule,
     CommonModule,
     MatDialogModule,
+    FormsModule
   ],
   templateUrl: './main-content.component.html',
   styleUrl: './main-content.component.scss',
@@ -100,6 +102,8 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.channelSubscription = this.channelsService.channelSubject$.subscribe(
       (channel) => {
         this.selectedChannel = channel ?? new Channel();
+        console.log("Current channel:", this.selectedChannel);
+        
       }
     );
 
@@ -113,6 +117,8 @@ export class MainContentComponent implements OnInit, OnDestroy {
       this.directMessagesService.directMessage$.subscribe(
         (directMessage: DirectMessage | null) => {
           this.directMessage = directMessage;
+          console.log(directMessage);
+          
           this.chatSelected = !!directMessage; // Update chatSelected based on the existence of a direct message
           if (this.chatSelected) {
             this.channelSelected = false;
@@ -212,10 +218,10 @@ export class MainContentComponent implements OnInit, OnDestroy {
     return ` ${hours}:${minutes} Uhr`; // Gib die Uhrzeit im Format "Stunden:Minuten:Sekunden" zurück
   }
 
-  savePost(message: string) {
+  savePost() {
     this.channelsService.savePost(
       this.selectedChannel.id,
-      message,
+      this.message,
       this.currentUser,
       this.files
     );

@@ -15,6 +15,7 @@
   </header>
 
   <!-- Message Content  -->
+  @if (selectedChannel.posts.length > 0) {
   <div class="message-content" *ngIf="channelSelected">
     <!-- Date line for messages -->
     <div class="dateLine">
@@ -51,10 +52,18 @@
     </div>
   </div>
 
+  }
+
   <!-- Input Feld am unteren Rand des Containers -->
   <div class="inputContent" *ngIf="channelSelected">
     <div class="textArea">
-      <textarea name="" id="message-textarea" placeholder="Nachricht an #Entwicklerteam"></textarea>
+
+      <textarea
+        name=""
+        id="message-textarea"
+        placeholder="Nachricht an #Entwicklerteam"
+        [(ngModel)]="message"
+      ></textarea>
 
       <div class="icons">
         <div class="buttons">
@@ -94,7 +103,7 @@
           </div>
         </div>
 
-        <a>
+        <a (click)="savePost()">
           <img src="./../../../../assets/images/icons/send_icon.svg" alt="" />
         </a>
       </div>
@@ -188,10 +197,16 @@
       </div>
     </div>
 
-    <!-- Input Feld am unteren rand des Containers -->
-    <div class="inputContent" *ngIf="chatSelected">
-      <div class="textArea">
-        <textarea name="" id="message-textarea" placeholder="Nachricht an #Entwicklerteam"></textarea>
+
+  <!-- Input Feld am unteren rand des Containers -->
+  <div class="inputContent" *ngIf="chatSelected">
+    <div class="textArea">
+      <textarea
+        name=""
+        id="message-textarea"
+        placeholder="Nachricht an #Entwicklerteam"
+        [(ngModel)]="message"
+      ></textarea>
 
         <div class="icons">
           <div class="buttons">
