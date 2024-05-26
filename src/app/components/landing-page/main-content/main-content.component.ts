@@ -102,6 +102,8 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.channelSubscription = this.channelsService.channelSubject$.subscribe(
       (channel) => {
         this.selectedChannel = channel ?? new Channel();
+        console.log("Current channel:", this.selectedChannel);
+        
       }
     );
 
@@ -115,6 +117,8 @@ export class MainContentComponent implements OnInit, OnDestroy {
       this.directMessagesService.directMessage$.subscribe(
         (directMessage: DirectMessage | null) => {
           this.directMessage = directMessage;
+          console.log(directMessage);
+          
           this.chatSelected = !!directMessage; // Update chatSelected based on the existence of a direct message
           if (this.chatSelected) {
             this.channelSelected = false;

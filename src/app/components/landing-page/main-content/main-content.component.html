@@ -22,6 +22,7 @@
   </header>
 
   <!-- Message Content  -->
+  @if (selectedChannel.posts.length > 0) {
   <div class="message-content" *ngIf="channelSelected">
     <!-- Date line for messages -->
     <div class="dateLine">
@@ -62,6 +63,8 @@
       </div>
     </div>
   </div>
+
+  }
 
   <!-- Input Feld am unteren Rand des Containers -->
   <div class="inputContent" *ngIf="channelSelected">
