@@ -33,6 +33,8 @@ export class ChooseAvatarComponent {
   });
   submitted = false;
 
+  readonly maxFileSize = 5 * 1024 * 1024;
+
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
@@ -60,13 +62,14 @@ export class ChooseAvatarComponent {
     if (input.files && input.files.length > 0) {
       this.file = input.files[0];
       if (this.file.type === 'image/jpeg' || this.file.type === 'image/png') {
-        this.registrationService.setAvatarFile(this.file);
-        this.displayImagePreview();
+        if (this.file.size <= this.maxFileSize) {
+          this.registrationService.setAvatarFile(this.file);
+          this.displayImagePreview();
+        } else {
+          this.snackbarService.openSnackBar('Die Datei ist zu groß. Bitte wähle eine Datei, die kleiner als 5 MB ist.', 'Schließen');
+        }
       } else {
-        this.snackbarService.openSnackBar(
-          'Bitte wähle ein Dateiformat jpg oder png.',
-          'Schliessen'
-        );
+        this.snackbarService.openSnackBar('Bitte wähle ein Dateiformat jpg oder png.', 'Schliessen');
       }
     }
   }
