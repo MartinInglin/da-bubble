@@ -23,6 +23,8 @@ import { RegistrationService } from './registration.service';
 import { SnackbarService } from './snackbar.service';
 import { UsersService } from './firestore/users.service';
 import { User } from '../models/user.class';
+import { Subscription } from 'rxjs';
+import { Firestore, doc, getDoc, updateDoc } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -30,11 +32,12 @@ import { User } from '../models/user.class';
 export class AuthService {
   private auth: Auth;
   private router = inject(Router);
+  firestore = inject(Firestore);
   usersService = inject(UsersService);
   registrationService = inject(RegistrationService);
   snackbarService = inject(SnackbarService);
 
-  constructor(private afApp:FirebaseApp) {
+  constructor(private afApp: FirebaseApp) {
     this.auth = getAuth(afApp);
   }
 
@@ -180,6 +183,8 @@ export class AuthService {
     const userSignedIn = userCredential.user;
     const userId = userCredential.user.uid;
 
+    this.setIsSignedInTrue(userId);
+
     //exchange after testing from here to line 117
     this.usersService.getCurrentUser(userId);
     this.router.navigate(['/landingPage']);
@@ -196,12 +201,20 @@ export class AuthService {
     // }
   }
 
+  async setIsSignedInTrue(userId: string) {
+    const docRef = doc(this.firestore, 'users', userId);
+    await updateDoc(docRef, {
+      isSignedIn: true,
+    });
+  }
+
   /**
    * This function signs out the user. If successful it navigates the user to the login page.
    *
    * @returns Calls the signOut function of fire auth.
    */
-  signOut() {
+  signOut(currentUserId: string) {
+    this.setIsSignedInFalse(currentUserId);
     return signOut(this.auth)
       .then(() => {
         sessionStorage.removeItem('currentUser');
@@ -213,6 +226,13 @@ export class AuthService {
           'Schliessen'
         );
       });
+  }
+
+  async setIsSignedInFalse(userId: string) {
+    const docRef = doc(this.firestore, 'users', userId);
+    await updateDoc(docRef, {
+      isSignedIn: false,
+    });
   }
 
   /**
@@ -269,6 +289,4 @@ export class AuthService {
       return false;
     }
   }
-
 }
-

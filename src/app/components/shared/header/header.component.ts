@@ -61,6 +61,7 @@ export class HeaderComponent {
         right: '50px'
       },
     });
+    dialogRef.componentInstance.currentUser = new User(this.currentUser)
 
     this.isDialogOpen = true;
 

@@ -67,7 +67,8 @@ export class UsersService {
       avatar: avatar,
       directMessages: [],
       channels: [],
-      isGoogleAccount: false
+      isGoogleAccount: false,
+      isSignedIn: false,
     };
 
     await setDoc(doc(this.firestore, 'users', userId), user);
@@ -95,6 +96,7 @@ export class UsersService {
         directMessages: [],
         channels: [],
         isGoogleAccount: true,
+        isSignedIn: false,
       };
       await setDoc(doc(this.firestore, 'users', userId), user);
     }

@@ -51,7 +51,6 @@ export class LandingPageComponent implements OnInit {
 
   currentUser: User = new User();
   allUsers: User[] = [];
-  //allChannels: Channel[] = [];
   i: any = ([] = '');
 
   showContacts: boolean = false;

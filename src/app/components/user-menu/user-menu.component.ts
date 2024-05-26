@@ -9,6 +9,7 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { AuthService } from '../../services/auth.service';
+import { User } from '../../models/user.class';
 
 @Component({
   selector: 'app-user-menu',
@@ -19,6 +20,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class UserMenuComponent {
   authService = inject(AuthService);
+  currentUser: User = new User();
 
   constructor(
     private dialog: MatDialog,
@@ -40,6 +42,6 @@ export class UserMenuComponent {
   }
 
   signOUt() {
-    this.authService.signOut();
+    this.authService.signOut(this.currentUser.id);
   }
 }
