@@ -34,8 +34,8 @@ export class AuthService {
   registrationService = inject(RegistrationService);
   snackbarService = inject(SnackbarService);
 
-  constructor() {
-    this.auth = getAuth();
+  constructor(private afApp:FirebaseApp) {
+    this.auth = getAuth(afApp);
   }
 
   /**

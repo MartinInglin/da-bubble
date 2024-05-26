@@ -8,26 +8,64 @@
         <h1>Wähle deinen Avatar</h1>
       </div>
 
+      @if (!imagePreviewUrl) {
       <img class="profile-image" src="{{ selectedAvatar }}" alt="" />
+      } @if (imagePreviewUrl) {
+      <img [src]="imagePreviewUrl" alt="Image Preview" class="profile-image" />
+      }
 
       <span class="name-user"> Frederik Beck </span>
 
       <p class="text-choose-from-list">Aus der Liste wählen</p>
 
       <div class="images-avatars">
-        <img src="assets/images/avatars/avatar_1.svg" alt="" (click)="setAvatar('assets/images/avatars/avatar_1.svg')"/>
-        <img src="assets/images/avatars/avatar_2.svg" alt="" (click)="setAvatar('assets/images/avatars/avatar_2.svg')"/>
-        <img src="assets/images/avatars/avatar_3.svg" alt="" (click)="setAvatar('assets/images/avatars/avatar_3.svg')"/>
-        <img src="assets/images/avatars/avatar_4.svg" alt="" (click)="setAvatar('assets/images/avatars/avatar_4.svg')"/>
-        <img src="assets/images/avatars/avatar_5.svg" alt="" (click)="setAvatar('assets/images/avatars/avatar_5.svg')"/>
-        <img src="assets/images/avatars/avatar_6.svg" alt="" (click)="setAvatar('assets/images/avatars/avatar_6.svg')"/>
+        <img
+          src="assets/images/avatars/avatar_1.svg"
+          alt=""
+          (click)="setAvatar('assets/images/avatars/avatar_1.svg')"
+        />
+        <img
+          src="assets/images/avatars/avatar_2.svg"
+          alt=""
+          (click)="setAvatar('assets/images/avatars/avatar_2.svg')"
+        />
+        <img
+          src="assets/images/avatars/avatar_3.svg"
+          alt=""
+          (click)="setAvatar('assets/images/avatars/avatar_3.svg')"
+        />
+        <img
+          src="assets/images/avatars/avatar_4.svg"
+          alt=""
+          (click)="setAvatar('assets/images/avatars/avatar_4.svg')"
+        />
+        <img
+          src="assets/images/avatars/avatar_5.svg"
+          alt=""
+          (click)="setAvatar('assets/images/avatars/avatar_5.svg')"
+        />
+        <img
+          src="assets/images/avatars/avatar_6.svg"
+          alt=""
+          (click)="setAvatar('assets/images/avatars/avatar_6.svg')"
+        />
       </div>
 
       <div class="upload-image">
         <p>eigenes Bild verwenden</p>
-        <button class="button-upload-image" type="button">
+        <button
+          class="button-upload-image"
+          type="button"
+          (click)="openFileDialog()"
+        >
           Datei hochladen
         </button>
+        <input
+          type="file"
+          #fileInput
+          style="display: none"
+          (change)="onFileSelected($event)"
+        />
       </div>
 
       <div class="button">

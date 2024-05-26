@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -20,7 +20,11 @@ export class ChooseAvatarComponent {
   authService = inject(AuthService);
   registrationService = inject(RegistrationService);
 
+  @ViewChild('fileInput') fileInput!: ElementRef;
+
   selectedAvatar: string = '';
+  file: File = new File([], '');
+  imagePreviewUrl: string | null = null;
 
   form: FormGroup = new FormGroup({
     avatar: new FormControl(''),
@@ -40,8 +44,32 @@ export class ChooseAvatarComponent {
   }
 
   setAvatar(imageURLAvatar: string) {
+    this.imagePreviewUrl = null;
     this.selectedAvatar = imageURLAvatar;
     this.registrationService.setAvatar(imageURLAvatar);
+  }
+
+  openFileDialog() {
+    this.fileInput.nativeElement.click();
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.file = input.files[0];
+      this.registrationService.setAvatarFile(this.file);
+      this.displayImagePreview();
+    }
+  }
+
+  displayImagePreview() {
+    if (this.file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imagePreviewUrl = e.target.result;
+      };
+      reader.readAsDataURL(this.file);
+    }
   }
 
   onSubmit(): void {

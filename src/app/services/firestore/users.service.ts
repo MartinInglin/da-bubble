@@ -10,6 +10,7 @@ import { User } from '../../models/user.class';
 import { RegistrationService } from '../registration.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserCredential } from '@angular/fire/auth';
+import { StorageService } from '../storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +19,7 @@ import { UserCredential } from '@angular/fire/auth';
   providedIn: 'root',
 })
 export class UsersService {
+  storageService = inject(StorageService);
   user: User = new User();
 
   private currentUserSubject: BehaviorSubject<User | null> =
@@ -52,11 +54,17 @@ export class UsersService {
   async createUser(userId: string): Promise<void> {
     const userData = this.registrationService.getUserData();
 
+    let avatar = userData.avatar;
+
+    if (userData.avatarFile && userData.avatarFile.name !== "empty.txt") {
+      avatar = await this.storageService.saveImageUser(userId, userData.avatarFile);
+    }
+
     const user: User = {
       id: userId,
       name: userData.name,
       email: userData.email,
-      avatar: userData.avatar,
+      avatar: avatar,
       directMessages: [],
       channels: [],
       isGoogleAccount: false

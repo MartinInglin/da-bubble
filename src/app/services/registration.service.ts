@@ -8,6 +8,7 @@ export class RegistrationService {
   private email: string = '';
   private password: string = '';
   private avatar: string = '';
+  private avatarFile: File = new File([], "empty.txt");
 
   /**
    * This function sets the name of the user. It is needed to store the name in case the user moves back and forward between registration and choose avatar page.
@@ -81,7 +82,15 @@ export class RegistrationService {
     return this.avatar;
   }
 
-  /**
+  setAvatarFile(file: File) {
+    this.avatarFile = file;
+  }
+
+  getAvatarFile(): File {
+    return this.avatarFile;
+  }
+
+    /**
    * This function gets an object of the user data.
    * 
    * @returns Obeject of user data
@@ -92,6 +101,7 @@ export class RegistrationService {
       email: this.email,
       password: this.password,
       avatar: this.avatar,
+      avatarFile: this.avatarFile,
     };
   }
 }
