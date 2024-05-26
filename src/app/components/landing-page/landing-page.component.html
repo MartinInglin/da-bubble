@@ -15,36 +15,60 @@
         <mat-drawer #drawer class="example-sidenav" mode="side">
           <div class="head-side-menu">
             <div class="head-side-menu-first">
-              <img src="./../../../assets/images/icons/workspace_logo.png" alt="" />
+              <img
+                src="./../../../assets/images/icons/workspace_logo.png"
+                alt=""
+              />
               <span>DevSpace</span>
             </div>
             <div class="head-side-menu-link">
-              <img src="./../../../assets/images/icons/16. edit_square.svg" alt="" />
+              <img
+                src="./../../../assets/images/icons/16. edit_square.svg"
+                alt=""
+              />
             </div>
           </div>
           <!-- Channel-List -->
           <div class="channels-head">
-            <div class="channel-head-first" (click)="showChannels = !showChannels">
-              <img class="drop-down-img" src="./../../../assets/images/icons/arrow_drop_down.svg" alt="Toggle Contacts" />
+            <div
+              class="channel-head-first"
+              (click)="showChannels = !showChannels"
+            >
+              <img
+                class="drop-down-img"
+                src="./../../../assets/images/icons/arrow_drop_down.svg"
+                alt="Toggle Contacts"
+              />
               <div class="channels-list">
-                <img src="./../../../assets/images/icons/workspaces.svg" alt="" />
+                <img
+                  src="./../../../assets/images/icons/workspaces.svg"
+                  alt=""
+                />
                 <span>Channels</span>
               </div>
             </div>
             <div class="head-side-menu-link">
-              <img (click)="openNewChannelDialog()" src="./../../../assets/images/icons/add_icon.svg" alt="" />
+              <img
+                (click)="openNewChannelDialog()"
+                src="./../../../assets/images/icons/add_icon.svg"
+                alt=""
+              />
             </div>
           </div>
 
           <table class="channels" *ngIf="showChannels">
-            <tr *ngFor="let channel of allChannels">
+            <tr *ngFor="let channel of currentUser.channels; let i = index">
               <td (click)="channelsService.getDataChannel(channel.id)">
-                <span class="span-hashtag">#</span> <span>{{currentUser.channels[i].id }}</span>
+                <span class="span-hashtag">#</span>
+                <span>{{ currentUser.channels[i].name }}</span>
               </td>
             </tr>
             <tr>
               <td class="channel-add">
-                <img src="./../../../assets/images/icons/add_circle.svg" alt="" />
+                <img
+                  src="./../../../assets/images/icons/add_circle.svg"
+                  alt=""
+                />
                 <span (click)="openNewChannelDialog()">Channel hinzufügen</span>
               </td>
             </tr>
@@ -53,11 +77,21 @@
           <!-- Strich -->
           <div class="channels-head">
             <!-- Contacts-List -->
-            <div class="channel-head-first" (click)="showContacts = !showContacts">
-              <img class="arrow-drop-down" src="./../../../assets/images/icons/arrow_drop_down.svg"
-                alt="Toggle Contacts" />
+            <div
+              class="channel-head-first"
+              (click)="showContacts = !showContacts"
+            >
+              <img
+                class="arrow-drop-down"
+                src="./../../../assets/images/icons/arrow_drop_down.svg"
+                alt="Toggle Contacts"
+              />
               <div class="contacts-list">
-                <img class="contact-list-account-img" src="./../../../assets/images/icons/account_circle.svg" alt="" />
+                <img
+                  class="contact-list-account-img"
+                  src="./../../../assets/images/icons/account_circle.svg"
+                  alt=""
+                />
                 <span>Direktnachrichten</span>
               </div>
             </div>
@@ -65,7 +99,14 @@
 
           <table class="contacts" *ngIf="showContacts">
             <tr *ngFor="let user of allUsers">
-              <td (click)="directMessagesService.getDataDirectMessage(user.id , currentUser)">
+              <td
+                (click)="
+                  directMessagesService.getDataDirectMessage(
+                    user.id,
+                    currentUser
+                  )
+                "
+              >
                 <img [src]="user.avatar" alt="Profilbild" />
                 <span>{{ user.name }}</span>
               </td>
@@ -77,10 +118,10 @@
     <!-- SideNav -->
 
     <!-- ChatSpace -->
-    <app-main-content  class="mainContent" ></app-main-content>
+    <app-main-content class="mainContent"></app-main-content>
 
     <!-- CommentSection -->
-    <app-thread  class="threadContent"></app-thread>
+    <app-thread class="threadContent"></app-thread>
   </div>
   <!-- MainContent -->
 </section>

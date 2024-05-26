@@ -51,7 +51,7 @@ export class LandingPageComponent implements OnInit {
 
   currentUser: User = new User();
   allUsers: User[] = [];
-  allChannels: Channel[] = [];
+  //allChannels: Channel[] = [];
   i: any = ([] = '');
 
   showContacts: boolean = false;
@@ -68,7 +68,7 @@ export class LandingPageComponent implements OnInit {
 
   constructor(private dialog: MatDialog) {
     this.usersService.getAllUsers();
-    this.channelsService.getAllChannels();
+    //this.channelsService.getAllChannels();
   }
 
   ngOnInit(): void {
@@ -91,7 +91,7 @@ export class LandingPageComponent implements OnInit {
         console.log('Current User:', this.currentUser);
         if (this.currentUser) {
           // Alle Kanäle abrufen
-          this.channelsService.getAllChannels();
+          //this.channelsService.getAllChannels();
         }
       }
     });
