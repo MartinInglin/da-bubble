@@ -79,13 +79,13 @@ mat-drawer-container {
 /* Menu button */
 .menuBtn {
   position: absolute;
-  left: -148px;
-  bottom: 250px;
-  width: fit-content;
-  transform: rotate(270deg);
+  left: -148px; /* Am linken Rand des Bildschirms */
+  top: 70%; /* Mittig vertikal */
+  transform: translateY(-50%) rotate(270deg); /* Mittig und drehen */
   z-index: 5;
   display: flex;
   gap: 20px;
+  width: fit-content;
 
   /* Styling for buttons inside the menu button */
   button {

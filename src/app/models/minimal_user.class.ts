@@ -7,6 +7,7 @@ export class MinimalUser {
       this.id = obj?.id || '';
       this.avatar = obj?.avatar || '';
       this.name = obj?.name || '';
+
     }
   }
   
