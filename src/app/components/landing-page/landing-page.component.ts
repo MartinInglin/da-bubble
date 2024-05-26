@@ -68,15 +68,9 @@ export class LandingPageComponent implements OnInit {
 
   constructor(private dialog: MatDialog) {
     this.usersService.getAllUsers();
-    //this.channelsService.getAllChannels();
   }
 
   ngOnInit(): void {
-    this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
-      this.currentUser = user ?? new User();
-      console.log('Current User:', this.currentUser);
-    });
-
     this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe(
       (allUsers) => {
         this.allUsers = allUsers ?? [];
@@ -87,12 +81,8 @@ export class LandingPageComponent implements OnInit {
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       if (user) {
         // Überprüfe, ob ein Benutzerobjekt vorhanden ist
-        this.currentUser = user; // Weise das Benutzerobjekt direkt zu
+        this.currentUser = user ?? new User(); // Weise das Benutzerobjekt direkt zu
         console.log('Current User:', this.currentUser);
-        if (this.currentUser) {
-          // Alle Kanäle abrufen
-          //this.channelsService.getAllChannels();
-        }
       }
     });
   }
@@ -128,5 +118,6 @@ export class LandingPageComponent implements OnInit {
       width: '872px',
       height: '539px',
     });
+    dialogRef.componentInstance.currentUser = new User(this.currentUser)
   }
 }

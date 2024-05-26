@@ -59,8 +59,8 @@ export class AuthService {
             return this.usersService.createUser(id).then(() => {
               this.router.navigate(['/login']);
               this.snackbarService.openSnackBar(
-                'User successfully created. Please log in.',
-                'Close'
+                'Benutzer erfolreich erstellt. Bitte melde dich an.',
+                'Schliessen'
               );
             });
           } else {
@@ -71,8 +71,8 @@ export class AuthService {
           console.error('Error during sign up:', error);
           if (error.code === 'auth/email-already-in-use') {
             this.snackbarService.openSnackBar(
-              'This email address is already in use. Please log in.',
-              'Close'
+              'Ein Konto mit dieser E-Mail-Adresse besteht bereits. Bitte melde dich an.',
+              'Schliessen'
             );
           } else {
             this.snackbarService.openSnackBar(

@@ -77,8 +77,12 @@ export class ChannelsService {
   async createChannel(
     name: string,
     description: string,
-    users: MinimalUser[]
+    currentUser: User
   ): Promise<void> {
+
+    const users = this.currentUserToMinimalUser(currentUser);
+
+
     const channelRef = collection(this.firestore, 'channels');
     const newDocRef = doc(channelRef);
 
@@ -95,6 +99,17 @@ export class ChannelsService {
       .map((user) => user.id)
       .filter((id): id is string => !!id);
     this.addChannelToUsers(channelData.id, channelData.name, userIds);
+  }
+
+  currentUserToMinimalUser(currentUser: User): MinimalUser[] {
+    const users = [
+      {
+        name: currentUser.name,
+        avatar: currentUser.avatar,
+        id: currentUser.id
+      }
+    ]
+    return users;
   }
 
   /**
