@@ -304,12 +304,15 @@ export class ChannelsService {
     currentUser: User,
     files: File[]
   ) {
+    const postId = this.createId()
+    const minimalFiles: MinimalFile[] = await this.storageService.saveFiles(postId, files);
+    console.log(minimalFiles);
+    
+
     const channelRef = doc(this.firestore, 'channels', channelId);
 
-    const minimalFiles: MinimalFile[] = this.filesToMinimalFiles(files);
-
     const post: Post = {
-      id: this.createId(),
+      id: postId,
       name: currentUser.name,
       avatar: currentUser.avatar,
       message: message,
@@ -319,16 +322,19 @@ export class ChannelsService {
       files: minimalFiles,
     };
     await updateDoc(channelRef, { posts: arrayUnion(post) });
+
+
+    this.storageService.saveFiles(postId, files)
   }
 
-  filesToMinimalFiles(files: File[]): MinimalFile[] {
-    return files.map((file) => {
-      return {
-        name: file.name,
-        url: file.webkitRelativePath,
-      };
-    });
-  }
+  // filesToMinimalFiles(files: File[], downloadURLs: string[]): MinimalFile[] {
+  //   return files.map((file) => {
+  //     return {
+  //       name: file.name,
+  //       url: downloadURLs,
+  //     };
+  //   });
+  // }
 
   /**
    * This function creates a unique id.
@@ -436,28 +442,5 @@ export class ChannelsService {
     };
 
     post.reactions.push(reaction);
-  }
-
-  async saveFileOnPost(channelId: string, postIndex: number, file: File) {
-    const channelRef = doc(this.firestore, channelId);
-    const channelDoc = await getDoc(channelRef);
-    const channelData = channelDoc.data();
-
-    if (channelData) {
-      const posts = channelData['posts'] || [];
-      const post: Post = posts[postIndex];
-
-      const fileData: MinimalFile = {
-        name: file.name,
-        url: file.webkitRelativePath,
-      };
-
-      post.files.push(fileData);
-
-      await setDoc(channelRef, { posts }, { merge: true });
-
-      const postId = post.id;
-      this.storageService.saveFile(postId, file);
-    }
   }
 }
