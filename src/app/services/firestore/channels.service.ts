@@ -21,7 +21,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { User } from '../../models/user.class';
 import { Reaction } from '../../models/reaction.class';
 import { StorageService } from '../storage.service';
-import { MinimalFile } from '../../models/minimal_file.class';
+import { MinimalFile } from '../../interfaces/minimal_file';
 
 @Injectable({
   providedIn: 'root',
@@ -79,9 +79,7 @@ export class ChannelsService {
     description: string,
     currentUser: User
   ): Promise<void> {
-
     const users = this.currentUserToMinimalUser(currentUser);
-
 
     const channelRef = collection(this.firestore, 'channels');
     const newDocRef = doc(channelRef);
@@ -106,9 +104,9 @@ export class ChannelsService {
       {
         name: currentUser.name,
         avatar: currentUser.avatar,
-        id: currentUser.id
-      }
-    ]
+        id: currentUser.id,
+      },
+    ];
     return users;
   }
 
@@ -300,8 +298,15 @@ export class ChannelsService {
    * @param message string
    * @param currentUser object of type user.
    */
-  async savePost(channelId: string, message: string, currentUser: User, files:File[]) {
+  async savePost(
+    channelId: string,
+    message: string,
+    currentUser: User,
+    files: File[]
+  ) {
     const channelRef = doc(this.firestore, 'channels', channelId);
+
+    const minimalFiles: MinimalFile[] = this.filesToMinimalFiles(files);
 
     const post: Post = {
       id: this.createId(),
@@ -311,10 +316,18 @@ export class ChannelsService {
       timestamp: this.getUTXTimestamp(),
       reactions: [],
       edited: false,
-      files: [],
+      files: minimalFiles,
     };
-
     await updateDoc(channelRef, { posts: arrayUnion(post) });
+  }
+
+  filesToMinimalFiles(files: File[]): MinimalFile[] {
+    return files.map((file) => {
+      return {
+        name: file.name,
+        url: file.webkitRelativePath,
+      };
+    });
   }
 
   /**
@@ -443,8 +456,8 @@ export class ChannelsService {
 
       await setDoc(channelRef, { posts }, { merge: true });
 
-      const postId = post.id
-      this.storageService.saveFile(postId, file)
+      const postId = post.id;
+      this.storageService.saveFile(postId, file);
     }
   }
 }
