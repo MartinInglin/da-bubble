@@ -38,10 +38,10 @@ header {
 
   img {
     max-height: 70px;
+    border-radius: 50%;
 
     &:hover {
       cursor: pointer;
-      border-radius: 50%;
     }
   }
 
