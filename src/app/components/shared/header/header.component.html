@@ -1,36 +1,22 @@
 <header>
   <div class="logo">
-    <img
-      src="assets/images/icons/logo_da_bubble.png"
-      alt="LOGO-DABUBBLE"
-    />
-    <img
-      src="assets/images/icons/Logo_name.png"
-      alt="LOGO-DABUBBLE"
-    />
+    <img src="assets/images/icons/logo_da_bubble.png" alt="LOGO-DABUBBLE" />
+    <img src="assets/images/icons/Logo_name.png" alt="LOGO-DABUBBLE" />
   </div>
 
   <div *ngIf="this.currentUser.isSignedIn" class="searchBar">
-    <input
-      type="text"
-      id="searchBar"
-      placeholder="Code learning durchsuchen..."
-    />
-    <img
-      src="assets/images/icons/search.svg"
-      alt="Search"
-      (click)="search()"
-    />
+    <input type="text" id="searchBar" placeholder="Code learning durchsuchen..." />
+    <img src="assets/images/icons/search.svg" alt="Search" (click)="search()" />
   </div>
 
-  <div *ngIf="this.currentUser.isSignedIn" class="user" (click)="openDialog()" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()">
+  <div *ngIf="this.currentUser.isSignedIn" class="user" (click)="openDialog()" (mouseover)="onMouseOver()"
+    (mouseout)="onMouseOut()">
     <span>{{ currentUser.name }}</span>
-    <img class="avatar" [src]="currentUser.avatar" alt="USER" />
-    <img 
-      class="menuDropDown" 
-      [src]="menuDown" 
-      alt="MENU" 
-    />
+    <div> <img class="avatar" [src]="currentUser.avatar" alt="USER" />
+      <div class="status"></div>
+    </div>
+
+    <img class="menuDropDown" [src]="menuDown" alt="MENU" />
   </div>
 
   <div *ngIf="showRegisterElement" class="register">

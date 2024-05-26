@@ -23,6 +23,13 @@ header {
   color: black;
   cursor: pointer;
 
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: -5px !important;
+  }
+
   span {
     font-size: 32px;
     white-space: nowrap;
@@ -111,4 +118,15 @@ header {
     line-height: 21.6px;
     text-align: right;
   }
+}
+
+.status {
+    height: 14px;
+    width: 14px;
+    position: relative;
+    top: 20px;
+    right: 18px;
+    border: 2px solid white;
+    border-radius: 100%;
+    background-color: $online-green;
 }
