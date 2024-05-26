@@ -5,7 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { UserMenuComponent } from '../../user-menu/user-menu.component';
-import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { UsersService } from '../../../services/firestore/users.service';
 import { AuthService } from '../../../services/auth.service';
 import { User } from '../../../models/user.class';
@@ -27,6 +27,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./edit-current-user.component.scss']
 })
 export class EditCurrentUserComponent implements OnInit, OnDestroy {
+  
   private userSubscription: Subscription = new Subscription();
   private originalEmail: string = '';
   
@@ -88,6 +89,11 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
     }
   }
 
+  isValidEmail(): boolean {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(this.updatedEmail);
+  }
+  
   cancelChanges(): void {
     this.wantChangeMail = false;
     this.updatedEmail = this.originalEmail;

@@ -20,12 +20,15 @@ import { Post } from '../../models/post.class';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../../models/user.class';
 import { Reaction } from '../../models/reaction.class';
+import { StorageService } from '../storage.service';
+import { MinimalFile } from '../../models/minimal_file.class';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChannelsService {
   firestore = inject(Firestore);
+  storageService = inject(StorageService);
 
   private channelSubject: BehaviorSubject<Channel | null> =
     new BehaviorSubject<Channel | null>(null);
@@ -54,15 +57,15 @@ export class ChannelsService {
   /**
    *
    */
-  getAllChannels() {
-    const collectionRef = collection(this.firestore, 'channels');
-    onSnapshot(collectionRef, (snapshot) => {
-      const channel = snapshot.docs.map(
-        (doc) => new Channel({ id: doc.id, ...doc.data() })
-      )[5];
-      this.channelSubject.next(channel);
-    });
-  }
+  // getAllChannels() {
+  //   const collectionRef = collection(this.firestore, 'channels');
+  //   onSnapshot(collectionRef, (snapshot) => {
+  //     const channel = snapshot.docs.map(
+  //       (doc) => new Channel({ id: doc.id, ...doc.data() })
+  //     )[5];
+  //     this.channelSubject.next(channel);
+  //   });
+  // }
 
   /**
    * This function creates a new channel. It therefore needs a name, a description and the users which a minimalized. For display purposes they need an id, a name and the URL of their avatar.
@@ -74,8 +77,12 @@ export class ChannelsService {
   async createChannel(
     name: string,
     description: string,
-    users: MinimalUser[]
+    currentUser: User
   ): Promise<void> {
+
+    const users = this.currentUserToMinimalUser(currentUser);
+
+
     const channelRef = collection(this.firestore, 'channels');
     const newDocRef = doc(channelRef);
 
@@ -92,6 +99,17 @@ export class ChannelsService {
       .map((user) => user.id)
       .filter((id): id is string => !!id);
     this.addChannelToUsers(channelData.id, channelData.name, userIds);
+  }
+
+  currentUserToMinimalUser(currentUser: User): MinimalUser[] {
+    const users = [
+      {
+        name: currentUser.name,
+        avatar: currentUser.avatar,
+        id: currentUser.id
+      }
+    ]
+    return users;
   }
 
   /**
@@ -282,7 +300,7 @@ export class ChannelsService {
    * @param message string
    * @param currentUser object of type user.
    */
-  async savePost(channelId: string, message: string, currentUser: User) {
+  async savePost(channelId: string, message: string, currentUser: User, files:File[]) {
     const channelRef = doc(this.firestore, 'channels', channelId);
 
     const post: Post = {
@@ -293,6 +311,7 @@ export class ChannelsService {
       timestamp: this.getUTXTimestamp(),
       reactions: [],
       edited: false,
+      files: [],
     };
 
     await updateDoc(channelRef, { posts: arrayUnion(post) });
@@ -383,7 +402,7 @@ export class ChannelsService {
     if (typeof reactionIndex === 'number') {
       post.reactions[reactionIndex].reaction = reactionIcon;
     } else {
-      this.createNewReaction(currentUser, reactionIcon, post)
+      this.createNewReaction(currentUser, reactionIcon, post);
     }
   }
 
@@ -404,5 +423,28 @@ export class ChannelsService {
     };
 
     post.reactions.push(reaction);
+  }
+
+  async saveFileOnPost(channelId: string, postIndex: number, file: File) {
+    const channelRef = doc(this.firestore, channelId);
+    const channelDoc = await getDoc(channelRef);
+    const channelData = channelDoc.data();
+
+    if (channelData) {
+      const posts = channelData['posts'] || [];
+      const post: Post = posts[postIndex];
+
+      const fileData: MinimalFile = {
+        name: file.name,
+        url: file.webkitRelativePath,
+      };
+
+      post.files.push(fileData);
+
+      await setDoc(channelRef, { posts }, { merge: true });
+
+      const postId = post.id
+      this.storageService.saveFile(postId, file)
+    }
   }
 }

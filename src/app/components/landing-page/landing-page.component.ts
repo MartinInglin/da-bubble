@@ -13,7 +13,11 @@ import { UsersService } from '../../services/firestore/users.service';
 import { ChannelsService } from '../../services/firestore/channels.service';
 import { DirectMessagesService } from '../../services/firestore/direct-messages.service';
 import { NewChannelComponent } from '../new-channel/new-channel.component';
-import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-landing-page',
@@ -36,10 +40,10 @@ import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dial
 })
 export class LandingPageComponent implements OnInit {
   openThreadEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
-  
+
   usersService = inject(UsersService);
   channelsService = inject(ChannelsService);
-  directMessagesService = inject(DirectMessagesService)
+  directMessagesService = inject(DirectMessagesService);
 
   private userSubscription: Subscription = new Subscription();
   private allUsersSubscription: Subscription = new Subscription();
@@ -47,8 +51,8 @@ export class LandingPageComponent implements OnInit {
 
   currentUser: User = new User();
   allUsers: User[] = [];
-  allChannels: Channel[] = [];
-  i :any = [] = '';
+  //allChannels: Channel[] = [];
+  i: any = ([] = '');
 
   showContacts: boolean = false;
   showChannels: boolean = true;
@@ -64,44 +68,30 @@ export class LandingPageComponent implements OnInit {
 
   constructor(private dialog: MatDialog) {
     this.usersService.getAllUsers();
-    this.channelsService.getAllChannels();
   }
 
   ngOnInit(): void {
-    this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
-      this.currentUser = user ?? new User;
-      console.log('Current User:', this.currentUser);
-    });
-
-    this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe((allUsers) => {
-      this.allUsers = allUsers ?? [];
-      console.log('All Users:', this.allUsers);
-
-    });
-
+    this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe(
+      (allUsers) => {
+        this.allUsers = allUsers ?? [];
+        console.log('All Users:', this.allUsers);
+      }
+    );
 
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       if (user) {
         // Überprüfe, ob ein Benutzerobjekt vorhanden ist
-        this.currentUser = user; // Weise das Benutzerobjekt direkt zu
+        this.currentUser = user ?? new User(); // Weise das Benutzerobjekt direkt zu
         console.log('Current User:', this.currentUser);
-        if (this.currentUser) {
-          // Alle Kanäle abrufen
-          this.channelsService.getAllChannels();
-        }
       }
     });
-    
-
   }
 
   getAllChannelsForUser(userId: string): void {
     // Hier kannst du die Kanäle abrufen, denen der Benutzer beigetreten ist, basierend auf der Benutzer-ID
   }
 
-
-
-  showContactsSide() { }
+  showContactsSide() {}
 
   toggle(drawer: any): void {
     this.isOpen = !this.isOpen;
@@ -126,7 +116,8 @@ export class LandingPageComponent implements OnInit {
   openNewChannelDialog(): void {
     const dialogRef = this.dialog.open(NewChannelComponent, {
       width: '872px',
-      height: '539px'
+      height: '539px',
     });
+    dialogRef.componentInstance.currentUser = new User(this.currentUser)
   }
 }

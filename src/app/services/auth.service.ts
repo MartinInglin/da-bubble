@@ -14,13 +14,15 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  updateEmail,
   updatePassword,
   user,
 } from '@angular/fire/auth';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { RegistrationService } from './registration.service';
 import { SnackbarService } from './snackbar.service';
 import { UsersService } from './firestore/users.service';
+import { User } from '../models/user.class';
 
 @Injectable({
   providedIn: 'root',
@@ -57,8 +59,8 @@ export class AuthService {
             return this.usersService.createUser(id).then(() => {
               this.router.navigate(['/login']);
               this.snackbarService.openSnackBar(
-                'User successfully created. Please log in.',
-                'Close'
+                'Benutzer erfolreich erstellt. Bitte melde dich an.',
+                'Schliessen'
               );
             });
           } else {
@@ -69,8 +71,8 @@ export class AuthService {
           console.error('Error during sign up:', error);
           if (error.code === 'auth/email-already-in-use') {
             this.snackbarService.openSnackBar(
-              'This email address is already in use. Please log in.',
-              'Close'
+              'Ein Konto mit dieser E-Mail-Adresse besteht bereits. Bitte melde dich an.',
+              'Schliessen'
             );
           } else {
             this.snackbarService.openSnackBar(
@@ -116,7 +118,7 @@ export class AuthService {
   }
 
   /**
-   * This function is there to sign in the user. It then navigates the user to the landing page.
+   * This function is there to sign in the user.
    *
    * @param email string
    * @param password string
@@ -137,6 +139,11 @@ export class AuthService {
     });
   }
 
+  /**
+   * This function signs in the user if he chooses to take the google account. It creates a new user if it is the first sign in.
+   *
+   * @returns -
+   */
   signInByGoogle(): Promise<void> {
     return signInWithPopup(this.auth, new GoogleAuthProvider())
       .then((result: UserCredential) => {
@@ -164,6 +171,11 @@ export class AuthService {
     this.signInWithEmail(email, password);
   }
 
+  /**
+   * This function signs in the user if the user is verified.
+   *
+   * @param userCredential object from firebase authentication
+   */
   signIn(userCredential: UserCredential) {
     const userSignedIn = userCredential.user;
     const userId = userCredential.user.uid;
@@ -203,6 +215,11 @@ export class AuthService {
       });
   }
 
+  /**
+   * This function sends an email to a user in case he forgets his password.
+   *
+   * @param email string
+   */
   resetForgottenPassword(email: string) {
     sendPasswordResetEmail(this.auth, email)
       .then(() => {
@@ -218,6 +235,11 @@ export class AuthService {
       });
   }
 
+  /**
+   * This function changes the password if the user is signed in.
+   *
+   * @param password string
+   */
   changePassword(password: string) {
     const currentUser = this.auth.currentUser;
 

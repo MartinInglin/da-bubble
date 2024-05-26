@@ -1,4 +1,8 @@
 {
+  "projects": {
+    "default": "da-bubble-bb34a",
+    "local": "da-bubble-bb34a"
+  },
   "targets": {
     "da-bubble-bb34a": {
       "hosting": {
@@ -8,7 +12,6 @@
       }
     }
   },
-  "projects": {
-    "default": "da-bubble-bb34a"
-  }
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }

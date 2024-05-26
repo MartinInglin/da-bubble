@@ -75,6 +75,7 @@ export class ThreadsService {
       timestamp: this.getUTXTimestamp(),
       reactions: [],
       edited: false,
+      files: []
     };
 
     await updateDoc(threadRef, { posts: arrayUnion(post) });
