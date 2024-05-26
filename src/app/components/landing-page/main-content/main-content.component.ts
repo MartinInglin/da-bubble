@@ -219,7 +219,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
   }
 
   savePost() {
-    debugger;
     this.channelsService.savePost(
       this.selectedChannel.id,
       this.message,
