@@ -216,11 +216,12 @@ export class AuthService {
    *
    * @returns Calls the signOut function of fire auth.
    */
-  signOut(currentUserId: string) {
+  async signOut(currentUserId: string) {
     this.setIsSignedInFalse(currentUserId);
     return signOut(this.auth)
       .then(() => {
         sessionStorage.removeItem('currentUser');
+        this.usersService.setCurrentUserNull();
         this.router.navigate(['/login']);
       })
       .catch((error) => {

@@ -146,4 +146,8 @@ export class UsersService {
       console.error('Error updating user in Firestore:', error);
     }
   }
+
+  setCurrentUserNull() {
+    this.currentUserSubject.next(null);
+  }
 }
