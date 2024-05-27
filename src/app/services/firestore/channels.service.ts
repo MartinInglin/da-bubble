@@ -254,6 +254,24 @@ export class ChannelsService {
   }
 
   /**
+   * This function retrieves the users in a specific channel.
+   *
+   * @param channelId string
+   * @returns Promise<MinimalUser[]>
+   */
+  async getUsersInChannel(channelId: string): Promise<MinimalUser[]> {
+    const channelDocRef = doc(this.firestore, 'channels', channelId);
+    const channelDoc = await getDoc(channelDocRef);
+
+    if (!channelDoc.exists()) {
+      throw new Error('Channel does not exist');
+    }
+
+    const channelData = channelDoc.data() as Channel;
+    return channelData.users;
+  }
+
+  /**
    * This function changes the name of the channel stored on the users.
    *
    * @param newNameChannel string

@@ -10,10 +10,12 @@
                 </div>
             </div>
             <div class="members">
-                <div class="single-member" (click)="openDetailViewDialog()"><img src="./../../../assets/images/avatars/avatar_3.svg"><div></div>Frederik Beck (Du)</div>
-                <div class="single-member" (click)="openDetailViewDialog()"><img src="./../../../assets/images/avatars/avatar_5.svg"><div></div>Sofia Müller</div>
-                <div class="single-member" (click)="openDetailViewDialog()"><img src="./../../../assets/images/avatars/avatar_6.svg"><div></div>Noah Braun</div>
-            </div>
+                <div class="single-member" *ngFor="let user of users" (click)="openDetailViewDialog()">
+                  <img [src]="user.avatar">
+                  <div></div>
+                  {{ user.name }}
+                </div>
+              </div>
             <button class="add-member" routerLink="/addUserToChannel">
                 <div><img src="./../../../assets/images/icons/add_member.svg"></div>Mitglieder hinzufügen
             </button>

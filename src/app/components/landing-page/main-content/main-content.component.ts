@@ -176,9 +176,14 @@ export class MainContentComponent implements OnInit, OnDestroy {
     });
   }
 
-  openMembersDialog(): void {
+  openMembersDialog(channelId: string): void {
     const dialogRef = this.dialog.open(MembersComponent, {
       width: '415px',
+      position: {
+        top: '210px',
+        right: '500px',
+      },
+      data: { channelId: channelId },
     });
   }
 
