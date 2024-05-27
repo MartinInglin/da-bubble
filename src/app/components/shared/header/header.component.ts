@@ -32,7 +32,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private userSubscription: Subscription = new Subscription();
   private routeSubscription: Subscription = new Subscription();
-  currentUser: User = new User();
+  currentUser: User | null = null;
   dialogRef: MatDialogRef<UserMenuComponent> | null = null;
   isDialogOpen = false;
   showRegisterElement = false;
@@ -40,9 +40,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
-      if (user) {
-        this.currentUser = user ?? new User();;
-      }
+      this.currentUser = user;
     });
 
     this.routeSubscription = this.router.events.subscribe(event => {
@@ -62,20 +60,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(UserMenuComponent, {
-      width: '282px',
-      position: {
-        top: '100px',
-        right: '50px'
-      },
-    });
-    dialogRef.componentInstance.currentUser = new User(this.currentUser);
+    if (this.currentUser) {
+      const dialogRef = this.dialog.open(UserMenuComponent, {
+        width: '282px',
+        position: {
+          top: '100px',
+          right: '50px'
+        },
+      });
+      dialogRef.componentInstance.currentUser = new User(this.currentUser);
 
-    this.isDialogOpen = true;
+      this.isDialogOpen = true;
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.isDialogOpen = false;
-    });
+      dialogRef.afterClosed().subscribe(() => {
+        this.isDialogOpen = false;
+      });
+    }
   }
 
   onMouseOver(): void {
