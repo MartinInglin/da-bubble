@@ -43,16 +43,16 @@ export class MembersComponent {
   async loadChannelMembers(): Promise<void> {
     try {
       this.users = await this.channelsService.getUsersInChannel(this.data.channelId);
-      console.log('Users in channel:', this.users);
     } catch (error) {
       console.error('Error fetching users:', error);
     }
   }
   
 
-  openDetailViewDialog(): void {
+  openDetailViewDialog(userId: string): void {
     const dialogRef = this.dialog.open(ProfileDetailViewComponent, {
       width: '500px',
+      data: { userId: userId }
     });
   }
 

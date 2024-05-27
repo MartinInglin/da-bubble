@@ -10,7 +10,7 @@
                 </div>
             </div>
             <div class="members">
-                <div class="single-member" *ngFor="let user of users" (click)="openDetailViewDialog()">
+                <div class="single-member" *ngFor="let user of users" (click)="openDetailViewDialog(user.id)">
                   <img [src]="user.avatar">
                   <div></div>
                   {{ user.name }}

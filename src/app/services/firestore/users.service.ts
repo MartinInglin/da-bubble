@@ -124,14 +124,16 @@ export class UsersService {
   /**
    * This function gets the data of all users and stores it as an observable. Every component that needs this data can subscribe to it.
    */
-  getAllUsers(): void {
+  getAllUsers(): Observable<User[]> {
     const collectionRef = collection(this.firestore, 'users');
 
-    onSnapshot(collectionRef, (snapshot) => {
-      const data = snapshot.docs.map(
-        (doc) => new User({ id: doc.id, ...doc.data() })
-      );
-      this.allUsersSubject.next(data);
+    return new Observable<User[]>((observer) => {
+      onSnapshot(collectionRef, (snapshot) => {
+        const data = snapshot.docs.map(
+          (doc) => new User({ id: doc.id, ...doc.data() })
+        );
+        observer.next(data);
+      });
     });
   }
 
