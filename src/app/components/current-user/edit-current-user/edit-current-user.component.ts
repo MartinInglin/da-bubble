@@ -68,9 +68,8 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
 
       const updatedData = {
         name: this.updatedName,
-        email: this.wantChangeMail ? this.currentUser.email : this.updatedEmail
+        email: this.wantChangeMail ? this.updatedEmail : this.currentUser.email
       };
-
       await this.usersService.updateUser(this.currentUser.id, updatedData);
       this.dialogRef.close();
     }
@@ -82,7 +81,8 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
       this.isPasswordVerified = isValid;
       if (isValid) {
         this.updatedEmail = this.updatedEmail;
-        this.saveChanges();
+        await this.saveChanges();
+        this.authService.changeEmail(this.updatedEmail, this.password)
       } else {
         this.passwordIsFalse = true;
       }

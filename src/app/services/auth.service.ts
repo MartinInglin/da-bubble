@@ -19,6 +19,7 @@ import {
   updateEmail,
   updatePassword,
   user,
+  verifyBeforeUpdateEmail,
 } from '@angular/fire/auth';
 import { Router, RouterLink } from '@angular/router';
 import { RegistrationService } from './registration.service';
@@ -292,39 +293,27 @@ export class AuthService {
     }
   }
 
-  async changeEmail(newEmail: string, currentPassword: string): Promise<void> {
+  async changeEmail(newEmail: string, password: string): Promise<void> {
     const currentUser = this.auth.currentUser;
 
     if (currentUser) {
       try {
         const credential = EmailAuthProvider.credential(
           currentUser.email!,
-          currentPassword
+          password
         );
         await reauthenticateWithCredential(currentUser, credential);
 
-        await updateEmail(currentUser, newEmail);
+        await verifyBeforeUpdateEmail(currentUser, newEmail);
+
         console.log('Email updated on fire auth.');
 
-        this.updateUserOnFirestore(currentUser.uid, newEmail);
+                this.signOut(currentUser.uid);
       } catch (error) {
         console.error('Email update failed:', error);
       }
     } else {
       console.error('No user is currently logged in.');
-    }
-  }
-
-  async updateUserOnFirestore(userId: string, newEmail: string): Promise<void> {
-    const partialUser = {
-      email: newEmail,
-    };
-
-    try {
-      await this.usersService.updateUser(userId, partialUser);
-      console.log('Email updated in Firestore.');
-    } catch (error) {
-      console.error('Failed to update email in Firestore:', error);
     }
   }
 }
