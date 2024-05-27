@@ -2,12 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import {
   Auth,
+  EmailAuthProvider,
   GoogleAuthProvider,
   UserCredential,
   browserSessionPersistence,
   createUserWithEmailAndPassword,
   getAdditionalUserInfo,
   getAuth,
+  reauthenticateWithCredential,
   sendEmailVerification,
   sendPasswordResetEmail,
   setPersistence,
@@ -287,6 +289,42 @@ export class AuthService {
       return true;
     } catch (error) {
       return false;
+    }
+  }
+
+  async changeEmail(newEmail: string, currentPassword: string): Promise<void> {
+    const currentUser = this.auth.currentUser;
+
+    if (currentUser) {
+      try {
+        const credential = EmailAuthProvider.credential(
+          currentUser.email!,
+          currentPassword
+        );
+        await reauthenticateWithCredential(currentUser, credential);
+
+        await updateEmail(currentUser, newEmail);
+        console.log('Email updated on fire auth.');
+
+        this.updateUserOnFirestore(currentUser.uid, newEmail);
+      } catch (error) {
+        console.error('Email update failed:', error);
+      }
+    } else {
+      console.error('No user is currently logged in.');
+    }
+  }
+
+  async updateUserOnFirestore(userId: string, newEmail: string): Promise<void> {
+    const partialUser = {
+      email: newEmail,
+    };
+
+    try {
+      await this.usersService.updateUser(userId, partialUser);
+      console.log('Email updated in Firestore.');
+    } catch (error) {
+      console.error('Failed to update email in Firestore:', error);
     }
   }
 }

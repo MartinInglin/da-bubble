@@ -5,6 +5,7 @@ import {
   onSnapshot,
   setDoc,
   collection,
+  updateDoc,
 } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { RegistrationService } from '../registration.service';
@@ -27,8 +28,9 @@ export class UsersService {
   public currentUser$: Observable<User | null> =
     this.currentUserSubject.asObservable();
 
-  private allUsersSubject: BehaviorSubject<User[] | null> =
-    new BehaviorSubject<User[] | null>(null);
+  private allUsersSubject: BehaviorSubject<User[] | null> = new BehaviorSubject<
+    User[] | null
+  >(null);
   public allUsersSubject$: Observable<User[] | null> =
     this.allUsersSubject.asObservable();
 
@@ -48,7 +50,7 @@ export class UsersService {
 
   /**
    * This function creates a new user document in the collection users.
-   * 
+   *
    * @param userId string
    */
   async createUser(userId: string): Promise<void> {
@@ -56,8 +58,11 @@ export class UsersService {
 
     let avatar = userData.avatar;
 
-    if (userData.avatarFile && userData.avatarFile.name !== "empty.txt") {
-      avatar = await this.storageService.saveImageUser(userId, userData.avatarFile);
+    if (userData.avatarFile && userData.avatarFile.name !== 'empty.txt') {
+      avatar = await this.storageService.saveImageUser(
+        userId,
+        userData.avatarFile
+      );
     }
 
     const user: User = {
@@ -76,7 +81,7 @@ export class UsersService {
 
   /**
    * This function creates a user in firestore if the user signs in with a google account.
-   * 
+   *
    * @param userCredential object from firebase authentication
    */
   async createUserGoogle(userCredential: UserCredential) {
@@ -85,7 +90,7 @@ export class UsersService {
     const userId = googleUser.uid;
     const userName = googleUser.displayName;
     const userEmail = googleUser.email;
-    const userAvatar = "assets/images/avatars/profile.svg";
+    const userAvatar = 'assets/images/avatars/profile.svg';
 
     if (userName && userEmail) {
       const user: User = {
@@ -104,7 +109,7 @@ export class UsersService {
 
   /**
    * This function gets the object of the current user and stores it as an obeservable. Every component that needs this data can subscribe to it.
-   * 
+   *
    * @param userId string
    */
   getCurrentUser(userId: string) {
@@ -123,13 +128,22 @@ export class UsersService {
     const collectionRef = collection(this.firestore, 'users');
 
     onSnapshot(collectionRef, (snapshot) => {
-      const data = snapshot.docs.map((doc) => new User({ id: doc.id, ...doc.data() }));
+      const data = snapshot.docs.map(
+        (doc) => new User({ id: doc.id, ...doc.data() })
+      );
       this.allUsersSubject.next(data);
     });
   }
 
-  async updateUser(userId: string, updatedData: Partial<User>): Promise<void> {
-    const userRef = doc(this.firestore, 'users', userId);
-    await setDoc(userRef, updatedData, { merge: true });
+  async updateUser(userId: string, partialUser: Partial<User>): Promise<void> {
+    const userDocRef = doc(this.firestore, 'users', userId);
+
+    try {
+      await updateDoc(userDocRef, partialUser);
+      this.getCurrentUser(userId);
+      console.log('User updated in Firestore.');
+    } catch (error) {
+      console.error('Error updating user in Firestore:', error);
+    }
   }
 }
