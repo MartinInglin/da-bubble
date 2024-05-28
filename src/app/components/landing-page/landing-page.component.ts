@@ -53,7 +53,7 @@ export class LandingPageComponent implements OnInit {
   allUsers: User[] = [];
   i: any = ([] = '');
 
-  showContacts: boolean = false;
+  showContacts: boolean = true;
   showChannels: boolean = true;
   isOpen: boolean = false;
   drawer: any;

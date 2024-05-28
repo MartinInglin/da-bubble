@@ -75,12 +75,11 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
     }
   }
 
-  async verifyPassword(): Promise<void> {
+  async changeMailAdress(): Promise<void> {
     if (this.currentUser && this.password) {
       const isValid = await this.authService.verifyPassword(this.currentUser.email, this.password);
       this.isPasswordVerified = isValid;
       if (isValid) {
-        this.updatedEmail = this.updatedEmail;
         await this.saveChanges();
         this.authService.changeEmail(this.updatedEmail, this.password)
       } else {

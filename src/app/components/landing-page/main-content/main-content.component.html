@@ -2,15 +2,13 @@
 <main id="mainContent">
   <!-- Header section with channel name and contact information -->
 
-
-
   <div class="height-65vh" *ngIf="channelSelected">
 
     <header >
       <div (click)="openChannelInfoDialog(selectedChannel.id)" class="channelName">
         {{ selectedChannel.name }}
       </div>
-      <div (click)="openMembersDialog()" class="channelMembers" *ngIf="channelSelected">
+      <div  class="channelMembers" *ngIf="channelSelected">
         <!-- Profile pictures of channel members which are part of the group -->
         <ng-container *ngFor="let users of selectedChannel.users">
           <img src="{{ selectedChannel.users[0].avatar }}" alt="" />
@@ -21,7 +19,7 @@
     <!-- Message Content  -->
    
     <div class="message-content" >
-      @if (!chatSelected && selectedChannel && selectedChannel.posts.length > 0) {
+      @if (!chatSelected && selectedChannel && selectedChannel.posts.length === 0) {
       <!-- Date line for messages -->
       <div class="dateLine">
         <div class="Line">
@@ -57,6 +55,14 @@
       </div>
 
     }
+
+    <div class="placeholderContainer" *ngIf="channelSelected">
+      <img src="{{selectedChannel.name}}" alt="">
+      <h3>{{selectedChannel.description}}</h3>
+      <div>
+        <span>Schreib etwas in die Gruppe <a href=""> {{selectedChannel.name}}</a> damit andere darauf reagieren.</span>
+      </div>
+    </div>
   </div>
 
     <!-- Input Feld am unteren Rand des Containers -->
@@ -111,13 +117,7 @@
       </div>
     </div>
 
-    <div class="placeholderContainer" *ngIf="channelSelected && selectedChannel.posts.length === 0">
-      <img src="{{selectedChannel.name}}" alt="">
-      <h3>{{selectedChannel.description}}</h3>
-      <div>
-        <span>Diese Unterhaltun findet nur zwischen <a href=""> {{selectedChannel.id}}</a> und dir statt.</span>
-      </div>
-    </div>
+   
 
 
 
