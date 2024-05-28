@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: column;
   max-width: 1920px;
-  margin-bottom: 100px;
+  // margin-bottom: 100px;
   overflow: hidden;
   a {
     cursor: pointer;
@@ -20,6 +20,9 @@
     }
   }
 }
+.height-65vh {
+  height: 65vh;
+}
 
 /* Styling for the header section */
 header {
@@ -28,7 +31,7 @@ header {
   justify-content: space-between;
   flex-direction: row;
   width: 100%;
-  min-height: 100px;
+  height: 100px;
   box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2);
   margin-bottom: 50px;
 
@@ -57,8 +60,8 @@ header {
     img {
       height: 30px;
       padding: 10px;
-      &:hover{
-        background-color:#eceefe;
+      &:hover {
+        background-color: #eceefe;
         border-radius: 30px;
       }
     }
@@ -127,7 +130,10 @@ header {
 
 /* Styling for the message content */
 .message-content {
-  height: 100vh;
+  min-height: 50vh;
+  display: flex;
+  justify-content: end;
+  flex-direction: column;
   /* Styling for the line separator */
   .dateLine {
     width: 100%;
@@ -159,7 +165,7 @@ header {
 /* Styling for individual messages */
 .message {
   display: flex;
-  width: 97%;
+  max-width: 97%;
   padding: 20px;
   height: 141px;
   align-items: center;
@@ -222,6 +228,36 @@ header {
     }
   }
 }
+.avatarName {
+  width: fit-content;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  img {
+    max-height: 70px;
+  }
+}
+.placeholderContainer {
+  margin-left: 50px;
+  width: 80%;
+  margin-bottom: 20px;
+  img {
+    height: 100px;
+    margin-right: 5px;
+  }
+  span {
+    font-weight: 700;
+    font-size: 20px;
+  }
+  p {
+    color: grey;
+    font-size: 14px;
+  }
+  .messageAvatarName {
+    margin-bottom: 5px;
+  }
+}
 
 .emoji-container {
   display: flex;
@@ -233,7 +269,7 @@ header {
 .emoji {
   margin-right: 10px;
   margin-bottom: 5px;
-  width: calc((100% / 3) - 10px); 
+  width: calc((100% / 3) - 10px);
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -280,8 +316,7 @@ cdk-overlay-connected-position-bounding-box {
   margin-top: 5px;
 }
 
-
-.seperator{
+.seperator {
   height: 30px;
   width: 1px;
   background-color: black;

@@ -65,6 +65,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
   currentUser: User = new User();
   selectedChannel: Channel = new Channel();
+
   allUsers: User[] = [];
   userId: any;
   directMessage: DirectMessage | null = null;
@@ -80,14 +81,14 @@ export class MainContentComponent implements OnInit, OnDestroy {
     '🚀',
     '⚡',
   ];
-  channelSelected: boolean = true;
+  channelSelected: boolean = false;
   chatSelected: boolean = false;
   files: File[] = [];
 
   constructor(
     private dialog: MatDialog,
     private threadService: ThreadsService,
-    private directMessagesService: DirectMessagesService
+    private directMessagesService: DirectMessagesService,
   ) {}
 
   // @Output() openThreadEvent = new EventEmitter<boolean>(); // Event to signal thread opening
@@ -99,13 +100,20 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       this.currentUser = user ?? new User();
     });
+
     this.channelSubscription = this.channelsService.channelSubject$.subscribe(
       (channel) => {
         this.selectedChannel = channel ?? new Channel();
         console.log("Current channel:", this.selectedChannel);
-        
+    
+        this.channelSelected = !!this.selectedChannel.id;
+        if (this.channelSelected) {
+          this.chatSelected = false;
+          console.log('hallo');
+        }
       }
     );
+    
 
     this.usersSubscription = this.usersService.allUsersSubject$.subscribe(
       (users) => {
