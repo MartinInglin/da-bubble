@@ -16,7 +16,10 @@
                 <mat-radio-button value="specific">
                     <span>Bestimmte Leute hinzufügen</span>
                 </mat-radio-button>
-                <input *ngIf="peopleType === 'specific'" placeholder="Name eingeben">
+                <input *ngIf="peopleType === 'specific'" placeholder="Name eingeben" (focus)="getUsersList()">
+                <div *ngIf="peopleType === 'specific'" class="userList">
+                    <div *ngFor="let user of userList">{{ user.name }}</div>
+                </div>
             </mat-radio-group>
             <div class="button-container">
                 <div class="message-button">

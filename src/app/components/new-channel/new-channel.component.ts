@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -55,11 +55,5 @@ export class NewChannelComponent {
 
   onNoClick(): void {
     this.dialogRef.close();
-  }
-
-  ngOnDestroy(): void {
-    if (this.dialogRefSubscription) {
-      this.dialogRefSubscription.unsubscribe();
-    }
   }
 }

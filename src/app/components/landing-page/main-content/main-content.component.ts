@@ -105,7 +105,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
       (channel) => {
         this.selectedChannel = channel ?? new Channel();
         console.log("Current channel:", this.selectedChannel);
-    
+        
         this.channelSelected = !!this.selectedChannel.id;
         if (this.channelSelected) {
           this.chatSelected = false;

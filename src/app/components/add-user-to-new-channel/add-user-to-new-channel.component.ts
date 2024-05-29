@@ -1,7 +1,8 @@
-import { Component, Inject, OnDestroy  } from '@angular/core';
+import { Component, Inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
@@ -10,6 +11,7 @@ import { UsersService } from '../../services/firestore/users.service';
 import { ChannelsService } from '../../services/firestore/channels.service';
 import { MinimalChannel } from '../../models/minimal_channel.class';
 import { Subscription } from 'rxjs';
+import { User } from '../../models/user.class';
 
 @Component({
   selector: 'app-add-user-to-new-channel',
@@ -20,14 +22,18 @@ import { Subscription } from 'rxjs';
     MatIconModule,
     MatButtonModule,
     FormsModule,
-    MatRadioModule
+    MatRadioModule,
+    MatSelectModule
   ],
   templateUrl: './add-user-to-new-channel.component.html',
   styleUrls: ['./add-user-to-new-channel.component.scss']
 })
-export class AddUserToNewChannelComponent {
+export class AddUserToNewChannelComponent implements OnDestroy {
   peopleType: string = 'all';
   channelId: string = '';
+  selectedUser: User | null = null;
+  userList: User[] = [];
+
   private usersSubscription: Subscription | undefined;
 
   constructor(
@@ -56,6 +62,12 @@ export class AddUserToNewChannelComponent {
 
       this.dialogRef.close();
     }
+  }
+
+  getUsersList(): void {
+    this.usersSubscription = this.usersService.getAllUsers().subscribe(users => {
+      this.userList = users;
+    });
   }
 
   onNoClick(): void {
