@@ -39,18 +39,17 @@ export class NewChannelComponent {
   createChannelAndOpenDialog(): void {
     if (this.channelName.trim()) {
       this.channelsService.createChannel(this.channelName, this.channelDescription, this.currentUser)
-        .then(()=> {
+        .then((channel) => {
           this.dialogRef.close();
-          this.openAddUserDialog(this.channelName);
+          this.openAddUserDialog(channel.id);
         })
         .catch(error => console.error('Error creating channel: ', error));
     }
   }
-
-  openAddUserDialog(channelName: string): void {
+  openAddUserDialog(channelId: string): void {
     const dialogRef = this.dialog.open(AddUserToNewChannelComponent, {
       width: '710px',
-      data: { channelName: channelName }
+      data: { channelId: channelId }
     });
   }
 

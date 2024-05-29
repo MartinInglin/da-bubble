@@ -9,7 +9,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { User } from '../../models/user.class';
 import { UsersService } from '../../services/firestore/users.service';
 import { ChannelsService } from '../../services/firestore/channels.service';
-import { Channel } from '../../models/channel.class';
+import { MinimalChannel } from '../../models/minimal_channel.class';
 
 @Component({
   selector: 'app-add-user-to-new-channel',
@@ -26,35 +26,35 @@ import { Channel } from '../../models/channel.class';
   styleUrls: ['./add-user-to-new-channel.component.scss']
 })
 export class AddUserToNewChannelComponent {
-  people: boolean = false;
-  channelName: string = '';
+  peopleType: string = 'all';
+  channelId: string = '';
 
   constructor(
     public dialogRef: MatDialogRef<AddUserToNewChannelComponent>,
     private usersService: UsersService,
     private channelsService: ChannelsService,
-    @Inject(MAT_DIALOG_DATA) public data: { channelName: string }
+    @Inject(MAT_DIALOG_DATA) public data: { channelId: string }
   ) {
-    this.channelName = data.channelName;
+    this.channelId = data.channelId;
   }
 
-  addUsersToChannel(channelName: string): void {
-    this.usersService.getAllUsers().subscribe(users => {
-      if (users) {
-        users.forEach(user => {
-          if (!user.channels.some(channel => channel.name === channelName)) {
-            user.channels.push({ id: channelName, name: channelName });
-            this.usersService.updateUser(user.id, { channels: user.channels }).then(() => {
-              console.log(`User ${user.name} added to channel ${channelName}`);
-            }).catch(error => {
-              console.error(`Error adding user ${user.name} to channel ${channelName}: `, error);
-            });
-          } else {
-            console.log(`User ${user.name} is already in channel ${channelName}`);
-          }
-        });
-      }
-    });
+  addAllUsersToChannel(): void {
+    if (this.peopleType === 'all') {
+      this.usersService.getAllUsers().subscribe(users => {
+        if (users) {
+          users.forEach(user => {
+            const minimalChannel: MinimalChannel = {
+              id: this.channelId,
+              name: ''
+            };
+            this.usersService.addChannelToUsers(minimalChannel);
+            this.channelsService.addAllUsersToChannel(this.channelId);
+          });
+        }
+      });
+
+      this.dialogRef.close();
+    }
   }
 
   onNoClick(): void {

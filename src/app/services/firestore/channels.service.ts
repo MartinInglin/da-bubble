@@ -78,12 +78,12 @@ export class ChannelsService {
     name: string,
     description: string,
     currentUser: User
-  ): Promise<void> {
+  ): Promise<Channel> {
     const users = this.currentUserToMinimalUser(currentUser);
-
+  
     const channelRef = collection(this.firestore, 'channels');
     const newDocRef = doc(channelRef);
-
+  
     const channelData: Channel = {
       id: newDocRef.id,
       name: name,
@@ -91,12 +91,14 @@ export class ChannelsService {
       users: users,
       posts: [],
     };
-
+  
     await setDoc(newDocRef, channelData);
     const userIds = users
       .map((user) => user.id)
       .filter((id): id is string => !!id);
-    this.addChannelToUsers(channelData.id, channelData.name, userIds);
+    await this.addChannelToUsers(channelData.id, channelData.name, userIds);
+    
+    return channelData;
   }
 
   currentUserToMinimalUser(currentUser: User): MinimalUser[] {
@@ -415,6 +417,44 @@ export class ChannelsService {
     } catch (error) {
       console.error('Error updating post: ', error);
     }
+  }
+
+  async addAllUsersToChannel(channelId: string): Promise<void> {
+    const collectionRef = collection(this.firestore, 'users');
+    const querySnapshot = await getDocs(collectionRef);
+  
+    const batch = writeBatch(this.firestore);
+  
+    const channelDocRef = doc(this.firestore, 'channels', channelId);
+    const channelDoc = await getDoc(channelDocRef);
+  
+    if (!channelDoc.exists()) {
+      throw new Error('Channel does not exist');
+    }
+  
+    const channelData = channelDoc.data() as Channel;
+    const existingUserIds = channelData.users.map(user => user.id);
+  
+    querySnapshot.forEach((docSnapshot) => {
+      const userData = docSnapshot.data() as User;
+      if (!existingUserIds.includes(userData.id)) {
+        const minimalUser: MinimalUser = {
+          id: userData.id,
+          name: userData.name,
+          avatar: userData.avatar,
+        };
+        channelData.users.push(minimalUser);
+        const userDocRef = doc(this.firestore, 'users', userData.id);
+        batch.update(userDocRef, {
+          channels: arrayUnion({ id: channelId, name: channelData.name }),
+        });
+      }
+    });
+  
+    batch.update(channelDocRef, { users: channelData.users });
+  
+    await batch.commit();
+    console.log('All users added to the channel.');
   }
 
   async saveReaction(

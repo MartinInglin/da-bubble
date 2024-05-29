@@ -4,21 +4,22 @@ import {
   doc,
   onSnapshot,
   setDoc,
+  getDocs,
   collection,
   updateDoc,
+  query,
 } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { RegistrationService } from '../registration.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserCredential } from '@angular/fire/auth';
 import { StorageService } from '../storage.service';
+import { MinimalChannel } from '../../models/minimal_channel.class';
 
 @Injectable({
   providedIn: 'root',
 })
-@Injectable({
-  providedIn: 'root',
-})
+
 export class UsersService {
   storageService = inject(StorageService);
   user: User = new User();
@@ -135,6 +136,24 @@ export class UsersService {
         observer.next(data);
       });
     });
+  }
+
+  async addChannelToUsers(channel: MinimalChannel): Promise<void> {
+    const collectionRef = collection(this.firestore, 'users');
+    const userQuery = query(collectionRef);
+    const querySnapshot = await getDocs(userQuery);
+
+    const updatePromises = querySnapshot.docs.map((docSnapshot) => {
+      const user = docSnapshot.data() as User;
+      if (!user.channels.some((c: MinimalChannel) => c.id === channel.id)) {
+        user.channels.push(channel);
+        return updateDoc(doc(this.firestore, 'users', user.id), { channels: user.channels });
+      }
+      return Promise.resolve();
+    });
+
+    await Promise.all(updatePromises);
+    console.log('Channel added to all users.');
   }
 
   async updateUser(userId: string, partialUser: Partial<User>): Promise<void> {
