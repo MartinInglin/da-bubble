@@ -19,7 +19,7 @@
     <!-- Message Content  -->
    
     <div class="message-content" >
-      @if (!chatSelected && selectedChannel && selectedChannel.posts.length === 0) {
+      @if (!chatSelected && selectedChannel && selectedChannel.posts.length > 0) {
       <!-- Date line for messages -->
       <div class="dateLine">
         <div class="Line">
