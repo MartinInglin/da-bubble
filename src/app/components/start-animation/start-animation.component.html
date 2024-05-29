@@ -1,0 +1,20 @@
+@if (isVisible) {
+  <div class="background" [@fadeOutBackgroundAnimation]="fadeOutBackgroundState">
+    <div class="background-text" [@moveUpTextAnimation]="moveUpTextState">
+      <img
+        src="assets/images/logo_start_animation_text.svg"
+        alt=""
+        [@moveTextRightAnimation]="textAnimationState"
+      />
+    </div>
+    <div class="background-half" [@fadeOutBackgroundHalfAnimation]="fadeOutBackgroundHalfState"></div>
+    <div class="background-logo" [@moveUpLogoAnimation]="moveUpLogoState">
+      <img
+        src="assets/images/logo_start_animation_1.svg"
+        alt="Logo"
+        [@moveLogoLeftAnimation]="logoAnimationState"
+      />
+    </div>
+  </div>
+}
+

@@ -1,4 +1,5 @@
 <div class="card-container">
+  <app-start-animation></app-start-animation>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="card">
       <div class="title">
@@ -58,11 +59,7 @@
         <div class="line"></div>
       </div>
 
-      <button
-        class="button-google"
-        type="button"
-        (click)="signInByGoogle()"
-      >
+      <button class="button-google" type="button" (click)="signInByGoogle()">
         <img src="assets/images/icons/google.svg" alt="" /> Anmelden mit Google
       </button>
 
