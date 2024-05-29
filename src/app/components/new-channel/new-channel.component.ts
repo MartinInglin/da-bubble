@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,7 +7,6 @@ import { FormsModule } from '@angular/forms';
 import { AddUserToNewChannelComponent } from '../add-user-to-new-channel/add-user-to-new-channel.component';
 import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ChannelsService } from '../../services/firestore/channels.service';
-import { Channel } from '../../models/channel.class';
 import { User } from '../../models/user.class';
 
 @Component({
@@ -29,6 +28,7 @@ export class NewChannelComponent {
   channelDescription: string = '';
   
   public currentUser: User = new User();
+  private dialogRefSubscription: any;
 
   constructor(
     private dialog: MatDialog,
@@ -55,5 +55,11 @@ export class NewChannelComponent {
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  ngOnDestroy(): void {
+    if (this.dialogRefSubscription) {
+      this.dialogRefSubscription.unsubscribe();
+    }
   }
 }

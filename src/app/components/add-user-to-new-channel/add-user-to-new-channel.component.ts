@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -6,10 +6,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { User } from '../../models/user.class';
 import { UsersService } from '../../services/firestore/users.service';
 import { ChannelsService } from '../../services/firestore/channels.service';
 import { MinimalChannel } from '../../models/minimal_channel.class';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-user-to-new-channel',
@@ -28,6 +28,7 @@ import { MinimalChannel } from '../../models/minimal_channel.class';
 export class AddUserToNewChannelComponent {
   peopleType: string = 'all';
   channelId: string = '';
+  private usersSubscription: Subscription | undefined;
 
   constructor(
     public dialogRef: MatDialogRef<AddUserToNewChannelComponent>,
@@ -59,5 +60,11 @@ export class AddUserToNewChannelComponent {
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  ngOnDestroy(): void {
+    if (this.usersSubscription) {
+      this.usersSubscription.unsubscribe();
+    }
   }
 }
