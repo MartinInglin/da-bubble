@@ -19,7 +19,6 @@ import { MinimalChannel } from '../../models/minimal_channel.class';
 @Injectable({
   providedIn: 'root',
 })
-
 export class UsersService {
   storageService = inject(StorageService);
   user: User = new User();
@@ -113,11 +112,11 @@ export class UsersService {
    *
    * @param userId string
    */
-  getCurrentUser(userId: string) {
-    const unsub = onSnapshot(doc(this.firestore, 'users', userId), (doc) => {
+  getCurrentUser(userId: string): void {
+    onSnapshot(doc(this.firestore, 'users', userId), (doc) => {
       const userData = doc.data() as User;
+      console.log('Firestore document updated:', userData);
       this.currentUserSubject.next(userData);
-
       sessionStorage.setItem('currentUser', JSON.stringify(userData));
     });
   }
@@ -147,7 +146,9 @@ export class UsersService {
       const user = docSnapshot.data() as User;
       if (!user.channels.some((c: MinimalChannel) => c.id === channel.id)) {
         user.channels.push(channel);
-        return updateDoc(doc(this.firestore, 'users', user.id), { channels: user.channels });
+        return updateDoc(doc(this.firestore, 'users', user.id), {
+          channels: user.channels,
+        });
       }
       return Promise.resolve();
     });
@@ -161,7 +162,6 @@ export class UsersService {
 
     try {
       await updateDoc(userDocRef, partialUser);
-      this.getCurrentUser(userId);
       console.log('User updated in Firestore.');
     } catch (error) {
       console.error('Error updating user in Firestore:', error);
