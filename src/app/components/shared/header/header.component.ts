@@ -67,6 +67,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
           top: '100px',
           right: '50px'
         },
+        panelClass: 'mat-dialog-content',
       });
       dialogRef.componentInstance.currentUser = new User(this.currentUser);
 
