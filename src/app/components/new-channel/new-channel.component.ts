@@ -28,7 +28,6 @@ export class NewChannelComponent {
   channelDescription: string = '';
   
   public currentUser: User = new User();
-  private dialogRefSubscription: any;
 
   constructor(
     private dialog: MatDialog,

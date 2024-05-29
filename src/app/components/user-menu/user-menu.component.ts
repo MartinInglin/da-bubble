@@ -14,6 +14,11 @@ import { User } from '../../models/user.class';
 @Component({
   selector: 'app-user-menu',
   standalone: true,
+  styles: [`
+  :host {
+    border-radius: 20px !important;
+  }
+`],
   imports: [CommonModule, RouterModule, MatCardModule, MatDialogModule],
   templateUrl: './user-menu.component.html',
   styleUrl: './user-menu.component.scss',
@@ -25,7 +30,7 @@ export class UserMenuComponent {
   constructor(
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<UserMenuComponent>
-  ) {}
+  ) { }
 
   onNoClick(): void {
     this.dialogRef.close();
