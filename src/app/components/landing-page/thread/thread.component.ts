@@ -22,7 +22,7 @@ import { MainContentComponent } from '../main-content/main-content.component';
 })
 export class ThreadComponent implements OnInit {
   allUsers: User[] = [];
-  comments: boolean = true;
+  comments: boolean = false;
   message: string = '';
   currentUser: User = new User();
   emojis: string[] = ["😊", "❤️", "😂", "🎉", "🌟", "🎈", "🌈", "🍕", "🚀", "⚡"];

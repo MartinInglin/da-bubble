@@ -60,6 +60,7 @@ header {
     img {
       height: 30px;
       padding: 10px;
+      margin-left: -30px;
       &:hover {
         background-color: #eceefe;
         border-radius: 30px;
@@ -74,6 +75,7 @@ header {
   display: flex;
   justify-content: center;
   margin-bottom: 30px;
+  z-index: 2000;
 }
 
 /* Styling for the text area */
@@ -130,7 +132,9 @@ header {
 
 /* Styling for the message content */
 .message-content {
-  min-height: 50vh;
+ min-height: 50vh; /* Mindesthöhe auf 50% der Bildschirmhöhe setzen */
+  max-height: 100vh; /* Maximale Höhe auf 100% der Bildschirmhöhe setzen */
+  overflow-y: auto;
   display: flex;
   justify-content: end;
   flex-direction: column;
@@ -320,4 +324,9 @@ cdk-overlay-connected-position-bounding-box {
   height: 30px;
   width: 1px;
   background-color: black;
+}
+@media (min-height: 1050px) {
+  .message-content {
+    min-height: 56vh; /* Setzt die Mindesthöhe auf 1000px, wenn die Höhe des Viewports mindestens 1000px beträgt */
+  }
 }

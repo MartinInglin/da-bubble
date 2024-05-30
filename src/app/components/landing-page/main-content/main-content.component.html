@@ -10,8 +10,8 @@
       </div>
       <div  class="channelMembers" *ngIf="channelSelected">
         <!-- Profile pictures of channel members which are part of the group -->
-        <ng-container *ngFor="let users of selectedChannel.users">
-          <img src="{{ selectedChannel.users[0].avatar }}" alt="" />
+        <ng-container *ngFor="let user of selectedChannel.users">
+          <img src="{{ user.avatar }}" alt="" />
         </ng-container>
       </div>
     </header>
@@ -19,27 +19,27 @@
     <!-- Message Content  -->
    
     <div class="message-content" >
-      @if (!chatSelected && selectedChannel && selectedChannel.posts.length === 0) {
+      @if (selectedChannel.posts.length === 0) {
       <!-- Date line for messages -->
-      <div class="dateLine">
+      <div class="dateLine" *ngFor="let post of selectedChannel.posts; let i = index">
         <div class="Line">
-          <span>{{ formatDate(selectedChannel.posts[0].timestamp) }}</span>
+          <span>{{ formatDate(post.timestamp) }}</span>
         </div>
       </div>
       <!--  -->
-      <div class="message">
+      <div class="message" *ngFor="let post of selectedChannel.posts; let i = index">
         <div class="message-container" (click)="openThread()">
           <!-- Profile picture of the message author -->
-          <img src="{{ selectedChannel.posts[0].avatar }}" alt="" />
+          <img src="{{ post.avatar }}" alt="" />
           <!-- Message box -->
           <div class="message-box">
             <div class="message-name">
               <!-- Name of the message author -->
-              <span>{{ selectedChannel.posts[0].name }}</span>
+              <span>{{ post.name }}</span>
             </div>
             <div class="message-text">
               <!-- Text of the message -->
-                <span>{{ selectedChannel.posts[0].message }}</span>
+                <span>{{ post.message }}</span>
             </div>
 
             <div class="message-details">
@@ -124,7 +124,7 @@
   </div>
 
 
-  <div class="height-65vh">
+  <div class="height-65vh" *ngIf="chatSelected">
 
 
     <!-- Header section with channel name and contact information -->
@@ -241,7 +241,7 @@
 
 
   <!-- Input Feld am unteren rand des Containers -->
-  <div class="inputContent">
+  <div class="inputContent" id="inputDirectMessage" *ngIf="chatSelected">
     <div class="textArea">
       <textarea name="" id="message-textarea" placeholder="Nachricht an #Entwicklerteam"
         [(ngModel)]="message"></textarea>
