@@ -10,7 +10,7 @@ import { ChannelsService } from '../../../services/firestore/channels.service';
 import { UsersService } from '../../../services/firestore/users.service';
 import { Subscription } from 'rxjs';
 import { Channel } from '../../../models/channel.class';
-import { DirectMessage } from '../../../models/direct_message.class';
+import { DirectMessage } from '../../../models/direct-message.class';
 import { MainContentComponent } from '../main-content/main-content.component';
 
 @Component({

@@ -28,7 +28,7 @@ import { ChannelInfoComponent } from '../../channel-info/channel-info.component'
 import { MembersComponent } from '../../members/members.component';
 import { ProfileDetailViewComponent } from '../../profile-detail-view/profile-detail-view.component';
 import { DirectMessagesService } from '../../../services/firestore/direct-messages.service';
-import { DirectMessage } from '../../../models/direct_message.class';
+import { DirectMessage } from '../../../models/direct-message.class';
 import { StorageService } from '../../../services/storage.service';
 import { FormsModule } from '@angular/forms';
 

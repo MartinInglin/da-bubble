@@ -11,8 +11,9 @@ import {
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { StartAnimationComponent } from '../start-animation/start-animation.component';
+
 
 @Component({
   selector: 'app-login',

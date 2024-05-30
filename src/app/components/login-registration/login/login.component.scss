@@ -1,4 +1,6 @@
-@import "./../../../styles.scss";
+@import "./../../../../styles.scss";
+
+
 
 .card-container {
   display: flex;
@@ -10,17 +12,25 @@
   height: 100%;
 }
 
+.form {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
 .card {
   display: flex;
   flex-direction: column;
   gap: 40px;
   align-items: center;
   border-radius: 30px;
-  padding: 50px 100px;
+  padding: 50px;
   box-sizing: border-box;
   background-color: white;
   margin: 30px 0;
-  max-width: 700px;
+  max-width: 600px;
 
   span {
     font-size: 20px;
@@ -29,32 +39,10 @@
   }
 }
 
-.title {
-  display: flex;
-  position: relative;
-  width: 100%;
-  justify-content: center;
-
-  img {
-    position: absolute;
-    left: -50px;
-    top: 12px;
-    padding: 5px;
-    border-radius: 50%;
-    transition: 75ms ease-in-out;
-
-    &:hover {
-      background-color: $background;
-      transition: 75ms ease-in-out;
-      cursor: pointer;
-    }
-  }
-}
-
 .input-section {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 30px;
   width: 100%;
 
   input {
@@ -75,17 +63,43 @@
 }
 
 .input-email {
-  background: url(./../../../assets/images/icons/mail.svg) no-repeat 28px 17px;
+  background: url(./../../../../assets/images/icons/mail.svg) no-repeat 28px 17px;
   padding-left: 80px;
   box-sizing: border-box;
 }
 
-.text-reset-password {
-  font-size: 20px;
-  line-height: 24px;
-  font-weight: 400;
-  color: $text-gray;
-  text-align: center;
+.input-password {
+  background: url(./../../../../assets/images/icons/lock.svg) no-repeat 28px 17px;
+  padding-left: 80px;
+  box-sizing: border-box;
+}
+
+.forgot-password {
+  color: $purple2;
+  cursor: pointer;
+  padding: 5px 15px;
+  border-radius: 25px;
+  transition: 75ms ease-in-out;
+
+  &:hover {
+    background-color: $background;
+    color: $purple1;
+    font-weight: 500;
+    transition: 75ms ease-in-out;
+  }
+}
+
+.or {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  .line {
+    height: 1px;
+    background-color: $light-purple-lines;
+    width: 42%;
+  }
 }
 
 button {
@@ -96,12 +110,31 @@ button {
   cursor: pointer;
 }
 
-.button {
-  display: flex;
-  justify-content: flex-end;
+.button-google {
   width: 100%;
+  border: none;
+  color: $purple1;
+  transition: 75ms ease-in-out;
+  border: 1px solid transparent;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  background-color: $background;
+  border-radius: 100px;
 
-  .button-send-mail {
+  &:hover {
+    border: 1px solid $purple1;
+    transition: 75ms ease-in-out;
+  }
+}
+
+.buttons-login {
+  display: flex;
+  gap: 30px;
+
+  .button-login {
     background-color: $text-gray;
     color: white;
     border: none;
@@ -117,6 +150,20 @@ button {
   .enable-button {
     background-color: $purple1;
   }
+
+  .button-guest-login {
+    border: 1px solid $purple2;
+    color: $purple2;
+    background-color: white;
+    transition: 75ms ease-in-out;
+    font-weight: 700;
+
+    &:hover {
+      background-color: $purple2;
+      color: white;
+      transition: 75ms ease-in-out;
+    }
+  }
 }
 
 .legal {
@@ -126,6 +173,7 @@ button {
   font-size: 18px;
   font-weight: 400;
   line-height: 21.6px;
+  margin-bottom: 36px;
 
   button {
     border: none;

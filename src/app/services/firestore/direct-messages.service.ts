@@ -11,7 +11,7 @@ import {
   updateDoc,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { DirectMessage } from '../../models/direct_message.class';
+import { DirectMessage } from '../../models/direct-message.class';
 import { MinimalUser } from '../../models/minimal_user.class';
 import { User } from '../../models/user.class';
 import { Post } from '../../models/post.class';
