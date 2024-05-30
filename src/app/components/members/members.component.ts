@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -28,6 +28,7 @@ import { MinimalUser } from '../../models/minimal_user.class';
 
 export class MembersComponent {
   users: MinimalUser[] = [];
+  private dialogRefSubscription: any;
 
   constructor(
     private dialog: MatDialog,
@@ -54,9 +55,17 @@ export class MembersComponent {
       width: '500px',
       data: { userId: userId }
     });
+    this.dialogRefSubscription = dialogRef.afterClosed().subscribe(() => {
+    });
   }
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  ngOnDestroy(): void {
+    if (this.dialogRefSubscription) {
+      this.dialogRefSubscription.unsubscribe();
+    }
   }
 }

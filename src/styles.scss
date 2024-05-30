@@ -78,6 +78,16 @@ p {
   background: #555;
 } 
 
+.mdc-dialog__surface {
+  background-color: rgba(0, 0, 0, 0) !important;
+  box-shadow: none !important;
+  border-radius: 0px !important;
+}
+
+.cdk-global-scrollblock {
+  overflow-y: hidden;
+}
+
 /* nunito-200 - latin */
 @font-face {
   font-display: swap;

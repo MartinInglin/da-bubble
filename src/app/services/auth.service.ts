@@ -182,14 +182,14 @@ export class AuthService {
    *
    * @param userCredential object from firebase authentication
    */
-  signIn(userCredential: UserCredential) {
+  async signIn(userCredential: UserCredential) {
     const userSignedIn = userCredential.user;
     const userId = userCredential.user.uid;
 
     this.setIsSignedInTrue(userId);
 
     //exchange after testing from here to line 117
-    this.usersService.getCurrentUser(userId);
+    await this.usersService.getCurrentUser(userId);
     this.router.navigate(['/landingPage']);
 
     // if (userSignedIn.emailVerified) {

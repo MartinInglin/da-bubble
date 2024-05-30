@@ -12,6 +12,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { StartAnimationComponent } from '../start-animation/start-animation.component';
 
 @Component({
   selector: 'app-login',
@@ -22,6 +23,7 @@ import { AuthService } from '../../services/auth.service';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
+    StartAnimationComponent
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',

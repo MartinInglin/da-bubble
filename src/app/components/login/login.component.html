@@ -1,4 +1,5 @@
 <div class="card-container">
+  <app-start-animation></app-start-animation>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="card">
       <div class="title">
@@ -13,6 +14,7 @@
       <div class="input-section">
         <div>
           <input
+            id="email"
             type="text"
             formControlName="email"
             class="input-email"
@@ -32,6 +34,7 @@
 
         <div>
           <input
+            id="password"
             type="password"
             formControlName="password"
             class="input-password"
@@ -58,11 +61,7 @@
         <div class="line"></div>
       </div>
 
-      <button
-        class="button-google"
-        type="button"
-        (click)="signInByGoogle()"
-      >
+      <button class="button-google" type="button" (click)="signInByGoogle()">
         <img src="assets/images/icons/google.svg" alt="" /> Anmelden mit Google
       </button>
 
