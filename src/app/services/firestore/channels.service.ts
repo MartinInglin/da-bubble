@@ -107,6 +107,7 @@ export class ChannelsService {
         name: currentUser.name,
         avatar: currentUser.avatar,
         id: currentUser.id,
+        email: currentUser.email
       },
     ];
     return users;
@@ -442,6 +443,7 @@ export class ChannelsService {
           id: userData.id,
           name: userData.name,
           avatar: userData.avatar,
+          email: userData.email
         };
         channelData.users.push(minimalUser);
         const userDocRef = doc(this.firestore, 'users', userData.id);

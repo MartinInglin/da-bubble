@@ -9,6 +9,7 @@ import {
   createUserWithEmailAndPassword,
   getAdditionalUserInfo,
   getAuth,
+  onAuthStateChanged,
   reauthenticateWithCredential,
   sendEmailVerification,
   sendPasswordResetEmail,
@@ -26,7 +27,7 @@ import { RegistrationService } from './registration.service';
 import { SnackbarService } from './snackbar.service';
 import { UsersService } from './firestore/users.service';
 import { User } from '../models/user.class';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, map } from 'rxjs';
 import { Firestore, doc, getDoc, updateDoc } from '@angular/fire/firestore';
 
 @Injectable({
@@ -309,12 +310,31 @@ export class AuthService {
 
         console.log('Email updated on fire auth.');
 
-                this.signOut(currentUser.uid);
+        this.signOut(currentUser.uid);
       } catch (error) {
         console.error('Email update failed:', error);
       }
     } else {
       console.error('No user is currently logged in.');
     }
+  }
+
+  isAuthenticated(): Observable<boolean> {
+    return new Observable(subscriber => {
+      onAuthStateChanged(this.auth, user => {
+        subscriber.next(!!user);
+        subscriber.complete();
+      });
+    });
+  }
+
+  redirectAuthorizedTo(): void {
+    this.isAuthenticated().pipe(
+      map(isAuthenticated => {
+        if (isAuthenticated) {
+          this.router.navigate(['landingPage']);
+        }
+      })
+    ).subscribe();
   }
 }

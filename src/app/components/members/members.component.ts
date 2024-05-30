@@ -4,15 +4,15 @@ import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { AddUserToChannelComponent } from '../add-user-to-channel/add-user-to-channel.component';
 import { ProfileDetailViewComponent } from '../profile-detail-view/profile-detail-view.component';
 import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ChannelsService } from '../../services/firestore/channels.service';
 import { MinimalUser } from '../../models/minimal_user.class';
-
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-members',
-  template: 'passed in {{ data.channelId}}',
   standalone: true,
   imports: [
     CommonModule,
@@ -23,18 +23,17 @@ import { MinimalUser } from '../../models/minimal_user.class';
     MatDialogModule
   ],
   templateUrl: './members.component.html',
-  styleUrl: './members.component.scss'
+  styleUrls: ['./members.component.scss']
 })
-
-export class MembersComponent {
+export class MembersComponent implements OnInit, OnDestroy {
   users: MinimalUser[] = [];
-  private dialogRefSubscription: any;
+  private dialogRefSubscription: Subscription | undefined;
 
   constructor(
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<MembersComponent>,
     private channelsService: ChannelsService,
-    @Inject(MAT_DIALOG_DATA) public data: {channelId: string}
+    @Inject(MAT_DIALOG_DATA) public data: { channelId: string }
   ) {}
 
   ngOnInit(): void {
@@ -48,14 +47,33 @@ export class MembersComponent {
       console.error('Error fetching users:', error);
     }
   }
-  
 
-  openDetailViewDialog(userId: string): void {
+  openDetailViewDialog(user: MinimalUser): void {
+
+    console.log('User data:', user);
     const dialogRef = this.dialog.open(ProfileDetailViewComponent, {
       width: '500px',
-      data: { userId: userId }
+      data: { 
+        userId: user.id,
+        userName: user.name,
+        userEmail: user.email,
+        userAvatar: user.avatar
+      }
     });
+  
     this.dialogRefSubscription = dialogRef.afterClosed().subscribe(() => {
+    });
+  }
+
+  openAddUserToChannelDialog() {
+    this.dialogRef.close();
+    
+    const dialogRef = this.dialog.open(AddUserToChannelComponent, {
+      width: '514px',
+      position: {
+        top: '210px',
+        right: '100px',
+      },
     });
   }
 

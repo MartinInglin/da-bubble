@@ -1,4 +1,4 @@
-@import "./../../../styles.scss";
+@import "./../../../../styles.scss";
 
 .card-container {
   display: flex;
@@ -75,20 +75,20 @@
 }
 
 .input-name {
-  background: url(./../../../assets/images/icons/person_filled.svg) no-repeat
+  background: url(./../../../../assets/images/icons/person_filled.svg) no-repeat
     28px 17px;
   padding-left: 80px;
   box-sizing: border-box;
 }
 
 .input-email {
-  background: url(./../../../assets/images/icons/mail.svg) no-repeat 28px 17px;
+  background: url(./../../../../assets/images/icons/mail.svg) no-repeat 28px 17px;
   padding-left: 80px;
   box-sizing: border-box;
 }
 
 .input-password {
-  background: url(./../../../assets/images/icons/lock.svg) no-repeat 28px 17px;
+  background: url(./../../../../assets/images/icons/lock.svg) no-repeat 28px 17px;
   padding-left: 80px;
   box-sizing: border-box;
 }
@@ -164,6 +164,7 @@ button {
   font-size: 18px;
   font-weight: 400;
   line-height: 21.6px;
+  margin-bottom: 36px;
 
   button {
     border: none;

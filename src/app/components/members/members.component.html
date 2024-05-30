@@ -10,13 +10,13 @@
                 </div>
             </div>
             <div class="members">
-                <div class="single-member" *ngFor="let user of users" (click)="openDetailViewDialog(user.id)">
+                <div class="single-member" *ngFor="let user of users" (click)="openDetailViewDialog(user)">
                   <img [src]="user.avatar">
                   <div></div>
                   {{ user.name }}
                 </div>
               </div>
-            <button class="add-member" routerLink="/addUserToChannel">
+            <button class="add-member" (click)="openAddUserToChannelDialog()">
                 <div><img src="./../../../assets/images/icons/add_member.svg"></div>Mitglieder hinzufügen
             </button>
         </mat-card-content>

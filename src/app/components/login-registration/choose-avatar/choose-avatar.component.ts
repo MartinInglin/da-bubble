@@ -6,9 +6,11 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { RegistrationService } from '../../services/registration.service';
-import { SnackbarService } from '../../services/snackbar.service';
+import { AuthService } from '../../../services/auth.service';
+
+import { SnackbarService } from '../../../services/snackbar.service';
+import { RegistrationService } from '../../../services/registration.service';
+
 
 @Component({
   selector: 'app-choose-avatar',
