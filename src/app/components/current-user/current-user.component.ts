@@ -24,6 +24,7 @@ import { EditCurrentUserComponent } from './edit-current-user/edit-current-user.
   templateUrl: './current-user.component.html',
   styleUrls: ['./current-user.component.scss']
 })
+
 export class CurrentUserComponent implements OnInit {
   private userSubscription: Subscription = new Subscription();
 

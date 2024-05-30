@@ -420,6 +420,27 @@ export class ChannelsService {
     }
   }
 
+  async addSingleUserToChannel(channelId: string, user: MinimalUser): Promise<void> {
+    const channelDocRef = doc(this.firestore, 'channels', channelId);
+    const channelDoc = await getDoc(channelDocRef);
+
+    if (!channelDoc.exists()) {
+      throw new Error('Channel does not exist');
+    }
+
+    const channelData = channelDoc.data() as Channel;
+    const users = channelData.users || [];
+
+    if (!users.some((u: MinimalUser) => u.id === user.id)) {
+      users.push(user);
+      await updateDoc(channelDocRef, { users });
+      console.log(`User ${user.name} added to channel ${channelId}`);
+    } else {
+      console.log(`User ${user.name} is already in channel ${channelId}`);
+    }
+  }
+
+
   async addAllUsersToChannel(channelId: string): Promise<void> {
     const collectionRef = collection(this.firestore, 'users');
     const querySnapshot = await getDocs(collectionRef);
@@ -457,6 +478,23 @@ export class ChannelsService {
   
     await batch.commit();
     console.log('All users added to the channel.');
+  }
+
+  async getChannelById(channelId: string): Promise<Channel | null> {
+    try {
+      const channelDocRef = doc(this.firestore, 'channels', channelId);
+      const channelDoc = await getDoc(channelDocRef);
+
+      if (channelDoc.exists()) {
+        return channelDoc.data() as Channel;
+      } else {
+        console.error('Channel does not exist');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error fetching channel:', error);
+      return null;
+    }
   }
 
   async saveReaction(

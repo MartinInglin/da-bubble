@@ -69,11 +69,15 @@ export class MembersComponent implements OnInit, OnDestroy {
     this.dialogRef.close();
     
     const dialogRef = this.dialog.open(AddUserToChannelComponent, {
-      width: '514px',
+      width: '800px',
+      height: '800px',
       position: {
         top: '210px',
-        right: '100px',
+        right: '-200px',
       },
+      data: {
+        channelId: this.data.channelId
+      }
     });
   }
 

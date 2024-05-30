@@ -14,11 +14,22 @@
         </div>
         <form>
             <div class="input-container">
-                <input placeholder="Name eingeben">
+                <input value="{{ getSelectedUsersDisplay() }}" placeholder="Name eingeben"  (input)="onSearchChange($event)">
             </div>
+            <mat-card *ngIf="showResults" class="user-list">
+                <div *ngFor="let user of filteredUsers" class="single-users">
+                    <img [src]="user.avatar">
+                    <p (click)="selectUser(user.id)">
+                        {{ user.name }}
+                    </p>
+                </div>
+                <div *ngIf="filteredUsers.length === 0">
+                    <p>Keine Benutzer mit diesem Namen vorhanden.</p>
+                </div>
+            </mat-card>
             <div class="button-container">
                 <div class="message-button">
-                    <button>Hinzufügen</button>
+                    <button (click)="addUsersToChannel()">Hinzufügen</button>
                 </div>
             </div>
         </form>

@@ -2,7 +2,7 @@
 
 mat-card {
     width: 514px;
-    height: 294px;
+    height: fit-content;
     border-radius: 30px 0px 30px 30px;
     padding: 40px;
     font-family: 'Nunito';
@@ -63,59 +63,97 @@ mat-card-content {
     }
 }
 
-form {
+.user-list {
+    position: absolute;
+    background-color: white;
+    width: 300px;
+    z-index: 1;
+    top: 200px;
+    left: 90px;
+    border-radius: 0px 20px 20px 20px;
     display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
+    gap: 15px;
 
-.input-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    input {
-        height: 55px;
-        width: 434px;
+    .single-users {
+        display: flex;
+        align-items: center;
         border-radius: 30px;
-        border: solid 1px $light-purple-lines;
-        padding-left: 15px;
-        font-size: 18px;
-        font-weight: 400;
-        line-height: 24.55px;
+        padding-left: 10px;
+        padding-right: 10px;
+        gap: 15px;
 
-        &::placeholder {
+        &:hover {
+            background-color: $background;
+            cursor: pointer;
+        }
+
+        img {
+            height: 44px;
+            width: 44px;
+        }
+
+        p {
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 24.55px;
             color: $text-gray;
-            font-family: 'Nunito';
         }
     }
 }
 
-.button-container {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
 
-    button {
+    .input-container {
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: $purple1;
-        width: 147px;
-        height: 49px;
-        border-radius: 25px;
-        gap: 10px;
-        padding: 12px 25px 12px 25px;
-        color: white;
-        font-weight: 700;
-        font-size: 18px;
-        line-height: 24.55px;
-        border: none;
 
-        &:hover {
-            opacity: 0.5;
-            transition: 75ms ease-in-out;
-            cursor: pointer;
-          }
+        input {
+            height: 55px;
+            width: 434px;
+            border-radius: 30px;
+            border: solid 1px $light-purple-lines;
+            padding-left: 15px;
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 24.55px;
+
+            &::placeholder {
+                color: $text-gray;
+                font-family: 'Nunito';
+            }
+        }
     }
-}
+
+    .button-container {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: $purple1;
+            width: 147px;
+            height: 49px;
+            border-radius: 25px;
+            gap: 10px;
+            padding: 12px 25px 12px 25px;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            line-height: 24.55px;
+            border: none;
+
+            &:hover {
+                opacity: 0.5;
+                transition: 75ms ease-in-out;
+                cursor: pointer;
+            }
+        }
+    }

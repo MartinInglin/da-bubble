@@ -8,6 +8,7 @@ import {
   collection,
   updateDoc,
   query,
+  arrayUnion
 } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { RegistrationService } from '../registration.service';
@@ -135,6 +136,18 @@ export class UsersService {
         observer.next(data);
       });
     });
+  }
+
+  async addChannelToSingleUser(userId: string, channel: MinimalChannel): Promise<void> {
+    try {
+      const userDocRef = doc(this.firestore, 'users', userId);
+      await updateDoc(userDocRef, {
+        channels: arrayUnion(channel),
+      });
+      console.log(`Channel ${channel.id} added to user ${userId}.`);
+    } catch (error) {
+      console.error('Error adding channel to user:', error);
+    }
   }
 
   async addChannelToUsers(channel: MinimalChannel): Promise<void> {
