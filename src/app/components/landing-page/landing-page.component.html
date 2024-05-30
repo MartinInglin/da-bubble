@@ -97,7 +97,7 @@
           </div>
 
           <table class="contacts" *ngIf="showContacts">
-            <tr *ngFor="let user of allUsers">
+            <tr *ngFor="let user of allUsers  let i = index">
               <td
                 (click)="
                   directMessagesService.getDataDirectMessage(

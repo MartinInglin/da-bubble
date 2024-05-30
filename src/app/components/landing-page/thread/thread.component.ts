@@ -11,12 +11,12 @@ import { UsersService } from '../../../services/firestore/users.service';
 import { Subscription } from 'rxjs';
 import { Channel } from '../../../models/channel.class';
 import { DirectMessage } from '../../../models/direct_message.class';
-import { MainContentComponent } from '../main-content/main-content.component';
+
 
 @Component({
   selector: 'app-thread',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, MatButtonModule, MatMenuModule,MainContentComponent],
+  imports: [CommonModule, FormsModule, RouterModule, MatButtonModule, MatMenuModule],
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss'
 })
@@ -47,7 +47,6 @@ export class ThreadComponent implements OnInit {
   constructor(private threadsService: ThreadsService, private channelService: ChannelsService, private userService: UsersService) { }
 
   ngOnInit(): void {
-
 
 
 
@@ -106,7 +105,9 @@ export class ThreadComponent implements OnInit {
   }
 
 
-
+openThread(){
+  this.comments = true;
+}
 
 
 }

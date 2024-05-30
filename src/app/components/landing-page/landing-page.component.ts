@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, inject } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
@@ -38,7 +38,7 @@ import {
   templateUrl: './landing-page.component.html',
   styleUrl: './landing-page.component.scss',
 })
-export class LandingPageComponent implements OnInit {
+export class LandingPageComponent implements OnInit, OnDestroy {
   openThreadEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   usersService = inject(UsersService);
@@ -54,7 +54,7 @@ export class LandingPageComponent implements OnInit {
   i: any = ([] = '');
 
   showContacts: boolean = true;
-  showChannels: boolean = true;
+  showChannels: boolean = false;
   isOpen: boolean = false;
   drawer: any;
   loading: boolean = true;

@@ -31,6 +31,7 @@ import { DirectMessagesService } from '../../../services/firestore/direct-messag
 import { DirectMessage } from '../../../models/direct_message.class';
 import { StorageService } from '../../../services/storage.service';
 import { FormsModule } from '@angular/forms';
+// import { ThreadComponent } from '../thread/thread.component';
 
 declare const twemoji: any; // Deklariere Twemoji als Modul
 
@@ -44,6 +45,7 @@ declare const twemoji: any; // Deklariere Twemoji als Modul
     CommonModule,
     MatDialogModule,
     FormsModule
+    // ThreadComponent
   ],
   templateUrl: './main-content.component.html',
   styleUrl: './main-content.component.scss',
@@ -57,6 +59,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   threadsService = inject(ThreadsService);
   storageService = inject(StorageService);
   message: any ='';
+  // threadComponent = inject(ThreadComponent)
 
   private userSubscription: Subscription = new Subscription();
   private channelSubscription: Subscription = new Subscription();
@@ -89,6 +92,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private threadService: ThreadsService,
     private directMessagesService: DirectMessagesService,
+    // private threadComponent : ThreadComponent
   ) {}
 
   // @Output() openThreadEvent = new EventEmitter<boolean>(); // Event to signal thread opening
@@ -182,6 +186,18 @@ export class MainContentComponent implements OnInit, OnDestroy {
       width: '872px',
       data: { channelId: channelId },
     });
+  }
+
+  async sendMessage(): Promise<void> {
+    if (this.message.trim()) {
+      try {
+        await this.channelsService.savePost(this.selectedChannel.id, this.message, this.currentUser, this.files);
+        this.message = '';
+        this.files = [];
+      } catch (error) {
+        console.error('Error posting message:', error);
+      }
+    }
   }
 
   openMembersDialog(channelId: string): void {

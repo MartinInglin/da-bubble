@@ -2,13 +2,18 @@
 <main id="mainContent">
   <!-- Header section with channel name and contact information -->
 
+  <header *ngIf="!channelSelected && !chatSelected" class="newMessage">
+    <span>Neue Nachricht</span>
+    <input type="text" placeholder="An: #channel, oder @jemand oder E-mail Adresse">
+  </header>
+
   <div class="height-65vh" *ngIf="channelSelected">
 
-    <header >
+    <header>
       <div (click)="openChannelInfoDialog(selectedChannel.id)" class="channelName">
         {{ selectedChannel.name }}
       </div>
-      <div  class="channelMembers" *ngIf="channelSelected">
+      <div class="channelMembers" *ngIf="channelSelected">
         <!-- Profile pictures of channel members which are part of the group -->
         <ng-container *ngFor="let user of selectedChannel.users">
           <img src="{{ user.avatar }}" alt="" />
@@ -17,55 +22,57 @@
     </header>
 
     <!-- Message Content  -->
-   
-    <div class="message-content" >
-      @if (selectedChannel.posts.length === 0) {
 
-
-      <!-- Date line for messages -->
-      <div class="dateLine" *ngFor="let post of selectedChannel.posts; let i = index">
-        <div class="Line">
-          <span>{{ formatDate(post.timestamp) }}</span>
-        </div>
-      </div>
-      <!--  -->
-      <div class="message" *ngFor="let post of selectedChannel.posts; let i = index">
-        <div class="message-container" (click)="openThread()">
-          <!-- Profile picture of the message author -->
-          <img src="{{ post.avatar }}" alt="" />
-          <!-- Message box -->
-          <div class="message-box">
-            <div class="message-name">
-              <!-- Name of the message author -->
-              <span>{{ post.name }}</span>
+    <div class="message-content">
+      @if (selectedChannel.posts.length > 0) {
+        <div *ngFor="let post of selectedChannel.posts  let i = index">
+          <!-- Date line for messages -->
+          <div class="dateLine">
+            <div class="Line">
+              <span>{{ formatDate(post.timestamp) }}</span>
             </div>
-            <div class="message-text">
-              <!-- Text of the message -->
-                <span>{{ post.message }}</span>
-            </div>
+          </div>
+          <!--  -->
+          <div class="message">
+            <div class="message-container" (click)="openThread()">
+              <!-- Profile picture of the message author -->
+              <img *ngIf="post.avatar" src="{{ post.avatar }}" alt="" />
+              <!-- Message box -->
+              <div class="message-box">
+                <div class="message-name">
+                  <!-- Name of the message author -->
+                  <span *ngIf="post.name">{{ post.name }}</span>
+                </div>
+                <div class="message-text">
+                  <!-- Text of the message -->
+                  <span *ngIf="post.message">{{ post.message }}</span>
+                </div>
 
-            <div class="message-details">
-              <!-- Message actions and time details -->
-              <a routerLink="/landingPage" (click)="threadsService.createThread(selectedChannel, 0)">Antworten</a>
-              <span>Letzte Antwort:{{
-                formatDateTime(selectedChannel.posts[0].timestamp)
-                }}
-              </span>
+                <div class="message-details">
+                  <!-- Message actions and time details -->
+                  <a routerLink="/landingPage" (click)="threadsService.createThread(selectedChannel, 0)">Antworten</a>
+                  <span>Letzte Antwort:{{
+                    formatDateTime(selectedChannel.posts[0].timestamp)
+                    }}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      }
 
-    }
-
-    <div class="placeholderContainer" *ngIf="channelSelected">
-      <img src="{{selectedChannel.name}}" alt="">
-      <h3>{{selectedChannel.description}}</h3>
-      <div>
-        <span>Schreib etwas in die Gruppe <a href=""> {{selectedChannel.name}}</a> damit andere darauf reagieren.</span>
+      <!-- Placeholder if no post is in channel -->
+      @if (selectedChannel.posts.length === 0) { <div class="placeholderContainer" *ngIf="channelSelected">
+        <img src="{{selectedChannel.name}}" alt="">
+        <h3>{{selectedChannel.description}}</h3>
+        <div>
+          <span>Schreib etwas in die Gruppe <a> {{selectedChannel.name}}</a> damit andere darauf
+            reagieren.</span>
+        </div>
       </div>
+      }
     </div>
-  </div>
 
     <!-- Input Feld am unteren Rand des Containers -->
     <div class="inputContent" *ngIf="channelSelected">
@@ -112,17 +119,12 @@
             </div>
           </div>
 
-          <a (click)="savePost()">
+          <a (click)="sendMessage()">
             <img src="./../../../../assets/images/icons/send_icon.svg" alt="" />
           </a>
         </div>
       </div>
     </div>
-
-   
-
-
-
   </div>
 
 
@@ -222,6 +224,7 @@
 
       }
 
+      <!-- Placeholder if no message is in channel -->
 
       <div class="placeholderContainer" *ngIf="chatSelected && directMessage && directMessage.posts.length === 0">
         <div class="messageAvatarName">
