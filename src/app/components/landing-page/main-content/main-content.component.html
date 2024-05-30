@@ -8,7 +8,7 @@
       <div (click)="openChannelInfoDialog(selectedChannel.id)" class="channelName">
         {{ selectedChannel.name }}
       </div>
-      <div  class="channelMembers" *ngIf="channelSelected">
+      <div class="channelMembers" *ngIf="channelSelected" (click)="openMembersDialog(selectedChannel.id)">
         <!-- Profile pictures of channel members which are part of the group -->
         <ng-container *ngFor="let user of selectedChannel.users">
           <img src="{{ user.avatar }}" alt="" />

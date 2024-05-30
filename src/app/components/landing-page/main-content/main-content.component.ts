@@ -189,7 +189,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
       width: '415px',
       position: {
         top: '210px',
-        right: '500px',
+        right: '100px',
       },
       data: { channelId: channelId },
     });
