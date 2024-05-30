@@ -434,7 +434,6 @@ export class ChannelsService {
     if (!users.some((u: MinimalUser) => u.id === user.id)) {
       users.push(user);
       await updateDoc(channelDocRef, { users });
-      console.log(`User ${user.name} added to channel ${channelId}`);
     } else {
       console.log(`User ${user.name} is already in channel ${channelId}`);
     }
