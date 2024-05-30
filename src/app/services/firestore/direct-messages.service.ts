@@ -137,11 +137,13 @@ export class DirectMessagesService {
             id: userDoc.id,
             avatar: userData['avatar'],
             name: userData['name'],
+            email: userData ['email']
           },
           {
             id: currentUser.id,
             avatar: currentUser.avatar,
             name: currentUser.name,
+            email: currentUser.email
           },
         ];
 
