@@ -16,7 +16,7 @@
                   {{ user.name }}
                 </div>
               </div>
-            <button class="add-member" routerLink="/addUserToChannel">
+            <button class="add-member" (click)="openAddUserToChannelDialog()" routerLink="/addUserToChannel">
                 <div><img src="./../../../assets/images/icons/add_member.svg"></div>Mitglieder hinzufügen
             </button>
         </mat-card-content>

@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { AddUserToChannelComponent } from '../add-user-to-channel/add-user-to-channel.component';
 import { ProfileDetailViewComponent } from '../profile-detail-view/profile-detail-view.component';
 import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ChannelsService } from '../../services/firestore/channels.service';
@@ -61,6 +62,18 @@ export class MembersComponent implements OnInit, OnDestroy {
     });
   
     this.dialogRefSubscription = dialogRef.afterClosed().subscribe(() => {
+    });
+  }
+
+  openAddUserToChannelDialog() {
+    this.dialogRef.close();
+    
+    const dialogRef = this.dialog.open(AddUserToChannelComponent, {
+      width: '514px',
+      position: {
+        top: '210px',
+        right: '100px',
+      },
     });
   }
 
