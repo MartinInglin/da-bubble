@@ -34,23 +34,24 @@ export const routes: Routes = [
   { path: 'imprint', component: ImprintComponent },
   { path: 'privacyPolicy', component: PrivacyPolicyComponent },
 
-  // {
-  //   path: 'landingPage',
-  //   component: LandingPageComponent,
-  //   canActivate: [AuthGuard],
-  //   data: { authGuardPipe: redirectUnauthorizedToLogin },
-  // },
-  { path: 'detailView', component: ProfileDetailViewComponent },
+  {
+    path: 'landingPage',
+    component: LandingPageComponent,
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+  },
 
-  { path: 'landingPage', component: LandingPageComponent },
+  //{ path: 'landingPage', component: LandingPageComponent },
 
-  { path: 'addUserToChannel', component: AddUserToChannelComponent },
-  { path: 'addUserToNewChannel', component: AddUserToNewChannelComponent },
-  { path: 'newChannel', component: NewChannelComponent },
-  { path: 'channelInfo', component: ChannelInfoComponent },
-  { path: 'channelInfoEdit', component: ChannelInfoEditComponent },
-  { path: 'members', component: MembersComponent },
-  { path: 'editMessage', component: EditMessageComponent },
-  { path: 'userMenu', component: UserMenuComponent },
-  { path: 'currentUser', component: CurrentUserComponent },
+  // { path: 'detailView', component: ProfileDetailViewComponent },
+
+  // { path: 'addUserToChannel', component: AddUserToChannelComponent },
+  // { path: 'addUserToNewChannel', component: AddUserToNewChannelComponent },
+  // { path: 'newChannel', component: NewChannelComponent },
+  // { path: 'channelInfo', component: ChannelInfoComponent },
+  // { path: 'channelInfoEdit', component: ChannelInfoEditComponent },
+  // { path: 'members', component: MembersComponent },
+  // { path: 'editMessage', component: EditMessageComponent },
+  // { path: 'userMenu', component: UserMenuComponent },
+  // { path: 'currentUser', component: CurrentUserComponent },
 ];
