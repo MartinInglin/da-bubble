@@ -4,6 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-add-user-to-channel',
@@ -19,5 +20,11 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './add-user-to-channel.component.scss'
 })
 export class AddUserToChannelComponent {
+  constructor(
+    public dialogRef: MatDialogRef<AddUserToChannelComponent>,
+  ) {}
 
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 }
