@@ -20,16 +20,43 @@ import { EditMessageComponent } from './components/edit-message/edit-message.com
 import { UserMenuComponent } from './components/user-menu/user-menu.component';
 import { CurrentUserComponent } from './components/current-user/current-user.component';
 
-import { AuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
+import {
+  AuthGuard,
+  redirectLoggedInTo,
+  redirectUnauthorizedTo,
+} from '@angular/fire/auth-guard';
 
+const redirectSignedInToLandingPage = () =>
+  redirectLoggedInTo(['/landingPage']);
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['/login']);
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'resetPassword', component: ResetPasswordComponent },
-  { path: 'chooseAvatar', component: ChooseAvatarComponent },
+
+  {
+    path: 'login',
+    component: LoginComponent,
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectSignedInToLandingPage },
+  },
+  {
+    path: 'register',
+    component: RegisterComponent,
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectSignedInToLandingPage },
+  },
+  {
+    path: 'resetPassword',
+    component: ResetPasswordComponent,
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectSignedInToLandingPage },
+  },
+  {
+    path: 'chooseAvatar',
+    component: ChooseAvatarComponent,
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectSignedInToLandingPage },
+  },
 
   { path: 'imprint', component: ImprintComponent },
   { path: 'privacyPolicy', component: PrivacyPolicyComponent },
