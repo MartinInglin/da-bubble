@@ -84,6 +84,8 @@ header {
   border: 1px solid black;
   border-radius: 20px;
   padding: 10px;
+  display: flex;
+  flex-direction: column;
   textarea {
     height: 80px;
     border: none;
@@ -94,6 +96,7 @@ header {
     font-size: 20px;
     padding-top: 10px;
     padding-left: 10px;
+    flex: 1;
     &:focus {
       border-color: transparent;
       outline: none;
@@ -347,6 +350,25 @@ cdk-overlay-connected-position-bounding-box {
     font-size: 18px;
   }
 }
+
+.documents-container {
+  display: flex;
+  overflow-x: auto;
+  gap: 8px;
+  .document {
+    background-color: rgb(165 165 165 / 24%);
+    border-radius: 50px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    width: fit-content;
+    padding: 4px 16px;
+
+    &:hover {
+      background-color: rgb(165 165 165 / 40%);
+      cursor: pointer;
+    }
+  }
+}
+
 @media (min-height: 1050px) {
   .message-content {
     min-height: 56vh; /* Setzt die Mindesthöhe auf 1000px, wenn die Höhe des Viewports mindestens 1000px beträgt */

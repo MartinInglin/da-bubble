@@ -7,8 +7,10 @@ import {
   getDoc,
   getDocs,
   onSnapshot,
+  query,
   setDoc,
   updateDoc,
+  where,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DirectMessage } from '../../models/direct-message.class';
@@ -16,6 +18,8 @@ import { MinimalUser } from '../../models/minimal_user.class';
 import { User } from '../../models/user.class';
 import { Post } from '../../models/post.class';
 import { v4 as uuidv4 } from 'uuid';
+import { UsersService } from './users.service';
+import { user } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -36,7 +40,7 @@ export class DirectMessagesService {
    * @param currentUser objecet User
    */
   async getDataDirectMessage(userId: string, currentUser: User) {
-    const idDirectMessage = await this.getIdDirectMessage(userId);
+    const idDirectMessage = await this.getIdDirectMessage(userId, currentUser);
 
     if (idDirectMessage) {
       const unsub = onSnapshot(
@@ -52,26 +56,37 @@ export class DirectMessagesService {
     }
   }
   /**
-   * This function gets the ID of the document of the direct message.
+   * This function gets the ID of the document of the direct message or null if the document does not exist yet.
    *
    * @param userId string of user you want to chat with
-   * @returns string of document ID
+   * @returns string of document ID or null
    */
-  async getIdDirectMessage(userId: string): Promise<string | null> {
+
+  async getIdDirectMessage(
+    userId: string,
+    currentUser: User
+  ): Promise<string | null> {
+    const currentUserId = currentUser.id;
+
     try {
       const collectionRef = collection(this.firestore, 'directMessages');
+
       const querySnapshot = await getDocs(collectionRef);
 
-      for (const docSnapshot of querySnapshot.docs) {
-        const data = docSnapshot.data();
-        const users = data['users'] || [];
+      for (const doc of querySnapshot.docs) {
+        const users = doc.data()['users'];
+        const hasCurrentUserId = users.some(
+          (user: { id: string }) => user.id === currentUserId
+        );
+        const hasUserId = users.some(
+          (user: { id: string }) => user.id === userId
+        );
 
-        for (let i = 0; i < users.length; i++) {
-          if (users[i].id === userId) {
-            return docSnapshot.id;
-          }
+        if (hasCurrentUserId && hasUserId) {
+          return doc.id;
         }
       }
+
       return null;
     } catch (error) {
       console.error('Error checking direct messages: ', error);
@@ -100,7 +115,7 @@ export class DirectMessagesService {
     await setDoc(newDocRef, directMessageData);
     console.log('Direct message successfully created!');
 
-    const idDirectMessage = await this.getIdDirectMessage(userId);
+    const idDirectMessage = directMessageData.id;
 
     if (idDirectMessage) {
       const unsub = onSnapshot(
@@ -137,13 +152,13 @@ export class DirectMessagesService {
             id: userDoc.id,
             avatar: userData['avatar'],
             name: userData['name'],
-            email: userData ['email']
+            email: userData['email'],
           },
           {
             id: currentUser.id,
             avatar: currentUser.avatar,
             name: currentUser.name,
-            email: currentUser.email
+            email: currentUser.email,
           },
         ];
 

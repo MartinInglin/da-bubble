@@ -54,11 +54,6 @@ export class UsersService {
     }
   }
 
-  ngOnInit() {
-
-
-  }
-
   /**
    * This function creates a new user document in the collection users.
    *

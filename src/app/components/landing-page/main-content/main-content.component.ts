@@ -268,4 +268,8 @@ export class MainContentComponent implements OnInit, OnDestroy {
       console.log(this.files);
     }
   }
+
+  removeFile(index: number) {
+    this.files.splice(index, 1);
+  }
 }

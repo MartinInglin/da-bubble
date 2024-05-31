@@ -4,20 +4,26 @@
 
   <header *ngIf="!channelSelected && !chatSelected" class="newMessage">
     <span>Neue Nachricht</span>
-    <input type="text" placeholder="An: #channel, oder @jemand oder E-mail Adresse">
+    <input
+      type="text"
+      placeholder="An: #channel, oder @jemand oder E-mail Adresse"
+    />
   </header>
 
   <div class="height-65vh" *ngIf="channelSelected">
-
     <header>
-      <div (click)="openChannelInfoDialog(selectedChannel.id)" class="channelName">
+      <div
+        (click)="openChannelInfoDialog(selectedChannel.id)"
+        class="channelName"
+      >
         {{ selectedChannel.name }}
       </div>
 
-  
-
-      <div class="channelMembers" *ngIf="channelSelected" (click)="openMembersDialog(selectedChannel.id)">
-
+      <div
+        class="channelMembers"
+        *ngIf="channelSelected"
+        (click)="openMembersDialog(selectedChannel.id)"
+      >
         <!-- Profile pictures of channel members which are part of the group -->
         <ng-container *ngFor="let user of selectedChannel.users">
           <img src="{{ user.avatar }}" alt="" />
@@ -29,50 +35,59 @@
 
     <div class="message-content">
       @if (selectedChannel.posts.length > 0) {
-        <div *ngFor="let post of selectedChannel.posts  let i = index">
-          <!-- Date line for messages -->
-          <div class="dateLine">
-            <div class="Line">
-              <span>{{ formatDate(post.timestamp) }}</span>
-            </div>
+      <div *ngFor="let post of selectedChannel.posts; let i = index">
+        <!-- Date line for messages -->
+        <div class="dateLine">
+          <div class="Line">
+            <span>{{ formatDate(post.timestamp) }}</span>
           </div>
-          <!--  -->
-          <div class="message">
-            <div class="message-container" (click)="openThread()">
-              <!-- Profile picture of the message author -->
-              <img *ngIf="post.avatar" src="{{ post.avatar }}" alt="" />
-              <!-- Message box -->
-              <div class="message-box">
-                <div class="message-name">
-                  <!-- Name of the message author -->
-                  <span *ngIf="post.name">{{ post.name }}</span>
-                </div>
-                <div class="message-text">
-                  <!-- Text of the message -->
-                  <span *ngIf="post.message">{{ post.message }}</span>
-                </div>
+        </div>
+        <!--  -->
+        <div class="message">
+          <div class="message-container" (click)="openThread()">
+            <!-- Profile picture of the message author -->
+            <img *ngIf="post.avatar" src="{{ post.avatar }}" alt="" />
+            <!-- Message box -->
+            <div class="message-box">
+              <div class="message-name">
+                <!-- Name of the message author -->
+                <span *ngIf="post.name">{{ post.name }}</span>
+              </div>
+              <div class="message-text">
+                <!-- Text of the message -->
+                <span *ngIf="post.message">{{ post.message }}</span>
+              </div>
 
-                <div class="message-details">
-                  <!-- Message actions and time details -->
-                  <a routerLink="/landingPage" (click)="threadsService.createThread(selectedChannel, 0)">Antworten</a>
-                  <span>Letzte Antwort:{{
+              <div class="message-details">
+                <!-- Message actions and time details -->
+                <a
+                  routerLink="/landingPage"
+                  (click)="threadsService.createThread(selectedChannel, 0)"
+                  >Antworten</a
+                >
+                <span
+                  >Letzte Antwort:{{
                     formatDateTime(selectedChannel.posts[0].timestamp)
-                    }}
-                  </span>
-                </div>
+                  }}
+                </span>
               </div>
             </div>
           </div>
         </div>
+      </div>
       }
 
       <!-- Placeholder if no post is in channel -->
-      @if (selectedChannel.posts.length === 0) { <div class="placeholderContainer" *ngIf="channelSelected">
-        <img src="{{selectedChannel.name}}" alt="">
-        <h3>{{selectedChannel.description}}</h3>
+      @if (selectedChannel.posts.length === 0) {
+      <div class="placeholderContainer" *ngIf="channelSelected">
+        <img src="{{ selectedChannel.name }}" alt="" />
+        <h3>{{ selectedChannel.description }}</h3>
         <div>
-          <span>Schreib etwas in die Gruppe <a> {{selectedChannel.name}}</a> damit andere darauf
-            reagieren.</span>
+          <span
+            >Schreib etwas in die Gruppe
+            <a> {{ selectedChannel.name }}</a> damit andere darauf
+            reagieren.</span
+          >
         </div>
       </div>
       }
@@ -81,32 +96,61 @@
     <!-- Input Feld am unteren Rand des Containers -->
     <div class="inputContent" *ngIf="channelSelected">
       <div class="textArea">
+        <textarea
+          name=""
+          id="message-textarea"
+          placeholder="Nachricht an #{{ selectedChannel.name }}"
+          [(ngModel)]="message"
+        ></textarea>
 
-        <textarea name="" id="message-textarea" placeholder="Nachricht an #Entwicklerteam"
-          [(ngModel)]="message"></textarea>
-
+        @if (files.length > 0) {
+        <div class="documents-container">
+          @for (file of files; track file; let index = $index) {
+            <div class="document" (click)="removeFile(index)">{{ files[index].name}}</div>
+          }
+        </div>
+        }
         <div class="icons">
           <div class="buttons">
             <a class="addIcon" (click)="openFileDialog()">
-              <img src="./../../../../assets/images/icons/add_icon.svg" alt="" />
+              <img
+                src="./../../../../assets/images/icons/add_icon.svg"
+                alt=""
+              />
             </a>
-            <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)" />
+            <input
+              type="file"
+              #fileInput
+              style="display: none"
+              (change)="onFileSelected($event)"
+            />
 
             <div class="seperator"></div>
 
             <!-- Liste für Emojis -->
             <div class="link-emojis">
               <button mat-button [matMenuTriggerFor]="aboveMenu">
-                <img src="./../../../../assets/images/icons/smiley-Icon.svg" alt="" />
+                <img
+                  src="./../../../../assets/images/icons/smiley-Icon.svg"
+                  alt=""
+                />
               </button>
               <mat-menu #aboveMenu="matMenu" yPosition="above">
                 <div class="emoji-container">
-                  <span *ngFor="let emoji of emojis" class="emoji" mat-menu-item>{{ emoji }}</span>
+                  <span
+                    *ngFor="let emoji of emojis"
+                    class="emoji"
+                    mat-menu-item
+                    >{{ emoji }}</span
+                  >
                 </div>
               </mat-menu>
               <!-- Liste für Verlinkungen von Kontakten -->
               <button mat-button [matMenuTriggerFor]="contactLinks">
-                <img src="./../../../../assets/images/icons/link_icon.svg" alt="" />
+                <img
+                  src="./../../../../assets/images/icons/link_icon.svg"
+                  alt=""
+                />
               </button>
               <mat-menu #contactLinks="matMenu" yPosition="above">
                 <div class="link-container">
@@ -131,30 +175,28 @@
     </div>
   </div>
 
-
   <div class="height-65vh" *ngIf="chatSelected">
-
-
     <!-- Header section with channel name and contact information -->
     <header *ngIf="chatSelected">
-      <div class="channelName" *ngIf="
-        directMessage && directMessage.users && directMessage.users.length > 0
-      ">
+      <div
+        class="channelName"
+        *ngIf="
+          directMessage && directMessage.users && directMessage.users.length > 0
+        "
+      >
         <div class="avatarName">
-          <img src="{{directMessage.users[0].avatar}}" alt="">
+          <img src="{{ directMessage.users[0].avatar }}" alt="" />
           {{ directMessage.users[0].name }}
         </div>
       </div>
     </header>
 
-
-
-
     <!-- Message Content  -->
 
     <div class="message-content">
       <!-- Date line for messages -->
-      @if (directMessage && directMessage.posts && directMessage.posts.length > 0 && directMessage.users.length > 0) {
+      @if (directMessage && directMessage.posts && directMessage.posts.length >
+      0 && directMessage.users.length > 0) {
       <div class="dateLine">
         <div class="Line">
           <span>{{ formatDate(selectedChannel.posts[0].timestamp) }}</span>
@@ -164,23 +206,34 @@
       <div class="message">
         <div class="message-container">
           <!-- Profile picture of the message author -->
-          <img *ngIf="directMessage?.users?.[0]?.avatar" [src]="directMessage.users[0].avatar" alt="" />
+          <img
+            *ngIf="directMessage?.users?.[0]?.avatar"
+            [src]="directMessage.users[0].avatar"
+            alt=""
+          />
           <!-- Message box -->
           <div class="message-box">
             <div class="message-name">
               <!-- Name of the message author -->
-              <span>{{directMessage.users[0].name}}</span>
+              <span>{{ directMessage.users[0].name }}</span>
             </div>
             <div class="message-text" *ngIf="directMessage.posts">
               <!-- Text of the message -->
-              <span>{{directMessage.posts}}</span>
-
+              <span>{{ directMessage.posts }}</span>
             </div>
 
             <div class="message-details">
               <!-- Message actions and time details -->
-              <a routerLink="/landingPage" (click)="threadsService.createThread(selectedChannel, 0)">Antworten</a>
-              <span>Letzte Antwort:{{ formatDateTime(selectedChannel.posts[0].timestamp) }} </span>
+              <a
+                routerLink="/landingPage"
+                (click)="threadsService.createThread(selectedChannel, 0)"
+                >Antworten</a
+              >
+              <span
+                >Letzte Antwort:{{
+                  formatDateTime(selectedChannel.posts[0].timestamp)
+                }}
+              </span>
             </div>
           </div>
         </div>
@@ -195,11 +248,20 @@
         </div>
         <!--  -->
         <div class="message">
-          <div class="message-container" *ngIf="
-            directMessage && directMessage.users && directMessage.users.length > 0
-          ">
+          <div
+            class="message-container"
+            *ngIf="
+              directMessage &&
+              directMessage.users &&
+              directMessage.users.length > 0
+            "
+          >
             <!-- Profile picture of the message author -->
-            <img *ngIf="directMessage?.users?.[0]?.avatar" [src]="directMessage.users[0].avatar" alt="" />
+            <img
+              *ngIf="directMessage?.users?.[0]?.avatar"
+              [src]="directMessage.users[0].avatar"
+              alt=""
+            />
             <!-- Message box -->
             <div class="message-box">
               <div class="message-name">
@@ -213,9 +275,14 @@
 
               <div class="message-details">
                 <!-- Message actions and time details -->
-                <a routerLink="/landingPage" (click)="threadsService.createThread(selectedChannel, 0)">Antworten</a>
-                <span>Letzte Antwort:{{
-                  formatDateTime(selectedChannel.posts[0].timestamp)
+                <a
+                  routerLink="/landingPage"
+                  (click)="threadsService.createThread(selectedChannel, 0)"
+                  >Antworten</a
+                >
+                <span
+                  >Letzte Antwort:{{
+                    formatDateTime(selectedChannel.posts[0].timestamp)
                   }}
                 </span>
               </div>
@@ -224,36 +291,40 @@
         </div>
       </div>
 
-
-
       }
 
       <!-- Placeholder if no message is in channel -->
 
-      <div class="placeholderContainer" *ngIf="chatSelected && directMessage && directMessage.posts.length === 0">
+      <div
+        class="placeholderContainer"
+        *ngIf="
+          chatSelected && directMessage && directMessage.posts.length === 0
+        "
+      >
         <div class="messageAvatarName">
-          <img src="{{directMessage.users[0].avatar}}" alt="">
-          <span>{{directMessage.users[0].name}}</span>
+          <img src="{{ directMessage.users[0].avatar }}" alt="" />
+          <span>{{ directMessage.users[0].name }}</span>
         </div>
 
         <div>
-          <p>Diese Unterhaltun findet nur zwischen {{directMessage.users[0].name}} und dir statt.</p>
+          <p>
+            Diese Unterhaltun findet nur zwischen
+            {{ directMessage.users[0].name }} und dir statt.
+          </p>
         </div>
       </div>
-
     </div>
-
   </div>
 
-
-
-
-
-  <!-- Input Feld am unteren rand des Containers -->
+  <!-- Input Feld am unteren Rand des Containers -->
   <div class="inputContent" id="inputDirectMessage" *ngIf="chatSelected">
     <div class="textArea">
-      <textarea name="" id="message-textarea" placeholder="Nachricht an #Entwicklerteam"
-        [(ngModel)]="message"></textarea>
+      <textarea
+        name=""
+        id="message-textarea"
+        placeholder="Nachricht an #Entwicklerteam"
+        [(ngModel)]="message"
+      ></textarea>
 
       <div class="icons">
         <div class="buttons">
@@ -269,16 +340,27 @@
           <!-- Liste für Emojis -->
           <div class="link-emojis">
             <button mat-button [matMenuTriggerFor]="aboveMenu">
-              <img src="./../../../../assets/images/icons/smiley-Icon.svg" alt="" />
+              <img
+                src="./../../../../assets/images/icons/smiley-Icon.svg"
+                alt=""
+              />
             </button>
             <mat-menu #aboveMenu="matMenu" yPosition="above">
               <div class="emoji-container">
-                <span *ngFor="let emoji of emojis" class="emoji" mat-menu-item>{{ emoji }}</span>
+                <span
+                  *ngFor="let emoji of emojis"
+                  class="emoji"
+                  mat-menu-item
+                  >{{ emoji }}</span
+                >
               </div>
             </mat-menu>
             <!-- Liste für Verlinkungen von Kontakten -->
             <button mat-button [matMenuTriggerFor]="contactLinks">
-              <img src="./../../../../assets/images/icons/link_icon.svg" alt="" />
+              <img
+                src="./../../../../assets/images/icons/link_icon.svg"
+                alt=""
+              />
             </button>
             <mat-menu #contactLinks="matMenu" yPosition="above">
               <div class="link-container">
@@ -301,5 +383,4 @@
       </div>
     </div>
   </div>
-
 </main>
