@@ -14,7 +14,7 @@
       <img [src]="imagePreviewUrl" alt="Image Preview" class="profile-image" />
       }
 
-      <span class="name-user"> Frederik Beck </span>
+      <span class="name-user"> {{ userName }} </span>
 
       <p class="text-choose-from-list">Aus der Liste wählen</p>
 
@@ -73,8 +73,16 @@
       </div>
     </div>
     <div class="legal">
-      <button class="button-imprint" type="button" routerLink="/imprint">Impressum</button>
-      <button class="button-privacy-policy" type="button" routerLink="/privacyPolicy">Datenschutz</button>
+      <button class="button-imprint" type="button" routerLink="/imprint">
+        Impressum
+      </button>
+      <button
+        class="button-privacy-policy"
+        type="button"
+        routerLink="/privacyPolicy"
+      >
+        Datenschutz
+      </button>
     </div>
   </form>
 </div>

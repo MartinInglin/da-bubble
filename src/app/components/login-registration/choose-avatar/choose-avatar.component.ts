@@ -27,6 +27,7 @@ export class ChooseAvatarComponent {
   @ViewChild('fileInput') fileInput!: ElementRef;
 
   selectedAvatar: string = '';
+  userName: string = '';
   file: File = new File([], '');
   imagePreviewUrl: string | null = null;
 
@@ -40,6 +41,8 @@ export class ChooseAvatarComponent {
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
+    this.getUserName()
+
     this.selectedAvatar =
       this.registrationService.getAvatar() ||
       'assets/images/avatars/profile.svg';
@@ -47,6 +50,12 @@ export class ChooseAvatarComponent {
     this.form = this.formBuilder.group({
       avatar: [this.registrationService.getAvatar() || ''],
     });
+
+    
+  }
+
+  getUserName() {
+    this.userName = this.registrationService.getName();
   }
 
   setAvatar(imageURLAvatar: string) {
