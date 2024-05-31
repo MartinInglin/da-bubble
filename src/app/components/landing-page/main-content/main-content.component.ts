@@ -92,10 +92,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private threadService: ThreadsService,
     private directMessagesService: DirectMessagesService,
-    // private threadComponent : ThreadComponent
   ) {}
-
-  // @Output() openThreadEvent = new EventEmitter<boolean>(); // Event to signal thread opening
 
   @Output() openThreadEvent: EventEmitter<boolean> =
     new EventEmitter<boolean>();
@@ -200,6 +197,15 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
   }
 
+  savePost() {
+    this.channelsService.savePost(
+      this.selectedChannel.id,
+      this.message,
+      this.currentUser,
+      this.files
+    );
+  }
+
   async sendMessageToContact(){
     if (this.message.trim() && this.directMessage?.id) {
       try {
@@ -260,14 +266,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   }
   
 
-  savePost() {
-    this.channelsService.savePost(
-      this.selectedChannel.id,
-      this.message,
-      this.currentUser,
-      this.files
-    );
-  }
+  
 
   openFileDialog() {
     this.fileInput.nativeElement.click();

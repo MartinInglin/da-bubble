@@ -35,7 +35,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;
   dialogRef: MatDialogRef<UserMenuComponent> | null = null;
   isDialogOpen = false;
-  showRegisterElement = false;
+  showRegisterElement = true;
   menuDown = './../../../../assets/images/icons/keyboard_arrow_down.svg';
 
   ngOnInit(): void {

@@ -36,7 +36,8 @@
             >
               <img
                 class="drop-down-img"
-                src="assets/images/icons/arrow_drop_down.svg"
+                [src]="showChannels ? arrowOpen : arrowClosed"
+
                 alt="Toggle Contacts"
               />
               <div class="channels-list">
@@ -82,7 +83,7 @@
             >
               <img
                 class="arrow-drop-down"
-                src="assets/images/icons/arrow_drop_down.svg"
+                [src]="showContacts ? arrowOpen : arrowClosed"
                 alt="Toggle Contacts"
               />
               <div class="contacts-list">

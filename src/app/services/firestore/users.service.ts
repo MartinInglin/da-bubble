@@ -190,5 +190,6 @@ export class UsersService {
 
   setCurrentUserNull() {
     this.currentUserSubject.next(null);
+    
   }
 }

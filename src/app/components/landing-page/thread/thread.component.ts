@@ -21,7 +21,7 @@ import { DirectMessage } from '../../../models/direct-message.class';
 })
 export class ThreadComponent implements OnInit {
   allUsers: User[] = [];
-  comments: boolean = false;
+  comments: boolean = true;
   message: string = '';
   currentUser: User = new User();
   emojis: string[] = ["😊", "❤️", "😂", "🎉", "🌟", "🎈", "🌈", "🍕", "🚀", "⚡"];

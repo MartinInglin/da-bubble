@@ -58,17 +58,21 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   allUsers: User[] = [];
   i: any = ([] = '');
 
-  showContacts: boolean = true;
+  showContacts: boolean = false;
   showChannels: boolean = false;
   isOpen: boolean = false;
   drawer: any;
   loading: boolean = true;
 
+  arrowOpen: any = '/assets/images/icons/arrow_drop_up.svg';
+  arrowClosed: any = '/assets/images/icons/arrow_drop_down.svg';
+
+
   users: any = [];
   menuOpen: string = 'Workspace-Menü öffnen';
   menuClosed: string = 'Workspace-Menü schliessen';
-  menuUp: any = './../../../assets/images/icons/menu_up.svg';
-  menuDown: any = './../../../assets/images/icons/menu_down.svg';
+  menuUp: any = '/assets/images/icons/menu_up.svg';
+  menuDown: any = '/assets/images/icons/menu_down.svg';
 
   constructor(private dialog: MatDialog) {}
 
@@ -90,12 +94,12 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   }
 
   async getAllUsers() {
-    await this.usersService.getAllUsers();
+    this.usersService.getAllUsers();
   }
 
-  // getAllChannelsForUser(userId: string): void {
-  //   // Hier kannst du die Kanäle abrufen, denen der Benutzer beigetreten ist, basierend auf der Benutzer-ID
-  // }
+  getAllChannelsForUser(userId: string): void {
+    // Hier kannst du die Kanäle abrufen, denen der Benutzer beigetreten ist, basierend auf der Benutzer-ID
+  }
 
   showContactsSide() {}
 
