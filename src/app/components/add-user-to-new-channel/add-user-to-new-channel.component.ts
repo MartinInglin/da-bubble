@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,6 +12,7 @@ import { ChannelsService } from '../../services/firestore/channels.service';
 import { MinimalChannel } from '../../models/minimal_channel.class';
 import { Subscription } from 'rxjs';
 import { User } from '../../models/user.class';
+import { MinimalUser } from '../../models/minimal_user.class';
 
 @Component({
   selector: 'app-add-user-to-new-channel',
@@ -28,15 +29,19 @@ import { User } from '../../models/user.class';
   templateUrl: './add-user-to-new-channel.component.html',
   styleUrls: ['./add-user-to-new-channel.component.scss'],
 })
-export class AddUserToNewChannelComponent implements OnDestroy {
+export class AddUserToNewChannelComponent implements OnDestroy, OnInit {
   peopleType: string = 'all';
   channelId: string = '';
+  currentUser: User | null = null;
   selectedUser: User | null = null;
-  userList: User[] = [];
   allUsers: User[] = [];
+  filteredUsers: User[] = [];
+  selectedUsers: string[] = [];
+  showResults: boolean = false;
 
   private usersSubscription: Subscription | undefined;
   private allUsersSubscription: Subscription = new Subscription();
+  private userSubscription: Subscription = new Subscription();
 
   constructor(
     public dialogRef: MatDialogRef<AddUserToNewChannelComponent>,
@@ -48,10 +53,13 @@ export class AddUserToNewChannelComponent implements OnDestroy {
   }
 
   ngOnInit(): void {
+    this.userSubscription = this.usersService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+    });
+    
     this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe(
       (allUsers) => {
         this.allUsers = allUsers ?? [];
-        console.log('All Users:', this.allUsers);
       }
     );
   }
@@ -68,13 +76,74 @@ export class AddUserToNewChannelComponent implements OnDestroy {
           this.channelsService.addAllUsersToChannel(this.channelId);
         });
       }
-
       this.dialogRef.close();
     }
   }
 
-  getUsersList(): void {
-    this.userList = this.allUsers;
+  onSearchChange(event: Event): void {
+    const searchValue = (event.target as HTMLInputElement).value;
+    if (!searchValue) {
+      this.filteredUsers = [];
+      this.showResults = false;
+    } else {
+      this.filteredUsers = this.allUsers.filter(user =>
+        (!this.currentUser || user.id !== this.currentUser.id) &&
+        user.name.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      this.showResults = true;
+    }
+  }
+
+  selectUser(userId: string): void {
+    if (this.selectedUsers.includes(userId)) {
+      this.selectedUsers = this.selectedUsers.filter(id => id !== userId);
+    } else {
+      this.selectedUsers.push(userId);
+    }
+  }
+
+  isSelected(userId: string): boolean {
+    return this.selectedUsers.includes(userId);
+  }
+
+  async addUsersToChannel(): Promise<void> {
+    if (this.peopleType === 'specific') {
+      for (const userId of this.selectedUsers) {
+        const user = this.allUsers.find(u => u.id === userId);
+        if (user) {
+          const minimalUser: MinimalUser = {
+            id: user.id,
+            name: user.name,
+            avatar: user.avatar,
+            email: user.email
+          };
+          await this.channelsService.addSingleUserToChannel(this.data.channelId, minimalUser);
+          
+          const channel = await this.channelsService.getChannelById(this.data.channelId);
+          if (channel) {
+            await this.usersService.addChannelToSingleUser(user.id, {
+              id: channel.id,
+              name: channel.name
+            });
+          }
+        }
+      }
+      this.dialogRef.close();
+    }
+  }
+
+  onSubmit(): void {
+    if (this.peopleType === 'all') {
+      this.addAllUsersToChannel();
+    } else if (this.peopleType === 'specific') {
+      this.addUsersToChannel();
+    }
+  }
+
+  onOutsideClick(event: Event): void {
+    if (!(event.target as HTMLElement).closest('.user-list')) {
+      this.showResults = false;
+    }
   }
 
   onNoClick(): void {

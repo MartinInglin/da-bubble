@@ -55,6 +55,14 @@ p {
   margin: 0;
 }
 
+.custom-dialog-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
 /* scrollbar */
  /* width */
  ::-webkit-scrollbar {

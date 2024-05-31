@@ -48,7 +48,11 @@ export class NewChannelComponent {
   openAddUserDialog(channelId: string): void {
     const dialogRef = this.dialog.open(AddUserToNewChannelComponent, {
       width: '710px',
-      data: { channelId: channelId }
+      position: {
+        top: '20%'
+      },
+      data: { channelId: channelId },
+      panelClass: 'custom-dialog-container'
     });
   }
 

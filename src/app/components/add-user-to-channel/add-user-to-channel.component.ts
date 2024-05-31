@@ -48,7 +48,6 @@ export class AddUserToChannelComponent implements OnInit {
     this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe(
       (allUsers) => {
         this.allUsers = allUsers ?? [];
-        console.log('All Users:', this.allUsers);
       }
     );
     this.loadChannelMembers();

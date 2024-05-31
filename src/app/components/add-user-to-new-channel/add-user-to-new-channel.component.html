@@ -1,4 +1,4 @@
-<section>
+<section (click)="onOutsideClick($event)">
     <mat-card>
         <mat-card-content>
             <div class="header">
@@ -16,14 +16,22 @@
                 <mat-radio-button value="specific">
                     <span>Bestimmte Leute hinzufügen</span>
                 </mat-radio-button>
-                <input *ngIf="peopleType === 'specific'" placeholder="Name eingeben" (focus)="getUsersList()">
-                <div *ngIf="peopleType === 'specific'" class="userList">
-                    <div *ngFor="let user of userList">{{ user.name }}</div>
-                </div>
+                <input *ngIf="peopleType === 'specific'" placeholder="Name eingeben" (input)="onSearchChange($event)">
+                <mat-card *ngIf="showResults" class="user-list" (click)="$event.stopPropagation()">
+                    <div *ngFor="let user of filteredUsers" [class.selected]="isSelected(user.id)" class="single-users">
+                        <img [src]="user.avatar">
+                        <p (click)="selectUser(user.id)">
+                            {{ user.name }}
+                        </p>
+                    </div>
+                    <div *ngIf="filteredUsers.length === 0">
+                        <p>Keine Benutzer mit diesem Namen vorhanden.</p>
+                    </div>
+                </mat-card>
             </mat-radio-group>
             <div class="button-container">
                 <div class="message-button">
-                    <button (click)="addAllUsersToChannel()" *ngIf="peopleType === 'all'">Erstellen</button>
+                    <button (click)="onSubmit()">Erstellen</button>
                 </div>
             </div>
         </mat-card-content>
