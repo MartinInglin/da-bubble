@@ -76,7 +76,6 @@ export class ChannelInfoComponent implements OnInit, OnDestroy {
 
     this.channelsService.removeUserFromChannel(channelId, currentUserId)
       .then(() => {
-        console.log('User removed from channel');
         this.dialogRef.close();
       })
       .catch(error => {
