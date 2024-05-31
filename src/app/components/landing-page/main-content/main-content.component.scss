@@ -96,6 +96,7 @@ header {
     font-size: 20px;
     padding-top: 10px;
     padding-left: 10px;
+  background: none;
     flex: 1;
     &:focus {
       border-color: transparent;
@@ -350,6 +351,7 @@ cdk-overlay-connected-position-bounding-box {
     border: 1px solid #eceefe;
     padding-left: 20px;
     font-size: 18px;
+    background-color: none;
   }
 }
 

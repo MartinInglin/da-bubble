@@ -200,6 +200,19 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
   }
 
+  async sendMessageToContact(){
+    if (this.message.trim() && this.directMessage?.id) {
+      try {
+        await this.directMessagesService.savePost(this.directMessage.id, this.message, this.currentUser);
+        this.message = '';
+        console.log(this.message ,"has ben sent");
+        
+      } catch (error) {
+        console.error('Error posting Directmessage:', error);
+      }
+    }
+  }
+
   openMembersDialog(channelId: string): void {
     const dialogRef = this.dialog.open(MembersComponent, {
       width: '415px',

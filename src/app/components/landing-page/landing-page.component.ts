@@ -93,9 +93,9 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     await this.usersService.getAllUsers();
   }
 
-  getAllChannelsForUser(userId: string): void {
-    // Hier kannst du die Kanäle abrufen, denen der Benutzer beigetreten ist, basierend auf der Benutzer-ID
-  }
+  // getAllChannelsForUser(userId: string): void {
+  //   // Hier kannst du die Kanäle abrufen, denen der Benutzer beigetreten ist, basierend auf der Benutzer-ID
+  // }
 
   showContactsSide() {}
 
