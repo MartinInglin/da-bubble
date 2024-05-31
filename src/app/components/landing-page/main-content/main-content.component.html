@@ -57,6 +57,13 @@
                 <!-- Text of the message -->
                 <span *ngIf="post.message">{{ post.message }}</span>
               </div>
+              @if (post.files.length > 0) {
+                <div class="documents-container">
+                  @for (file of post.files; track file; let index = $index) {
+                    <div class="document" (click)="downloadFile(file.url)">{{ file.name}}</div>
+                  }
+                </div>
+              }
 
               <div class="message-details">
                 <!-- Message actions and time details -->
@@ -67,7 +74,7 @@
                 >
                 <span
                   >Letzte Antwort:{{
-                    formatDateTime(selectedChannel.posts[0].timestamp)
+                    formatDateTime(selectedChannel.posts[i].timestamp)
                   }}
                 </span>
               </div>
@@ -106,7 +113,7 @@
         @if (files.length > 0) {
         <div class="documents-container">
           @for (file of files; track file; let index = $index) {
-            <div class="document" (click)="removeFile(index)">{{ files[index].name}}</div>
+            <div class="document" (click)="removeFile(index)">{{ file.name}}</div>
           }
         </div>
         }

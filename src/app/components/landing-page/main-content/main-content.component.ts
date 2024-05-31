@@ -241,11 +241,11 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
   formatDateTime(timestamp: number): string {
     const date = new Date(timestamp);
-    const hours = date.getHours(); // Hole die Stunden aus dem Datum
-    const minutes = date.getMinutes(); // Hole die Minuten aus dem Datum
-    // const seconds = date.getSeconds(); // Hole die Sekunden aus dem Datum
-    return ` ${hours}:${minutes} Uhr`; // Gib die Uhrzeit im Format "Stunden:Minuten:Sekunden" zurück
+    const hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes} Uhr`;
   }
+  
 
   savePost() {
     this.channelsService.savePost(
@@ -271,5 +271,9 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
   removeFile(index: number) {
     this.files.splice(index, 1);
+  }
+
+  downloadFile(downloadURL: string) {
+    this.storageService.getFile(downloadURL);
   }
 }

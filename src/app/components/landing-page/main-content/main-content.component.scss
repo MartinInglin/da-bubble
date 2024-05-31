@@ -223,6 +223,8 @@ header {
     height: 110px;
     padding: 10px;
     gap: 30px;
+    height: fit-content;
+    
     &:hover {
       background-color: #eceefe;
       width: 100%;
@@ -355,6 +357,8 @@ cdk-overlay-connected-position-bounding-box {
   display: flex;
   overflow-x: auto;
   gap: 8px;
+  padding: 8px;
+
   .document {
     background-color: rgb(165 165 165 / 24%);
     border-radius: 50px;

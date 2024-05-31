@@ -43,8 +43,19 @@ export class StorageService {
     xhr.responseType = 'blob';
     xhr.onload = (event) => {
       const blob = xhr.response;
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'downloaded-file'; // You can set a default filename here
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      }, 0);
     };
     xhr.open('GET', downloadUrl);
     xhr.send();
   }
+  
 }
