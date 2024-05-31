@@ -1,4 +1,10 @@
-import { Component, EventEmitter, OnDestroy, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
@@ -64,9 +70,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   menuUp: any = './../../../assets/images/icons/menu_up.svg';
   menuDown: any = './../../../assets/images/icons/menu_down.svg';
 
-  constructor(private dialog: MatDialog) {
-    (window as any).allUsers = this.allUsers;
-  }
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe(
@@ -75,7 +79,6 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         console.log('All Users:', this.allUsers);
       }
     );
-
 
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       if (user) {
@@ -118,6 +121,6 @@ export class LandingPageComponent implements OnInit, OnDestroy {
       width: '872px',
       height: '539px',
     });
-    dialogRef.componentInstance.currentUser = new User(this.currentUser)
+    dialogRef.componentInstance.currentUser = new User(this.currentUser);
   }
 }

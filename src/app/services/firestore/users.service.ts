@@ -47,7 +47,16 @@ export class UsersService {
         console.error('Error parsing stored user data:', error);
       }
     }
-    this.getAllUsers()
+    this.getAllUsers();
+    const currentUserId = this.currentUserSubject.value?.id
+    if (currentUserId) {
+      this.getCurrentUser(currentUserId);
+    }
+  }
+
+  ngOnInit() {
+
+
   }
 
   /**
@@ -159,6 +168,7 @@ export class UsersService {
 
     const updatePromises = querySnapshot.docs.map((docSnapshot) => {
       const user = docSnapshot.data() as User;
+      debugger;
       if (!user.channels.some((c: MinimalChannel) => c.id === channel.id)) {
         user.channels.push(channel);
         return updateDoc(doc(this.firestore, 'users', user.id), {
