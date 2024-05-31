@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,6 +10,7 @@ import { User } from '../../models/user.class';
 import { ChannelsService } from '../../services/firestore/channels.service';
 import { MinimalUser } from '../../models/minimal_user.class';
 import { MinimalChannel } from '../../models/minimal_channel.class';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-user-to-channel',
@@ -25,11 +26,16 @@ import { MinimalChannel } from '../../models/minimal_channel.class';
   styleUrl: './add-user-to-channel.component.scss'
 })
 export class AddUserToChannelComponent implements OnInit {
+  usersService = inject(UsersService)
+
   users: User[] = [];
   usersInChannel: MinimalUser[] = [];
   filteredUsers: User[] = [];
   selectedUsers: string[] = [];
   showResults: boolean = false;
+  allUsers: User[] = [];
+
+  private allUsersSubscription: Subscription = new Subscription();
 
   constructor(
     public dialogRef: MatDialogRef<AddUserToChannelComponent>,
@@ -39,10 +45,12 @@ export class AddUserToChannelComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.userService.getAllUsers().subscribe(users => {
-      this.users = users;
-      this.filteredUsers = [...this.users];
-    });
+    this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe(
+      (allUsers) => {
+        this.allUsers = allUsers ?? [];
+        console.log('All Users:', this.allUsers);
+      }
+    );
     this.loadChannelMembers();
   }
 
@@ -111,5 +119,11 @@ export class AddUserToChannelComponent implements OnInit {
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  ngOnDestroy(): void {
+    if (this.allUsersSubscription) {
+      this.allUsersSubscription.unsubscribe();
+    }
   }
 }

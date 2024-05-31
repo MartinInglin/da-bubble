@@ -23,18 +23,20 @@ import { User } from '../../models/user.class';
     MatButtonModule,
     FormsModule,
     MatRadioModule,
-    MatSelectModule
+    MatSelectModule,
   ],
   templateUrl: './add-user-to-new-channel.component.html',
-  styleUrls: ['./add-user-to-new-channel.component.scss']
+  styleUrls: ['./add-user-to-new-channel.component.scss'],
 })
 export class AddUserToNewChannelComponent implements OnDestroy {
   peopleType: string = 'all';
   channelId: string = '';
   selectedUser: User | null = null;
   userList: User[] = [];
+  allUsers: User[] = [];
 
   private usersSubscription: Subscription | undefined;
+  private allUsersSubscription: Subscription = new Subscription();
 
   constructor(
     public dialogRef: MatDialogRef<AddUserToNewChannelComponent>,
@@ -45,29 +47,34 @@ export class AddUserToNewChannelComponent implements OnDestroy {
     this.channelId = data.channelId;
   }
 
+  ngOnInit(): void {
+    this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe(
+      (allUsers) => {
+        this.allUsers = allUsers ?? [];
+        console.log('All Users:', this.allUsers);
+      }
+    );
+  }
+
   addAllUsersToChannel(): void {
     if (this.peopleType === 'all') {
-      this.usersService.getAllUsers().subscribe(users => {
-        if (users) {
-          users.forEach(user => {
-            const minimalChannel: MinimalChannel = {
-              id: this.channelId,
-              name: ''
-            };
-            this.usersService.addChannelToUsers(minimalChannel);
-            this.channelsService.addAllUsersToChannel(this.channelId);
-          });
-        }
-      });
+      if (this.allUsers) {
+        this.allUsers.forEach((user) => {
+          const minimalChannel: MinimalChannel = {
+            id: this.channelId,
+            name: '',
+          };
+          this.usersService.addChannelToUsers(minimalChannel);
+          this.channelsService.addAllUsersToChannel(this.channelId);
+        });
+      }
 
       this.dialogRef.close();
     }
   }
 
   getUsersList(): void {
-    this.usersSubscription = this.usersService.getAllUsers().subscribe(users => {
-      this.userList = users;
-    });
+    this.userList = this.allUsers;
   }
 
   onNoClick(): void {
@@ -77,6 +84,9 @@ export class AddUserToNewChannelComponent implements OnDestroy {
   ngOnDestroy(): void {
     if (this.usersSubscription) {
       this.usersSubscription.unsubscribe();
+    }
+    if (this.allUsersSubscription) {
+      this.allUsersSubscription.unsubscribe();
     }
   }
 }

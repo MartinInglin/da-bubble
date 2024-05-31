@@ -47,7 +47,6 @@ export class LandingPageComponent implements OnInit, OnDestroy {
 
   private userSubscription: Subscription = new Subscription();
   private allUsersSubscription: Subscription = new Subscription();
-  private allChannelsSubscription: Subscription = new Subscription();
 
   currentUser: User = new User();
   allUsers: User[] = [];
@@ -66,7 +65,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   menuDown: any = './../../../assets/images/icons/menu_down.svg';
 
   constructor(private dialog: MatDialog) {
-    this.usersService.getAllUsers();
+    (window as any).allUsers = this.allUsers;
   }
 
   ngOnInit(): void {
@@ -77,6 +76,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
       }
     );
 
+
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       if (user) {
         // Überprüfe, ob ein Benutzerobjekt vorhanden ist
@@ -84,6 +84,10 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         console.log('Current User:', this.currentUser);
       }
     });
+  }
+
+  async getAllUsers() {
+    await this.usersService.getAllUsers();
   }
 
   getAllChannelsForUser(userId: string): void {
@@ -106,9 +110,6 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     }
     if (this.allUsersSubscription) {
       this.allUsersSubscription.unsubscribe();
-    }
-    if (this.allChannelsSubscription) {
-      this.allChannelsSubscription.unsubscribe();
     }
   }
 

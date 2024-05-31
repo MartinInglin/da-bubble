@@ -8,7 +8,7 @@ import {
   collection,
   updateDoc,
   query,
-  arrayUnion
+  arrayUnion,
 } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { RegistrationService } from '../registration.service';
@@ -22,6 +22,9 @@ import { MinimalChannel } from '../../models/minimal_channel.class';
 })
 export class UsersService {
   storageService = inject(StorageService);
+  firestore = inject(Firestore);
+  registrationService = inject(RegistrationService);
+
   user: User = new User();
 
   private currentUserSubject: BehaviorSubject<User | null> =
@@ -35,9 +38,6 @@ export class UsersService {
   public allUsersSubject$: Observable<User[] | null> =
     this.allUsersSubject.asObservable();
 
-  firestore = inject(Firestore);
-  registrationService = inject(RegistrationService);
-
   constructor() {
     const storedUser = sessionStorage.getItem('currentUser');
     if (storedUser) {
@@ -47,6 +47,7 @@ export class UsersService {
         console.error('Error parsing stored user data:', error);
       }
     }
+    this.getAllUsers()
   }
 
   /**
@@ -125,20 +126,22 @@ export class UsersService {
   /**
    * This function gets the data of all users and stores it as an observable. Every component that needs this data can subscribe to it.
    */
-  getAllUsers(): Observable<User[]> {
+  getAllUsers(): void {
     const collectionRef = collection(this.firestore, 'users');
 
-    return new Observable<User[]>((observer) => {
       onSnapshot(collectionRef, (snapshot) => {
         const data = snapshot.docs.map(
           (doc) => new User({ id: doc.id, ...doc.data() })
         );
-        observer.next(data);
+        this.allUsersSubject.next(data);
       });
-    });
+
   }
 
-  async addChannelToSingleUser(userId: string, channel: MinimalChannel): Promise<void> {
+  async addChannelToSingleUser(
+    userId: string,
+    channel: MinimalChannel
+  ): Promise<void> {
     try {
       const userDocRef = doc(this.firestore, 'users', userId);
       await updateDoc(userDocRef, {
