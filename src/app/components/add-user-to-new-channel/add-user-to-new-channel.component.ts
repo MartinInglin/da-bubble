@@ -154,6 +154,9 @@ export class AddUserToNewChannelComponent implements OnDestroy, OnInit {
     if (this.usersSubscription) {
       this.usersSubscription.unsubscribe();
     }
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
     if (this.allUsersSubscription) {
       this.allUsersSubscription.unsubscribe();
     }

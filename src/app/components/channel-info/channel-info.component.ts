@@ -1,4 +1,5 @@
-import { Component, Inject, Input } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -8,7 +9,8 @@ import { ChannelInfoEditComponent } from './channel-info-edit/channel-info-edit.
 import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Channel } from '../../models/channel.class';
 import { ChannelsService } from '../../services/firestore/channels.service';
-import { OnInit } from '@angular/core';
+import { User } from '../../models/user.class';
+import { UsersService } from '../../services/firestore/users.service';
 
 @Component({
   selector: 'app-channel-info',
@@ -25,21 +27,27 @@ import { OnInit } from '@angular/core';
   templateUrl: './channel-info.component.html',
   styleUrl: './channel-info.component.scss',
 })
-export class ChannelInfoComponent implements OnInit {
+export class ChannelInfoComponent implements OnInit, OnDestroy {
   channel: Channel | null = null;
+  currentUser: User | null = null;
   channelSubscription: any;
+
+  private userSubscription: Subscription = new Subscription();
 
   constructor(
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<ChannelInfoComponent>,
     private channelsService: ChannelsService,
+    private usersService: UsersService,
     @Inject(MAT_DIALOG_DATA) public data: {channelId: string}
   ) {}
 
   ngOnInit(): void {
     this.loadChannelData();
+    this.userSubscription = this.usersService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+    });
   }
-
 
   loadChannelData(): void {
     if (!this.data.channelId) return; 
@@ -54,14 +62,35 @@ export class ChannelInfoComponent implements OnInit {
     this.channelsService.getDataChannel(this.data.channelId);
   }
 
-
   openDialog(): void {
     const dialogRef = this.dialog.open(ChannelInfoEditComponent, {
       width: '872px',
     });
   }
 
+  leaveChannel(): void {
+    if (!this.currentUser || !this.channel) return;
+
+    const channelId = this.channel.id;
+    const currentUserId = this.currentUser.id;
+
+    this.channelsService.removeUserFromChannel(channelId, currentUserId)
+      .then(() => {
+        console.log('User removed from channel');
+        this.dialogRef.close();
+      })
+      .catch(error => {
+        console.error('Error leaving channel:', error);
+      });
+  }
+
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  ngOnDestroy(): void {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
   }
 }
