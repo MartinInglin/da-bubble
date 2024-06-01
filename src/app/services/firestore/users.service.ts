@@ -48,7 +48,7 @@ export class UsersService {
       }
     }
     this.getAllUsers();
-    const currentUserId = this.currentUserSubject.value?.id
+    const currentUserId = this.currentUserSubject.value?.id;
     if (currentUserId) {
       this.getCurrentUser(currentUserId);
     }
@@ -133,13 +133,12 @@ export class UsersService {
   getAllUsers(): void {
     const collectionRef = collection(this.firestore, 'users');
 
-      onSnapshot(collectionRef, (snapshot) => {
-        const data = snapshot.docs.map(
-          (doc) => new User({ id: doc.id, ...doc.data() })
-        );
-        this.allUsersSubject.next(data);
-      });
-
+    onSnapshot(collectionRef, (snapshot) => {
+      const data = snapshot.docs.map(
+        (doc) => new User({ id: doc.id, ...doc.data() })
+      );
+      this.allUsersSubject.next(data);
+    });
   }
 
   async addChannelToSingleUser(
@@ -163,7 +162,6 @@ export class UsersService {
 
     const updatePromises = querySnapshot.docs.map((docSnapshot) => {
       const user = docSnapshot.data() as User;
-      debugger;
       if (!user.channels.some((c: MinimalChannel) => c.id === channel.id)) {
         user.channels.push(channel);
         return updateDoc(doc(this.firestore, 'users', user.id), {

@@ -27,7 +27,7 @@ import { RegistrationService } from './registration.service';
 import { SnackbarService } from './snackbar.service';
 import { UsersService } from './firestore/users.service';
 import { User } from '../models/user.class';
-import { Observable, Subscription, map } from 'rxjs';
+import { Observable, Subscription, map, timeout } from 'rxjs';
 import { Firestore, doc, getDoc, updateDoc } from '@angular/fire/firestore';
 
 @Injectable({
@@ -219,10 +219,11 @@ export class AuthService {
    */
   async signOut(currentUserId: string) {
     this.setIsSignedInFalse(currentUserId);
+    sessionStorage.removeItem('currentUser');
+    this.usersService.setCurrentUserNull();
+
     return signOut(this.auth)
       .then(() => {
-        sessionStorage.removeItem('currentUser');
-        this.usersService.setCurrentUserNull();
         this.router.navigate(['/login']);
       })
       .catch((error) => {
@@ -320,8 +321,8 @@ export class AuthService {
   }
 
   isAuthenticated(): Observable<boolean> {
-    return new Observable(subscriber => {
-      onAuthStateChanged(this.auth, user => {
+    return new Observable((subscriber) => {
+      onAuthStateChanged(this.auth, (user) => {
         subscriber.next(!!user);
         subscriber.complete();
       });
@@ -329,12 +330,14 @@ export class AuthService {
   }
 
   redirectAuthorizedTo(): void {
-    this.isAuthenticated().pipe(
-      map(isAuthenticated => {
-        if (isAuthenticated) {
-          this.router.navigate(['landingPage']);
-        }
-      })
-    ).subscribe();
+    this.isAuthenticated()
+      .pipe(
+        map((isAuthenticated) => {
+          if (isAuthenticated) {
+            this.router.navigate(['landingPage']);
+          }
+        })
+      )
+      .subscribe();
   }
 }
