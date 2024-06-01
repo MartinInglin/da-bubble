@@ -44,8 +44,6 @@ export class ChannelsService {
    * @param idChannel string
    */
   getDataChannel(idChannel: string) {
-    console.log(idChannel);
-    
     const unsub = onSnapshot(
       doc(this.firestore, 'channels', idChannel),
       (doc) => {

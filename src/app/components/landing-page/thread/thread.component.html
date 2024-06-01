@@ -6,34 +6,27 @@
     <div class="thread-content">
       <!-- Header of the thread -->
       <div class="head-thread">
-        <span>Thread</span>
+        <div class="head-thread-text">
+          <span>Thread</span>
+          <span class="thread-name"># {{ selectedThread.name }}</span>
+        </div>
+
         <button (click)="closeThread()">
-          <img src="assets/images/icons/close.svg" alt="">
+          <img src="assets/images/icons/close.svg" alt="" />
         </button>
       </div>
 
       <!-- Individual message within the thread -->
-      @if (selectedChannel.posts.length > 0) {
-      <div class="message">
-        <div class="message-container">
-          <img src="{{ selectedChannel.posts[0].avatar }}" alt="" />
-
-          <div class="message-box">
-            <div class="message-name">
-              <span>{{ selectedChannel.posts[0].name }}</span>
-              <span class="second-span"></span>
-            </div>
-            <div class="message-text">
-              <span>{{ selectedChannel.posts[0].message }}</span>
-            </div>
-          </div>
-        </div>
-        <!-- Details and actions for the message -->
-        <div class="message-details">
-          <!-- Link to reply to the message -->
-          <a>Antworten</a>
-          <div class="line-antwort"></div>
-        </div>
+      @if (selectedThread.posts.length > 0) { @for (post of
+      selectedThread.posts; track post;) {
+      <app-post [post]="post"></app-post>
+      }
+      <!-- Details and actions for the message -->
+      @if (selectedThread.posts[0]) {}
+      <div class="message-details">
+        <!-- Link to reply to the message -->
+        <div class="number-answers">{{selectedThread.posts.length - 1}} Antworten</div>
+        <div class="line-answer"></div>
       </div>
       }
     </div>
@@ -45,10 +38,7 @@
         <div class="icons">
           <div class="buttons">
             <a [matMenuTriggerFor]="attachment" class="addIcon">
-              <img
-                src="/assets/images/icons/add_icon.svg"
-                alt=""
-              />
+              <img src="/assets/images/icons/add_icon.svg" alt="" />
             </a>
             <mat-menu #attachment="matMenu" yPosition="above">
               <div class="attachment-container"></div>

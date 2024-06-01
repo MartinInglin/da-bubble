@@ -5,6 +5,7 @@ import {
   collection,
   doc,
   getDoc,
+  onSnapshot,
   setDoc,
   updateDoc,
 } from '@angular/fire/firestore';
@@ -14,6 +15,7 @@ import { Channel } from '../../models/channel.class';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../../models/user.class';
 import { Reaction } from '../../models/reaction.class';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +23,29 @@ import { Reaction } from '../../models/reaction.class';
 export class ThreadsService {
   firestore = inject(Firestore);
 
+  private threadSubject: BehaviorSubject<Thread | null> =
+  new BehaviorSubject<Thread | null>(null);
+
+public threadSubject$: Observable<Thread | null> =
+  this.threadSubject.asObservable();
+
   constructor() {}
+
+  getDataThread(channelId: string, channelName: string, post: Post) {
+    const threadId = post.id
+
+    const unsub = onSnapshot(
+      doc(this.firestore, 'channels', channelId, 'threads', threadId),
+      (doc) => {
+        const threadData = doc.data() as Thread;
+        if (!doc.exists()) {
+          this.createThread(channelId, channelName, post)
+        }
+        this.threadSubject.next(threadData);
+        console.log(threadData);
+      }
+    );
+  }
 
   /**
    * This function creates a new thread if the user clicks on a post in a channel.
@@ -29,16 +53,16 @@ export class ThreadsService {
    * @param channelData object as channel
    * @param postIndex number
    */
-  async createThread(channelData: Channel, postIndex: number): Promise<void> {
+  async createThread(channelId: string, channelName: string, firstPost: Post): Promise<void> {
     try {
-      const channelRef = doc(this.firestore, 'channels', channelData.id);
+      const channelRef = doc(this.firestore, 'channels', channelId);
       const threadsCollectionRef = collection(channelRef, 'threads');
 
-      const post: Post = channelData.posts[postIndex];
+      const post: Post = firstPost;
 
       const threadData: Thread = {
         id: post.id,
-        name: channelData.name,
+        name: channelName,
         posts: [post],
       };
 

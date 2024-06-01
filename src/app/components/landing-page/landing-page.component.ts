@@ -106,7 +106,6 @@ export class LandingPageComponent implements OnInit, OnDestroy {
 
   toggle(drawer: any): void {
     this.isOpen = !this.isOpen;
-    console.log('Menu status toggled:', this.isOpen);
     if (drawer) {
       drawer.toggle(); // Ensure this method exists and works as expected
     }

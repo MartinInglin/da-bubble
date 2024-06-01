@@ -1,0 +1,39 @@
+<div class="message">
+  <div class="message-container">
+    <img src="{{ post.avatar }}" alt="" />
+
+    <div class="message-box">
+      <div class="message-name">
+        <span>{{ post.name }}</span>
+        <span class="timestamp">{{ formatDateTime(post.timestamp) }}</span>
+      </div>
+      <div class="message-text">
+        <span>{{ post.message }}</span>
+      </div>
+      @if (post.reactions.length > 0) {
+        <div class="reactions-container">
+            <div class="reactions">
+              <img src="assets/images/icons/add_icon.svg " alt="" />
+              <div class="amount-reactions">1</div>
+            </div>
+    
+            <img
+              class="add-reaction"
+              src="assets/images/icons/add_reaction.svg"
+              alt=""
+            />
+          </div>
+      }
+
+    </div>
+  </div>
+  @if (post.files.length > 0) {
+  <div class="documents-container">
+    @for (file of post.files; track file; let index = $index) {
+    <div class="document" (click)="downloadFile(file.url)">
+      {{ file.name }}
+    </div>
+    }
+  </div>
+  }
+</div>

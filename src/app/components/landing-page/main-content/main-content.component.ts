@@ -31,6 +31,7 @@ import { DirectMessagesService } from '../../../services/firestore/direct-messag
 import { DirectMessage } from '../../../models/direct-message.class';
 import { StorageService } from '../../../services/storage.service';
 import { FormsModule } from '@angular/forms';
+import { Post } from '../../../models/post.class';
 // import { ThreadComponent } from '../thread/thread.component';
 
 declare const twemoji: any; // Deklariere Twemoji als Modul
@@ -94,8 +95,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     private directMessagesService: DirectMessagesService
   ) {}
 
-  @Output() toggleThread: EventEmitter<boolean> =
-    new EventEmitter<boolean>();
+  @Output() toggleThread: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   ngOnInit(): void {
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
@@ -110,7 +110,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
         this.channelSelected = !!this.selectedChannel.id;
         if (this.channelSelected) {
           this.chatSelected = false;
-          console.log('hallo');
         }
       }
     );
@@ -135,8 +134,9 @@ export class MainContentComponent implements OnInit, OnDestroy {
       );
   }
 
-  openThread(): void {
+  openThread(selectedChannelId: string, selectedChannelName:string, post: Post): void {
     this.toggleThread.emit(true);
+    this.threadService.getDataThread(selectedChannelId, selectedChannelName, post);
   }
 
   ngOnDestroy(): void {

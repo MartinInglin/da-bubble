@@ -1,3 +1,5 @@
+@import "./../../../../styles.scss";
+
 /* Set height of the aside element */
 aside {
   max-height: 100%;
@@ -28,6 +30,9 @@ aside {
 /* height thread container */
 .thread-content {
   height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Header styling for the thread */
@@ -44,6 +49,12 @@ aside {
     font-size: 24px;
     font-weight: 500;
     margin-left: 20px;
+  }
+  .thread-name {
+    font-size: 16px;
+    line-height: 19.1px;
+    font-weight: 400;
+    color: $purple2;
   }
   button {
     border: none;
@@ -122,74 +133,20 @@ aside {
   }
 }
 
-/* Styling for individual messages */
-.message {
+.message-details {
   display: flex;
-  max-width: 100%;
-  width: 398px;
-  padding: 20px;
-  height: 141px;
+  width: fit-content;
+  gap: 20px;
+  width: 85%;
   align-items: center;
-  flex-direction: column;
-  img {
-    height: 70px;
-    width: 70px;
+  .number-answers {
+    color: rgba(0, 0, 255, 0.288);
+    font-weight: 550;
   }
-  .message-text {
-    width: fit-content;
-    background-color: #eceefe;
-    min-height: 35px;
-    border-radius: 0px 30px 30px 30px;
-    display: flex;
-    align-items: center;
-    padding: 10px;
-  }
-  .message-name {
-    font-weight: 600;
-    margin-bottom: 5px;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    gap: 5px;
-    .second-span {
-      font-size: 14px;
-      font-weight: 400;
-    }
-  }
-  .message-details {
-    margin-top: 10px;
-    display: flex;
-    width: fit-content;
-    gap: 20px;
-    width: 100%;
-    align-items: center;
-    a {
-      color: rgba(0, 0, 255, 0.288);
-      text-decoration: none;
-      font-weight: 550;
-    }
-    .line-antwort {
-      width: 100%;
-      height: 1px;
-      background-color: rgba(0, 0, 255, 0.288);
-    }
-  }
-  .message-container {
-    display: flex;
-    align-items: start;
-    flex-direction: row;
-    width: 100%;
-    height: 110px;
-    padding: 10px;
-    gap: 30px;
-    &:hover {
-      background-color: #eceefe;
-
-      .message-text {
-        background-color: white;
-      }
-    }
+  .line-answer {
+    height: 1px;
+    background-color: rgba(0, 0, 255, 0.288);
+    flex: 1;
   }
 }
 
@@ -203,7 +160,7 @@ aside {
 .emoji {
   margin-right: 10px;
   margin-bottom: 5px;
-  width: calc((100% / 3) - 10px); 
+  width: calc((100% / 3) - 10px);
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -253,7 +210,7 @@ cdk-overlay-connected-position-bounding-box {
   margin-top: 5px;
 }
 
-.seperator{
+.seperator {
   height: 30px;
   width: 1px;
   background-color: black;

@@ -44,7 +44,10 @@
         </div>
         <!--  -->
         <div class="message">
-          <div class="message-container" (click)="openThread()">
+          <div
+            class="message-container"
+            (click)="openThread(selectedChannel.id, selectedChannel.name, post)"
+          >
             <!-- Profile picture of the message author -->
             <img *ngIf="post.avatar" src="{{ post.avatar }}" alt="" />
             <!-- Message box -->
@@ -231,11 +234,7 @@
 
             <div class="message-details">
               <!-- Message actions and time details -->
-              <a
-                routerLink="/landingPage"
-                (click)="threadsService.createThread(selectedChannel, 0)"
-                >Antworten</a
-              >
+              <a>Antworten</a>
               <span
                 >Letzte Antwort:{{
                   formatDateTime(selectedChannel.posts[0].timestamp)
@@ -282,11 +281,7 @@
 
               <div class="message-details">
                 <!-- Message actions and time details -->
-                <a
-                  routerLink="/landingPage"
-                  (click)="threadsService.createThread(selectedChannel, 0)"
-                  >Antworten</a
-                >
+                <a>Antworten</a>
                 <span
                   >Letzte Antwort:{{
                     formatDateTime(selectedChannel.posts[0].timestamp)
