@@ -32,6 +32,7 @@ import { DirectMessage } from '../../../models/direct-message.class';
 import { StorageService } from '../../../services/storage.service';
 import { FormsModule } from '@angular/forms';
 import { Post } from '../../../models/post.class';
+import { StateService } from '../../../services/stateservice.service';
 // import { ThreadComponent } from '../thread/thread.component';
 
 declare const twemoji: any; // Deklariere Twemoji als Modul
@@ -60,7 +61,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   threadsService = inject(ThreadsService);
   storageService = inject(StorageService);
   message: any = '';
-  // threadComponent = inject(ThreadComponent)
+  stateService = inject(StateService);
 
   private userSubscription: Subscription = new Subscription();
   private channelSubscription: Subscription = new Subscription();
@@ -93,7 +94,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private threadService: ThreadsService,
     private directMessagesService: DirectMessagesService
-  ) {}
+  ) { }
 
   @Output() toggleThread: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -132,9 +133,17 @@ export class MainContentComponent implements OnInit, OnDestroy {
           }
         }
       );
+
+      this.stateService.showContacts$.subscribe(show => {
+        this.chatSelected= show;
+      });
+  
+      this.stateService.showChannels$.subscribe(show => {
+        this.channelSelected = show;
+      });
   }
 
-  openThread(selectedChannelId: string, selectedChannelName:string, post: Post): void {
+  openThread(selectedChannelId: string, selectedChannelName: string, post: Post): void {
     this.toggleThread.emit(true);
     this.threadService.getDataThread(selectedChannelId, selectedChannelName, post);
   }

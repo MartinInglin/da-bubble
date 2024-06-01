@@ -24,6 +24,8 @@ import {
   MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
+import { StateService } from '../../services/stateservice.service';
+
 
 @Component({
   selector: 'app-landing-page',
@@ -50,6 +52,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   usersService = inject(UsersService);
   channelsService = inject(ChannelsService);
   directMessagesService = inject(DirectMessagesService);
+  stateService = inject(StateService)
 
   private userSubscription: Subscription = new Subscription();
   private allUsersSubscription: Subscription = new Subscription();
@@ -92,6 +95,14 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         console.log('Current User:', this.currentUser);
       }
     });
+
+    this.stateService.showContacts$.subscribe(show => {
+      this.showContacts = show;
+    });
+
+    this.stateService.showChannels$.subscribe(show => {
+      this.showChannels = show;
+    });
   }
 
   async getAllUsers() {
@@ -130,5 +141,11 @@ export class LandingPageComponent implements OnInit, OnDestroy {
 
   toggleThread(isOpen: boolean): void {
     this.isThreadOpen = isOpen;
+  }
+
+  closeChannelsAndContacts(){
+    console.log('hallo');
+    this.stateService.setShowContacts(false);
+    this.stateService.setShowChannels(false);
   }
 }

@@ -170,18 +170,18 @@
           <span>{{ formatDate(selectedChannel.posts[0].timestamp) }}</span>
         </div>
       </div>
-      <!--  -->
+      <!--Message Loop -->
       <div class="message">
         <div class="message-container">
           <!-- Profile picture of the message author -->
-          <img *ngIf="directMessage?.users?.[0]?.avatar" [src]="directMessage.users[0].avatar" alt="" />
+          <img  [src]="directMessage.users[0].avatar" alt="" />
           <!-- Message box -->
           <div class="message-box">
             <div class="message-name">
               <!-- Name of the message author -->
               <span>{{ directMessage.users[0].name }}</span>
             </div>
-            <div class="message-text" *ngIf="directMessage.posts">
+            <div class="message-text" >
               <!-- Text of the message -->
               <span>{{ directMessage.posts }}</span>
             </div>
@@ -197,6 +197,7 @@
           </div>
         </div>
       </div>
+
       }
 
       <!-- Placeholder if no message is in channel -->
