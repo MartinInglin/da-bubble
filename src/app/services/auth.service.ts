@@ -35,6 +35,7 @@ import { Firestore, doc, getDoc, updateDoc } from '@angular/fire/firestore';
 })
 export class AuthService {
   private auth: Auth;
+
   private router = inject(Router);
   firestore = inject(Firestore);
   usersService = inject(UsersService);
@@ -218,6 +219,7 @@ export class AuthService {
    * @returns Calls the signOut function of fire auth.
    */
   async signOut(currentUserId: string) {
+    this.usersService.unsubscribeFromData();
     this.setIsSignedInFalse(currentUserId);
     sessionStorage.removeItem('currentUser');
     this.usersService.setCurrentUserNull();

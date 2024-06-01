@@ -27,6 +27,8 @@ export class UsersService {
 
   user: User = new User();
 
+  private unsubscribe: any;
+
   private currentUserSubject: BehaviorSubject<User | null> =
     new BehaviorSubject<User | null>(null);
   public currentUser$: Observable<User | null> =
@@ -119,12 +121,18 @@ export class UsersService {
    * @param userId string
    */
   getCurrentUser(userId: string): void {
-    onSnapshot(doc(this.firestore, 'users', userId), (doc) => {
+    this.unsubscribe = onSnapshot(doc(this.firestore, 'users', userId), (doc) => {
       const userData = doc.data() as User;
       console.log('Firestore document updated:', userData);
       this.currentUserSubject.next(userData);
       sessionStorage.setItem('currentUser', JSON.stringify(userData));
     });
+  }
+
+  public unsubscribeFromData() {
+    this.unsubscribe();
+    console.log('Unsubscribe current user');
+    
   }
 
   /**
@@ -133,7 +141,7 @@ export class UsersService {
   getAllUsers(): void {
     const collectionRef = collection(this.firestore, 'users');
 
-    onSnapshot(collectionRef, (snapshot) => {
+    this.unsubscribe = onSnapshot(collectionRef, (snapshot) => {
       const data = snapshot.docs.map(
         (doc) => new User({ id: doc.id, ...doc.data() })
       );
