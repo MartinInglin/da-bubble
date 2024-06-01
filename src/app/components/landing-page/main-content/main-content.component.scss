@@ -380,3 +380,35 @@ cdk-overlay-connected-position-bounding-box {
     min-height: 56vh; /* Setzt die Mindesthöhe auf 1000px, wenn die Höhe des Viewports mindestens 1000px beträgt */
   }
 }
+
+
+
+// .message-container {
+//   display: flex;
+//   align-items: flex-start;
+// }
+
+// .message-container.my-message {
+//   flex-direction: row-reverse;
+//   text-align: right;
+// }
+
+// .message-container.my-message .message-box {
+//   background-color: #e0f7fa; /* Beispielhintergrund für eigene Nachrichten */
+// }
+
+// .message-container.my-message img {
+//   margin-left: 10px;
+//   margin-right: 0;
+// }
+
+// .message-box {
+//   padding: 10px;
+//   border-radius: 10px;
+//   background-color: #f0f0f0; /* Beispielhintergrund für andere Nachrichten */
+// }
+
+// .message-details {
+//   font-size: 0.8em;
+//   color: #666;
+// }
