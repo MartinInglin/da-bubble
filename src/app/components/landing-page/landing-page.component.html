@@ -118,10 +118,13 @@
     <!-- SideNav -->
 
     <!-- ChatSpace -->
-    <app-main-content class="mainContent"></app-main-content>
+    <app-main-content (toggleThread)="toggleThread($event)" class="mainContent"></app-main-content>
 
     <!-- CommentSection -->
-    <app-thread class="threadContent"></app-thread>
+    @if (isThreadOpen) {
+      <app-thread (toggleThread)="toggleThread($event)" class="threadContent"></app-thread>
+    }
+
   </div>
   <!-- MainContent -->
 </section>

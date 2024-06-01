@@ -34,7 +34,7 @@ aside {
 .head-thread {
   padding: 6px;
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
   align-items: center;
   height: 88px;
   box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2);
@@ -45,9 +45,18 @@ aside {
     font-weight: 500;
     margin-left: 20px;
   }
-  a {
-    text-decoration: none;
-    color: black;
+  button {
+    border: none;
+    border-radius: 50%;
+    margin-right: 24px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    &:hover {
+      background-color: #eceefe;
+    }
   }
 }
 

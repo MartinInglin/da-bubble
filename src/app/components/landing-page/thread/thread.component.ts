@@ -28,7 +28,6 @@ export class ThreadComponent implements OnInit {
   userId: any;
   selectedChannel: Channel = new Channel();
 
-
   channelsService = inject(ChannelsService);
   usersService = inject(UsersService);
 
@@ -36,19 +35,15 @@ export class ThreadComponent implements OnInit {
   private userSubscription: Subscription = new Subscription();
   private channelSubscription: Subscription = new Subscription();
 
-
-
   @Output() commentsChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
-  @Input() openThreadEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() toggleThread: EventEmitter<boolean> = new EventEmitter<boolean>();
+  //@Input() openThreadEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() channelId: string = ''; // Kanal-ID als Eingabe für die Thread-Komponente
   @Input() threadId: string = ''; // Thread-ID als Eingabe für die Thread-Komponente
 
   constructor(private threadsService: ThreadsService, private channelService: ChannelsService, private userService: UsersService) { }
 
   ngOnInit(): void {
-
-
-
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       this.currentUser = user ?? new User();
     });
@@ -103,10 +98,9 @@ export class ThreadComponent implements OnInit {
     }
   }
 
-
-openThread(){
-  this.comments = true;
-}
+  closeThread(): void {
+    this.toggleThread.emit(false);
+  }
 
 
 }

@@ -121,18 +121,15 @@ export class UsersService {
    * @param userId string
    */
   getCurrentUser(userId: string): void {
-    this.unsubscribe = onSnapshot(doc(this.firestore, 'users', userId), (doc) => {
-      const userData = doc.data() as User;
-      console.log('Firestore document updated:', userData);
-      this.currentUserSubject.next(userData);
-      sessionStorage.setItem('currentUser', JSON.stringify(userData));
-    });
-  }
-
-  public unsubscribeFromData() {
-    this.unsubscribe();
-    console.log('Unsubscribe current user');
-    
+    this.unsubscribe = onSnapshot(
+      doc(this.firestore, 'users', userId),
+      (doc) => {
+        const userData = doc.data() as User;
+        console.log('Firestore document updated:', userData);
+        this.currentUserSubject.next(userData);
+        sessionStorage.setItem('currentUser', JSON.stringify(userData));
+      }
+    );
   }
 
   /**
@@ -196,6 +193,10 @@ export class UsersService {
 
   setCurrentUserNull() {
     this.currentUserSubject.next(null);
-    
+  }
+
+  public unsubscribeFromData() {
+    this.unsubscribe();
+    console.log('Unsubscribe current user');
   }
 }

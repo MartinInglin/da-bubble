@@ -63,6 +63,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   isOpen: boolean = false;
   drawer: any;
   loading: boolean = true;
+  isThreadOpen: boolean = false;
 
   arrowOpen: any = '/assets/images/icons/arrow_drop_up.svg';
   arrowClosed: any = '/assets/images/icons/arrow_drop_down.svg';
@@ -126,5 +127,9 @@ export class LandingPageComponent implements OnInit, OnDestroy {
       height: '539px',
     });
     dialogRef.componentInstance.currentUser = new User(this.currentUser);
+  }
+
+  toggleThread(isOpen: boolean): void {
+    this.isThreadOpen = isOpen;
   }
 }

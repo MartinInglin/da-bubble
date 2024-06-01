@@ -44,7 +44,7 @@ declare const twemoji: any; // Deklariere Twemoji als Modul
     MatMenuModule,
     CommonModule,
     MatDialogModule,
-    FormsModule
+    FormsModule,
     // ThreadComponent
   ],
   templateUrl: './main-content.component.html',
@@ -58,7 +58,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   usersService = inject(UsersService);
   threadsService = inject(ThreadsService);
   storageService = inject(StorageService);
-  message: any ='';
+  message: any = '';
   // threadComponent = inject(ThreadComponent)
 
   private userSubscription: Subscription = new Subscription();
@@ -91,10 +91,10 @@ export class MainContentComponent implements OnInit, OnDestroy {
   constructor(
     private dialog: MatDialog,
     private threadService: ThreadsService,
-    private directMessagesService: DirectMessagesService,
+    private directMessagesService: DirectMessagesService
   ) {}
 
-  @Output() openThreadEvent: EventEmitter<boolean> =
+  @Output() toggleThread: EventEmitter<boolean> =
     new EventEmitter<boolean>();
 
   ngOnInit(): void {
@@ -105,8 +105,8 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.channelSubscription = this.channelsService.channelSubject$.subscribe(
       (channel) => {
         this.selectedChannel = channel ?? new Channel();
-        console.log("Current channel:", this.selectedChannel);
-        
+        console.log('Current channel:', this.selectedChannel);
+
         this.channelSelected = !!this.selectedChannel.id;
         if (this.channelSelected) {
           this.chatSelected = false;
@@ -114,7 +114,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
         }
       }
     );
-    
 
     this.usersSubscription = this.usersService.allUsersSubject$.subscribe(
       (users) => {
@@ -127,7 +126,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
         (directMessage: DirectMessage | null) => {
           this.directMessage = directMessage;
           console.log(directMessage);
-          
+
           this.chatSelected = !!directMessage; // Update chatSelected based on the existence of a direct message
           if (this.chatSelected) {
             this.channelSelected = false;
@@ -137,7 +136,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   }
 
   openThread(): void {
-    this.openThreadEvent.emit();
+    this.toggleThread.emit(true);
   }
 
   ngOnDestroy(): void {
@@ -148,7 +147,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
       this.channelSubscription.unsubscribe();
     }
     if (this.usersSubscription) {
-      this.usersSubscription.unsubscribe(); // Benutzerabonnement aufheben
+      this.usersSubscription.unsubscribe();
     }
     if (this.directMessageSubscription) {
       this.directMessageSubscription.unsubscribe();
@@ -166,17 +165,17 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
   }
 
-  onClickCreateThread(channelData: Channel, postIndex: number): void {
-    this.openThreadEvent.emit(true); // Hier wird das Event ausgelöst
-    this.threadService
-      .createThread(channelData, postIndex)
-      .then(() => {
-        console.log('Thread erfolgreich erstellt!');
-      })
-      .catch((error) => {
-        console.error('Fehler beim Erstellen des Threads: ', error);
-      });
-  }
+  // onClickCreateThread(channelData: Channel, postIndex: number): void {
+  //   this.openThreadEvent.emit(true); // Hier wird das Event ausgelöst
+  //   this.threadService
+  //     .createThread(channelData, postIndex)
+  //     .then(() => {
+  //       console.log('Thread erfolgreich erstellt!');
+  //     })
+  //     .catch((error) => {
+  //       console.error('Fehler beim Erstellen des Threads: ', error);
+  //     });
+  // }
 
   openChannelInfoDialog(channelId: string): void {
     const dialogRef = this.dialog.open(ChannelInfoComponent, {
@@ -188,7 +187,12 @@ export class MainContentComponent implements OnInit, OnDestroy {
   async sendMessage(): Promise<void> {
     if (this.message.trim()) {
       try {
-        await this.channelsService.savePost(this.selectedChannel.id, this.message, this.currentUser, this.files);
+        await this.channelsService.savePost(
+          this.selectedChannel.id,
+          this.message,
+          this.currentUser,
+          this.files
+        );
         this.message = '';
         this.files = [];
       } catch (error) {
@@ -206,13 +210,16 @@ export class MainContentComponent implements OnInit, OnDestroy {
     );
   }
 
-  async sendMessageToContact(){
+  async sendMessageToContact() {
     if (this.message.trim() && this.directMessage?.id) {
       try {
-        await this.directMessagesService.savePost(this.directMessage.id, this.message, this.currentUser);
+        await this.directMessagesService.savePost(
+          this.directMessage.id,
+          this.message,
+          this.currentUser
+        );
         this.message = '';
-        console.log(this.message ,"has ben sent");
-        
+        console.log(this.message, 'has ben sent');
       } catch (error) {
         console.error('Error posting Directmessage:', error);
       }
@@ -264,9 +271,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
     const minutes = date.getMinutes().toString().padStart(2, '0');
     return `${hours}:${minutes} Uhr`;
   }
-  
-
-  
 
   openFileDialog() {
     this.fileInput.nativeElement.click();
