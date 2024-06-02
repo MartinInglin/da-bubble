@@ -175,7 +175,6 @@ export class UsersService {
       }
       return Promise.resolve();
     });
-
     await Promise.all(updatePromises);
     console.log('Channel added to all users.');
   }

@@ -61,27 +61,27 @@ export class AddUserToChannelComponent implements OnInit, OnDestroy {
   onSearchChange(event: Event): void {
     const searchValue = (event.target as HTMLInputElement).value.toLowerCase().trim();
     if (!searchValue) {
-        this.filteredUsers = [];
-        this.showResults = false;
+      this.filteredUsers = [];
+      this.showResults = false;
     } else {
-        this.filteredUsers = this.allUsers.filter(user =>
-            !this.usersInChannel.some(u => u.id === user.id) && 
-            user.name.toLowerCase().includes(searchValue) &&
-            !this.selectedUsers.includes(user.id)
-        );
-        this.showResults = true;
+      this.filteredUsers = this.allUsers.filter(user =>
+        !this.usersInChannel.some(u => u.id === user.id) &&
+        user.name.toLowerCase().includes(searchValue) &&
+        !this.selectedUsers.includes(user.id)
+      );
+      this.showResults = true;
     }
-}
-
-selectUser(userId: string): void {
-  if (this.selectedUsers.includes(userId)) {
-    this.selectedUsers = this.selectedUsers.filter(id => id !== userId);
-  } else {
-    this.selectedUsers.push(userId);
   }
-  this.showResults = false;
-  (document.getElementById('userInput') as HTMLInputElement).value = '';
-}
+
+  selectUser(userId: string): void {
+    if (this.selectedUsers.includes(userId)) {
+      this.selectedUsers = this.selectedUsers.filter(id => id !== userId);
+    } else {
+      this.selectedUsers.push(userId);
+    }
+    this.showResults = false;
+    (document.getElementById('userInput') as HTMLInputElement).value = '';
+  }
 
   getSelectedUsers(): User[] {
     return this.selectedUsers.map(userId => {
@@ -89,32 +89,32 @@ selectUser(userId: string): void {
     });
   }
 
-async addUsersToChannel(): Promise<void> {
+  async addUsersToChannel(): Promise<void> {
     for (const userId of this.selectedUsers) {
-        const user = this.allUsers.find(u => u.id === userId);
-        if (user) {
-            const minimalUser: MinimalUser = {
-                id: user.id,
-                name: user.name,
-                avatar: user.avatar,
-                email: user.email
-            };
-            try {
-                await this.channelsService.addSingleUserToChannel(this.data.channelId, minimalUser);
-                const channel = await this.channelsService.getChannelById(this.data.channelId);
-                if (channel) {
-                    await this.userService.addChannelToSingleUser(user.id, {
-                        id: channel.id,
-                        name: channel.name
-                    });
-                }
-            } catch (error) {
-                console.error('Error adding user to channel:', error);
-            }
+      const user = this.allUsers.find(u => u.id === userId);
+      if (user) {
+        const minimalUser: MinimalUser = {
+          id: user.id,
+          name: user.name,
+          avatar: user.avatar,
+          email: user.email
+        };
+        try {
+          await this.channelsService.addSingleUserToChannel(this.data.channelId, minimalUser);
+          const channel = await this.channelsService.getChannelById(this.data.channelId);
+          if (channel) {
+            await this.userService.addChannelToSingleUser(user.id, {
+              id: channel.id,
+              name: channel.name
+            });
+          }
+        } catch (error) {
+          console.error('Error adding user to channel:', error);
         }
+      }
     }
     this.dialogRef.close();
-}
+  }
 
   onNoClick(): void {
     this.dialogRef.close();
