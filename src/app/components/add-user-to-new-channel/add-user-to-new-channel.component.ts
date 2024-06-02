@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -88,6 +88,7 @@ export class AddUserToNewChannelComponent implements OnDestroy, OnInit {
     } else {
       this.filteredUsers = this.allUsers.filter(user =>
         (!this.currentUser || user.id !== this.currentUser.id) &&
+        !this.selectedUsers.includes(user.id) &&
         user.name.toLowerCase().includes(searchValue.toLowerCase())
       );
       this.showResults = true;
@@ -100,10 +101,20 @@ export class AddUserToNewChannelComponent implements OnDestroy, OnInit {
     } else {
       this.selectedUsers.push(userId);
     }
+    this.updateFilteredUsers();
   }
 
   isSelected(userId: string): boolean {
     return this.selectedUsers.includes(userId);
+  }
+
+  updateFilteredUsers(): void {
+    const searchValue = (document.querySelector('input[placeholder="Name eingeben"]') as HTMLInputElement)?.value;
+    this.filteredUsers = this.allUsers.filter(user =>
+      (!this.currentUser || user.id !== this.currentUser.id) &&
+      !this.selectedUsers.includes(user.id) &&
+      user.name.toLowerCase().includes(searchValue?.toLowerCase() || '')
+    );
   }
 
   async addUsersToChannel(): Promise<void> {
@@ -130,6 +141,12 @@ export class AddUserToNewChannelComponent implements OnDestroy, OnInit {
       }
       this.dialogRef.close();
     }
+  }
+
+  getSelectedUsers(): User[] {
+    return this.selectedUsers.map(userId => {
+      return this.allUsers.find(u => u.id === userId) as User;
+    });
   }
 
   onSubmit(): void {
