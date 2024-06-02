@@ -341,6 +341,7 @@ export class ChannelsService {
       reactions: [],
       edited: false,
       files: minimalFiles,
+      userId: currentUser.id,
     };
     await updateDoc(channelRef, { posts: arrayUnion(post) });
 

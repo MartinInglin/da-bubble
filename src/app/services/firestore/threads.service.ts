@@ -100,6 +100,7 @@ public threadSubject$: Observable<Thread | null> =
       reactions: [],
       edited: false,
       files: [],
+      userId: currentUser.id,
     };
 
     await updateDoc(threadRef, { posts: arrayUnion(post) });

@@ -19,7 +19,7 @@
       <!-- Individual message within the thread -->
       @if (selectedThread.posts.length > 0) { @for (post of
       selectedThread.posts; track post;) {
-      <app-post [post]="post"></app-post>
+      <app-post [post]="post" [currentUserId]="currentUser.id"></app-post>
       }
       <!-- Details and actions for the message -->
       @if (selectedThread.posts[0]) {}
@@ -51,7 +51,7 @@
 
               <button mat-button [matMenuTriggerFor]="aboveMenu">
                 <img
-                  src="./../../../../assets/images/icons/smiley-Icon.svg"
+                  src="assets/images/icons/smiley-Icon.svg"
                   alt=""
                 />
               </button>
@@ -69,7 +69,7 @@
               <!-- Liste für Verlinkungen von Kontakten -->
               <button mat-button [matMenuTriggerFor]="contactLinks">
                 <img
-                  src="./../../../../assets/images/icons/link_icon.svg"
+                  src="assets/images/icons/link_icon.svg"
                   alt=""
                 />
               </button>
@@ -91,7 +91,7 @@
           <!-- Icon for sending the message -->
 
           <a>
-            <img src="./../../../../assets/images/icons/send_icon.svg" alt="" />
+            <img src="assets/images/icons/send_icon.svg" alt="" />
           </a>
         </div>
       </div>

@@ -196,6 +196,7 @@ export class DirectMessagesService {
       reactions: [],
       edited: false,
       files: [],
+      userId: currentUser.id,
     };
 
     await updateDoc(directMessageRef, { posts: arrayUnion(post) });

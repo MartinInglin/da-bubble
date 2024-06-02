@@ -10,6 +10,7 @@ export class Post {
   reactions: Reaction[];
   edited: boolean;
   files: MinimalFile[];
+  userId: string;
 
   constructor(obj?: any) {
     this.id = obj?.id || '';
@@ -29,5 +30,6 @@ export class Post {
         fileName: obj?.name,
         fileURL: obj?.url,
       })) || [];
+    this.userId = obj?.userId || '';
   }
 }

@@ -2,7 +2,7 @@ import { Component, Input, inject } from '@angular/core';
 import { Post } from '../../../models/post.class';
 import { StorageService } from '../../../services/storage.service';
 import { CommonModule } from '@angular/common';
-import {MatMenuModule} from '@angular/material/menu'; 
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-post',
@@ -18,8 +18,21 @@ export class PostComponent {
   showReaction: boolean = false;
   reactionIndex: number = 0;
   showEditMessage: boolean = false;
+  postFromCurrentUser: boolean = false;
 
   @Input() post: Post = new Post();
+  @Input() currentUserId: string = '';
+
+  ngOnInit() {
+    this.checkIfPostFromCurrentUser();
+  }
+
+  checkIfPostFromCurrentUser() {
+    if (this.currentUserId === this.post.userId) {
+      this.postFromCurrentUser = true;
+      console.log('Post from current user: ', this.postFromCurrentUser);
+    }
+  }
 
   formatDateTime(timestamp: number): string {
     const date = new Date(timestamp);
@@ -31,11 +44,9 @@ export class PostComponent {
   downloadFile(downloadURL: string) {
     this.storageService.getFile(downloadURL);
   }
-  
+
   toggleShowEditMessage() {
     this.showEditMessage = !this.showEditMessage;
     console.log(this.showEditMessage);
-    
   }
-  
 }
