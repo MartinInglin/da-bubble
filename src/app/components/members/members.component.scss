@@ -107,6 +107,7 @@ mat-card-content {
     &:hover {
         background-color: $background;
         color: $purple1;
+        cursor: pointer;
     }
 
     div {
