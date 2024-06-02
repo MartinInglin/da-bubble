@@ -116,7 +116,7 @@
               </button>
               <mat-menu #aboveMenu="matMenu" yPosition="above">
                 <div class="emoji-container">
-                  <span *ngFor="let emoji of emojis" class="emoji" mat-menu-item>{{ emoji }}</span>
+                  <span *ngFor="let emoji of emojis" class="emoji" mat-menu-item (click)="addEmojiToMessage(emoji)">{{ emoji }}</span>
                 </div>
               </mat-menu>
               <!-- Liste für Verlinkungen von Kontakten -->
@@ -244,7 +244,7 @@
             </button>
             <mat-menu #aboveMenu="matMenu" yPosition="above">
               <div class="emoji-container">
-                <span *ngFor="let emoji of emojis" class="emoji" mat-menu-item>{{ emoji }}</span>
+                <span *ngFor="let emoji of emojis" (click)="addEmojiToMessage(emoji)" class="emoji" mat-menu-item >{{ emoji }}</span>
               </div>
             </mat-menu>
             <!-- Liste für Verlinkungen von Kontakten -->

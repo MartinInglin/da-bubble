@@ -301,4 +301,8 @@ export class MainContentComponent implements OnInit, OnDestroy {
   downloadFile(downloadURL: string) {
     this.storageService.getFile(downloadURL);
   }
+
+  addEmojiToMessage(emoji: string): void {
+    this.message += emoji;
+  }
 }
