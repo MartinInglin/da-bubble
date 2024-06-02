@@ -36,7 +36,7 @@ export class ChannelsService {
   public channelSubject$: Observable<Channel | null> =
     this.channelSubject.asObservable();
 
-  constructor() {}
+  constructor() { }
 
   /**
    * This function gets the data of a selected channel. It therefore needs the id of the requested channel. The data is provided as an observable that any component can subscribe to.
@@ -80,10 +80,10 @@ export class ChannelsService {
     currentUser: User
   ): Promise<Channel> {
     const users = this.currentUserToMinimalUser(currentUser);
-  
+
     const channelRef = collection(this.firestore, 'channels');
     const newDocRef = doc(channelRef);
-  
+
     const channelData: Channel = {
       id: newDocRef.id,
       name: name,
@@ -91,13 +91,13 @@ export class ChannelsService {
       users: users,
       posts: [],
     };
-  
+
     await setDoc(newDocRef, channelData);
     const userIds = users
       .map((user) => user.id)
       .filter((id): id is string => !!id);
     await this.addChannelToUsers(channelData.id, channelData.name, userIds);
-    
+
     return channelData;
   }
 
@@ -232,6 +232,19 @@ export class ChannelsService {
     await deleteDoc(doc(this.firestore, 'channels', channelId));
   }
 
+  async updateChannel(channelId: string, name: string, description: string): Promise<void> {
+    try {
+      const changes = {
+        name: name,
+        description: description
+      };
+      await this.changePropertiesChannel(channelId, changes);
+    } catch (error) {
+      console.error('Error updating channel:', error);
+      throw error;
+    }
+  }
+
   /**
    * This function changes the properties of a channel like its name, its users or its description. The changes can be sent partially so the object does not have to be complete.
    *
@@ -242,17 +255,23 @@ export class ChannelsService {
     channelId: string,
     changes: Partial<Channel>
   ): Promise<void> {
-    const docRef = doc(this.firestore, 'channels', channelId);
+    try {
+      const docRef = doc(this.firestore, 'channels', channelId);
+      const docSnap = await getDoc(docRef);
 
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      await updateDoc(docRef, changes);
-    } else {
-      console.log('No such document!');
-    }
+      if (docSnap.exists()) {
+        await updateDoc(docRef, changes);
+      } else {
+        console.log('No such document!');
+        throw new Error('Channel document does not exist');
+      }
 
-    if (changes.name) {
-      this.changeNameChannelOnUsers(changes.name, channelId);
+      if (changes.name) {
+        await this.changeNameChannelOnUsers(changes.name, channelId);
+      }
+    } catch (error) {
+      console.error('Error updating channel properties:', error);
+      throw error; // Rethrow the error for handling in the calling code
     }
   }
 
@@ -328,7 +347,7 @@ export class ChannelsService {
     const postId = this.createId()
     const minimalFiles: MinimalFile[] = await this.storageService.saveFiles(postId, files);
     console.log(minimalFiles);
-    
+
 
     const channelRef = doc(this.firestore, 'channels', channelId);
 
@@ -444,19 +463,19 @@ export class ChannelsService {
   async addAllUsersToChannel(channelId: string): Promise<void> {
     const collectionRef = collection(this.firestore, 'users');
     const querySnapshot = await getDocs(collectionRef);
-  
+
     const batch = writeBatch(this.firestore);
-  
+
     const channelDocRef = doc(this.firestore, 'channels', channelId);
     const channelDoc = await getDoc(channelDocRef);
-  
+
     if (!channelDoc.exists()) {
       throw new Error('Channel does not exist');
     }
-  
+
     const channelData = channelDoc.data() as Channel;
     const existingUserIds = channelData.users.map(user => user.id);
-  
+
     querySnapshot.forEach((docSnapshot) => {
       const userData = docSnapshot.data() as User;
       if (!existingUserIds.includes(userData.id)) {
@@ -473,9 +492,9 @@ export class ChannelsService {
         });
       }
     });
-  
+
     batch.update(channelDocRef, { users: channelData.users });
-  
+
     await batch.commit();
     console.log('All users added to the channel.');
   }

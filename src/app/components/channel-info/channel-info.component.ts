@@ -63,8 +63,14 @@ export class ChannelInfoComponent implements OnInit, OnDestroy {
   }
 
   openDialog(): void {
+    if (!this.channel) return;
     const dialogRef = this.dialog.open(ChannelInfoEditComponent, {
       width: '872px',
+      data: { 
+        channelId: this.channel.id,
+        name: this.channel.name,
+        description: this.channel.description
+      }
     });
   }
 
