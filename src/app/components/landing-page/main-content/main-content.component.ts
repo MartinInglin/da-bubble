@@ -54,6 +54,9 @@ declare const twemoji: any; // Deklariere Twemoji als Modul
 })
 export class MainContentComponent implements OnInit, OnDestroy {
   // @Output() openThreadEvent: EventEmitter<void> = new EventEmitter<void>();
+
+  @Output() toggleThread = new EventEmitter<void>();
+  
   @ViewChild('fileInput') fileInput!: ElementRef;
 
   channelsService = inject(ChannelsService);
@@ -95,8 +98,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
     private threadService: ThreadsService,
     private directMessagesService: DirectMessagesService
   ) { }
-
-  @Output() toggleThread: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   ngOnInit(): void {
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
@@ -144,7 +145,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   }
 
   openThread(selectedChannelId: string, selectedChannelName: string, post: Post): void {
-    this.toggleThread.emit(true);
+    this.toggleThread.emit();
     this.threadService.getDataThread(selectedChannelId, selectedChannelName, post);
   }
 

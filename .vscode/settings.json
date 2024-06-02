@@ -1,4 +1,8 @@
 {
     "editor.wordWrap": "off",
-    "editor.wordWrapColumn": 120
+    "editor.wordWrapColumn": 120,
+    "prettier.printWidth": 120,
+    "html.format.wrapLineLength": 1200,
+    "prettier.bracketSpacing": false,
+    "prettier.arrowParens": "always"
 }

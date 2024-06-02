@@ -3,9 +3,10 @@ import {
   EventEmitter,
   OnDestroy,
   OnInit,
+  ViewChild,
   inject,
 } from '@angular/core';
-import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { Channel } from '../../models/channel.class';
@@ -49,10 +50,12 @@ import { StateService } from '../../services/stateservice.service';
 export class LandingPageComponent implements OnInit, OnDestroy {
   openThreadEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+  @ViewChild('drawerThread') drawerThread!: MatDrawer;
+
   usersService = inject(UsersService);
   channelsService = inject(ChannelsService);
   directMessagesService = inject(DirectMessagesService);
-  stateService = inject(StateService)
+  stateService = inject(StateService);
 
   private userSubscription: Subscription = new Subscription();
   private allUsersSubscription: Subscription = new Subscription();
@@ -122,6 +125,10 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  toggleThread() { 
+    this.drawerThread.toggle()
+  }
+
   ngOnDestroy(): void {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
@@ -137,10 +144,6 @@ export class LandingPageComponent implements OnInit, OnDestroy {
       height: '539px',
     });
     dialogRef.componentInstance.currentUser = new User(this.currentUser);
-  }
-
-  toggleThread(isOpen: boolean): void {
-    this.isThreadOpen = isOpen;
   }
 
   closeChannelsAndContacts(){

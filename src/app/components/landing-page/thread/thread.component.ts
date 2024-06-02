@@ -30,7 +30,7 @@ import { PostComponent } from '../post/post.component';
     RouterModule,
     MatButtonModule,
     MatMenuModule,
-    PostComponent
+    PostComponent,
   ],
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss',
@@ -65,14 +65,12 @@ export class ThreadComponent implements OnInit {
   private channelSubscription: Subscription = new Subscription();
   private threadSubscription: Subscription = new Subscription();
 
-  @Output() commentsChanged: EventEmitter<boolean> =
-    new EventEmitter<boolean>();
-  @Output() toggleThread: EventEmitter<boolean> = new EventEmitter<boolean>();
-  //@Input() openThreadEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() commentsChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() toggleThread = new EventEmitter<void>();
   @Input() channelId: string = ''; // Kanal-ID als Eingabe für die Thread-Komponente
   @Input() threadId: string = ''; // Thread-ID als Eingabe für die Thread-Komponente
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit(): void {
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
@@ -92,8 +90,7 @@ export class ThreadComponent implements OnInit {
     this.threadSubscription = this.threadsService.threadSubject$.subscribe(
       (thread) => {
         this.selectedThread = thread ?? new Thread();
-        console.log("Current thread", this.selectedThread);
-        
+        console.log('Current thread', this.selectedThread);
       }
     );
   }
@@ -141,6 +138,6 @@ export class ThreadComponent implements OnInit {
   }
 
   closeThread(): void {
-    this.toggleThread.emit(false);
+    this.toggleThread.emit();
   }
 }

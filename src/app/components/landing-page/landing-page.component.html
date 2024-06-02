@@ -15,46 +15,24 @@
         <mat-drawer #drawer class="example-sidenav" mode="side">
           <div class="head-side-menu">
             <div class="head-side-menu-first">
-              <img
-                src="assets/images/icons/workspace_logo.png"
-                alt=""
-              />
+              <img src="assets/images/icons/workspace_logo.png" alt="" />
               <span>DevSpace</span>
             </div>
             <div class="head-side-menu-link">
-              <img
-              (click)="closeChannelsAndContacts()"
-                src="assets/images/icons/16. edit_square.svg"
-                alt=""
-              />
+              <img (click)="closeChannelsAndContacts()" src="assets/images/icons/16. edit_square.svg" alt="" />
             </div>
           </div>
           <!-- Channel-List -->
           <div class="channels-head">
-            <div
-              class="channel-head-first"
-              (click)="showChannels = !showChannels"
-            >
-              <img
-                class="drop-down-img"
-                [src]="showChannels ? arrowOpen : arrowClosed"
-
-                alt="Toggle Contacts"
-              />
+            <div class="channel-head-first" (click)="showChannels = !showChannels">
+              <img class="drop-down-img" [src]="showChannels ? arrowOpen : arrowClosed" alt="Toggle Contacts" />
               <div class="channels-list">
-                <img
-                  src="assets/images/icons/workspaces.svg"
-                  alt=""
-                />
+                <img src="assets/images/icons/workspaces.svg" alt="" />
                 <span>Channels</span>
               </div>
             </div>
             <div class="head-side-menu-link">
-              <img
-                (click)="openNewChannelDialog()"
-                src="assets/images/icons/add_icon.svg"
-                alt=""
-              />
+              <img (click)="openNewChannelDialog()" src="assets/images/icons/add_icon.svg" alt="" />
             </div>
           </div>
 
@@ -67,10 +45,7 @@
             </tr>
             <tr>
               <td class="channel-add">
-                <img
-                  src="assets/images/icons/add_circle.svg"
-                  alt=""
-                />
+                <img src="assets/images/icons/add_circle.svg" alt="" />
                 <span (click)="openNewChannelDialog()">Channel hinzufügen</span>
               </td>
             </tr>
@@ -78,36 +53,23 @@
           <!-- Strich -->
           <div class="channels-head">
             <!-- Contacts-List -->
-            <div
-              class="channel-head-first"
-              (click)="showContacts = !showContacts"
-            >
-              <img
-                class="arrow-drop-down"
-                [src]="showContacts ? arrowOpen : arrowClosed"
-                alt="Toggle Contacts"
-              />
+            <div class="channel-head-first" (click)="showContacts = !showContacts">
+              <img class="arrow-drop-down" [src]="showContacts ? arrowOpen : arrowClosed" alt="Toggle Contacts" />
               <div class="contacts-list">
-                <img
-                  class="contact-list-account-img"
-                  src="assets/images/icons/account_circle.svg"
-                  alt=""
-                />
+                <img class="contact-list-account-img" src="assets/images/icons/account_circle.svg" alt="" />
                 <span>Direktnachrichten</span>
               </div>
             </div>
           </div>
 
           <table class="contacts" *ngIf="showContacts">
-            <tr *ngFor="let user of allUsers  let i = index">
-              <td
-                (click)="
+            <tr *ngFor="let user of allUsers; let i = index">
+              <td (click)="
                   directMessagesService.getDataDirectMessage(
                     user.id,
                     currentUser
                   )
-                "
-              >
+                ">
                 <img [src]="user.avatar" alt="Profilbild" />
                 <span>{{ user.name }}</span>
               </td>
@@ -119,12 +81,14 @@
     <!-- SideNav -->
 
     <!-- ChatSpace -->
-    <app-main-content (toggleThread)="toggleThread($event)" class="mainContent"></app-main-content>
+    <app-main-content class="mainContent" (toggleThread)="toggleThread()"></app-main-content>
 
-    <!-- CommentSection -->
-    @if (isThreadOpen) {
-      <app-thread (toggleThread)="toggleThread($event)" class="threadContent"></app-thread>
-    }
+    <!-- Thread Section -->
+    <mat-drawer-container class="thread-container" autosize>
+      <mat-drawer #drawerThread="matDrawer" class="thread-sidenav" mode="side" position="end">
+        <app-thread class="threadContent" (toggleThread)="toggleThread()"></app-thread>
+      </mat-drawer>
+    </mat-drawer-container>
 
   </div>
   <!-- MainContent -->
