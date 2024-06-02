@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,7 +9,6 @@ import { UsersService } from '../../services/firestore/users.service';
 import { User } from '../../models/user.class';
 import { ChannelsService } from '../../services/firestore/channels.service';
 import { MinimalUser } from '../../models/minimal_user.class';
-import { MinimalChannel } from '../../models/minimal_channel.class';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -23,11 +22,9 @@ import { Subscription } from 'rxjs';
     FormsModule
   ],
   templateUrl: './add-user-to-channel.component.html',
-  styleUrl: './add-user-to-channel.component.scss'
+  styleUrls: ['./add-user-to-channel.component.scss']
 })
-export class AddUserToChannelComponent implements OnInit {
-  usersService = inject(UsersService)
-
+export class AddUserToChannelComponent implements OnInit, OnDestroy {
   users: User[] = [];
   usersInChannel: MinimalUser[] = [];
   filteredUsers: User[] = [];
@@ -45,7 +42,7 @@ export class AddUserToChannelComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe(
+    this.allUsersSubscription = this.userService.allUsersSubject$.subscribe(
       (allUsers) => {
         this.allUsers = allUsers ?? [];
       }
@@ -62,59 +59,62 @@ export class AddUserToChannelComponent implements OnInit {
   }
 
   onSearchChange(event: Event): void {
-    const searchValue = (event.target as HTMLInputElement).value;
+    const searchValue = (event.target as HTMLInputElement).value.toLowerCase().trim();
     if (!searchValue) {
-      this.filteredUsers = [];
-      this.showResults = false;
+        this.filteredUsers = [];
+        this.showResults = false;
     } else {
-      this.filteredUsers = this.users.filter(user =>
-        !this.usersInChannel.some(u => u.id === user.id) &&
-        user.name.toLowerCase().includes(searchValue.toLowerCase())
-      );
-      this.showResults = true;
+        this.filteredUsers = this.allUsers.filter(user =>
+            !this.usersInChannel.some(u => u.id === user.id) && 
+            user.name.toLowerCase().includes(searchValue) &&
+            !this.selectedUsers.includes(user.id)
+        );
+        this.showResults = true;
     }
-  }
+}
 
-  selectUser(userId: string): void {
-    if (this.selectedUsers.includes(userId)) {
-      this.selectedUsers = this.selectedUsers.filter(id => id !== userId);
-    } else {
-      this.selectedUsers.push(userId);
-    }
-    this.showResults = false;
+selectUser(userId: string): void {
+  if (this.selectedUsers.includes(userId)) {
+    this.selectedUsers = this.selectedUsers.filter(id => id !== userId);
+  } else {
+    this.selectedUsers.push(userId);
   }
+  this.showResults = false;
+  (document.getElementById('userInput') as HTMLInputElement).value = '';
+}
 
-  getSelectedUsersDisplay(): string {
+  getSelectedUsers(): User[] {
     return this.selectedUsers.map(userId => {
-      const user = this.users.find(u => u.id === userId);
-      return user ? user.name : '';
-    }).join(', ');
+      return this.allUsers.find(u => u.id === userId) as User;
+    });
   }
 
-  async addUsersToChannel(): Promise<void> {
+async addUsersToChannel(): Promise<void> {
     for (const userId of this.selectedUsers) {
-      const user = this.users.find(u => u.id === userId);
-      if (user) {
-        const minimalUser: MinimalUser = {
-          id: user.id,
-          name: user.name,
-          avatar: user.avatar,
-          email: user.email
-        };
-        await this.channelsService.addSingleUserToChannel(this.data.channelId, minimalUser);
-        
-        const channel = await this.channelsService.getChannelById(this.data.channelId);
-        if (channel) {
-          await this.userService.addChannelToSingleUser(user.id, {
-            id: channel.id,
-            name: channel.name
-          });
+        const user = this.allUsers.find(u => u.id === userId);
+        if (user) {
+            const minimalUser: MinimalUser = {
+                id: user.id,
+                name: user.name,
+                avatar: user.avatar,
+                email: user.email
+            };
+            try {
+                await this.channelsService.addSingleUserToChannel(this.data.channelId, minimalUser);
+                const channel = await this.channelsService.getChannelById(this.data.channelId);
+                if (channel) {
+                    await this.userService.addChannelToSingleUser(user.id, {
+                        id: channel.id,
+                        name: channel.name
+                    });
+                }
+            } catch (error) {
+                console.error('Error adding user to channel:', error);
+            }
         }
-      }
     }
     this.dialogRef.close();
-  }
-  
+}
 
   onNoClick(): void {
     this.dialogRef.close();

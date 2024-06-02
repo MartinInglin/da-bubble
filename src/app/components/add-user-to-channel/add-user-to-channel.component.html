@@ -14,7 +14,16 @@
         </div>
         <form>
             <div class="input-container">
-                <input value="{{ getSelectedUsersDisplay() }}" placeholder="Name eingeben"  (input)="onSearchChange($event)">
+                <input id="userInput" placeholder="Name eingeben" (input)="onSearchChange($event)">
+                <div class="selected-user">
+                    <div *ngFor="let user of getSelectedUsers()" class="selected-single-user">
+                        <img [src]="user.avatar" alt="User Avatar">
+                        <p>{{ user.name }}</p>
+                        <button (click)="selectUser(user.id)">
+                            <img src="./../../../assets/images/icons/close.svg">
+                        </button>
+                    </div>
+                </div>
             </div>
             <mat-card *ngIf="showResults" class="user-list">
                 <div *ngFor="let user of filteredUsers" class="single-users">
