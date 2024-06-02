@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   getDownloadURL,
   getStorage,
@@ -6,16 +6,30 @@ import {
   uploadBytes,
 } from '@angular/fire/storage';
 import { MinimalFile } from '../interfaces/minimal_file';
+import { SnackbarService } from './snackbar.service';
 
 @Injectable({
   providedIn: 'root',
 })
+
 export class StorageService {
+  snackbarService = inject(SnackbarService);
   private storage = getStorage();
 
-  constructor() {}
+
+
+  constructor() { }
 
   async saveFiles(postId: string, files: File[]): Promise<MinimalFile[]> {
+    const MAX_TOTAL_FILE_SIZE_MB = 5;
+    const MAX_TOTAL_FILE_SIZE_BYTES = MAX_TOTAL_FILE_SIZE_MB * 1024 * 1024;
+    const totalSize = files.reduce((acc, file) => acc + file.size, 0);
+
+    if (totalSize > MAX_TOTAL_FILE_SIZE_BYTES) {
+      this.snackbarService.openSnackBar('Die Dateien sind zu groß. Du kannst maximal 5MB speichern.', 'Schließen');
+      throw new Error('Total size of all files exceeds 5MB.');
+    }
+
     const uploadPromises = files.map(async (file) => {
       const fileRef = ref(this.storage, `posts/${postId}/${file.name}`);
       const uploadTask = await uploadBytes(fileRef, file);
@@ -26,11 +40,10 @@ export class StorageService {
       } as MinimalFile;
     });
 
-    // Wait for all upload promises to resolve
     return Promise.all(uploadPromises);
   }
 
-  async saveImageUser(userId:string, file: File): Promise<string> {
+  async saveImageUser(userId: string, file: File): Promise<string> {
     const fileRef = ref(this.storage, `imagesUsers/${file.name}`);
     const uploadTask = await uploadBytes(fileRef, file);
     const downloadURL = await getDownloadURL(uploadTask.ref);
@@ -57,5 +70,5 @@ export class StorageService {
     xhr.open('GET', downloadUrl);
     xhr.send();
   }
-  
+
 }
