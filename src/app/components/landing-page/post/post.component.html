@@ -1,5 +1,9 @@
 <div class="message">
-  <div class="message-container">
+  <div
+    class="message-container"
+    (mouseenter)="showMenu = true"
+    (mouseleave)="showMenu = false; showEditMessage = false"
+  >
     <img src="{{ post.avatar }}" alt="" />
 
     <div class="message-box">
@@ -11,20 +15,43 @@
         <span>{{ post.message }}</span>
       </div>
       @if (post.reactions.length > 0) {
-        <div class="reactions-container">
-            <div class="reactions">
-              <img src="assets/images/icons/add_icon.svg " alt="" />
-              <div class="amount-reactions">1</div>
-            </div>
-    
-            <img
-              class="add-reaction"
-              src="assets/images/icons/add_reaction.svg"
-              alt=""
-            />
+      <div class="reactions-container">
+        <div class="reactions">
+          <!-- 0 must be changed to index later on-->
+          <img
+            src="assets/images/icons/add_icon.svg "
+            (mouseenter)="showReaction = true; reactionIndex = 0"
+            (mouseleave)="showReaction = false"
+          />
+          <div class="amount-reactions">1</div>
+          <div class="tooltip-reaction" [ngClass]="{ show: showReaction }">
+            <img src="./../../../../assets/images/icons/add_icon.svg" alt="" />
+            <div class="name-reaction">Name der Person</div>
+            <div>hat reagiert</div>
           </div>
-      }
+        </div>
 
+        <img
+          class="add-reaction"
+          src="assets/images/icons/add_reaction.svg"
+          alt=""
+        />
+      </div>
+      }
+    </div>
+    <div class="menu-hover" [ngClass]="{ show: showMenu }">
+      <img src="assets/images/icons/add_circle.svg" alt="" />
+      <img src="assets/images/icons/add_circle.svg" alt="" />
+      <img src="assets/images/icons/add_reaction.svg" alt="" />
+      <img src="assets/images/icons/comment.svg" alt="" />
+      <img
+        src="assets/images/icons/edit_message.svg"
+        alt=""
+        (click)="toggleShowEditMessage()"
+      />
+      <div class="edit-message" [ngClass]="{ show: showEditMessage }">
+        <span>Nachricht bearbeiten</span>
+      </div>
     </div>
   </div>
   @if (post.files.length > 0) {

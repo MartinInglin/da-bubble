@@ -14,7 +14,7 @@
   }
   .message-text {
     width: fit-content;
-    background-color: #eceefe;
+    background-color: $background;
     min-height: 35px;
     border-radius: 0px 30px 30px 30px;
     display: flex;
@@ -41,11 +41,16 @@
     width: 100%;
     padding: 10px;
     gap: 30px;
+    transition: 75ms ease-in-out;
+    position: relative;
+
     &:hover {
-      background-color: #eceefe;
+      background-color: $background;
+      transition: 75ms ease-in-out;
 
       .message-text {
         background-color: white;
+        transition: 75ms ease-in-out;
       }
     }
     .timestamp {
@@ -54,7 +59,62 @@
       color: $text-gray;
     }
   }
+  .menu-hover {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 20px;
+    border: 1px solid $light-purple-lines;
+    border-radius: 25px 25px 0 25px;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 15px 3px 20px;
+    background-color: white;
+
+    img {
+      height: 24px;
+      width: 24px;
+      border-radius: 50%;
+      &:hover {
+        background-color: $background;
+        cursor: pointer;
+      }
+    }
+
+    .edit-message {
+      position: absolute;
+      bottom: -44px;
+      right: 24px;
+      display: none;
+      border-radius: 30px 0px 30px 30px;
+      box-shadow: 0px 6px 14px 0px #00000033;
+      background-color: white;
+      padding: 10px 20px;
+
+      span {
+        font-weight: 500;
+        font-size: 20px;
+        white-space: nowrap;
+        border-radius: 20px;
+        transition: 75ms ease-in-out;
+        padding: 8px;
+        &:hover {
+          background-color: $background;
+          color: $purple1;
+          transition: 75ms ease-in-out;
+          cursor: pointer;
+        }
+      }
+    }
+    .edit-message.show {
+      display: flex;
+    }
+  }
+  .menu-hover.show {
+    display: flex;
+  }
 }
+
 .documents-container {
   display: flex;
   overflow-x: auto;
@@ -81,6 +141,7 @@
   align-items: center;
   gap: 12px;
   margin-top: 8px;
+  position: relative;
 
   .reactions {
     display: flex;
@@ -93,11 +154,33 @@
     img {
       height: 24px;
       width: 24px;
-
     }
     .amount-reactions {
       font-size: 16px;
       font-weight: 400;
+    }
+    .tooltip-reaction {
+      position: absolute;
+      bottom: 34px;
+      left: 24px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 30px 30px 30px 0;
+      gap: 5px;
+      padding: 15px 10px;
+      background-color: $purple1;
+      color: white;
+      font-size: 16px;
+
+      .name-reaction {
+        font-weight: 700;
+      }
+    }
+    .tooltip-reaction.show {
+      display: flex;
+      z-index: 99;
     }
   }
   .add-reaction {
