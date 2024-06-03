@@ -72,7 +72,7 @@ mat-card-content {
             cursor: pointer;
         }
 
-        div {
+        .online {
             height: 14px;
             width: 14px;
             position: relative;
@@ -81,6 +81,17 @@ mat-card-content {
             border: 2px solid white;
             border-radius: 100%;
             background-color: $online-green;
+        }
+
+        .offline{
+            height: 14px;
+            width: 14px;
+            position: relative;
+            right: 19px;
+            top: 16px;
+            border: 2px solid white;
+            border-radius: 100%;
+            background-color: $text-gray;
         }
 
         img {
