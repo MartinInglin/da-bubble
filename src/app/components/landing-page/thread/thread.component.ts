@@ -20,6 +20,7 @@ import { Channel } from '../../../models/channel.class';
 import { DirectMessage } from '../../../models/direct-message.class';
 import { Thread } from '../../../models/thread.class';
 import { PostComponent } from '../post/post.component';
+import { PostInputComponent } from '../post-input/post-input.component';
 
 @Component({
   selector: 'app-thread',
@@ -31,6 +32,7 @@ import { PostComponent } from '../post/post.component';
     MatButtonModule,
     MatMenuModule,
     PostComponent,
+    PostInputComponent
   ],
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss',

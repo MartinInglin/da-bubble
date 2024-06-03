@@ -1,0 +1,129 @@
+/* Styling for the input field */
+.inputContent {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    z-index: 2000;
+  }
+  
+  /* Styling for the text area */
+  .textArea {
+    height: 135px;
+    width: 90%;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    textarea {
+      height: 80px;
+      border: none;
+      width: 90%;
+      display: flex;
+      align-items: flex-start;
+      resize: none;
+      font-size: 20px;
+      padding-top: 10px;
+      padding-left: 10px;
+    background: none;
+      flex: 1;
+      &:focus {
+        border-color: transparent;
+        outline: none;
+      }
+    }
+  
+    /* Styling for the icons */
+    .icons {
+      display: flex;
+      height: 45px;
+      align-items: start;
+      justify-content: space-between;
+      padding-left: 15px;
+      padding-right: 15px;
+      .buttons {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+      }
+      .addIcon {
+        height: 30px;
+        width: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-top: none;
+        border-bottom: none;
+        border-left: none;
+        cursor: pointer;
+        background-color: none;
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .link-emojis {
+    margin-top: 5px;
+  }
+
+  .emoji-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .emoji {
+    margin-right: 10px;
+    margin-bottom: 5px;
+    width: calc((100% / 3) - 10px);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  cdk-overlay-connected-position-bounding-box {
+    border-radius: 30px;
+    height: fit-content;
+  }
+  .link-container {
+    display: flex;
+    width: fit-content;
+    padding: 10px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .links {
+    td {
+      width: 100%;
+      padding: 10px;
+      cursor: pointer;
+      img {
+        height: 40px;
+      }
+    }
+  }
+
+  .documents-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+    padding: 8px;
+  
+    .document {
+      background-color: rgb(165 165 165 / 24%);
+      border-radius: 50px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+      width: fit-content;
+      padding: 4px 16px;
+  
+      &:hover {
+        background-color: rgb(165 165 165 / 40%);
+        cursor: pointer;
+      }
+    }
+  }

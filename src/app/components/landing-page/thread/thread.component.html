@@ -25,76 +25,20 @@
       @if (selectedThread.posts[0]) {}
       <div class="message-details">
         <!-- Link to reply to the message -->
-        <div class="number-answers">{{selectedThread.posts.length - 1}} Antworten</div>
+        <div class="number-answers">
+          {{ selectedThread.posts.length - 1 }} Antworten
+        </div>
         <div class="line-answer"></div>
       </div>
       }
     </div>
 
-    <div class="inputContent">
-      <div class="textArea">
-        <textarea name="" id="message-textarea" placeholder=""></textarea>
-
-        <div class="icons">
-          <div class="buttons">
-            <a [matMenuTriggerFor]="attachment" class="addIcon">
-              <img src="/assets/images/icons/add_icon.svg" alt="" />
-            </a>
-            <mat-menu #attachment="matMenu" yPosition="above">
-              <div class="attachment-container"></div>
-            </mat-menu>
-
-            <div class="seperator"></div>
-
-            <div class="link-emojis">
-              <!-- Liste für Emojis -->
-
-              <button mat-button [matMenuTriggerFor]="aboveMenu">
-                <img
-                  src="assets/images/icons/smiley-Icon.svg"
-                  alt=""
-                />
-              </button>
-              <mat-menu #aboveMenu="matMenu" yPosition="above">
-                <div class="emoji-container">
-                  <span
-                    *ngFor="let emoji of emojis"
-                    class="emoji"
-                    mat-menu-item
-                    >{{ emoji }}</span
-                  >
-                </div>
-              </mat-menu>
-
-              <!-- Liste für Verlinkungen von Kontakten -->
-              <button mat-button [matMenuTriggerFor]="contactLinks">
-                <img
-                  src="assets/images/icons/link_icon.svg"
-                  alt=""
-                />
-              </button>
-              <mat-menu #contactLinks="matMenu" yPosition="above">
-                <div class="link-container">
-                  <table class="links">
-                    <tr *ngFor="let user of allUsers">
-                      <td (click)="linkContactInMessage(user.name)">
-                        <img [src]="user.avatar" alt="Profilbild" />
-                        <span>{{ user.name }}</span>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </mat-menu>
-            </div>
-          </div>
-
-          <!-- Icon for sending the message -->
-
-          <a>
-            <img src="assets/images/icons/send_icon.svg" alt="" />
-          </a>
-        </div>
-      </div>
-    </div>
+    <app-post-input class="post-input"
+      [selectedChannel]="selectedChannel"
+      [allUsers]="allUsers"
+      [currentUser]="currentUser"
+      [selectedThread]="selectedThread"
+      [path]="'threads'"
+    ></app-post-input>
   </div>
 </aside>
