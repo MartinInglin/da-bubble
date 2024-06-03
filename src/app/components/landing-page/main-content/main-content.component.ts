@@ -218,6 +218,10 @@ export class MainContentComponent implements OnInit, OnDestroy {
   openChannelInfoDialog(channelId: string): void {
     const dialogRef = this.dialog.open(ChannelInfoComponent, {
       width: '872px',
+      position: {
+        top: '11%',
+        right: '25%'
+      },
       data: { channelId: channelId },
     });
   }
