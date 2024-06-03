@@ -17,28 +17,36 @@
       </div>
 
       <!-- Individual message within the thread -->
-      @if (selectedThread.posts.length > 0) { @for (post of
-      selectedThread.posts; track post;) {
-      <app-post [post]="post" [currentUserId]="currentUser.id"></app-post>
-      }
-      <!-- Details and actions for the message -->
-      @if (selectedThread.posts[0]) {}
-      <div class="message-details">
-        <!-- Link to reply to the message -->
-        <div class="number-answers">
-          {{ selectedThread.posts.length - 1 }} Antworten
-        </div>
-        <div class="line-answer"></div>
-      </div>
-      }
-    </div>
+      <div class="message-content">
+        @for (post of selectedThread.posts | slice:0:1; track post) {
+        <app-post
+          [post]="selectedThread.posts[0]"
+          [currentUserId]="currentUser.id"
+        ></app-post>
 
-    <app-post-input class="post-input"
-      [selectedChannel]="selectedChannel"
-      [allUsers]="allUsers"
-      [currentUser]="currentUser"
-      [selectedThread]="selectedThread"
-      [path]="'threads'"
-    ></app-post-input>
+        } @if (selectedThread.posts.length > 0) {
+
+        <!-- Details and actions for the message -->
+        <div class="message-details">
+          <!-- Link to reply to the message -->
+          <div class="number-answers">
+            {{ selectedThread.posts.length - 1 }} Antworten
+          </div>
+          <div class="line-answer"></div>
+        </div>
+
+        @for (post of selectedThread.posts | slice:1; track post;) {
+        <app-post [post]="post" [currentUserId]="currentUser.id"></app-post>
+        } }
+      </div>
+      <app-post-input
+        class="post-input"
+        [selectedChannel]="selectedChannel"
+        [allUsers]="allUsers"
+        [currentUser]="currentUser"
+        [selectedThread]="selectedThread"
+        [path]="'threads'"
+      ></app-post-input>
+    </div>
   </div>
 </aside>

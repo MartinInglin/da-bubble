@@ -71,6 +71,16 @@ aside {
   }
 }
 
+.message-content {
+  height: 53vh; /* Mindesthöhe auf 50% der Bildschirmhöhe setzen */
+  padding-top: 20px;
+  width: 100%;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 /* Input section styling */
 .inputContent {
   width: 100%;
@@ -135,9 +145,8 @@ aside {
 
 .message-details {
   display: flex;
-  width: fit-content;
   gap: 20px;
-  width: 85%;
+  width: 90%;
   align-items: center;
   .number-answers {
     color: rgba(0, 0, 255, 0.288);
