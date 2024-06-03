@@ -5,19 +5,20 @@
                 <div>
                     <p>Mitglieder</p>
                     <button (click)="onNoClick()" mat-icon-button>
-                        <img src="./../../../assets/images/icons/close.svg">
+                        <img src="assets/images/icons/close.svg">
                     </button>
                 </div>
             </div>
             <div class="members">
                 <div class="single-member" *ngFor="let user of users" (click)="openDetailViewDialog(user)">
                   <img [src]="user.avatar">
-                  <div></div>
+                  <div *ngIf="user.isSignedIn" class="online"></div>
+                  <div *ngIf="!user.isSignedIn" class="offline"></div>
                   {{ user.name }}
                 </div>
               </div>
             <button class="add-member" (click)="openAddUserToChannelDialog()">
-                <div><img src="./../../../assets/images/icons/add_member.svg"></div>Mitglieder hinzufügen
+                <div><img src="assets/images/icons/add_member.svg"></div>Mitglieder hinzufügen
             </button>
         </mat-card-content>
     </mat-card>

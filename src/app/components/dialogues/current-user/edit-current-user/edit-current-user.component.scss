@@ -51,12 +51,81 @@
 .profile-container {
     width: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 10px;
+
+    .current-avatar {
+        height: 200px;
+        width: 200px;
+        border-radius: 50%;
+        transition: scale 75ms ease-in-out;
+
+        &:hover {
+            cursor: pointer;
+            scale: 1.05;
+        }
+    }
+}
+
+.change-avatar-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 
     img {
         height: 200px;
         width: 200px;
+        border-radius: 50%;
+        transition: scale 75ms ease-in-out;
+
+        &:hover {
+            cursor: pointer;
+            scale: 1.05;
+        }
+    }
+
+    .choose-avatar-container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+
+        img {
+            height: 64px;
+            width: 64px;
+            transition: scale 75ms ease-in-out;
+
+            &:hover {
+                cursor: pointer;
+                scale: 1.05;
+            }
+        }
+    }
+
+    button {
+        width: fit-content;
+        height: 49px;
+        border-radius: 25px;
+        padding: 12px 25px 12px 25px;
+        border: 1px solid $purple2;
+        color: $purple1;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 24.55px;
+        text-align: center;
+        transition: scale 75ms ease-in-out;
+        background-color: white;
+
+        &:hover {
+            background-color: $purple2;
+            color: white;
+            scale: 1.05;
+            cursor: pointer;
+        }
     }
 }
 

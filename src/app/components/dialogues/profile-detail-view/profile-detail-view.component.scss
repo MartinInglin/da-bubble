@@ -67,7 +67,7 @@ mat-card-content {
         line-height: 43.65px;
     }
 
-    span {
+    .online {
         font-size: 20px;
         font-weight: 400;
         line-height: 27.28px;
@@ -78,6 +78,23 @@ mat-card-content {
 
         div {
             background-color: $online-green;
+            height: 16px;
+            width: 16px;
+            border-radius: 100%;
+        }
+    }
+
+    .offline {
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 27.28px;
+        color: $text-gray;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+
+        div {
+            background-color: $text-gray;
             height: 16px;
             width: 16px;
             border-radius: 100%;

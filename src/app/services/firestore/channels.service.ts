@@ -134,6 +134,17 @@ export class ChannelsService {
     }
   }
 
+  async getUserById(userId: string): Promise<User> {
+    const userDocRef = doc(this.firestore, 'users', userId);
+    const userDoc = await getDoc(userDocRef);
+  
+    if (!userDoc.exists()) {
+      throw new Error('User does not exist');
+    }
+  
+    return userDoc.data() as User;
+  }
+
   /**
    * This function removes a user from a channel. There are two processes going on. On one hand the user is removed from the channel and on the other hand the channel is removed from the user. If there is no user in the channel left, then the channel is deleted. The runTransaction guarantees that data is consistent if a transaction fails.
    *

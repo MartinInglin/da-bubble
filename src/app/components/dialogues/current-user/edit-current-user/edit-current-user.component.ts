@@ -38,6 +38,7 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
   password: string = '';
   passwordIsFalse: boolean = false;
   isPasswordVerified: boolean = false;
+  changeAvatar: boolean = false;
 
   constructor(
     private usersService: UsersService,
@@ -54,6 +55,10 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
         this.originalEmail = user.email;
       }
     });
+  }
+
+  toggleAvatar(): void {
+    this.changeAvatar = !this.changeAvatar;
   }
 
   async saveChanges(): Promise<void> {
