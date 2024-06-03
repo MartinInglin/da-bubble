@@ -57,10 +57,10 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
     });
   }
 
-  changeAvatarTrue(): void {
-    this.changeAvatar = true;
+  toggleAvatar(): void {
+    this.changeAvatar = !this.changeAvatar;
   }
-  
+
   async saveChanges(): Promise<void> {
     if (this.currentUser) {
       if (this.currentUser.email !== this.updatedEmail) {
