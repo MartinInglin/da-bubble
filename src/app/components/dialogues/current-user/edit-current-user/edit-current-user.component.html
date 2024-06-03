@@ -8,41 +8,37 @@
         </button>
       </div>
       <div class="profile-container">
-        <img [src]="currentUser.avatar" alt="User Avatar" />
+        <div class="change-avatar-container">
+          <img [src]="currentUser.avatar" alt="User Avatar" />
+          <div class="choose-avatar-container">
+            <img src="assets/images/avatars/avatar_1.svg" alt=""/>
+            <img src="assets/images/avatars/avatar_2.svg" alt=""/>
+            <img src="assets/images/avatars/avatar_3.svg" alt=""/>
+            <img src="assets/images/avatars/avatar_4.svg" alt=""/>
+            <img src="assets/images/avatars/avatar_5.svg" alt=""/>
+            <img src="assets/images/avatars/avatar_6.svg" alt=""/>
+          </div>
+          <button>Profilbild hochladen</button>
+        </div>
       </div>
       <div class="edit-container">
         <div class="name-container">
           <img src="assets/images/icons/account_circle.svg" />
           <p>Vollständiger Name</p>
         </div>
-        <input
-          class="name-input"
-          placeholder="{{ currentUser.name }}"
-          [(ngModel)]="updatedName"
-        />
+        <input class="name-input" placeholder="{{ currentUser.name }}" [(ngModel)]="updatedName" />
         <div *ngIf="!currentUser.isGoogleAccount" class="name-container">
           <img src="assets/images/icons/mail_black.svg" />
           <p>E-Mail-Adresse</p>
         </div>
-        <input
-          *ngIf="!currentUser.isGoogleAccount"
-          id="mail"
-          class="name-input"
-          type="email"
-          placeholder="{{ currentUser.email }}"
-          [(ngModel)]="updatedEmail"
-        />
+        <input *ngIf="!currentUser.isGoogleAccount" id="mail" class="name-input" type="email" placeholder="{{ currentUser.email }}" [(ngModel)]="updatedEmail" />
         <p class="wrong" id="wrong-mail" *ngIf="!isValidEmail()">
           Bitte gültige E-Mail-Adresse eingeben!
         </p>
       </div>
       <div class="button-container" (click)="onNoClick()">
         <button class="cancel" (click)="onNoClick()">Abbrechen</button>
-        <button
-          class="save"
-          [disabled]="!isValidEmail()"
-          (click)="saveChanges()"
-        >
+        <button class="save" [disabled]="!isValidEmail()" (click)="saveChanges()">
           Speichern
         </button>
       </div>
@@ -59,11 +55,7 @@
           zuerst deine neue E-Mail-Adresse bestätigen, bevor du dich wieder
           anmelden kannst.
         </p>
-        <input
-          type="password"
-          placeholder="Passwort eingeben"
-          [(ngModel)]="password"
-        />
+        <input type="password" placeholder="Passwort eingeben" [(ngModel)]="password" />
         <p *ngIf="passwordIsFalse" class="wrong">
           Bitte richtiges Passwort eingeben!
         </p>

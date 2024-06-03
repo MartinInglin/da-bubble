@@ -38,6 +38,7 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
   password: string = '';
   passwordIsFalse: boolean = false;
   isPasswordVerified: boolean = false;
+  changeAvatar: boolean = false;
 
   constructor(
     private usersService: UsersService,
@@ -56,6 +57,10 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
     });
   }
 
+  changeAvatarTrue(): void {
+    this.changeAvatar = true;
+  }
+  
   async saveChanges(): Promise<void> {
     if (this.currentUser) {
       if (this.currentUser.email !== this.updatedEmail) {
