@@ -412,3 +412,22 @@ cdk-overlay-connected-position-bounding-box {
 //   font-size: 0.8em;
 //   color: #666;
 // }
+.newMessage ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #ccc;
+  background-color: rgb(85, 189, 189);
+  height: 50px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.newMessage li {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.newMessage li:hover {
+  background-color: #f0f0f0;
+}

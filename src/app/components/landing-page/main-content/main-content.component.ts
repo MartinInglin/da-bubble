@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { ChannelsService } from '../../../services/firestore/channels.service';
 import { RouterModule } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, of } from 'rxjs';
 import { User } from '../../../models/user.class';
 import { UsersService } from '../../../services/firestore/users.service';
 import { ThreadsService } from '../../../services/firestore/threads.service';
@@ -19,6 +19,8 @@ import { Channel } from '../../../models/channel.class';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import {
   MatDialog,
   MatDialogModule,
@@ -33,7 +35,8 @@ import { StorageService } from '../../../services/storage.service';
 import { FormsModule } from '@angular/forms';
 import { Post } from '../../../models/post.class';
 import { StateService } from '../../../services/stateservice.service';
-// import { ThreadComponent } from '../thread/thread.component';
+import { SearchService } from '../../../services/search-service.service';
+import { Observable } from 'rxjs';
 
 declare const twemoji: any; // Deklariere Twemoji als Modul
 
@@ -47,13 +50,12 @@ declare const twemoji: any; // Deklariere Twemoji als Modul
     CommonModule,
     MatDialogModule,
     FormsModule,
-    // ThreadComponent
+    ReactiveFormsModule
   ],
   templateUrl: './main-content.component.html',
   styleUrl: './main-content.component.scss',
 })
 export class MainContentComponent implements OnInit, OnDestroy {
-  // @Output() openThreadEvent: EventEmitter<void> = new EventEmitter<void>();
 
   @Output() toggleThread = new EventEmitter<void>();
   
@@ -65,6 +67,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   storageService = inject(StorageService);
   message: any = '';
   stateService = inject(StateService);
+  // searchService = inject(SearchService);
 
   private userSubscription: Subscription = new Subscription();
   private channelSubscription: Subscription = new Subscription();
@@ -92,14 +95,26 @@ export class MainContentComponent implements OnInit, OnDestroy {
   channelSelected: boolean = false;
   chatSelected: boolean = false;
   files: File[] = [];
+  form: FormGroup;
+  searchResults$: Observable<(Channel | User)[]> = of ([]);
+  searchResults: (Channel | User)[] | undefined;
 
   constructor(
     private dialog: MatDialog,
     private threadService: ThreadsService,
-    private directMessagesService: DirectMessagesService
-  ) { }
+    private directMessagesService: DirectMessagesService,
+    private fb: FormBuilder,
+    private searchService : SearchService,
+    
+  ) { 
+    this.form = this.fb.group({
+      recipient: [''],
+    });
+
+  }
 
   ngOnInit(): void {
+
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       this.currentUser = user ?? new User();
     });
@@ -142,6 +157,37 @@ export class MainContentComponent implements OnInit, OnDestroy {
       this.stateService.showChannels$.subscribe(show => {
         this.channelSelected = show;
       });
+
+     
+      this.searchResults$ = this.form.valueChanges.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap((term) => this.searchService.search(term))
+      );
+
+      this.searchResults$.subscribe(results => {
+        this.searchResults = results;
+      });
+  }
+
+  get recipient(): FormControl {
+    return this.form.get('recipient') as FormControl;
+  }
+
+   selectRecipient(recipient: Channel | User) {
+    const recipientString:any =
+      recipient instanceof Channel
+        ? `#${recipient.name}`
+        : `@${recipient.id}`;
+    this.form.setValue(recipientString);
+  }
+
+  
+  linkContactInMessage(x: string) {
+    let messageTextarea = document.getElementById('message-textarea');
+    if (messageTextarea) {
+      messageTextarea.textContent += '@' + x + ' '; // Append the name to the textarea with a space
+    }
   }
 
   openThread(selectedChannelId: string, selectedChannelName: string, post: Post): void {
@@ -168,24 +214,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
     return twemoji.parse(emoji);
   }
 
-  linkContactInMessage(x: string) {
-    let messageTextarea = document.getElementById('message-textarea');
-    if (messageTextarea) {
-      messageTextarea.textContent += '@' + x + ' '; // Append the name to the textarea with a space
-    }
-  }
-
-  // onClickCreateThread(channelData: Channel, postIndex: number): void {
-  //   this.openThreadEvent.emit(true); // Hier wird das Event ausgelöst
-  //   this.threadService
-  //     .createThread(channelData, postIndex)
-  //     .then(() => {
-  //       console.log('Thread erfolgreich erstellt!');
-  //     })
-  //     .catch((error) => {
-  //       console.error('Fehler beim Erstellen des Threads: ', error);
-  //     });
-  // }
 
   openChannelInfoDialog(channelId: string): void {
     const dialogRef = this.dialog.open(ChannelInfoComponent, {
@@ -306,4 +334,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   addEmojiToMessage(emoji: string): void {
     this.message += emoji;
   }
+
+
+
 }

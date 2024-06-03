@@ -2,9 +2,21 @@
 <main id="mainContent">
   <!-- Header section with channel name and contact information -->
 
-  <header *ngIf="!channelSelected && !chatSelected" class="newMessage">
+  <header *ngIf="!channelSelected && !chatSelected" class="newMessage" [formGroup]="form">
     <span>Neue Nachricht</span>
-    <input type="text" placeholder="An: #channel, oder @jemand oder E-mail Adresse" />
+    <input
+      type="text"
+      formControlName="recipient"
+      placeholder="An: #channel, oder @jemand oder E-mail Adresse"
+    />
+    <div *ngIf="searchResults$ | async as results">
+      <h2>Search Results</h2>
+      <ul>
+        <li *ngFor="let result of results" (click)="selectRecipient(result)">
+          {{ result.id ? result.id : result.name }} ({{ result.id ? 'Channel' : 'Direct Message' }})
+        </li>
+      </ul>
+    </div>
   </header>
 
   <div class="height-65vh" *ngIf="channelSelected">
