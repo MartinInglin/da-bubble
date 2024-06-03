@@ -12,8 +12,11 @@
         </div>
         <div class="name-container">
           <p>{{ userName }}</p>
-          <span>
+          <span class="online" *ngIf="isSignedIn">
             <div></div>Aktiv
+          </span>
+          <span class="offline" *ngIf="!isSignedIn">
+            <div></div>Abwesend
           </span>
         </div>
         <div class="mail-container">
