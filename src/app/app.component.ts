@@ -4,16 +4,6 @@ import { RouterOutlet } from '@angular/router';
 import { LandingPageComponent } from './components/landing-page/landing-page.component';
 
 import { HeaderComponent } from './components/shared/header/header.component';
-import { AddUserToChannelComponent } from './components/add-user-to-channel/add-user-to-channel.component';
-import { ProfileDetailViewComponent } from './components/profile-detail-view/profile-detail-view.component';
-import { NewChannelComponent } from './components/new-channel/new-channel.component';
-import { AddUserToNewChannelComponent } from './components/add-user-to-new-channel/add-user-to-new-channel.component';
-import { ChannelInfoComponent } from './components/channel-info/channel-info.component';
-import { ChannelInfoEditComponent } from './components/channel-info/channel-info-edit/channel-info-edit.component';
-import { MembersComponent } from './components/members/members.component';
-import { EditMessageComponent } from './components/edit-message/edit-message.component';
-import { UserMenuComponent } from './components/user-menu/user-menu.component';
-import { CurrentUserComponent } from './components/current-user/current-user.component';
 
 @Component({
   selector: 'app-root',
@@ -21,16 +11,6 @@ import { CurrentUserComponent } from './components/current-user/current-user.com
   imports: [
     RouterOutlet,
     HeaderComponent,
-    ProfileDetailViewComponent,
-    AddUserToChannelComponent,
-    NewChannelComponent,
-    AddUserToNewChannelComponent,
-    ChannelInfoComponent,
-    MembersComponent,
-    ChannelInfoEditComponent,
-    EditMessageComponent,
-    UserMenuComponent,
-    CurrentUserComponent,
     LandingPageComponent,
   ],
 

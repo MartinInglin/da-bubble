@@ -1,4 +1,4 @@
-@import "./../../../../styles.scss";
+@import "./../../../../../styles.scss";
 
 mat-card {
     width: 872px;
@@ -97,7 +97,7 @@ mat-card-content {
 }
 
 .input-channel-name {
-    background: url(./../../../../assets/images/icons/tag.svg) no-repeat 28px 16.5px;
+    background: url(./../../../../../assets/images/icons/tag.svg) no-repeat 28px 16.5px;
     box-sizing: border-box;
     padding-left: 60px !important;
 }

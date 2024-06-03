@@ -1,11 +1,11 @@
-@import "./../../../styles.scss";
+@import "./../../../../styles.scss";
 
 mat-card {
     width: 500px;
     height: fit-content;
+    border-radius: 30px;
     padding: 40px;
     font-family: 'Nunito';
-    border-radius: 30px 0px 30px 30px;
 }
 
 mat-card-content {
@@ -57,43 +57,17 @@ mat-card-content {
     img {
         height: 200px;
         width: 200px;
-        border-radius: 50%;
     }
 }
 
 .name-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-
-    .edit-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        p {
-            font-size: 32px;
-            font-weight: 700;
-            line-height: 43.65px;
-        }
-
-        button {
-            border: none;
-            background-color: white;
-            color: $purple3;
-            font-size: 18px;
-            font-weight: 600;
-            line-height: 24.55px;
-            transition: scale 75ms ease-in-out;
-
-            &:hover {
-                cursor: pointer;
-                scale: 1.05;
-            }
-        }
+    p {
+        font-size: 32px;
+        font-weight: 700;
+        line-height: 43.65px;
     }
 
-    .status {
+    span {
         font-size: 20px;
         font-weight: 400;
         line-height: 27.28px;

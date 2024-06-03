@@ -5,9 +5,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { AddUserToNewChannelComponent } from '../add-user-to-new-channel/add-user-to-new-channel.component';
-import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ChannelsService } from '../../services/firestore/channels.service';
-import { User } from '../../models/user.class';
+import { MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import { ChannelsService } from '../../../services/firestore/channels.service';
+import { User } from '../../../models/user.class';
 
 @Component({
   selector: 'app-new-channel',

@@ -1,11 +1,11 @@
-@import "./../../../styles.scss";
+@import "./../../../../styles.scss";
 
 mat-card {
-    width: 710px;
+    width: 514px;
     height: fit-content;
+    border-radius: 30px 0px 30px 30px;
     padding: 40px;
     font-family: 'Nunito';
-    border-radius: 30px;
 }
 
 mat-card-content {
@@ -14,10 +14,11 @@ mat-card-content {
     gap: 20px;
 }
 
-.header {
+
+.add-user-header {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 5px;
 
     div {
         display: flex;
@@ -30,6 +31,15 @@ mat-card-content {
             line-height: 32.74px;
             margin: 0;
         }
+    }
+
+    span {
+        display: flex;
+        gap: 15px;
+        color: $purple2;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24.55px;
     }
 
     button {
@@ -53,49 +63,12 @@ mat-card-content {
     }
 }
 
-mat-radio-group {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-
-    mat-radio-button {
-        display: flex;
-        gap: 20px;
-        color: $purple1;
-
-        span {
-            font-size: 18px;
-            font-weight: 400px;
-            line-height: 24.55px;
-
-            span {
-                color: $purple1;
-            }
-        }
-    }
-
-    input {
-        height: 55px;
-        border-radius: 30px;
-        border: solid 1px $light-purple-lines;
-        padding-left: 15px;
-        font-size: 18px;
-        font-weight: 400;
-        line-height: 24.55px;
-
-        &::placeholder {
-            color: $text-gray;
-            font-family: 'Nunito';
-        }
-    }
-}
-
 .user-list {
     position: absolute;
     background-color: white;
     width: 300px;
     z-index: 1;
-    top: 80%;
+    top: 200px;
     left: 90px;
     border-radius: 0px 20px 20px 20px;
     display: flex;
@@ -125,9 +98,6 @@ mat-radio-group {
             line-height: 24.55px;
             color: $text-gray;
         }
-    }
-    .single-users.selected {
-        background-color: $purple2;
     }
 }
 
@@ -182,9 +152,38 @@ mat-radio-group {
                 width: 13.5px;
 
                 &:hover {
-                    content: url("./../../../assets/images/icons/close_blue.svg");
+                    content: url("./../../../../assets/images/icons/close_blue.svg");
                 }
             }
+        }
+    }
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+
+    input {
+        height: 55px;
+        width: 434px;
+        border-radius: 30px;
+        border: solid 1px $light-purple-lines;
+        padding-left: 15px;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24.55px;
+
+        &::placeholder {
+            color: $text-gray;
+            font-family: 'Nunito';
         }
     }
 }
@@ -199,9 +198,10 @@ mat-radio-group {
         align-items: center;
         justify-content: center;
         background-color: $purple1;
-        width: 125px;
+        width: 147px;
         height: 49px;
         border-radius: 25px;
+        gap: 10px;
         padding: 12px 25px 12px 25px;
         color: white;
         font-weight: 700;
@@ -215,32 +215,4 @@ mat-radio-group {
             cursor: pointer;
         }
     }
-}
-
-.mat-mdc-radio-button.mat-accent {
-    --mdc-radio-disabled-selected-icon-color: black;
-    --mdc-radio-disabled-unselected-icon-color: black;
-    --mdc-radio-unselected-hover-icon-color: #212121;
-    --mdc-radio-unselected-icon-color: rgba(0, 0, 0, 0.54);
-    --mdc-radio-unselected-pressed-icon-color: rgba(0, 0, 0, 0.54);
-    --mdc-radio-selected-focus-icon-color: #444df2;
-    --mdc-radio-selected-hover-icon-color: #444df2;
-    --mdc-radio-selected-icon-color: #444df2;
-    --mdc-radio-selected-pressed-icon-color: #444df2;
-    --mat-radio-ripple-color: black;
-    --mat-radio-checked-ripple-color: #444df2;
-    --mat-radio-disabled-label-color: rgba(0, 0, 0, 0.38);
-}
-
-html .mat-accent {
-    --mat-slider-ripple-color: #444df2;
-    --mat-slider-hover-state-layer-color: rgba(255, 64, 129, 0.05);
-    --mat-slider-focus-state-layer-color: rgba(255, 64, 129, 0.2);
-    --mdc-slider-handle-color: #444df2;
-    --mdc-slider-focus-handle-color: #444df2;
-    --mdc-slider-hover-handle-color: #444df2;
-    --mdc-slider-active-track-color: #444df2;
-    --mdc-slider-inactive-track-color: #444df2;
-    --mdc-slider-with-tick-marks-inactive-container-color: #444df2;
-    --mdc-slider-with-tick-marks-active-container-color: white;
 }

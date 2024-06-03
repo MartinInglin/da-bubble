@@ -5,10 +5,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { UsersService } from '../../services/firestore/users.service';
-import { User } from '../../models/user.class';
-import { ChannelsService } from '../../services/firestore/channels.service';
-import { MinimalUser } from '../../models/minimal_user.class';
+import { UsersService } from '../../../services/firestore/users.service';
+import { User } from '../../../models/user.class';
+import { ChannelsService } from '../../../services/firestore/channels.service';
+import { MinimalUser } from '../../../models/minimal_user.class';
 import { Subscription } from 'rxjs';
 
 @Component({

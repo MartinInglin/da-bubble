@@ -7,12 +7,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { UsersService } from '../../services/firestore/users.service';
-import { ChannelsService } from '../../services/firestore/channels.service';
-import { MinimalChannel } from '../../models/minimal_channel.class';
+import { UsersService } from '../../../services/firestore/users.service';
+import { ChannelsService } from '../../../services/firestore/channels.service';
+import { MinimalChannel } from '../../../models/minimal_channel.class';
 import { Subscription } from 'rxjs';
-import { User } from '../../models/user.class';
-import { MinimalUser } from '../../models/minimal_user.class';
+import { User } from '../../../models/user.class';
+import { MinimalUser } from '../../../models/minimal_user.class';
 
 @Component({
   selector: 'app-add-user-to-new-channel',

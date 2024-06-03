@@ -26,9 +26,9 @@ import {
   MatDialogModule,
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
-import { ChannelInfoComponent } from '../../channel-info/channel-info.component';
-import { MembersComponent } from '../../members/members.component';
-import { ProfileDetailViewComponent } from '../../profile-detail-view/profile-detail-view.component';
+import { ChannelInfoComponent } from '../../dialogues/channel-info/channel-info.component';
+import { MembersComponent } from '../../dialogues/members/members.component';
+import { ProfileDetailViewComponent } from '../../dialogues/profile-detail-view/profile-detail-view.component';
 import { DirectMessagesService } from '../../../services/firestore/direct-messages.service';
 import { DirectMessage } from '../../../models/direct-message.class';
 import { StorageService } from '../../../services/storage.service';

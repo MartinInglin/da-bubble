@@ -8,7 +8,7 @@ import { UsersService } from '../../../services/firestore/users.service';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { UserMenuComponent } from '../../user-menu/user-menu.component';
+import { UserMenuComponent } from '../../dialogues/user-menu/user-menu.component';
 
 @Component({
   selector: 'app-header',

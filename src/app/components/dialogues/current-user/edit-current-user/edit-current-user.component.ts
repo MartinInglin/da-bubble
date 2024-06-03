@@ -6,9 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { UserMenuComponent } from '../../user-menu/user-menu.component';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { UsersService } from '../../../services/firestore/users.service';
-import { AuthService } from '../../../services/auth.service';
-import { User } from '../../../models/user.class';
+import { UsersService } from '../../../../services/firestore/users.service';
+import { AuthService } from '../../../../services/auth.service';
+import { User } from '../../../../models/user.class';
 import { Subscription } from 'rxjs';
 
 @Component({

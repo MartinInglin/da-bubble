@@ -7,8 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { AddUserToChannelComponent } from '../add-user-to-channel/add-user-to-channel.component';
 import { ProfileDetailViewComponent } from '../profile-detail-view/profile-detail-view.component';
 import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ChannelsService } from '../../services/firestore/channels.service';
-import { MinimalUser } from '../../models/minimal_user.class';
+import { ChannelsService } from '../../../services/firestore/channels.service';
+import { MinimalUser } from '../../../models/minimal_user.class';
 import { Subscription } from 'rxjs';
 
 @Component({

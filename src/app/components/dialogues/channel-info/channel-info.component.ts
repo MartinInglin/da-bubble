@@ -1,19 +1,20 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ChannelInfoEditComponent } from './channel-info-edit/channel-info-edit.component';
+import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Channel } from '../../../models/channel.class';
 import { ChannelsService } from '../../../services/firestore/channels.service';
 import { User } from '../../../models/user.class';
 import { UsersService } from '../../../services/firestore/users.service';
 
 @Component({
-  selector: 'app-channel-info-edit',
+  selector: 'app-channel-info',
+  template: 'passed in {{ data.channelId}}',
   standalone: true,
   imports: [
     CommonModule,
@@ -21,29 +22,25 @@ import { UsersService } from '../../../services/firestore/users.service';
     MatCardModule,
     MatIconModule,
     MatButtonModule,
-    FormsModule
+    MatDialogModule
   ],
-  templateUrl: './channel-info-edit.component.html',
-  styleUrls: ['./channel-info-edit.component.scss']
+  templateUrl: './channel-info.component.html',
+  styleUrl: './channel-info.component.scss',
 })
-export class ChannelInfoEditComponent implements OnInit, OnDestroy {
-  updatedName: string;
-  updatedDescription: string;
-  currentUser: User | null = null;
+export class ChannelInfoComponent implements OnInit, OnDestroy {
   channel: Channel | null = null;
+  currentUser: User | null = null;
   channelSubscription: any;
 
   private userSubscription: Subscription = new Subscription();
 
   constructor(
-    public dialogRef: MatDialogRef<ChannelInfoEditComponent>,
+    private dialog: MatDialog,
+    public dialogRef: MatDialogRef<ChannelInfoComponent>,
     private channelsService: ChannelsService,
     private usersService: UsersService,
-    @Inject(MAT_DIALOG_DATA) public data: { channelId: string, channelName: string, channelDescription: string }
-  ) {
-    this.updatedName = data.channelName;
-    this.updatedDescription = data.channelDescription;
-  }
+    @Inject(MAT_DIALOG_DATA) public data: {channelId: string}
+  ) {}
 
   ngOnInit(): void {
     this.loadChannelData();
@@ -53,14 +50,10 @@ export class ChannelInfoEditComponent implements OnInit, OnDestroy {
   }
 
   loadChannelData(): void {
-    if (!this.data.channelId) return;
+    if (!this.data.channelId) return; 
     this.channelSubscription = this.channelsService.channelSubject$.subscribe(
       (channel) => {
         this.channel = channel;
-        if (channel) {
-          this.updatedName = channel.name;
-          this.updatedDescription = channel.description || '';
-        }
       },
       (error) => {
         console.error('Error loading channel data:', error);
@@ -69,20 +62,21 @@ export class ChannelInfoEditComponent implements OnInit, OnDestroy {
     this.channelsService.getDataChannel(this.data.channelId);
   }
 
-  saveChanges(): void {
+  openDialog(): void {
     if (!this.channel) return;
-
-    this.channelsService.updateChannel(this.data.channelId, this.updatedName, this.updatedDescription)
-      .then(() => {
-        this.dialogRef.close();
-      })
-      .catch(error => {
-        console.error('Fehler beim Speichern der Änderungen:', error);
-      });
+    const dialogRef = this.dialog.open(ChannelInfoEditComponent, {
+      width: '872px',
+      data: { 
+        channelId: this.channel.id,
+        name: this.channel.name,
+        description: this.channel.description
+      }
+    });
   }
 
   leaveChannel(): void {
     if (!this.currentUser || !this.channel) return;
+
     const channelId = this.channel.id;
     const currentUserId = this.currentUser.id;
 
@@ -95,13 +89,13 @@ export class ChannelInfoEditComponent implements OnInit, OnDestroy {
       });
   }
 
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
   ngOnDestroy(): void {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
     }
-  }
-
-  onNoClick(): void {
-    this.dialogRef.close();
   }
 }
