@@ -37,6 +37,7 @@ import { Post } from '../../../models/post.class';
 import { StateService } from '../../../services/stateservice.service';
 import { SearchService } from '../../../services/search-service.service';
 import { Observable } from 'rxjs';
+import { PostComponent } from '../post/post.component';
 
 declare const twemoji: any; // Deklariere Twemoji als Modul
 
@@ -50,7 +51,8 @@ declare const twemoji: any; // Deklariere Twemoji als Modul
     CommonModule,
     MatDialogModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    PostComponent
   ],
   templateUrl: './main-content.component.html',
   styleUrl: './main-content.component.scss',
@@ -63,7 +65,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
   channelsService = inject(ChannelsService);
   usersService = inject(UsersService);
-  threadsService = inject(ThreadsService);
   storageService = inject(StorageService);
   message: any = '';
   stateService = inject(StateService);
@@ -101,7 +102,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
   constructor(
     private dialog: MatDialog,
-    private threadService: ThreadsService,
     private directMessagesService: DirectMessagesService,
     private fb: FormBuilder,
     private searchService : SearchService,
@@ -188,11 +188,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
     if (messageTextarea) {
       messageTextarea.textContent += '@' + x + ' '; // Append the name to the textarea with a space
     }
-  }
-
-  openThread(selectedChannelId: string, selectedChannelName: string, post: Post): void {
-    this.toggleThread.emit();
-    this.threadService.getDataThread(selectedChannelId, selectedChannelName, post);
   }
 
   ngOnDestroy(): void {
@@ -337,6 +332,10 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
   addEmojiToMessage(emoji: string): void {
     this.message += emoji;
+  }
+
+  openThread() {
+    this.toggleThread.emit();
   }
 
 
