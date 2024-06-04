@@ -265,15 +265,21 @@ mat-drawer-container {
     width: 70%;
     display: flex;
     justify-content: start;
-    padding-left: 10px;
     align-items: center;
     gap: 10px;
     cursor: pointer;
+    padding: 4px 20px 4px 20px;
+    transition: padding 100ms ease-in-out;
 
     /* Hover effect for table data in channels and contacts */
     &:hover {
-      color: #535af1;
-      transform: scale(1.05);
+      border-radius: 20px;
+      background-color: #eceefe;
+      padding-left: 23px;
+
+      .span-hashtag {
+        color: #535af1;
+      }
     }
   }
 
@@ -304,7 +310,7 @@ mat-drawer-container {
     justify-content: start;
     align-items: center;
     cursor: pointer;
-    transition: scale 100ms ease-in-out;
+    transition: padding 100ms ease-in-out;
     img {
       height: 50px;
       width: 50px;
@@ -315,7 +321,6 @@ mat-drawer-container {
     }
 
     &:hover {
-      color: #535af1;
       border-radius: 30px;
       background-color: #eceefe;
       padding-left: 28px;
