@@ -40,6 +40,16 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
   isPasswordVerified: boolean = false;
   changeAvatar: boolean = false;
 
+  availableAvatars: string[] = [
+    'assets/images/avatars/avatar_1.svg',
+    'assets/images/avatars/avatar_2.svg',
+    'assets/images/avatars/avatar_3.svg',
+    'assets/images/avatars/avatar_4.svg',
+    'assets/images/avatars/avatar_5.svg',
+    'assets/images/avatars/avatar_6.svg'
+  ];
+  selectedAvatar: string = '';
+
   constructor(
     private usersService: UsersService,
     private authService: AuthService,
@@ -53,12 +63,17 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
         this.updatedName = user.name;
         this.updatedEmail = user.email;
         this.originalEmail = user.email;
+        this.selectedAvatar = user.avatar;
       }
     });
   }
 
   toggleAvatar(): void {
     this.changeAvatar = !this.changeAvatar;
+  }
+
+  selectAvatar(avatar: string): void {
+    this.selectedAvatar = avatar;
   }
 
   async saveChanges(): Promise<void> {
@@ -73,7 +88,8 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
 
       const updatedData = {
         name: this.updatedName,
-        email: this.wantChangeMail ? this.updatedEmail : this.currentUser.email
+        email: this.wantChangeMail ? this.updatedEmail : this.currentUser.email,
+        avatar: this.selectedAvatar
       };
       await this.usersService.updateUser(this.currentUser.id, updatedData);
       this.dialogRef.close();
