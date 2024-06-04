@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; 
 import { MatCardModule } from '@angular/material/card';
@@ -10,6 +10,7 @@ import { UsersService } from '../../../../services/firestore/users.service';
 import { AuthService } from '../../../../services/auth.service';
 import { User } from '../../../../models/user.class';
 import { Subscription } from 'rxjs';
+import { SnackbarService } from '../../../../services/snackbar.service';
 
 @Component({
   selector: 'app-edit-current-user',
@@ -49,10 +50,17 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
     'assets/images/avatars/avatar_6.svg'
   ];
   selectedAvatar: string = '';
+  file: File = new File([], '');
+  imagePreviewUrl: string | null = null;
+
+  @ViewChild('fileInput') fileInput!: ElementRef;
+
+  readonly maxFileSize = 5 * 1024 * 1024;
 
   constructor(
     private usersService: UsersService,
     private authService: AuthService,
+    private snackbarService: SnackbarService,
     public dialogRef: MatDialogRef<EditCurrentUserComponent>
   ) {}
 
@@ -63,7 +71,7 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
         this.updatedName = user.name;
         this.updatedEmail = user.email;
         this.originalEmail = user.email;
-        this.selectedAvatar = user.avatar;
+        this.selectedAvatar = user.avatar; // Set the default avatar to the current user's avatar
       }
     });
   }
@@ -73,7 +81,39 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
   }
 
   selectAvatar(avatar: string): void {
+    this.imagePreviewUrl = null;
     this.selectedAvatar = avatar;
+  }
+
+  openFileDialog() {
+    this.fileInput.nativeElement.click();
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.file = input.files[0];
+      if (this.file.type === 'image/jpeg' || this.file.type === 'image/png') {
+        if (this.file.size <= this.maxFileSize) {
+          this.displayImagePreview();
+        } else {
+          this.snackbarService.openSnackBar('Die Datei ist zu groß. Bitte wähle eine Datei, die kleiner als 5 MB ist.', 'Schließen');
+        }
+      } else {
+        this.snackbarService.openSnackBar('Bitte wähle ein Dateiformat jpg oder png.', 'Schliessen');
+      }
+    }
+  }
+
+  displayImagePreview() {
+    if (this.file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imagePreviewUrl = e.target.result;
+        this.selectedAvatar = e.target.result; // Use the uploaded image as the selected avatar
+      };
+      reader.readAsDataURL(this.file);
+    }
   }
 
   async saveChanges(): Promise<void> {

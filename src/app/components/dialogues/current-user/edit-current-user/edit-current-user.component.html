@@ -18,7 +18,8 @@
             alt="Avatar Auswahl"
             class="avatar-option"/>
           </div>
-          <button>Profilbild hochladen</button>
+          <button (click)="openFileDialog()">Profilbild hochladen</button>
+          <input #fileInput type="file" (change)="onFileSelected($event)" hidden/>
         </div>
       </div>
       <div class="edit-container">

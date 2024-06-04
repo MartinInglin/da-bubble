@@ -81,12 +81,6 @@
         height: 200px;
         width: 200px;
         border-radius: 50%;
-        transition: scale 75ms ease-in-out;
-
-        &:hover {
-            cursor: pointer;
-            scale: 1.05;
-        }
     }
 
     .choose-avatar-container {
