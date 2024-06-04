@@ -111,13 +111,12 @@
         font-weight: 700;
         line-height: 24.55px;
         text-align: center;
-        transition: scale 75ms ease-in-out;
+        transition: all 75ms ease-in-out;
         background-color: white;
 
         &:hover {
             background-color: $purple2;
             color: white;
-            scale: 1.05;
             cursor: pointer;
         }
     }

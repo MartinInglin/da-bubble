@@ -49,21 +49,32 @@ header {
 
   /* Styling for the channel members */
   .channelMembers {
-    width: fit-content;
     height: 40px;
     margin-right: 50px;
     display: flex;
-    padding: 10px;
+    padding: 3px 10px 3px 40px;
     align-items: center;
     cursor: pointer;
+    transition: all 100ms ease-in-out;
+
+    &:hover {
+      background-color: #eceefe;
+      border-radius: 30px;
+    }
+
     img {
       height: 30px;
       padding: 10px;
       margin-left: -30px;
-      &:hover {
-        background-color: #eceefe;
-        border-radius: 30px;
-      }
+    }
+
+    p {
+      text-align: center;
+      font-weight: 600;
+      font-size: 20px;
+      line-height: 27.28px;
+      color: black;
+      margin: 0 !important;
     }
   }
 }

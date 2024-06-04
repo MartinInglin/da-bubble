@@ -79,6 +79,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   selectedChannel: Channel = new Channel();
 
   allUsers: User[] = [];
+  userCount: number = 0;
   userId: any;
   directMessage: DirectMessage | null = null;
   emojis: string[] = [
@@ -127,6 +128,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
         this.channelSelected = !!this.selectedChannel.id;
         if (this.channelSelected) {
           this.chatSelected = false;
+          this.getUserCount();
         }
       }
     );
@@ -181,6 +183,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
         : `@${recipient.id}`;
     this.form.setValue(recipientString);
   }
+
 
   
   linkContactInMessage(x: string) {
@@ -338,6 +341,13 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.toggleThread.emit();
   }
 
-
-
+  async getUserCount(): Promise<void> {
+    try {
+      if (this.selectedChannel && this.selectedChannel.id) {
+        this.userCount = await this.channelsService.countUsersInChannel(this.selectedChannel.id);
+      }
+    } catch (error) {
+      console.error('Error fetching user count:', error);
+    }
+  }
 }
