@@ -162,6 +162,7 @@ mat-drawer-container {
 
   &:hover {
 
+
     .drop-down-img,
     .arrow-drop-down {
       content: url("./../../../assets/images/icons/arrow_drop_down_blue.svg");
@@ -174,7 +175,7 @@ mat-drawer-container {
     }
 
     .contacts-list {
-      color: blue;
+      color: #535af1;
     }
   }
 }
@@ -189,6 +190,8 @@ mat-drawer-container {
   height: 40px;
   width: fit-content;
   gap: 15px;
+  transition: padding 200ms ease-in-out;
+  transition: margin 200ms ease-in-out;
 
   img {
     height: 27px;
@@ -205,6 +208,9 @@ mat-drawer-container {
 
     }
 
+
+    padding-bottom: 2px;
+    margin-left: -2px;
     color: #535af1;
 
   }
@@ -219,6 +225,7 @@ mat-drawer-container {
   height: 40px;
   width: fit-content;
   gap: 15px;
+  transition: padding 200ms ease-in-out;
 
   img {
     height: 27px;
@@ -234,8 +241,9 @@ mat-drawer-container {
       content: url("./../../../assets/images/icons/account_circle_blue.svg");
 
     }
-
-    color: blue;
+    padding-top: 2px;
+    padding-left: 2px;
+    color: #535af1;
   }
 }
 
@@ -275,7 +283,7 @@ mat-drawer-container {
     &:hover {
       border-radius: 20px;
       background-color: #eceefe;
-      padding-left: 23px;
+      padding-left: 2px;
 
       .span-hashtag {
         color: #535af1;
