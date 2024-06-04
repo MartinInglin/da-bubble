@@ -31,6 +31,7 @@ export class AddUserToChannelComponent implements OnInit, OnDestroy {
   selectedUsers: string[] = [];
   showResults: boolean = false;
   allUsers: User[] = [];
+  channelName: string = '';
 
   private allUsersSubscription: Subscription = new Subscription();
 
@@ -48,6 +49,7 @@ export class AddUserToChannelComponent implements OnInit, OnDestroy {
       }
     );
     this.loadChannelMembers();
+    this.loadChannelName();
   }
 
   async loadChannelMembers(): Promise<void> {
@@ -55,6 +57,17 @@ export class AddUserToChannelComponent implements OnInit, OnDestroy {
       this.usersInChannel = await this.channelsService.getUsersInChannel(this.data.channelId);
     } catch (error) {
       console.error('Error fetching users:', error);
+    }
+  }
+
+  async loadChannelName(): Promise<void> {
+    try {
+      const channel = await this.channelsService.getChannelById(this.data.channelId);
+      if (channel) {
+        this.channelName = channel.name;
+      }
+    } catch (error) {
+      console.error('Error fetching channel name:', error);
     }
   }
 

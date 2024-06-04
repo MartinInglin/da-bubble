@@ -28,6 +28,7 @@ import {
 } from '@angular/material/dialog';
 import { ChannelInfoComponent } from '../../dialogues/channel-info/channel-info.component';
 import { MembersComponent } from '../../dialogues/members/members.component';
+import { AddUserToChannelComponent } from '../../dialogues/add-user-to-channel/add-user-to-channel.component';
 import { ProfileDetailViewComponent } from '../../dialogues/profile-detail-view/profile-detail-view.component';
 import { DirectMessagesService } from '../../../services/firestore/direct-messages.service';
 import { DirectMessage } from '../../../models/direct-message.class';
@@ -60,7 +61,7 @@ declare const twemoji: any; // Deklariere Twemoji als Modul
 export class MainContentComponent implements OnInit, OnDestroy {
 
   @Output() toggleThread = new EventEmitter<void>();
-  
+
   @ViewChild('fileInput') fileInput!: ElementRef;
 
   channelsService = inject(ChannelsService);
@@ -98,16 +99,16 @@ export class MainContentComponent implements OnInit, OnDestroy {
   chatSelected: boolean = false;
   files: File[] = [];
   form: FormGroup;
-  searchResults$: Observable<(Channel | User)[]> = of ([]);
+  searchResults$: Observable<(Channel | User)[]> = of([]);
   searchResults: (Channel | User)[] | undefined;
 
   constructor(
     private dialog: MatDialog,
     private directMessagesService: DirectMessagesService,
     private fb: FormBuilder,
-    private searchService : SearchService,
-    
-  ) { 
+    private searchService: SearchService,
+
+  ) {
     this.form = this.fb.group({
       recipient: [''],
     });
@@ -152,32 +153,32 @@ export class MainContentComponent implements OnInit, OnDestroy {
         }
       );
 
-      this.stateService.showContacts$.subscribe(show => {
-        this.chatSelected= show;
-      });
-  
-      this.stateService.showChannels$.subscribe(show => {
-        this.channelSelected = show;
-      });
+    this.stateService.showContacts$.subscribe(show => {
+      this.chatSelected = show;
+    });
 
-     
-      this.searchResults$ = this.form.valueChanges.pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        switchMap((term) => this.searchService.search(term))
-      );
+    this.stateService.showChannels$.subscribe(show => {
+      this.channelSelected = show;
+    });
 
-      this.searchResults$.subscribe(results => {
-        this.searchResults = results;
-      });
+
+    this.searchResults$ = this.form.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((term) => this.searchService.search(term))
+    );
+
+    this.searchResults$.subscribe(results => {
+      this.searchResults = results;
+    });
   }
 
   get recipient(): FormControl {
     return this.form.get('recipient') as FormControl;
   }
 
-   selectRecipient(recipient: Channel | User) {
-    const recipientString:any =
+  selectRecipient(recipient: Channel | User) {
+    const recipientString: any =
       recipient instanceof Channel
         ? `#${recipient.name}`
         : `@${recipient.id}`;
@@ -185,7 +186,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   }
 
 
-  
+
   linkContactInMessage(x: string) {
     let messageTextarea = document.getElementById('message-textarea');
     if (messageTextarea) {
@@ -272,6 +273,18 @@ export class MainContentComponent implements OnInit, OnDestroy {
       position: {
         top: '11%',
         right: '6%',
+      },
+      data: { channelId: channelId },
+    });
+  }
+
+  openAddUserToChannelDialog(channelId: string) {
+    const dialogRef = this.dialog.open(AddUserToChannelComponent, {
+      width: '800px',
+      height: '800px',
+      position: {
+        top: '210px',
+        right: '-200px',
       },
       data: { channelId: channelId },
     });
