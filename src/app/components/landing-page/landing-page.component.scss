@@ -71,6 +71,8 @@ mat-drawer-container {
   align-items: center;
   justify-content: center;
   background-color: none;
+  padding: 3px;
+  border-radius: 50%;
 
   img {
     height: 40px;
@@ -80,7 +82,14 @@ mat-drawer-container {
   &:hover {
     background-color: #eceefe;
     cursor: pointer;
-    border-radius: 30px;
+    
+    .edit-square-button {
+      content: url("./../../../assets/images/icons/16.\ edit_square_blue.svg");
+    }
+
+    .add-channel-button {
+      content: url("./../../../assets/images/icons/add_icon_blue.svg");
+    }
   }
 }
 
