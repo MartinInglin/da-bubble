@@ -1,3 +1,5 @@
+@import "./../../../styles.scss";
+
 /* Content styling */
 section {
   overflow: hidden;
@@ -19,9 +21,10 @@ section {
 }
 
 /* Side navigation container */
-nav{
+nav {
   height: 90vh;
 }
+
 mat-drawer-container {
   height: 85.5vh;
   overflow: hidden;
@@ -44,15 +47,18 @@ mat-drawer-container {
   flex-direction: row;
   margin-bottom: 20px;
   gap: 20px;
+
   span {
     font-size: 24px;
     font-weight: 700;
   }
+
   .head-side-menu-first {
     display: flex;
     align-items: center;
     gap: 25px;
     cursor: pointer;
+
     img {
       cursor: auto;
     }
@@ -65,12 +71,14 @@ mat-drawer-container {
   align-items: center;
   justify-content: center;
   background-color: none;
+
   img {
     height: 40px;
     width: 40px;
   }
+
   &:hover {
-    background-color:#eceefe;
+    background-color: #eceefe;
     cursor: pointer;
     border-radius: 30px;
   }
@@ -79,9 +87,12 @@ mat-drawer-container {
 /* Menu button */
 .menuBtn {
   position: absolute;
-  left: -148px; /* Am linken Rand des Bildschirms */
-  top: 70%; /* Mittig vertikal */
-  transform: translateY(-50%) rotate(270deg); /* Mittig und drehen */
+  left: -148px;
+  /* Am linken Rand des Bildschirms */
+  top: 70%;
+  /* Mittig vertikal */
+  transform: translateY(-50%) rotate(270deg);
+  /* Mittig und drehen */
   z-index: 5;
   display: flex;
   gap: 20px;
@@ -101,6 +112,7 @@ mat-drawer-container {
     border: none;
     box-shadow: -1px 0px 4px rgb(0, 0, 0);
     font-size: 20px;
+
     // gap: 10px;
     img {
       transform: rotate(90deg);
@@ -108,7 +120,8 @@ mat-drawer-container {
     }
   }
 }
-.menu-btn-content{
+
+.menu-btn-content {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -116,7 +129,7 @@ mat-drawer-container {
 }
 
 
-.threadContent{
+.threadContent {
   height: 90vh;
 }
 
@@ -135,8 +148,9 @@ mat-drawer-container {
   height: 40px;
   padding: 10px;
   margin-bottom: 10px;
- 
+
 }
+
 .channel-head-first {
   display: flex;
   align-items: center;
@@ -145,17 +159,21 @@ mat-drawer-container {
   gap: 35px;
   width: fit-content;
   cursor: pointer;
-  &:hover{
+
+  &:hover {
+
     .drop-down-img,
-    .arrow-drop-down{
+    .arrow-drop-down {
       content: url("./../../../assets/images/icons/arrow_drop_down_blue.svg");
       transform: scale(1.1);
     }
-    .contact-list-account-img{
+
+    .contact-list-account-img {
       content: url("./../../../assets/images/icons/account_circle_blue.svg");
       height: 27px;
     }
-    .contacts-list{
+
+    .contacts-list {
       color: blue;
     }
   }
@@ -171,22 +189,27 @@ mat-drawer-container {
   height: 40px;
   width: fit-content;
   gap: 15px;
+
   img {
     height: 27px;
   }
+
   span {
     font-size: 20px;
     font-weight: 700;
   }
+
   &:hover {
     img {
       content: url("./../../../assets/images/icons/workspace_blue.svg");
 
     }
+
     color: #535af1;
 
   }
 }
+
 .contacts-list {
   display: flex;
   align-items: center;
@@ -196,21 +219,26 @@ mat-drawer-container {
   height: 40px;
   width: fit-content;
   gap: 15px;
+
   img {
     height: 27px;
   }
+
   span {
     font-size: 20px;
     font-weight: 700;
   }
+
   &:hover {
     img {
       content: url("./../../../assets/images/icons/account_circle_blue.svg");
-      
+
     }
+
     color: blue;
   }
 }
+
 .channel-add {
   &:hover {
     img {
@@ -222,6 +250,7 @@ mat-drawer-container {
 /* Styling for table data in channels and contacts */
 .channels {
   width: 100%;
+
   tr {
     display: flex;
     justify-content: center;
@@ -229,6 +258,7 @@ mat-drawer-container {
     width: 100%;
     margin-bottom: 10px;
   }
+
   td {
     height: 33px;
     font-size: 18px;
@@ -239,27 +269,32 @@ mat-drawer-container {
     align-items: center;
     gap: 10px;
     cursor: pointer;
+
     /* Hover effect for table data in channels and contacts */
     &:hover {
       color: #535af1;
       transform: scale(1.05);
     }
   }
-  .span-hashtag{
+
+  .span-hashtag {
     font-weight: 600;
     font-size: 21px;
   }
 }
+
 .contacts {
   width: 100%;
+
   tr {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     margin-bottom: 10px;
-  
+
   }
+
   td {
     height: 58px;
     font-size: 18px;
@@ -270,13 +305,16 @@ mat-drawer-container {
     align-items: center;
     gap: 10px;
     cursor: pointer;
+
     img {
       height: 50px;
       width: 50px;
     }
+
     span {
       font-size: 18px;
     }
+
     &:hover {
       color: #535af1;
       border-radius: 10px;
@@ -285,4 +323,26 @@ mat-drawer-container {
       padding-right: 10px;
     }
   }
+
+  .online {
+    height: 14px;
+    width: 14px;
+    position: relative;
+    right: 23px;
+    top: 16px;
+    border: 2px solid white;
+    border-radius: 100%;
+    background-color: $online-green;
+}
+
+.offline {
+  height: 14px;
+  width: 14px;
+  position: relative;
+  right: 23px;
+  top: 16px;
+  border: 2px solid white;
+  border-radius: 100%;
+  background-color: $text-gray;
+}
 }
