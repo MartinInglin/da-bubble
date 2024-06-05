@@ -57,8 +57,8 @@ export class PostComponent {
     console.log(this.showEditMessage);
   }
 
-  openThread(selectedChannelId: string, selectedChannelName: string, post: Post): void {
-    this.toggleThread.emit();
-    this.threadService.getDataThread(selectedChannelId, selectedChannelName, post);
-  }
+  // openThread(): void {
+  //   this.toggleThread.emit();
+
+  // }
 }

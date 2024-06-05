@@ -248,3 +248,22 @@
   flex-direction: row-reverse;
   gap: 10px;
 }
+
+/* Styling for the message details */
+.message-details {
+  margin: 10px 0;
+  display: flex;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
+  gap: 20px;
+  a {
+    color: blue;
+    text-decoration: none;
+    font-weight: 550;
+  }
+  span {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.425);
+  }
+}

@@ -22,6 +22,7 @@
         <app-post
           [post]="selectedThread.posts[0]"
           [currentUserId]="currentUser.id"
+          [isChannel]="false"
         ></app-post>
 
         } @if (selectedThread.posts.length > 0) {

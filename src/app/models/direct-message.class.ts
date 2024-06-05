@@ -1,10 +1,10 @@
-import { MinimalUser } from "./minimal_user.class";
-import { Post } from "./post.class";
+import { MinimalUser } from './minimal_user.class';
+import { Post } from './post.class';
 
 export class DirectMessage {
   id: string;
   users: MinimalUser[];
-  posts: [];
+  posts: Post[];
 
   constructor(obj?: any) {
     (this.id = obj ? obj.id : ''),

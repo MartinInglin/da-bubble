@@ -5,7 +5,6 @@
     class="message-container-current-user"
     (mouseenter)="showMenu = true"
     (mouseleave)="showMenu = false; showEditMessage = false"
-    (click)="openThread(selectedChannel.id, selectedChannel.name, post)"
   >
     <img src="{{ post.avatar }}" alt="" />
 
@@ -49,7 +48,9 @@
       <img src="assets/images/icons/add_circle.svg" alt="" />
       <img src="assets/images/icons/add_circle.svg" alt="" />
       <img src="assets/images/icons/add_reaction.svg" alt="" />
-      <!-- <img src="assets/images/icons/comment.svg" alt="" /> Is only needed in channels-->
+      @if (isChannel) {
+      <img src="assets/images/icons/comment.svg" alt="" />
+      }
       <img
         src="assets/images/icons/edit_message.svg"
         alt=""
@@ -68,6 +69,14 @@
     </div>
     }
   </div>
+  } @if (isChannel) {
+  <div class="message-details">
+    <!-- Message actions and time details -->
+    <a>Antworten</a>
+    <span
+      >Letzte Antwort:{{ formatDateTime(selectedChannel.posts[0].timestamp) }}
+    </span>
+  </div>
   }
 </div>
 }
@@ -79,7 +88,6 @@
     class="message-container"
     (mouseenter)="showMenu = true"
     (mouseleave)="showMenu = false"
-    (click)="openThread(selectedChannel.id, selectedChannel.name, post)"
   >
     <img src="{{ post.avatar }}" alt="" />
 
@@ -123,7 +131,9 @@
       <img src="assets/images/icons/add_circle.svg" alt="" />
       <img src="assets/images/icons/add_circle.svg" alt="" />
       <img src="assets/images/icons/add_reaction.svg" alt="" />
-      <!-- <img src="assets/images/icons/comment.svg" alt="" /> Is only needed in channels-->
+      @if (isChannel) {
+      <img src="assets/images/icons/comment.svg" alt="" />
+      }
     </div>
   </div>
   @if (post.files.length > 0) {
@@ -133,6 +143,14 @@
       {{ file.name }}
     </div>
     }
+  </div>
+  } @if (isChannel) {
+  <div class="message-details">
+    <!-- Message actions and time details -->
+    <a>Antworten</a>
+    <span
+      >Letzte Antwort:{{ formatDateTime(selectedChannel.posts[0].timestamp) }}
+    </span>
   </div>
   }
 </div>

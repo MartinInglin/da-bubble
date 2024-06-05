@@ -1,7 +1,8 @@
 <!-- Main content of the document -->
 <main id="mainContent">
-  <!-- Header section with channel name and contact information -->
+  <!-- Channel -->
 
+  <!-- Header section with channel name and contact information -->
   <header
     *ngIf="!channelSelected && !chatSelected"
     class="newMessage"
@@ -47,10 +48,9 @@
     </header>
 
     <!-- Message Content  -->
-
     <div class="message-content">
       @if (selectedChannel.posts.length > 0) {
-      <div *ngFor="let post of selectedChannel.posts; let i = index">
+      <div *ngFor="let post of selectedChannel.posts">
         <!-- Date line for messages -->
         <div class="dateLine">
           <div class="Line">
@@ -59,17 +59,19 @@
         </div>
 
         <!-- Post -->
-        <app-post [post]="post" [currentUserId]="currentUser.id" [isChannel]="true" [selectedChannel]="selectedChannel" (toggleThread)="openThread()"> </app-post>
-
-        <div class="message-details">
-          <!-- Message actions and time details -->
-          <a>Antworten</a>
-          <span
-            >Letzte Antwort:{{
-              formatDateTime(selectedChannel.posts[i].timestamp)
-            }}
-          </span>
-        </div>
+        <app-post
+          [post]="post"
+          [currentUserId]="currentUser.id"
+          [isChannel]="true"
+          [selectedChannel]="selectedChannel"
+          (click)="openThread(post)"
+        >
+          <div class="message-details">
+            <!-- Message actions and time details -->
+            <a>Antworten</a>
+            <span>Letzte Antwort:{{ formatDateTime(post.timestamp) }} </span>
+          </div>
+        </app-post>
       </div>
       }
 
@@ -111,10 +113,7 @@
         <div class="icons">
           <div class="buttons">
             <a class="addIcon" (click)="openFileDialog()">
-              <img
-                src="assets/images/icons/add_icon.svg"
-                alt=""
-              />
+              <img src="assets/images/icons/add_icon.svg" alt="" />
             </a>
             <input
               type="file"
@@ -128,10 +127,7 @@
             <!-- Liste für Emojis -->
             <div class="link-emojis">
               <button mat-button [matMenuTriggerFor]="aboveMenu">
-                <img
-                  src="assets/images/icons/smiley-Icon.svg"
-                  alt=""
-                />
+                <img src="assets/images/icons/smiley-Icon.svg" alt="" />
               </button>
               <mat-menu #aboveMenu="matMenu" yPosition="above">
                 <div class="emoji-container">
@@ -146,10 +142,7 @@
               </mat-menu>
               <!-- Liste für Verlinkungen von Kontakten -->
               <button mat-button [matMenuTriggerFor]="contactLinks">
-                <img
-                  src="assets/images/icons/link_icon.svg"
-                  alt=""
-                />
+                <img src="assets/images/icons/link_icon.svg" alt="" />
               </button>
               <mat-menu #contactLinks="matMenu" yPosition="above">
                 <div class="link-container">
@@ -174,18 +167,15 @@
     </div>
   </div>
 
+  <!-- Direct Message -->
+
   <div class="height-65vh" *ngIf="chatSelected">
     <!-- Header section with channel name and contact information -->
     <header *ngIf="chatSelected">
-      <div
-        class="channelName"
-        *ngIf="
-          directMessage && directMessage.users && directMessage.users.length > 0
-        "
-      >
+      <div class="channelName" *ngIf="selectedDirectMessage.users.length > 0">
         <div class="avatarName">
-          <img src="{{ directMessage.users[0].avatar }}" alt="" />
-          {{ directMessage.users[0].name }}
+          <img src="{{ otherUserDirectMessage.avatar }}" alt="" />
+          {{ otherUserDirectMessage.name }}
         </div>
       </div>
     </header>
@@ -194,40 +184,24 @@
 
     <div class="message-content">
       <!-- Date line for messages -->
-      @if (directMessage && directMessage.posts && directMessage.posts.length >
-      0 && directMessage.users.length > 0) {
-      <div class="dateLine">
-        <div class="Line">
-          <span>{{ formatDate(selectedChannel.posts[0].timestamp) }}</span>
-        </div>
-      </div>
-      <!--Message Loop -->
-      <div class="message">
-        <div class="message-container">
-          <!-- Profile picture of the message author -->
-          <img [src]="directMessage.users[0].avatar" alt="" />
-          <!-- Message box -->
-          <div class="message-box">
-            <div class="message-name">
-              <!-- Name of the message author -->
-              <span>{{ directMessage.users[0].name }}</span>
-            </div>
-            <div class="message-text">
-              <!-- Text of the message -->
-              <span>{{ directMessage.posts }}</span>
-            </div>
-
-            <div class="message-details">
-              <!-- Message actions and time details -->
-              <a>Antworten</a>
-              <span
-                >Letzte Antwort:{{
-                  formatDateTime(selectedChannel.posts[0].timestamp)
-                }}
-              </span>
-            </div>
+      @if (selectedDirectMessage.posts.length > 0 &&
+      selectedDirectMessage.users.length > 0) {
+      <div *ngFor="let post of selectedDirectMessage.posts">
+        <!-- Date line for messages -->
+        <div class="dateLine">
+          <div class="Line">
+            <span>{{ formatDate(post.timestamp) }}</span>
           </div>
         </div>
+
+        <!-- Post -->
+        <app-post
+          [post]="post"
+          [currentUserId]="currentUser.id"
+          [isChannel]="false"
+          [selectedChannel]="selectedChannel"
+        >
+        </app-post>
       </div>
 
       }
@@ -237,18 +211,20 @@
       <div
         class="placeholderContainer"
         *ngIf="
-          chatSelected && directMessage && directMessage.posts.length === 0
+          chatSelected &&
+          selectedDirectMessage &&
+          selectedDirectMessage.posts.length === 0
         "
       >
         <div class="messageAvatarName">
-          <img src="{{ directMessage.users[0].avatar }}" alt="" />
-          <span>{{ directMessage.users[0].name }}</span>
+          <img src="{{ otherUserDirectMessage.avatar }}" alt="" />
+          <span>{{ otherUserDirectMessage.name }}</span>
         </div>
 
         <div>
           <p>
             Diese Unterhaltun findet nur zwischen
-            {{ directMessage.users[0].name }} und dir statt.
+            {{ otherUserDirectMessage.name }} und dir statt.
           </p>
         </div>
       </div>
@@ -279,10 +255,7 @@
           <!-- Liste für Emojis -->
           <div class="link-emojis">
             <button mat-button [matMenuTriggerFor]="aboveMenu">
-              <img
-                src="assets/images/icons/smiley-Icon.svg"
-                alt=""
-              />
+              <img src="assets/images/icons/smiley-Icon.svg" alt="" />
             </button>
             <mat-menu #aboveMenu="matMenu" yPosition="above">
               <div class="emoji-container">
@@ -297,10 +270,7 @@
             </mat-menu>
             <!-- Liste für Verlinkungen von Kontakten -->
             <button mat-button [matMenuTriggerFor]="contactLinks">
-              <img
-                src="assets/images/icons/link_icon.svg"
-                alt=""
-              />
+              <img src="assets/images/icons/link_icon.svg" alt="" />
             </button>
             <mat-menu #contactLinks="matMenu" yPosition="above">
               <div class="link-container">
@@ -318,7 +288,7 @@
         </div>
 
         <a (click)="sendMessageToContact()">
-          <img src="./../../../../assets/images/icons/send_icon.svg" alt="" />
+          <img src="assets/images/icons/send_icon.svg" alt="" />
         </a>
       </div>
     </div>

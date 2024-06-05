@@ -19,7 +19,12 @@ import { Channel } from '../../../models/channel.class';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import {
   MatDialog,
@@ -38,6 +43,7 @@ import { StateService } from '../../../services/stateservice.service';
 import { SearchService } from '../../../services/search-service.service';
 import { Observable } from 'rxjs';
 import { PostComponent } from '../post/post.component';
+import { MinimalUser } from '../../../models/minimal_user.class';
 
 declare const twemoji: any; // Deklariere Twemoji als Modul
 
@@ -52,15 +58,14 @@ declare const twemoji: any; // Deklariere Twemoji als Modul
     MatDialogModule,
     FormsModule,
     ReactiveFormsModule,
-    PostComponent
+    PostComponent,
   ],
   templateUrl: './main-content.component.html',
   styleUrl: './main-content.component.scss',
 })
 export class MainContentComponent implements OnInit, OnDestroy {
-
   @Output() toggleThread = new EventEmitter<void>();
-  
+
   @ViewChild('fileInput') fileInput!: ElementRef;
 
   channelsService = inject(ChannelsService);
@@ -68,6 +73,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   storageService = inject(StorageService);
   message: any = '';
   stateService = inject(StateService);
+  threadsService = inject(ThreadsService);
   // searchService = inject(SearchService);
 
   private userSubscription: Subscription = new Subscription();
@@ -77,10 +83,11 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
   currentUser: User = new User();
   selectedChannel: Channel = new Channel();
+  selectedDirectMessage: DirectMessage = new DirectMessage();
+  otherUserDirectMessage: MinimalUser = new MinimalUser();
 
   allUsers: User[] = [];
   userId: any;
-  directMessage: DirectMessage | null = null;
   emojis: string[] = [
     '😊',
     '❤️',
@@ -97,24 +104,21 @@ export class MainContentComponent implements OnInit, OnDestroy {
   chatSelected: boolean = false;
   files: File[] = [];
   form: FormGroup;
-  searchResults$: Observable<(Channel | User)[]> = of ([]);
+  searchResults$: Observable<(Channel | User)[]> = of([]);
   searchResults: (Channel | User)[] | undefined;
 
   constructor(
     private dialog: MatDialog,
     private directMessagesService: DirectMessagesService,
     private fb: FormBuilder,
-    private searchService : SearchService,
-    
-  ) { 
+    private searchService: SearchService
+  ) {
     this.form = this.fb.group({
       recipient: [''],
     });
-
   }
 
   ngOnInit(): void {
-
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       this.currentUser = user ?? new User();
     });
@@ -138,51 +142,54 @@ export class MainContentComponent implements OnInit, OnDestroy {
     );
 
     this.directMessageSubscription =
-      this.directMessagesService.directMessage$.subscribe(
-        (directMessage: DirectMessage | null) => {
-          this.directMessage = directMessage;
-          console.log(directMessage);
+      this.directMessagesService.directMessage$.subscribe((directMessage) => {
+        this.selectedDirectMessage = directMessage ?? new DirectMessage();
+        console.log('Seleceted Message: ', this.selectedDirectMessage);
 
-          this.chatSelected = !!directMessage; // Update chatSelected based on the existence of a direct message
-          if (this.chatSelected) {
-            this.channelSelected = false;
-          }
+        this.chatSelected = !!directMessage;
+        if (this.chatSelected) {
+          this.channelSelected = false;
         }
-      );
-
-      this.stateService.showContacts$.subscribe(show => {
-        this.chatSelected= show;
-      });
-  
-      this.stateService.showChannels$.subscribe(show => {
-        this.channelSelected = show;
+        this.getOtherUserDirectMessage();
       });
 
-     
-      this.searchResults$ = this.form.valueChanges.pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        switchMap((term) => this.searchService.search(term))
-      );
+    this.stateService.showContacts$.subscribe((show) => {
+      this.chatSelected = show;
+    });
 
-      this.searchResults$.subscribe(results => {
-        this.searchResults = results;
-      });
+    this.stateService.showChannels$.subscribe((show) => {
+      this.channelSelected = show;
+    });
+
+    this.searchResults$ = this.form.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((term) => this.searchService.search(term))
+    );
+
+    this.searchResults$.subscribe((results) => {
+      this.searchResults = results;
+    });
+  }
+
+  getOtherUserDirectMessage() {
+    for (let i = 0; i < this.selectedDirectMessage.users.length; i++) {
+      if (this.selectedDirectMessage.users[i].id != this.currentUser.id) {
+        this.otherUserDirectMessage = this.selectedDirectMessage.users[i];
+      }
+    }
   }
 
   get recipient(): FormControl {
     return this.form.get('recipient') as FormControl;
   }
 
-   selectRecipient(recipient: Channel | User) {
-    const recipientString:any =
-      recipient instanceof Channel
-        ? `#${recipient.name}`
-        : `@${recipient.id}`;
+  selectRecipient(recipient: Channel | User) {
+    const recipientString: any =
+      recipient instanceof Channel ? `#${recipient.name}` : `@${recipient.id}`;
     this.form.setValue(recipientString);
   }
 
-  
   linkContactInMessage(x: string) {
     let messageTextarea = document.getElementById('message-textarea');
     if (messageTextarea) {
@@ -209,13 +216,12 @@ export class MainContentComponent implements OnInit, OnDestroy {
     return twemoji.parse(emoji);
   }
 
-
   openChannelInfoDialog(channelId: string): void {
     const dialogRef = this.dialog.open(ChannelInfoComponent, {
       width: '872px',
       position: {
         top: '11%',
-        right: '25%'
+        right: '25%',
       },
       data: { channelId: channelId },
     });
@@ -248,10 +254,10 @@ export class MainContentComponent implements OnInit, OnDestroy {
   }
 
   async sendMessageToContact() {
-    if (this.message.trim() && this.directMessage?.id) {
+    if (this.message.trim() && this.selectedDirectMessage?.id) {
       try {
         await this.directMessagesService.savePost(
-          this.directMessage.id,
+          this.selectedDirectMessage.id,
           this.message,
           this.currentUser
         );
@@ -334,10 +340,22 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.message += emoji;
   }
 
-  openThread() {
+  /**
+   * This function gets the data of a thread if the user clicks on a post in a channel. Then it opens the thread.
+   */
+  openThread(post: Post) {
+    this.getDataThread(post);
     this.toggleThread.emit();
   }
 
-
-
+  /**
+   * This function gets the data of the thread from the service. The post needs to be transmitted if the thread is openend for the first time. Then a new document is created and the post is stored as the first post.
+   */
+  getDataThread(post: Post) {
+    this.threadsService.getDataThread(
+      this.selectedChannel.id,
+      this.selectedChannel.name,
+      post
+    );
+  }
 }
