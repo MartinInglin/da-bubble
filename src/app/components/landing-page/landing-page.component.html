@@ -40,7 +40,7 @@
             <tr *ngFor="let channel of currentUser.channels; let i = index">
               <td (click)="channelsService.getDataChannel(channel.id)">
                 <span class="span-hashtag">#</span>
-                <span>{{ currentUser.channels[i].name }}</span>
+                <span class="current-user-name">{{ currentUser.channels[i].name }}</span>
               </td>
             </tr>
             <tr>

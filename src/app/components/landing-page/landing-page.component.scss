@@ -292,10 +292,13 @@ mat-drawer-container {
     &:hover {
       border-radius: 20px;
       background-color: #eceefe;
-      padding-left: 2px;
 
       .span-hashtag {
         color: #535af1;
+      }
+
+      .current-user-name {
+        padding-bottom: 2px;
       }
     }
   }
