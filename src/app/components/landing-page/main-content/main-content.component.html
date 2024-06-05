@@ -28,22 +28,19 @@
 
   <div class="height-65vh" *ngIf="channelSelected">
     <header>
-      <div
-        (click)="openChannelInfoDialog(selectedChannel.id)"
-        class="channelName"
-      >
+      <div (click)="openChannelInfoDialog(selectedChannel.id)" class="channelName">
         {{ selectedChannel.name }}
       </div>
 
-      <div
-        class="channelMembers"
-        *ngIf="channelSelected"
-        (click)="openMembersDialog(selectedChannel.id)"
-      >
-        <!-- Profile pictures of channel members which are part of the group -->
-        <ng-container *ngFor="let user of selectedChannel.users">
-          <img src="{{ user.avatar }}" alt="" />
-        </ng-container>
+      <div class="members-and-button">
+        <div class="channelMembers" *ngIf="channelSelected" (click)="openMembersDialog(selectedChannel.id)">
+          <!-- Profile pictures of channel members which are part of the group -->
+          <ng-container *ngFor="let user of selectedChannel.users">
+            <img src="{{ user.avatar }}" alt="" />
+          </ng-container>
+          <p>{{ userCount }}</p>
+        </div>
+        <button (click)="openAddUserToChannelDialog(selectedChannel.id)"><img src="assets/images/icons/add_member.svg"></button>
       </div>
     </header>
 
@@ -81,11 +78,9 @@
         <img src="{{ selectedChannel.name }}" alt="" />
         <h3>{{ selectedChannel.description }}</h3>
         <div>
-          <span
-            >Schreib etwas in die Gruppe
+          <span>Schreib etwas in die Gruppe
             <a> {{ selectedChannel.name }}</a> damit andere darauf
-            reagieren.</span
-          >
+            reagieren.</span>
         </div>
       </div>
       }
@@ -94,12 +89,7 @@
     <!-- Input Feld am unteren Rand des Containers -->
     <div class="inputContent" *ngIf="channelSelected">
       <div class="textArea">
-        <textarea
-          name=""
-          id="message-textarea"
-          placeholder="Nachricht an #{{ selectedChannel.name }}"
-          [(ngModel)]="message"
-        ></textarea>
+        <textarea name="" id="message-textarea" placeholder="Nachricht an #{{ selectedChannel.name }}" [(ngModel)]="message"></textarea>
 
         @if (files.length > 0) {
         <div class="documents-container">
@@ -115,12 +105,7 @@
             <a class="addIcon" (click)="openFileDialog()">
               <img src="assets/images/icons/add_icon.svg" alt="" />
             </a>
-            <input
-              type="file"
-              #fileInput
-              style="display: none"
-              (change)="onFileSelected($event)"
-            />
+            <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)" />
 
             <div class="seperator"></div>
 
@@ -131,13 +116,7 @@
               </button>
               <mat-menu #aboveMenu="matMenu" yPosition="above">
                 <div class="emoji-container">
-                  <span
-                    *ngFor="let emoji of emojis"
-                    class="emoji"
-                    mat-menu-item
-                    (click)="addEmojiToMessage(emoji)"
-                    >{{ emoji }}</span
-                  >
+                  <span *ngFor="let emoji of emojis" class="emoji" mat-menu-item (click)="addEmojiToMessage(emoji)">{{ emoji }}</span>
                 </div>
               </mat-menu>
               <!-- Liste für Verlinkungen von Kontakten -->
@@ -234,12 +213,7 @@
   <!-- Input Feld am unteren Rand des Containers -->
   <div class="inputContent" id="inputDirectMessage" *ngIf="chatSelected">
     <div class="textArea">
-      <textarea
-        name=""
-        id="message-textarea"
-        placeholder="Nachricht an #Entwicklerteam"
-        [(ngModel)]="message"
-      ></textarea>
+      <textarea name="" id="message-textarea" placeholder="Nachricht an #Entwicklerteam" [(ngModel)]="message"></textarea>
 
       <div class="icons">
         <div class="buttons">
@@ -259,13 +233,7 @@
             </button>
             <mat-menu #aboveMenu="matMenu" yPosition="above">
               <div class="emoji-container">
-                <span
-                  *ngFor="let emoji of emojis"
-                  (click)="addEmojiToMessage(emoji)"
-                  class="emoji"
-                  mat-menu-item
-                  >{{ emoji }}</span
-                >
+                <span *ngFor="let emoji of emojis" (click)="addEmojiToMessage(emoji)" class="emoji" mat-menu-item>{{ emoji }}</span>
               </div>
             </mat-menu>
             <!-- Liste für Verlinkungen von Kontakten -->

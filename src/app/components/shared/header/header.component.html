@@ -11,7 +11,7 @@
 
   <div *ngIf="currentUser?.isSignedIn" class="user" (click)="openDialog()" (mouseover)="onMouseOver()"
     (mouseout)="onMouseOut()">
-    <span>{{ currentUser?.name}}</span>
+    <span class="name">{{ currentUser?.name}}</span>
     <div> 
       <img class="avatar" [src]="currentUser?.avatar" alt="USER" />
       <div *ngIf="currentUser?.isSignedIn" class="online"></div>

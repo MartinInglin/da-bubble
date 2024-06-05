@@ -57,15 +57,15 @@ export class ChannelsService {
   /**
    *
    */
-  // getAllChannels() {
-  //   const collectionRef = collection(this.firestore, 'channels');
-  //   onSnapshot(collectionRef, (snapshot) => {
-  //     const channel = snapshot.docs.map(
-  //       (doc) => new Channel({ id: doc.id, ...doc.data() })
-  //     )[5];
-  //     this.channelSubject.next(channel);
-  //   });
-  // }
+  getAllChannels() {
+    const collectionRef = collection(this.firestore, 'channels');
+    onSnapshot(collectionRef, (snapshot) => {
+      const channel = snapshot.docs.map(
+        (doc) => new Channel({ id: doc.id, ...doc.data() })
+      )[5];
+      this.channelSubject.next(channel);
+    });
+  }
 
   /**
    * This function creates a new channel. It therefore needs a name, a description and the users which a minimalized. For display purposes they need an id, a name and the URL of their avatar.
@@ -143,6 +143,18 @@ export class ChannelsService {
     }
   
     return userDoc.data() as User;
+  }
+
+  async countUsersInChannel(channelId: string): Promise<number> {
+    const channelDocRef = doc(this.firestore, 'channels', channelId);
+    const channelDoc = await getDoc(channelDocRef);
+
+    if (!channelDoc.exists()) {
+      throw new Error('Channel does not exist');
+    }
+
+    const channelData = channelDoc.data() as Channel;
+    return channelData.users.length;
   }
 
   /**

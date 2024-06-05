@@ -9,16 +9,17 @@
       </div>
       <div class="profile-container">
         <div class="change-avatar-container">
-          <img [src]="currentUser.avatar" alt="User Avatar" (click)="toggleAvatar()"/>
-          <div *ngIf="changeAvatar" class="choose-avatar-container">
-            <img src="assets/images/avatars/avatar_1.svg" alt=""/>
-            <img src="assets/images/avatars/avatar_2.svg" alt=""/>
-            <img src="assets/images/avatars/avatar_3.svg" alt=""/>
-            <img src="assets/images/avatars/avatar_4.svg" alt=""/>
-            <img src="assets/images/avatars/avatar_5.svg" alt=""/>
-            <img src="assets/images/avatars/avatar_6.svg" alt=""/>
+          <img [src]="selectedAvatar || currentUser.avatar" alt="User Avatar"/>
+          <div class="choose-avatar-container">
+            <img *ngFor="let avatar of availableAvatars"
+            [src]="avatar"
+            [class.selected]="avatar === selectedAvatar"
+            (click)="selectAvatar(avatar)"
+            alt="Avatar Auswahl"
+            class="avatar-option"/>
           </div>
-          <button *ngIf="changeAvatar">Profilbild hochladen</button>
+          <button (click)="openFileDialog()">Profilbild hochladen</button>
+          <input #fileInput type="file" (change)="onFileSelected($event)" hidden/>
         </div>
       </div>
       <div class="edit-container">

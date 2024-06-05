@@ -33,6 +33,7 @@ import {
 } from '@angular/material/dialog';
 import { ChannelInfoComponent } from '../../dialogues/channel-info/channel-info.component';
 import { MembersComponent } from '../../dialogues/members/members.component';
+import { AddUserToChannelComponent } from '../../dialogues/add-user-to-channel/add-user-to-channel.component';
 import { ProfileDetailViewComponent } from '../../dialogues/profile-detail-view/profile-detail-view.component';
 import { DirectMessagesService } from '../../../services/firestore/direct-messages.service';
 import { DirectMessage } from '../../../models/direct-message.class';
@@ -40,7 +41,7 @@ import { StorageService } from '../../../services/storage.service';
 import { FormsModule } from '@angular/forms';
 import { Post } from '../../../models/post.class';
 import { StateService } from '../../../services/stateservice.service';
-import { SearchService } from '../../../services/search-service.service';
+// import { SearchService } from '../../../services/search-service.service';
 import { Observable } from 'rxjs';
 import { PostComponent } from '../post/post.component';
 import { MinimalUser } from '../../../models/minimal_user.class';
@@ -81,12 +82,15 @@ export class MainContentComponent implements OnInit, OnDestroy {
   private usersSubscription: Subscription = new Subscription();
   private directMessageSubscription: Subscription = new Subscription();
 
+  filteredChannels: User[] = [];
   currentUser: User = new User();
   selectedChannel: Channel = new Channel();
   selectedDirectMessage: DirectMessage = new DirectMessage();
   otherUserDirectMessage: MinimalUser = new MinimalUser();
 
+  filteredUsers: User[] = [];
   allUsers: User[] = [];
+  userCount: number = 0;
   userId: any;
   emojis: string[] = [
     '😊',
@@ -106,12 +110,12 @@ export class MainContentComponent implements OnInit, OnDestroy {
   form: FormGroup;
   searchResults$: Observable<(Channel | User)[]> = of([]);
   searchResults: (Channel | User)[] | undefined;
-
+  searchTerm: string = '';
   constructor(
     private dialog: MatDialog,
     private directMessagesService: DirectMessagesService,
     private fb: FormBuilder,
-    private searchService: SearchService
+    //private searchService: SearchService
   ) {
     this.form = this.fb.group({
       recipient: [''],
@@ -125,19 +129,38 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
     this.channelSubscription = this.channelsService.channelSubject$.subscribe(
       (channel) => {
-        this.selectedChannel = channel ?? new Channel();
-        console.log('Current channel:', this.selectedChannel);
+        if (channel) {
+          this.selectedChannel = channel ?? new Channel();
+          console.log('Current channel:', this.selectedChannel);
+          // this.searchService.setChannels([channel]);
 
-        this.channelSelected = !!this.selectedChannel.id;
-        if (this.channelSelected) {
-          this.chatSelected = false;
+          this.filteredChannels = this.allUsers.filter(c =>
+            c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+          );
+
+          this.channelSelected = !!this.selectedChannel.id;
+          if (this.channelSelected) {
+            this.chatSelected = false;
+          }
+
         }
+
       }
     );
 
     this.usersSubscription = this.usersService.allUsersSubject$.subscribe(
       (users) => {
-        this.allUsers = users ?? []; // Benutzerdaten aktualisieren
+        if (users) {
+          this.allUsers = users ?? []; // Benutzerdaten aktualisieren
+          // this.searchService.setContacts(users); 
+          console.log('All users:', this.allUsers);
+
+          this.filteredUsers = this.allUsers.filter(u =>
+            u.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+          );
+          
+        }
+
       }
     );
 
@@ -161,10 +184,19 @@ export class MainContentComponent implements OnInit, OnDestroy {
       this.channelSelected = show;
     });
 
+    this.stateService.showContacts$.subscribe(show => {
+      this.chatSelected = show;
+    });
+
+    this.stateService.showChannels$.subscribe(show => {
+      this.channelSelected = show;
+    });
+
+
     this.searchResults$ = this.form.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap((term) => this.searchService.search(term))
+      //switchMap((term) => this.searchService.search(term))
     );
 
     this.searchResults$.subscribe((results) => {
@@ -178,6 +210,21 @@ export class MainContentComponent implements OnInit, OnDestroy {
         this.otherUserDirectMessage = this.selectedDirectMessage.users[i];
       }
     }
+    //  switchMap(formValue => {
+    //     const term = formValue.recipient;
+    //     console.log('Form value changes:', term); // Added log to check form value changes
+    //     this.searchTerm = typeof term === 'string' ? term : '';
+    //     console.log('Search term:', this.searchTerm); // Added log to check search term
+    //     return this.searchTerm ? this.search(this.searchTerm) : of([]);
+    //   })
+    // );
+
+
+
+    // this.searchResults$.subscribe(results => {
+    //   console.log('Search results:', results);
+    //   this.searchResults = results;
+    // });
   }
 
   get recipient(): FormControl {
@@ -186,8 +233,23 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
   selectRecipient(recipient: Channel | User) {
     const recipientString: any =
-      recipient instanceof Channel ? `#${recipient.name}` : `@${recipient.id}`;
-    this.form.setValue(recipientString);
+      recipient instanceof Channel
+        ? `#${recipient.name}`
+        : `@${recipient.id}`;
+        this.form.setValue({ recipient: recipientString });
+  }
+
+  search(searchTerm: string): Observable<(User)[]> {
+    console.log('Search term in search function:', searchTerm); // Added log to check search term in search function
+    const filteredChannels = this.allUsers.filter(
+      channel => channel.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    const filteredUsers = this.allUsers.filter(
+      user => user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    const results = [...filteredChannels, ...filteredUsers];
+    console.log('Filtered results:', results); // Added log to check filtered results
+    return of(results);
   }
 
   linkContactInMessage(x: string) {
@@ -280,6 +342,18 @@ export class MainContentComponent implements OnInit, OnDestroy {
     });
   }
 
+  openAddUserToChannelDialog(channelId: string) {
+    const dialogRef = this.dialog.open(AddUserToChannelComponent, {
+      width: '800px',
+      height: '800px',
+      position: {
+        top: '210px',
+        right: '-200px',
+      },
+      data: { channelId: channelId },
+    });
+  }
+
   openDetailViewDialog(): void {
     const dialogRef = this.dialog.open(ProfileDetailViewComponent, {
       width: '500px',
@@ -357,5 +431,15 @@ export class MainContentComponent implements OnInit, OnDestroy {
       this.selectedChannel.name,
       post
     );
+  }
+
+  async getUserCount(): Promise<void> {
+    try {
+      if (this.selectedChannel && this.selectedChannel.id) {
+        this.userCount = await this.channelsService.countUsersInChannel(this.selectedChannel.id);
+      }
+    } catch (error) {
+      console.error('Error fetching user count:', error);
+    }
   }
 }
