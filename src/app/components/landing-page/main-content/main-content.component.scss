@@ -96,7 +96,7 @@ header {
     font-size: 20px;
     padding-top: 10px;
     padding-left: 10px;
-  background: none;
+    background: none;
     flex: 1;
     &:focus {
       border-color: transparent;
@@ -225,7 +225,7 @@ header {
     padding: 10px;
     gap: 30px;
     height: fit-content;
-    
+
     &:hover {
       background-color: #eceefe;
       width: 100%;
@@ -381,7 +381,19 @@ cdk-overlay-connected-position-bounding-box {
   }
 }
 
-
+@media (max-width: 580px) {
+  .newMessage {
+    span{
+      margin-left: 30px;
+    }
+    input {
+    margin-left: 30px;
+    }
+    input::placeholder {
+      color: transparent;
+    }
+  }
+}
 
 // .message-container {
 //   display: flex;

@@ -286,3 +286,42 @@ mat-drawer-container {
     }
   }
 }
+
+// Media Querries
+@media (max-width: 768px) { /* Adjust breakpoint as needed */
+  .Content {
+    display: flex; /* Allow stacking elements vertically */
+  }
+
+  .sidenav {
+    // position: fixed; /* Fix sidenav to viewport on smaller screens */
+    width: 100%; /* Take full width */
+    // transform: translateX(-100%); /* Hide sidenav initially */
+    transition: transform 0.8s ease-in-out; /* Smooth transition */
+    mat-drawer-container{
+      justify-content: center;
+      align-items: center;
+      display: flex;
+    }
+  }
+
+  .sidenav.open { /* Add class on menu open */
+    transform: translateX(100%); 
+    display: swap; 
+  }
+
+  // .sidenav:not(.open) {
+  //   transform: translateX(-100%); /* Hide sidenav when closed */
+  // }
+
+  .mainContent{
+    flex: 1; /* Allow main content to fill remaining space */
+    overflow-y: auto; /* Enable scrolling for long content */
+    transition: opacity 0.3s ease-in-out; /* Smooth opacity change */
+  }
+
+  .mainContent.hidden { /* Add class on menu open */
+    opacity: 0; /* Hide main content when menu is open */
+    pointer-events: none; /* Prevent interaction with hidden content */
+  }
+}

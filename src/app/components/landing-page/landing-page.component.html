@@ -10,7 +10,7 @@
       </button>
     </div>
     <!-- SideNav -->
-    <nav>
+    <nav class="sidenav">
       <mat-drawer-container class="example-container" autosize>
         <mat-drawer #drawer class="example-sidenav" mode="side">
           <div class="head-side-menu">
@@ -82,7 +82,7 @@
 
     <!-- ChatSpace -->
     <app-main-content class="mainContent" (toggleThread)="toggleThread()"></app-main-content>
-
+    
     <!-- Thread Section -->
     <mat-drawer-container class="thread-container" autosize>
       <mat-drawer #drawerThread="matDrawer" class="thread-sidenav" mode="side" position="end">

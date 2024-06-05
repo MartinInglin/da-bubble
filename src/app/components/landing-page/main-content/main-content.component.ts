@@ -67,7 +67,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   storageService = inject(StorageService);
   message: any = '';
   stateService = inject(StateService);
-  // searchService = inject(SearchService);
+  searchService = inject(SearchService);
 
   private userSubscription: Subscription = new Subscription();
   private channelSubscription: Subscription = new Subscription();
@@ -104,7 +104,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     private threadService: ThreadsService,
     private directMessagesService: DirectMessagesService,
     private fb: FormBuilder,
-    private searchService : SearchService,
+    // private searchService : SearchService,
     
   ) { 
     this.form = this.fb.group({
@@ -121,19 +121,27 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
     this.channelSubscription = this.channelsService.channelSubject$.subscribe(
       (channel) => {
-        this.selectedChannel = channel ?? new Channel();
-        console.log('Current channel:', this.selectedChannel);
-
-        this.channelSelected = !!this.selectedChannel.id;
-        if (this.channelSelected) {
-          this.chatSelected = false;
+        if (channel) {
+          this.selectedChannel = channel ?? new Channel();
+          console.log('Current channel:', this.selectedChannel);
+          this.searchService.setChannels([channel]);
+  
+          this.channelSelected = !!this.selectedChannel.id;
+          if (this.channelSelected) {
+            this.chatSelected = false;
+          }
         }
+      
       }
     );
 
     this.usersSubscription = this.usersService.allUsersSubject$.subscribe(
       (users) => {
-        this.allUsers = users ?? []; // Benutzerdaten aktualisieren
+        if (users) {
+          this.allUsers = users ?? []; // Benutzerdaten aktualisieren
+          this.searchService.setContacts(users); 
+        }
+
       }
     );
 

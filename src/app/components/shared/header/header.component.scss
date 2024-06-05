@@ -53,9 +53,9 @@ header {
   img {
     height: 30px !important;
 
-  &:hover {
-    content: url("./../../../../assets/images/icons/keyboard_arrow_down_blue.svg");
-  }
+    &:hover {
+      content: url("./../../../../assets/images/icons/keyboard_arrow_down_blue.svg");
+    }
   }
 }
 
@@ -94,7 +94,6 @@ header {
     width: 35px;
     pointer-events: none;
   }
-
 }
 
 .register {
@@ -121,12 +120,34 @@ header {
 }
 
 .status {
-    height: 14px;
-    width: 14px;
-    position: relative;
-    top: 20px;
-    right: 18px;
-    border: 2px solid white;
-    border-radius: 100%;
-    background-color: $online-green;
+  height: 14px;
+  width: 14px;
+  position: relative;
+  top: 20px;
+  right: 18px;
+  border: 2px solid white;
+  border-radius: 100%;
+  background-color: $online-green;
+}
+
+@media (max-width: 1180px) {
+  input#searchBar::placeholder {
+    color: transparent;
+  }
+}
+
+@media (max-width: 1020px) {
+  .name {
+    display: none;
+  }
+  .user {
+    justify-content: end;
+    width: fit-content;
+  }
+}
+@media (max-width: 750px) {
+  .searchBar {
+    display: none;
+  }
+
 }
