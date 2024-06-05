@@ -113,7 +113,6 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   }
 
   getAllChannelsForUser(userId: string): void {
-    // Hier kannst du die Kanäle abrufen, denen der Benutzer beigetreten ist, basierend auf der Benutzer-ID
   }
 
   showContactsSide() {}

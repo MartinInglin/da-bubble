@@ -36,7 +36,7 @@ import { StorageService } from '../../../services/storage.service';
 import { FormsModule } from '@angular/forms';
 import { Post } from '../../../models/post.class';
 import { StateService } from '../../../services/stateservice.service';
-import { SearchService } from '../../../services/search-service.service';
+// import { SearchService } from '../../../services/search-service.service';
 import { Observable } from 'rxjs';
 import { PostComponent } from '../post/post.component';
 
@@ -69,16 +69,17 @@ export class MainContentComponent implements OnInit, OnDestroy {
   storageService = inject(StorageService);
   message: any = '';
   stateService = inject(StateService);
-  searchService = inject(SearchService);
+  // searchService = inject(SearchService);
 
   private userSubscription: Subscription = new Subscription();
   private channelSubscription: Subscription = new Subscription();
   private usersSubscription: Subscription = new Subscription();
   private directMessageSubscription: Subscription = new Subscription();
 
+  filteredChannels: User[] = [];
   currentUser: User = new User();
   selectedChannel: Channel = new Channel();
-
+  filteredUsers: User[] = [];
   allUsers: User[] = [];
   userCount: number = 0;
   userId: any;
@@ -101,14 +102,13 @@ export class MainContentComponent implements OnInit, OnDestroy {
   form: FormGroup;
   searchResults$: Observable<(Channel | User)[]> = of([]);
   searchResults: (Channel | User)[] | undefined;
-
+  searchTerm: string = '';
   constructor(
     private dialog: MatDialog,
     private directMessagesService: DirectMessagesService,
     private fb: FormBuilder,
-    // private searchService : SearchService,
-    
-  ) { 
+
+  ) {
     this.form = this.fb.group({
       recipient: [''],
     });
@@ -125,15 +125,19 @@ export class MainContentComponent implements OnInit, OnDestroy {
         if (channel) {
           this.selectedChannel = channel ?? new Channel();
           console.log('Current channel:', this.selectedChannel);
-          this.searchService.setChannels([channel]);
-  
+          // this.searchService.setChannels([channel]);
+
+          this.filteredChannels = this.allUsers.filter(c =>
+            c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+          );
+
           this.channelSelected = !!this.selectedChannel.id;
           if (this.channelSelected) {
             this.chatSelected = false;
           }
 
         }
-      
+
       }
     );
 
@@ -141,7 +145,13 @@ export class MainContentComponent implements OnInit, OnDestroy {
       (users) => {
         if (users) {
           this.allUsers = users ?? []; // Benutzerdaten aktualisieren
-          this.searchService.setContacts(users); 
+          // this.searchService.setContacts(users); 
+          console.log('All users:', this.allUsers);
+
+          this.filteredUsers = this.allUsers.filter(u =>
+            u.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+          );
+          
         }
 
       }
@@ -172,10 +182,19 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.searchResults$ = this.form.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap((term) => this.searchService.search(term))
+     switchMap(formValue => {
+        const term = formValue.recipient;
+        console.log('Form value changes:', term); // Added log to check form value changes
+        this.searchTerm = typeof term === 'string' ? term : '';
+        console.log('Search term:', this.searchTerm); // Added log to check search term
+        return this.searchTerm ? this.search(this.searchTerm) : of([]);
+      })
     );
 
+
+
     this.searchResults$.subscribe(results => {
+      console.log('Search results:', results);
       this.searchResults = results;
     });
   }
@@ -189,10 +208,21 @@ export class MainContentComponent implements OnInit, OnDestroy {
       recipient instanceof Channel
         ? `#${recipient.name}`
         : `@${recipient.id}`;
-    this.form.setValue(recipientString);
+        this.form.setValue({ recipient: recipientString });
   }
 
-
+  search(searchTerm: string): Observable<(User)[]> {
+    console.log('Search term in search function:', searchTerm); // Added log to check search term in search function
+    const filteredChannels = this.allUsers.filter(
+      channel => channel.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    const filteredUsers = this.allUsers.filter(
+      user => user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    const results = [...filteredChannels, ...filteredUsers];
+    console.log('Filtered results:', results); // Added log to check filtered results
+    return of(results);
+  }
 
   linkContactInMessage(x: string) {
     let messageTextarea = document.getElementById('message-textarea');
