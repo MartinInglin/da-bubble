@@ -1,8 +1,10 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { Post } from '../../../models/post.class';
 import { StorageService } from '../../../services/storage.service';
 import { CommonModule } from '@angular/common';
 import { MatMenuModule } from '@angular/material/menu';
+import { ThreadsService } from '../../../services/firestore/threads.service';
+import { Channel } from '../../../models/channel.class';
 
 @Component({
   selector: 'app-post',
@@ -13,6 +15,7 @@ import { MatMenuModule } from '@angular/material/menu';
 })
 export class PostComponent {
   storageService = inject(StorageService);
+  threadService = inject(ThreadsService);
 
   showMenu: boolean = false;
   showReaction: boolean = false;
@@ -22,6 +25,10 @@ export class PostComponent {
 
   @Input() post: Post = new Post();
   @Input() currentUserId: string = '';
+  @Input() selectedChannel!: Channel;
+  @Input() isChannel: boolean = false;
+
+  @Output() toggleThread = new EventEmitter<void>();
 
   ngOnInit() {
     this.checkIfPostFromCurrentUser();
@@ -48,5 +55,10 @@ export class PostComponent {
   toggleShowEditMessage() {
     this.showEditMessage = !this.showEditMessage;
     console.log(this.showEditMessage);
+  }
+
+  openThread(selectedChannelId: string, selectedChannelName: string, post: Post): void {
+    this.toggleThread.emit();
+    this.threadService.getDataThread(selectedChannelId, selectedChannelName, post);
   }
 }

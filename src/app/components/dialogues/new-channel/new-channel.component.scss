@@ -1,0 +1,127 @@
+@import "./../../../../styles.scss";
+
+mat-card {
+    width: 872px;
+    height: 539px;
+    padding: 40px;
+    font-family: 'Nunito';
+    border-radius: 30px;
+}
+
+mat-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        p {
+            font-size: 24px;
+            font-weight: 700px;
+            line-height: 32.74px;
+            margin: 0;
+        }
+    }
+
+    span {
+        p {
+            display: flex;
+            gap: 15px;
+            font-size: 17px;
+            font-weight: 400;
+            line-height: 24.55px;
+        }
+    }
+
+    button {
+        height: 40px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: scale 75ms ease-in-out;
+
+        &:hover {
+            background-color: $background;
+            color: $purple1;
+            scale: 1.05;
+        }
+
+        img {
+            height: 13.5px;
+            width: 13.5px;
+        }
+    }
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    input {
+        height: 60px;
+        border-radius: 30px;
+        border: solid 1px $light-purple-lines;
+        padding-left: 15px;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24.55px;
+
+        &::placeholder {
+            color: $text-gray;
+            font-family: 'Nunito';
+        }
+    }
+}
+
+.input-channel {
+    background: url(./../../../../assets/images/icons/tag.svg) no-repeat 28px 17px;
+    box-sizing: border-box;
+    padding-left: 60px !important;
+}
+
+.button-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: $purple1;
+        width: 147px;
+        height: 49px;
+        border-radius: 25px;
+        gap: 10px;
+        padding: 12px 25px 12px 25px;
+        color: white;
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 24.55px;
+        border: none;
+
+        &:hover {
+            opacity: 0.5;
+            transition: 75ms ease-in-out;
+            cursor: pointer;
+          }
+    }
+}

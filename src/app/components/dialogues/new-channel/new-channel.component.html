@@ -1,0 +1,31 @@
+<section>
+    <mat-card>
+        <mat-card-content>
+            <div class="header">
+                <div>
+                    <p>Channel erstellen</p>
+                    <button mat-icon-button (click)="onNoClick()">
+                        <img src="assets/images/icons/close.svg">
+                    </button>
+                </div>
+                <span>
+                    <p>Channels dienen deinem Team zur Kommunikation. Am besten sollten sie themenbezogen sein
+                        #marketing zum Beispiel.</p>
+                </span>
+            </div>
+            <form>
+                <div class="input-container">
+                    <p><b>Channel-Name</b></p>
+                    <input [(ngModel)]="channelName" placeholder="z.B Kooperationsprojekte" class="input-channel" name="channelName">
+                    <p><b>Beschreibung</b> (optional)</p>
+                    <input [(ngModel)]="channelDescription" placeholder="Dein Text hier" name="channelDescription">
+                </div>
+                <div class="button-container">
+                    <div class="message-button">
+                        <button (click)="createChannelAndOpenDialog()">Erstellen</button>
+                    </div>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</section>

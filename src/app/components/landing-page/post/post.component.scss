@@ -3,9 +3,9 @@
 /* Styling for individual messages */
 .message {
   display: flex;
-  max-width: 100%;
-  width: 398px;
+  width: 100%;
   padding: 20px;
+  box-sizing: border-box;
   align-items: center;
   flex-direction: column;
   img {

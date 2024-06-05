@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
@@ -8,7 +8,7 @@ import { UsersService } from '../../../services/firestore/users.service';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { UserMenuComponent } from '../../user-menu/user-menu.component';
+import { UserMenuComponent } from '../../dialogues/user-menu/user-menu.component';
 
 @Component({
   selector: 'app-header',

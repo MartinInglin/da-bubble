@@ -1,0 +1,70 @@
+<section>
+  <mat-card *ngIf="currentUser" class="edit-user-card">
+    <mat-card-content>
+      <div class="detail-view-header">
+        <p>Profil</p>
+        <button (click)="onNoClick()" mat-icon-button>
+          <img src="assets/images/icons/close.svg" />
+        </button>
+      </div>
+      <div class="profile-container">
+        <div class="change-avatar-container">
+          <img [src]="selectedAvatar || currentUser.avatar" alt="User Avatar"/>
+          <div class="choose-avatar-container">
+            <img *ngFor="let avatar of availableAvatars"
+            [src]="avatar"
+            [class.selected]="avatar === selectedAvatar"
+            (click)="selectAvatar(avatar)"
+            alt="Avatar Auswahl"
+            class="avatar-option"/>
+          </div>
+          <button (click)="openFileDialog()">Profilbild hochladen</button>
+          <input #fileInput type="file" (change)="onFileSelected($event)" hidden/>
+        </div>
+      </div>
+      <div class="edit-container">
+        <div class="name-container">
+          <img src="assets/images/icons/account_circle.svg" />
+          <p>Vollständiger Name</p>
+        </div>
+        <input class="name-input" placeholder="{{ currentUser.name }}" [(ngModel)]="updatedName" />
+        <div *ngIf="!currentUser.isGoogleAccount" class="name-container">
+          <img src="assets/images/icons/mail_black.svg" />
+          <p>E-Mail-Adresse</p>
+        </div>
+        <input *ngIf="!currentUser.isGoogleAccount" id="mail" class="name-input" type="email" placeholder="{{ currentUser.email }}" [(ngModel)]="updatedEmail" />
+        <p class="wrong" id="wrong-mail" *ngIf="!isValidEmail()">
+          Bitte gültige E-Mail-Adresse eingeben!
+        </p>
+      </div>
+      <div class="button-container" (click)="onNoClick()">
+        <button class="cancel" (click)="onNoClick()">Abbrechen</button>
+        <button class="save" [disabled]="!isValidEmail()" (click)="saveChanges()">
+          Speichern
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="change-mail-card" *ngIf="wantChangeMail">
+    <mat-card-content>
+      <div class="change-mail-container">
+        <p>
+          Bitte gib dein Passwort ein um die Änderung zu bestätigen! <br>
+          <br>
+          <b>Achtung: </b>Bitte stelle sicher, dass du auf die neue
+          E-Mail-Adresse Zugriff hast. Du wirst automatisch abgemeldet und musst
+          zuerst deine neue E-Mail-Adresse bestätigen, bevor du dich wieder
+          anmelden kannst.
+        </p>
+        <input type="password" placeholder="Passwort eingeben" [(ngModel)]="password" />
+        <p *ngIf="passwordIsFalse" class="wrong">
+          Bitte richtiges Passwort eingeben!
+        </p>
+        <div class="button-container">
+          <button class="cancel" (click)="cancelChanges()">Abbrechen</button>
+          <button class="save" (click)="changeMailAdress()">Bestätigen</button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</section>

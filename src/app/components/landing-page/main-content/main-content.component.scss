@@ -1,3 +1,5 @@
+@import "./../../../../styles.scss";
+
 /* Styling for the main content container */
 #mainContent {
   max-height: 100vh;
@@ -51,18 +53,58 @@ header {
   .channelMembers {
     width: fit-content;
     height: 40px;
-    margin-right: 50px;
     display: flex;
-    padding: 10px;
+    padding: 3px 10px 3px 40px;
     align-items: center;
     cursor: pointer;
+    transition: all 100ms ease-in-out;
+
+    &:hover {
+      background-color: #eceefe;
+      border-radius: 30px;
+    }
+
     img {
       height: 30px;
       padding: 10px;
       margin-left: -30px;
+    }
+
+    p {
+      text-align: center;
+      font-weight: 600;
+      font-size: 20px;
+      line-height: 27.28px;
+      color: black;
+      margin: 0 !important;
+    }
+  }
+}
+
+.members-and-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-right: 50px;
+
+  button {
+    border-radius: 50%;
+    padding: 8px;
+    height: 40px;
+    width: 40px;
+    background-color: $background;
+    border: none;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    img {
+      transition: scale 100ms ease-in-out;
       &:hover {
-        background-color: #eceefe;
-        border-radius: 30px;
+        scale: 1.05;
+        content: url("./../../../../assets/images/icons/add_member_blue.svg");
       }
     }
   }
@@ -198,23 +240,6 @@ header {
     font-size: 18px;
   }
 
-  /* Styling for the message details */
-  .message-details {
-    margin-top: 10px;
-    display: flex;
-    width: fit-content;
-    gap: 20px;
-    a {
-      color: blue;
-      text-decoration: none;
-      font-weight: 550;
-    }
-    span {
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.425);
-    }
-  }
-
   /* Styling for the message container */
   .message-container {
     display: flex;
@@ -235,6 +260,26 @@ header {
     }
   }
 }
+
+/* Styling for the message details */
+.message-details {
+  margin: 10px 0;
+  display: flex;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
+  gap: 20px;
+  a {
+    color: blue;
+    text-decoration: none;
+    font-weight: 550;
+  }
+  span {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.425);
+  }
+}
+
 .avatarName {
   width: fit-content;
   display: flex;

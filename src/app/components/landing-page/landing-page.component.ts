@@ -19,7 +19,7 @@ import { Subscription } from 'rxjs';
 import { UsersService } from '../../services/firestore/users.service';
 import { ChannelsService } from '../../services/firestore/channels.service';
 import { DirectMessagesService } from '../../services/firestore/direct-messages.service';
-import { NewChannelComponent } from '../new-channel/new-channel.component';
+import { NewChannelComponent } from '../dialogues/new-channel/new-channel.component';
 import {
   MatDialog,
   MatDialogModule,

@@ -1,0 +1,138 @@
+@import "./../../../../styles.scss";
+
+mat-card {
+    width: 415px;
+    height: fit-content;
+    padding: 40px;
+    font-family: 'Nunito';
+    border-radius: 30px 0px 30px 30px;
+}
+
+mat-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        p {
+            font-size: 24px;
+            font-weight: 700px;
+            line-height: 32.74px;
+            margin: 0;
+        }
+    }
+
+    button {
+        height: 40px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: scale 75ms ease-in-out;
+
+        &:hover {
+            background-color: $background;
+            color: $purple1;
+            scale: 1.05;
+        }
+
+        img {
+            height: 13.5px;
+            width: 13.5px;
+        }
+    }
+}
+
+.members {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+
+    .single-member {
+        display: flex;
+        align-items: center;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24.55px;
+        border-radius: 30px;
+        padding: 4px 30px 4px 20px;
+
+        &:hover {
+            background-color: $background;
+            cursor: pointer;
+        }
+
+        .online {
+            height: 14px;
+            width: 14px;
+            position: relative;
+            right: 19px;
+            top: 16px;
+            border: 2px solid white;
+            border-radius: 100%;
+            background-color: $online-green;
+        }
+
+        .offline{
+            height: 14px;
+            width: 14px;
+            position: relative;
+            right: 19px;
+            top: 16px;
+            border: 2px solid white;
+            border-radius: 100%;
+            background-color: $text-gray;
+        }
+
+        img {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+        }
+    }
+}
+
+.add-member {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding: 8px 30px 8px 20px;
+    margin-left: 6px;
+    gap: 22px;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 24.55px;
+    border-radius: 30px;
+    background-color: white;
+    border: none;
+
+    &:hover {
+        background-color: $background;
+        color: $purple1;
+        cursor: pointer;
+    }
+
+    div {
+        padding: 4px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: $background;
+        border-radius: 100%;
+    }
+
+    img {
+        height: 32px;
+        width: 32px;
+    }
+}

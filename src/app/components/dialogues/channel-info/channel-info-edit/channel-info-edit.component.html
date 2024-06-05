@@ -1,0 +1,40 @@
+<section>
+    <mat-card>
+      <mat-card-content>
+        <div class="header">
+          <div>
+            <p><img src="assets/images/icons/tag.svg"> Entwicklerteam</p>
+            <button (click)="onNoClick()" mat-icon-button>
+              <img src="assets/images/icons/close.svg">
+            </button>
+          </div>
+        </div>
+        <div class="channel-name-container">
+          <div class="edit-container">
+            <span>Channel-Name</span>
+            <button (click)="saveChanges()">Speichern</button>
+          </div>
+          <div class="name-container">
+            <input [(ngModel)]="updatedName" class="input-channel-name">
+          </div>
+        </div>
+        <div class="channel-info-container">
+          <div class="edit-container">
+            <span>Beschreibung</span>
+            <button (click)="saveChanges()">Speichern</button>
+          </div>
+          <input [(ngModel)]="updatedDescription">
+          <hr>
+          <div>
+            <span class="created-by">Erstellt von<p *ngIf="channel && channel.users && channel.users.length > 0">{{ channel.users[0].name }}</p></span>
+          </div>
+        </div>
+        <div class="button-container">
+          <div class="message-button">
+            <button (click)="leaveChannel()">Channel verlassen</button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </section>
+  

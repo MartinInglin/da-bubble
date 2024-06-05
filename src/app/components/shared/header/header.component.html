@@ -14,7 +14,7 @@
     <span class="name">{{ currentUser?.name}}</span>
     <div> 
       <img class="avatar" [src]="currentUser?.avatar" alt="USER" />
-      <div class="status"></div>
+      <div *ngIf="currentUser?.isSignedIn" class="online"></div>
     </div>
 
     <img class="menuDropDown" [src]="menuDown" alt="MENU" />

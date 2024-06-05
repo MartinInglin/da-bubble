@@ -1,0 +1,218 @@
+@import "./../../../../styles.scss";
+
+mat-card {
+    width: 514px;
+    height: fit-content;
+    border-radius: 30px 0px 30px 30px;
+    padding: 40px;
+    font-family: 'Nunito';
+}
+
+mat-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+.add-user-header {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        p {
+            font-size: 24px;
+            font-weight: 700px;
+            line-height: 32.74px;
+            margin: 0;
+        }
+    }
+
+    span {
+        display: flex;
+        gap: 15px;
+        color: $purple2;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24.55px;
+    }
+
+    button {
+        height: 40px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: scale 75ms ease-in-out;
+
+        &:hover {
+            background-color: $background;
+            color: $purple1;
+            scale: 1.05;
+        }
+
+        img {
+            height: 13.5px;
+            width: 13.5px;
+        }
+    }
+}
+
+.user-list {
+    position: absolute;
+    background-color: white;
+    width: 300px;
+    z-index: 1;
+    top: 200px;
+    left: 90px;
+    border-radius: 0px 20px 20px 20px;
+    display: flex;
+    gap: 15px;
+
+    .single-users {
+        display: flex;
+        align-items: center;
+        border-radius: 30px;
+        padding-left: 10px;
+        padding-right: 10px;
+        gap: 15px;
+
+        &:hover {
+            background-color: $background;
+            cursor: pointer;
+        }
+
+        img {
+            height: 44px;
+            width: 44px;
+        }
+
+        p {
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 24.55px;
+            color: $text-gray;
+        }
+    }
+}
+
+.selected-user {
+    display: flex;
+    height: fit-content;
+    flex-wrap: wrap;
+    max-width: 598px;
+    gap: 10px;
+    align-items: center;
+    padding-left: 15px;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 24.55px;
+
+    .selected-single-user {
+        height: 40px;
+        display: flex;
+        width: fit-content;
+        align-items: center;
+        gap: 10px;
+        color: #212121;
+        padding-left: 20px;
+        padding-right: 20px;
+        border-radius: 30px;
+        background-color: $background;
+
+        img {
+            height: 35px;
+            width: 35px;
+            border-radius: 100%;
+        }
+
+        button {
+            height: 15px;
+            width: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 0px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0);
+            transition: scale 75ms ease-in-out;
+    
+            &:hover {
+                scale: 1.05;
+                cursor: pointer;
+            }
+    
+            img {
+                height: 13.5px;
+                width: 13.5px;
+
+                &:hover {
+                    content: url("./../../../../assets/images/icons/close_blue.svg");
+                }
+            }
+        }
+    }
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+
+    input {
+        height: 55px;
+        width: 434px;
+        border-radius: 30px;
+        border: solid 1px $light-purple-lines;
+        padding-left: 15px;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24.55px;
+
+        &::placeholder {
+            color: $text-gray;
+            font-family: 'Nunito';
+        }
+    }
+}
+
+.button-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: $purple1;
+        width: 147px;
+        height: 49px;
+        border-radius: 25px;
+        gap: 10px;
+        padding: 12px 25px 12px 25px;
+        color: white;
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 24.55px;
+        border: none;
+
+        &:hover {
+            opacity: 0.5;
+            transition: 75ms ease-in-out;
+            cursor: pointer;
+        }
+    }
+}

@@ -130,6 +130,17 @@ header {
   background-color: $online-green;
 }
 
+.online {
+    height: 14px;
+    width: 14px;
+    position: relative;
+    top: 20px;
+    right: 18px;
+    border: 2px solid white;
+    border-radius: 100%;
+    background-color: $online-green;
+}
+
 @media (max-width: 1180px) {
   input#searchBar::placeholder {
     color: transparent;
