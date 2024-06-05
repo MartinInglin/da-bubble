@@ -42,7 +42,6 @@ public threadSubject$: Observable<Thread | null> =
           this.createThread(channelId, channelName, post)
         }
         this.threadSubject.next(threadData);
-        console.log(threadData);
       }
     );
   }
