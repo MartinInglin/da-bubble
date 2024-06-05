@@ -41,7 +41,6 @@ import { StorageService } from '../../../services/storage.service';
 import { FormsModule } from '@angular/forms';
 import { Post } from '../../../models/post.class';
 import { StateService } from '../../../services/stateservice.service';
-// import { SearchService } from '../../../services/search-service.service';
 import { Observable } from 'rxjs';
 import { PostComponent } from '../post/post.component';
 import { MinimalUser } from '../../../models/minimal_user.class';
@@ -75,7 +74,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
   message: any = '';
   stateService = inject(StateService);
   threadsService = inject(ThreadsService);
-  // searchService = inject(SearchService);
 
   private userSubscription: Subscription = new Subscription();
   private channelSubscription: Subscription = new Subscription();
@@ -115,7 +113,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private directMessagesService: DirectMessagesService,
     private fb: FormBuilder,
-    //private searchService: SearchService
   ) {
     this.form = this.fb.group({
       recipient: [''],
@@ -132,7 +129,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
         if (channel) {
           this.selectedChannel = channel ?? new Channel();
           console.log('Current channel:', this.selectedChannel);
-          // this.searchService.setChannels([channel]);
 
           this.filteredChannels = this.allUsers.filter(c =>
             c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
@@ -152,7 +148,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
       (users) => {
         if (users) {
           this.allUsers = users ?? []; // Benutzerdaten aktualisieren
-          // this.searchService.setContacts(users); 
           console.log('All users:', this.allUsers);
 
           this.filteredUsers = this.allUsers.filter(u =>
@@ -196,8 +191,19 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.searchResults$ = this.form.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      //switchMap((term) => this.searchService.search(term))
+      switchMap(formValue => {
+        const term = formValue.recipient;
+        console.log('Form value changes:', term); // Added log to check form value changes
+        this.searchTerm = typeof term === 'string' ? term : '';
+        console.log('Search term:', this.searchTerm); // Added log to check search term
+        return this.searchTerm ? this.search(this.searchTerm) : of([]);
+      })
     );
+
+    this.searchResults$.subscribe(results => {
+      console.log('Search results:', results);
+      this.searchResults = results;
+    });
 
     this.searchResults$.subscribe((results) => {
       this.searchResults = results;
@@ -210,21 +216,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
         this.otherUserDirectMessage = this.selectedDirectMessage.users[i];
       }
     }
-    //  switchMap(formValue => {
-    //     const term = formValue.recipient;
-    //     console.log('Form value changes:', term); // Added log to check form value changes
-    //     this.searchTerm = typeof term === 'string' ? term : '';
-    //     console.log('Search term:', this.searchTerm); // Added log to check search term
-    //     return this.searchTerm ? this.search(this.searchTerm) : of([]);
-    //   })
-    // );
-
-
-
-    // this.searchResults$.subscribe(results => {
-    //   console.log('Search results:', results);
-    //   this.searchResults = results;
-    // });
   }
 
   get recipient(): FormControl {
