@@ -44,6 +44,7 @@ import { StateService } from '../../../services/stateservice.service';
 import { Observable } from 'rxjs';
 import { PostComponent } from '../post/post.component';
 import { MinimalUser } from '../../../models/minimal_user.class';
+import { PostInputComponent } from '../post-input/post-input.component';
 
 declare const twemoji: any; // Deklariere Twemoji als Modul
 
@@ -59,6 +60,7 @@ declare const twemoji: any; // Deklariere Twemoji als Modul
     FormsModule,
     ReactiveFormsModule,
     PostComponent,
+    PostInputComponent
   ],
   templateUrl: './main-content.component.html',
   styleUrl: './main-content.component.scss',

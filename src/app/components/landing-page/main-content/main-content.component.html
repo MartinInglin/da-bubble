@@ -3,12 +3,23 @@
   <!-- Channel -->
 
   <!-- Header section with channel name and contact information -->
-  <header *ngIf="!channelSelected && !chatSelected" class="newMessage" [formGroup]="form">
+  <header
+    *ngIf="!channelSelected && !chatSelected"
+    class="newMessage"
+    [formGroup]="form"
+  >
     <span>Neue Nachricht</span>
-    <input type="text" formControlName="recipient" placeholder="An: #channel, oder @jemand oder E-mail Adresse" />
+    <input
+      type="text"
+      formControlName="recipient"
+      placeholder="An: #channel, oder @jemand oder E-mail Adresse"
+    />
     <div *ngIf="searchResults && searchResults.length">
       <ul>
-        <li *ngFor="let result of searchResults" (click)="selectRecipient(result)">
+        <li
+          *ngFor="let result of searchResults"
+          (click)="selectRecipient(result)"
+        >
           {{ result.name }} ({{ result.id ? "Channel" : "Direct Message" }})
         </li>
       </ul>
@@ -17,19 +28,33 @@
 
   <div class="height-65vh" *ngIf="channelSelected">
     <header>
-      <div (click)="openChannelInfoDialog(selectedChannel.id)" class="channelName">
+      <div
+        (click)="openChannelInfoDialog(selectedChannel.id)"
+        class="channelName"
+      >
         {{ selectedChannel.name }}
       </div>
 
       <div class="members-and-button">
-        <div class="channelMembers" *ngIf="channelSelected" (click)="openMembersDialog(selectedChannel.id, membersDialog)">
+        <div
+          class="channelMembers"
+          *ngIf="channelSelected"
+          (click)="openMembersDialog(selectedChannel.id, membersDialog)"
+        >
           <!-- Profile pictures of channel members which are part of the group -->
           <ng-container *ngFor="let user of selectedChannel.users">
             <img src="{{ user.avatar }}" alt="" />
           </ng-container>
           <p #membersDialog>{{ userCount }}</p>
         </div>
-        <button #addUserDialog (click)="openAddUserToChannelDialog(selectedChannel.id, addUserDialog)"><img src="assets/images/icons/add_member.svg"></button>
+        <button
+          #addUserDialog
+          (click)="
+            openAddUserToChannelDialog(selectedChannel.id, addUserDialog)
+          "
+        >
+          <img src="assets/images/icons/add_member.svg" />
+        </button>
       </div>
     </header>
 
@@ -67,72 +92,24 @@
         <img src="{{ selectedChannel.name }}" alt="" />
         <h3>{{ selectedChannel.description }}</h3>
         <div>
-          <span>Schreib etwas in die Gruppe
+          <span
+            >Schreib etwas in die Gruppe
             <a> {{ selectedChannel.name }}</a> damit andere darauf
-            reagieren.</span>
+            reagieren.</span
+          >
         </div>
       </div>
       }
     </div>
 
     <!-- Input Feld am unteren Rand des Containers -->
-    <div class="inputContent" *ngIf="channelSelected">
-      <div class="textArea">
-        <textarea name="" id="message-textarea" placeholder="Nachricht an #{{ selectedChannel.name }}" [(ngModel)]="message"></textarea>
-
-        @if (files.length > 0) {
-        <div class="documents-container">
-          @for (file of files; track file; let index = $index) {
-          <div class="document" (click)="removeFile(index)">
-            {{ file.name }}
-          </div>
-          }
-        </div>
-        }
-        <div class="icons">
-          <div class="buttons">
-            <a class="addIcon" (click)="openFileDialog()">
-              <img src="assets/images/icons/add_icon.svg" alt="" />
-            </a>
-            <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)" />
-
-            <div class="seperator"></div>
-
-            <!-- Liste für Emojis -->
-            <div class="link-emojis">
-              <button mat-button [matMenuTriggerFor]="aboveMenu">
-                <img src="assets/images/icons/smiley-Icon.svg" alt="" />
-              </button>
-              <mat-menu #aboveMenu="matMenu" yPosition="above">
-                <div class="emoji-container">
-                  <span *ngFor="let emoji of emojis" class="emoji" mat-menu-item (click)="addEmojiToMessage(emoji)">{{ emoji }}</span>
-                </div>
-              </mat-menu>
-              <!-- Liste für Verlinkungen von Kontakten -->
-              <button mat-button [matMenuTriggerFor]="contactLinks">
-                <img src="assets/images/icons/link_icon.svg" alt="" />
-              </button>
-              <mat-menu #contactLinks="matMenu" yPosition="above">
-                <div class="link-container">
-                  <table class="links">
-                    <tr *ngFor="let user of allUsers">
-                      <td (click)="linkContactInMessage(user.name)">
-                        <img [src]="user.avatar" alt="Profilbild" />
-                        <span>{{ user.name }}</span>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </mat-menu>
-            </div>
-          </div>
-
-          <a (click)="sendMessage()">
-            <img src="assets/images/icons/send_icon.svg" alt="" />
-          </a>
-        </div>
-      </div>
-    </div>
+    <app-post-input
+      class="post-input"
+      [selectedChannel]="selectedChannel"
+      [allUsers]="allUsers"
+      [currentUser]="currentUser"
+      [path]="'channels'"
+    ></app-post-input>
   </div>
 
   <!-- Direct Message -->
@@ -200,54 +177,14 @@
   </div>
 
   <!-- Input Feld am unteren Rand des Containers -->
-  <div class="inputContent" id="inputDirectMessage" *ngIf="chatSelected">
-    <div class="textArea">
-      <textarea name="" id="message-textarea" placeholder="Nachricht an #Entwicklerteam" [(ngModel)]="message"></textarea>
-
-      <div class="icons">
-        <div class="buttons">
-          <a [matMenuTriggerFor]="attachment" class="addIcon">
-            <img src="assets/images/icons/add_icon.svg" alt="" />
-          </a>
-          <mat-menu #attachment="matMenu" yPosition="above">
-            <div class="attachment-container"></div>
-          </mat-menu>
-
-          <div class="seperator"></div>
-
-          <!-- Liste für Emojis -->
-          <div class="link-emojis">
-            <button mat-button [matMenuTriggerFor]="aboveMenu">
-              <img src="assets/images/icons/smiley-Icon.svg" alt="" />
-            </button>
-            <mat-menu #aboveMenu="matMenu" yPosition="above">
-              <div class="emoji-container">
-                <span *ngFor="let emoji of emojis" (click)="addEmojiToMessage(emoji)" class="emoji" mat-menu-item>{{ emoji }}</span>
-              </div>
-            </mat-menu>
-            <!-- Liste für Verlinkungen von Kontakten -->
-            <button mat-button [matMenuTriggerFor]="contactLinks">
-              <img src="assets/images/icons/link_icon.svg" alt="" />
-            </button>
-            <mat-menu #contactLinks="matMenu" yPosition="above">
-              <div class="link-container">
-                <table class="links">
-                  <tr *ngFor="let user of allUsers">
-                    <td (click)="linkContactInMessage(user.name)">
-                      <img [src]="user.avatar" alt="Profilbild" />
-                      <span>{{ user.name }}</span>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </mat-menu>
-          </div>
-        </div>
-
-        <a (click)="sendMessageToContact()">
-          <img src="assets/images/icons/send_icon.svg" alt="" />
-        </a>
-      </div>
-    </div>
-  </div>
+  @if (chatSelected) {
+  <app-post-input
+    class="post-input"
+    [selectedChannel]="selectedChannel"
+    [selectedDirectMessage]="selectedDirectMessage"
+    [allUsers]="allUsers"
+    [currentUser]="currentUser"
+    [path]="'directMessages'"
+  ></app-post-input>
+  }
 </main>

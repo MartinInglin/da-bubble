@@ -32,7 +32,7 @@ export class PostInputComponent {
   @Input() allUsers!: User[];
   @Input() currentUser!: User;
 
-  @Input() path!: 'directMessage' | 'threads' | 'channel';
+  @Input() path!: 'directMessages' | 'threads' | 'channels';
 
   @ViewChild('fileInput') fileInput!: ElementRef;
 
@@ -114,10 +114,10 @@ export class PostInputComponent {
   getDocRef(): DocumentReference | undefined {
     const channelId = this.selectedChannel.id;
 
-    if (this.path === 'channel') {
+    if (this.path === 'channels') {
       return doc(this.firestore, this.path, channelId);
     }
-    if (this.path === 'directMessage') {
+    if (this.path === 'directMessages') {
       const directMessageId = this.selectedDirectMessage.id;
       return doc(this.firestore, this.path, directMessageId);
     }
