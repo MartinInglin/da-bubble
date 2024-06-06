@@ -119,6 +119,7 @@
 
 .documents-container {
   display: flex;
+  align-items: center;
   overflow-x: auto;
   gap: 8px;
   padding: 8px;
@@ -130,6 +131,22 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     width: fit-content;
     padding: 4px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &:hover {
+      background-color: rgb(165 165 165 / 40%);
+      cursor: pointer;
+    }
+  }
+
+  .delete-file {
+    height: 12px;
+    width: 12px;
+    background-color: rgb(165 165 165 / 24%);
+    border-radius: 50px;
+    padding: 6px;
 
     &:hover {
       background-color: rgb(165 165 165 / 40%);

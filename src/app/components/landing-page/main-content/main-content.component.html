@@ -131,7 +131,7 @@
       <!-- Date line for messages -->
       @if (selectedDirectMessage.posts.length > 0 &&
       selectedDirectMessage.users.length > 0) {
-      <div *ngFor="let post of selectedDirectMessage.posts">
+      <div *ngFor="let post of selectedDirectMessage.posts; let index = index">
         <!-- Date line for messages -->
         <div class="dateLine">
           <div class="Line">
@@ -145,6 +145,8 @@
           [currentUserId]="currentUser.id"
           [isChannel]="false"
           [selectedChannel]="selectedChannel"
+          [selectedDirectMessageId]="selectedDirectMessage.id"
+          [indexPost]="index"
         >
         </app-post>
       </div>

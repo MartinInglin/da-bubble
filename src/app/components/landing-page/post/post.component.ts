@@ -5,17 +5,19 @@ import { CommonModule } from '@angular/common';
 import { MatMenuModule } from '@angular/material/menu';
 import { ThreadsService } from '../../../services/firestore/threads.service';
 import { Channel } from '../../../models/channel.class';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { PostsService } from '../../../services/firestore/posts.service';
 
 @Component({
   selector: 'app-post',
   standalone: true,
-  imports: [CommonModule, MatMenuModule],
+  imports: [CommonModule, MatMenuModule, MatTooltipModule],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss',
 })
 export class PostComponent {
   storageService = inject(StorageService);
-  threadService = inject(ThreadsService);
+  postsService = inject(PostsService);
 
   showMenu: boolean = false;
   showReaction: boolean = false;
@@ -27,6 +29,8 @@ export class PostComponent {
   @Input() currentUserId: string = '';
   @Input() selectedChannel!: Channel;
   @Input() isChannel: boolean = false;
+  @Input() selectedDirectMessageId!: string;
+  @Input() indexPost!: number;
 
   @Output() toggleThread = new EventEmitter<void>();
 
@@ -48,17 +52,25 @@ export class PostComponent {
     return `${hours}:${minutes} Uhr`;
   }
 
-  downloadFile(downloadURL: string) {
+  downloadFile(downloadURL: string, e: Event) {
     this.storageService.getFile(downloadURL);
+    e.stopPropagation();
+  }
+
+  deleteFile(fileName: string, e: Event, indexFile: number) {
+    if (this.selectedDirectMessageId) {
+      this.postsService.deleteFileDirectMessage(
+        this.indexPost,
+        this.selectedDirectMessageId,
+        indexFile
+      );
+    }
+    this.storageService.deleteFiles(this.post.id, fileName);
+    e.stopPropagation();
   }
 
   toggleShowEditMessage() {
     this.showEditMessage = !this.showEditMessage;
     console.log(this.showEditMessage);
   }
-
-  // openThread(): void {
-  //   this.toggleThread.emit();
-
-  // }
 }

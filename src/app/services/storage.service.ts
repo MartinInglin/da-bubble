@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import {
+  deleteObject,
   getDownloadURL,
   getStorage,
   ref,
@@ -41,6 +42,16 @@ export class StorageService {
     });
 
     return Promise.all(uploadPromises);
+  }
+
+  async deleteFiles(postId: string, fileName: string) {
+    const fileRef = ref(this.storage, `posts/${postId}/${fileName}`);
+    try {
+      await deleteObject(fileRef);
+      console.log("File deleted successfully");
+    } catch (error) {
+      console.error("An error occurred while deleting the file:", error);
+    }
   }
 
   async saveImageUser(userId: string, file: File): Promise<string> {
