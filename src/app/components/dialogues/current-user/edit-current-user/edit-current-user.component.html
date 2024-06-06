@@ -10,17 +10,12 @@
       </div>
       <div class="profile-container">
         <div class="change-avatar-container">
-          <img [src]="selectedAvatar || currentUser.avatar" alt="User Avatar"/>
+          <img [src]="selectedAvatar || currentUser.avatar" alt="User Avatar" />
           <div class="choose-avatar-container">
-            <img *ngFor="let avatar of availableAvatars"
-            [src]="avatar"
-            [class.selected]="avatar === selectedAvatar"
-            (click)="selectAvatar(avatar)"
-            alt="Avatar Auswahl"
-            class="avatar-option"/>
+            <img *ngFor="let avatar of availableAvatars" [src]="avatar" [class.selected]="avatar === selectedAvatar" (click)="selectAvatar(avatar)" alt="Avatar Auswahl" class="avatar-option" />
           </div>
           <button (click)="openFileDialog()">Profilbild hochladen</button>
-          <input #fileInput type="file" (change)="onFileSelected($event)" hidden/>
+          <input #fileInput type="file" (change)="onFileSelected($event)" hidden />
         </div>
       </div>
       <div class="edit-container">
@@ -37,7 +32,7 @@
         <p class="wrong" id="wrong-mail" *ngIf="!isValidEmail()">
           Bitte gültige E-Mail-Adresse eingeben!
         </p>
-        <button class="change-passwort-button" (click)="wantToChangePassword()">Passwort ändern</button>
+        <button class="change-passwort-button" *ngIf="!currentUser.isGoogleAccount" (click)="wantToChangePassword()">Passwort ändern</button>
       </div>
       <div class="button-container" (click)="onNoClick()">
         <button class="cancel" (click)="onNoClick()">Abbrechen</button>
@@ -72,8 +67,8 @@
   <mat-card class="change-mail-card" *ngIf="wantChangePassword">
     <mat-card-content>
       <div class="change-mail-container" *ngIf="wantChangePassword">
-        <input type="password" [(ngModel)]="password" placeholder="Altes Passwort eingeben"/>
-        <input type="password" [(ngModel)]="newPassword" placeholder="Neues Passwort eingeben"/>
+        <input type="password" [(ngModel)]="password" placeholder="Altes Passwort eingeben" />
+        <input type="password" [(ngModel)]="newPassword" placeholder="Neues Passwort eingeben" />
         <p *ngIf="passwordIsFalse" class="wrong">
           Das eingegebene Passwort ist falsch!
         </p>
