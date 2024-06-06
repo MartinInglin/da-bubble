@@ -137,6 +137,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
           this.channelSelected = !!this.selectedChannel.id;
           if (this.channelSelected) {
             this.chatSelected = false;
+            this.getUserCount(); // Benutzerzähler aktualisieren
           }
 
         }
@@ -162,7 +163,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.directMessageSubscription =
       this.directMessagesService.directMessage$.subscribe((directMessage) => {
         this.selectedDirectMessage = directMessage ?? new DirectMessage();
-        console.log('Seleceted Message: ', this.selectedDirectMessage);
+        console.log('Selected Message: ', this.selectedDirectMessage);
 
         this.chatSelected = !!directMessage;
         if (this.chatSelected) {
@@ -178,15 +179,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.stateService.showChannels$.subscribe((show) => {
       this.channelSelected = show;
     });
-
-    this.stateService.showContacts$.subscribe(show => {
-      this.chatSelected = show;
-    });
-
-    this.stateService.showChannels$.subscribe(show => {
-      this.channelSelected = show;
-    });
-
 
     this.searchResults$ = this.form.valueChanges.pipe(
       debounceTime(300),
