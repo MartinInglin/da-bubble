@@ -52,8 +52,8 @@ export class CurrentUserComponent implements OnInit {
     const dialogRef = this.dialog.open(EditCurrentUserComponent, {
       width: '500px',
       position: {
-        top: '100px',
-        right: '50px',
+        top: '120px',
+        right: '30px',
       },
     });
   }

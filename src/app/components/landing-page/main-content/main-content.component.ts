@@ -86,6 +86,8 @@ export class MainContentComponent implements OnInit, OnDestroy {
   selectedDirectMessage: DirectMessage = new DirectMessage();
   otherUserDirectMessage: MinimalUser = new MinimalUser();
 
+  openDialog = true;
+
   filteredUsers: User[] = [];
   allUsers: User[] = [];
   userCount: number = 0;
@@ -266,7 +268,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
       width: '872px',
       position: {
         top: '11%',
-        right: '25%',
+        right: '27%',
       },
       data: { channelId: channelId },
     });
@@ -314,24 +316,27 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
   }
 
-  openMembersDialog(channelId: string): void {
+  openMembersDialog(channelId: string, membersDialog: HTMLElement): void {
+    const rect = membersDialog.getBoundingClientRect();
     const dialogRef = this.dialog.open(MembersComponent, {
       width: '415px',
       position: {
-        top: '11%',
-        right: '6%',
+        top: `${rect.bottom + window.scrollY + 10}px`,
+        left: `${rect.left + window.scrollX - 400}px`
       },
       data: { channelId: channelId },
     });
   }
+  
 
-  openAddUserToChannelDialog(channelId: string) {
+  openAddUserToChannelDialog(channelId: string, addUserDialog: HTMLElement) {
+    const rect = addUserDialog.getBoundingClientRect();
     const dialogRef = this.dialog.open(AddUserToChannelComponent, {
       width: '800px',
       height: '800px',
       position: {
-        top: '210px',
-        right: '-200px',
+        top: `${rect.bottom + window.scrollY + 10}px`,
+        left: `${rect.left + window.scrollX - 475}px`
       },
       data: { channelId: channelId },
     });

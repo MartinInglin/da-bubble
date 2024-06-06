@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, ElementRef } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
@@ -64,8 +64,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
       const dialogRef = this.dialog.open(UserMenuComponent, {
         width: '282px',
         position: {
-          top: '100px',
-          right: '50px'
+          top: '120px',
+          right: '30px'
         },
         panelClass: 'mat-dialog-content',
       });

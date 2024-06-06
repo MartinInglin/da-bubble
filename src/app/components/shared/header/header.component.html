@@ -17,7 +17,7 @@
       <div *ngIf="currentUser?.isSignedIn" class="online"></div>
     </div>
 
-    <img class="menuDropDown" [src]="menuDown" alt="MENU" />
+    <img class="menuDropDown" [src]="menuDown" alt="MENU" #userDiv />
   </div>
 
   <div *ngIf="showRegisterElement" class="register">

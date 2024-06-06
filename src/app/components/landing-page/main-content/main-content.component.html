@@ -22,14 +22,14 @@
       </div>
 
       <div class="members-and-button">
-        <div class="channelMembers" *ngIf="channelSelected" (click)="openMembersDialog(selectedChannel.id)">
+        <div class="channelMembers" *ngIf="channelSelected" (click)="openMembersDialog(selectedChannel.id, membersDialog)">
           <!-- Profile pictures of channel members which are part of the group -->
           <ng-container *ngFor="let user of selectedChannel.users">
             <img src="{{ user.avatar }}" alt="" />
           </ng-container>
-          <p>{{ userCount }}</p>
+          <p #membersDialog>{{ userCount }}</p>
         </div>
-        <button (click)="openAddUserToChannelDialog(selectedChannel.id)"><img src="assets/images/icons/add_member.svg"></button>
+        <button #addUserDialog (click)="openAddUserToChannelDialog(selectedChannel.id, addUserDialog)"><img src="assets/images/icons/add_member.svg"></button>
       </div>
     </header>
 
