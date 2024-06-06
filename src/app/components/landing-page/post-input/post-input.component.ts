@@ -72,12 +72,14 @@ export class PostInputComponent {
     this.message += emoji;
   }
 
-  linkContactInMessage(x: string) {
-    let messageTextarea = document.getElementById('message-textarea');
-    if (messageTextarea) {
-      messageTextarea.textContent += '@' + x + ' '; // Append the name to the textarea with a space
+  /**
+   * This function writes the name of a user into the textarea, if the user selects one in the @ user menu.
+   * 
+   * @param userName Name of the user the from the list that opens if a click on the @ symbol happens.
+   */
+  linkContactInMessage(userName: string) {
+      this.message += '@' + userName + ' ';
     }
-  }
 
   /**
    * This function saves a post a user writes in a channel.
@@ -109,6 +111,7 @@ export class PostInputComponent {
       userId: this.currentUser.id,
     };
     await updateDoc(docRef, { posts: arrayUnion(post) });
+    this.message = '';
   }
 
   getDocRef(): DocumentReference | undefined {
