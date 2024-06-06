@@ -1,4 +1,5 @@
 <section>
+  <div class="overlay" *ngIf="wantChangeMail || wantChangePassword"></div>
   <mat-card *ngIf="currentUser" class="edit-user-card">
     <mat-card-content>
       <div class="detail-view-header">
@@ -36,6 +37,7 @@
         <p class="wrong" id="wrong-mail" *ngIf="!isValidEmail()">
           Bitte gültige E-Mail-Adresse eingeben!
         </p>
+        <button class="change-passwort-button" (click)="wantToChangePassword()">Passwort ändern</button>
       </div>
       <div class="button-container" (click)="onNoClick()">
         <button class="cancel" (click)="onNoClick()">Abbrechen</button>
@@ -58,11 +60,29 @@
         </p>
         <input type="password" placeholder="Passwort eingeben" [(ngModel)]="password" />
         <p *ngIf="passwordIsFalse" class="wrong">
-          Bitte richtiges Passwort eingeben!
+          Das eingegebene Passwort ist falsch!
         </p>
         <div class="button-container">
           <button class="cancel" (click)="cancelChanges()">Abbrechen</button>
           <button class="save" (click)="changeMailAdress()">Bestätigen</button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="change-mail-card" *ngIf="wantChangePassword">
+    <mat-card-content>
+      <div class="change-mail-container" *ngIf="wantChangePassword">
+        <input type="password" [(ngModel)]="password" placeholder="Altes Passwort eingeben"/>
+        <input type="password" [(ngModel)]="newPassword" placeholder="Neues Passwort eingeben"/>
+        <p *ngIf="passwordIsFalse" class="wrong">
+          Das eingegebene Passwort ist falsch!
+        </p>
+        <p *ngIf="newPassword && newPassword.length < 6" class="wrong">
+          Das neue Passwort muss mindestens 6 Zeichen lang sein!
+        </p>
+        <div class="button-container">
+          <button class="cancel" (click)="wantToChangePassword()">Abbrechen</button>
+          <button class="save" (click)="changePassword()" [disabled]="newPassword && newPassword.length < 6">Bestätigen</button>
         </div>
       </div>
     </mat-card-content>

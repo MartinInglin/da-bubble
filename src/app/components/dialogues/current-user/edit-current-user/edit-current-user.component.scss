@@ -93,6 +93,11 @@
             width: 64px;
             transition: scale 75ms ease-in-out;
 
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed !important;
+            }
+
             &:hover {
                 cursor: pointer;
                 scale: 1.05;
@@ -113,6 +118,11 @@
         text-align: center;
         transition: all 75ms ease-in-out;
         background-color: white;
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed !important;
+        }
 
         &:hover {
             background-color: $purple2;
@@ -179,6 +189,11 @@
         line-height: 24.55px;
         text-align: center;
 
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed !important;
+        }
+
         &:hover {
             cursor: pointer;
             background-color: #797EF3;
@@ -221,6 +236,7 @@
     border-radius: 30px;
     transform: translate(-50%, -50%);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    z-index: 20;
 
     mat-card-content {
         display: flex;
@@ -272,7 +288,33 @@
     }
 }
 
+.change-passwort-button {
+    color: $purple1;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 24.55px;
+    border: none;
+    background-color: white;
+    text-align: start;
+
+    &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+}
+
 .wrong {
     color: red;
     font-size: 14px;
 }
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    border-radius: 30px 0px 30px 30px;
+  }

@@ -36,7 +36,9 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
   updatedName: string = '';
   updatedEmail: string = '';
   wantChangeMail: boolean = false;
+  wantChangePassword: boolean = false;
   password: string = '';
+  newPassword: string = '';
   passwordIsFalse: boolean = false;
   isPasswordVerified: boolean = false;
   changeAvatar: boolean = false;
@@ -78,6 +80,10 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
 
   toggleAvatar(): void {
     this.changeAvatar = !this.changeAvatar;
+  }
+
+  wantToChangePassword(): void {
+    this.wantChangePassword = !this.wantChangePassword;
   }
 
   selectAvatar(avatar: string): void {
@@ -145,6 +151,22 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
         this.authService.changeEmail(this.updatedEmail, this.password)
       } else {
         this.passwordIsFalse = true;
+      }
+    }
+  }
+
+  async changePassword(): Promise<void> {
+    if (this.currentUser && this.password && this.newPassword) {
+      const isValid = await this.authService.verifyPassword(this.currentUser.email, this.password);
+      if (isValid) {
+        await this.authService.changePassword(this.newPassword);
+        this.snackbarService.openSnackBar('Passwort erfolgreich geändert.', 'Schließen');
+        this.wantChangePassword = false;
+        this.password = '';
+        this.newPassword = '';
+      } else {
+        this.passwordIsFalse = true;
+        this.snackbarService.openSnackBar('Das alte Passwort ist falsch.', 'Schließen');
       }
     }
   }
