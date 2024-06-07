@@ -73,7 +73,6 @@
         <app-post
           [post]="post"
           [currentUserId]="currentUser.id"
-          [isChannel]="true"
           [selectedChannel]="selectedChannel"
           (click)="openThread(post)"
           [indexPost]="index"
@@ -145,7 +144,6 @@
         <app-post
           [post]="post"
           [currentUserId]="currentUser.id"
-          [isChannel]="false"
           [selectedChannel]="selectedChannel"
           [selectedDirectMessageId]="selectedDirectMessage.id"
           [indexPost]="index"

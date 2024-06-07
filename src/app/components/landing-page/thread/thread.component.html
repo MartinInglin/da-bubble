@@ -22,7 +22,10 @@
         <app-post
           [post]="selectedThread.posts[0]"
           [currentUserId]="currentUser.id"
-          [isChannel]="false"
+          [selectedChannel]="selectedChannel"
+          [selectedThreadId]="selectedThread.id"
+          [indexPost]="0"
+          [path]="'threads'"
         ></app-post>
 
         } @if (selectedThread.posts.length > 0) {
@@ -36,8 +39,16 @@
           <div class="line-answer"></div>
         </div>
 
-        @for (post of selectedThread.posts | slice:1; track post;) {
-        <app-post [post]="post" [currentUserId]="currentUser.id"></app-post>
+        @for (post of selectedThread.posts | slice:1; track post; let index =
+        $index) {
+        <app-post
+          [post]="post"
+          [currentUserId]="currentUser.id"
+          [selectedChannel]="selectedChannel"
+          [selectedThreadId]="selectedThread.id"
+          [indexPost]="index + 1"
+          [path]="'threads'"
+        ></app-post>
         } }
       </div>
       <app-post-input

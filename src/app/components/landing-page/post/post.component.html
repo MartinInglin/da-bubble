@@ -48,7 +48,7 @@
       <img src="assets/images/icons/add_circle.svg" alt="" />
       <img src="assets/images/icons/add_circle.svg" alt="" />
       <img src="assets/images/icons/add_reaction.svg" alt="" />
-      @if (isChannel) {
+      @if (path === 'channels') {
       <img src="assets/images/icons/comment.svg" alt="" />
       }
       <img
@@ -77,7 +77,7 @@
     </div>
     }
   </div>
-  } @if (isChannel) {
+  } @if (path === 'channels') {
   <div class="message-details">
     <!-- Message actions and time details -->
     <a>Antworten</a>
@@ -139,7 +139,7 @@
       <img src="assets/images/icons/add_circle.svg" alt="" />
       <img src="assets/images/icons/add_circle.svg" alt="" />
       <img src="assets/images/icons/add_reaction.svg" alt="" />
-      @if (isChannel) {
+      @if (path === 'channels') {
       <img src="assets/images/icons/comment.svg" alt="" />
       }
     </div>
@@ -152,7 +152,7 @@
     </div>
     }
   </div>
-  } @if (isChannel) {
+  } @if (path === 'channels') {
   <div class="message-details">
     <!-- Message actions and time details -->
     <a>Antworten</a>
