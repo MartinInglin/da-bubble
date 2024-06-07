@@ -61,7 +61,7 @@
     <!-- Message Content  -->
     <div class="message-content">
       @if (selectedChannel.posts.length > 0) {
-      <div *ngFor="let post of selectedChannel.posts">
+      <div *ngFor="let post of selectedChannel.posts; let index = index">
         <!-- Date line for messages -->
         <div class="dateLine">
           <div class="Line">
@@ -76,6 +76,8 @@
           [isChannel]="true"
           [selectedChannel]="selectedChannel"
           (click)="openThread(post)"
+          [indexPost]="index"
+          [path]="'channels'"
         >
           <div class="message-details">
             <!-- Message actions and time details -->
@@ -147,6 +149,7 @@
           [selectedChannel]="selectedChannel"
           [selectedDirectMessageId]="selectedDirectMessage.id"
           [indexPost]="index"
+          [path]="'directMessages'"
         >
         </app-post>
       </div>

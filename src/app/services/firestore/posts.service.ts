@@ -9,9 +9,9 @@ export class PostsService {
 
   constructor() {}
 
-  async deleteFileDirectMessage(indexPost: number, directMessageId: string, indexFile: number) {
+  async deleteFile(indexPost: number, documentId: string, path: string, indexFile: number) {
     try {
-      const docRef = doc(this.firestore, 'directMessages', directMessageId);
+      const docRef = doc(this.firestore, path, documentId);
       const directMessageDoc = await getDoc(docRef);
       const directMessageData = directMessageDoc.data();
     

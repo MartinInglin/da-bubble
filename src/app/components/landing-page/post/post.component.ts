@@ -29,8 +29,9 @@ export class PostComponent {
   @Input() currentUserId: string = '';
   @Input() selectedChannel!: Channel;
   @Input() isChannel: boolean = false;
-  @Input() selectedDirectMessageId!: string;
+  @Input() selectedDirectMessageId: string = '';
   @Input() indexPost!: number;
+  @Input() path!: 'directMessages' | 'threads' | 'channels';
 
   @Output() toggleThread = new EventEmitter<void>();
 
@@ -58,14 +59,23 @@ export class PostComponent {
   }
 
   deleteFile(fileName: string, e: Event, indexFile: number) {
-    if (this.selectedDirectMessageId) {
-      this.postsService.deleteFileDirectMessage(
-        this.indexPost,
-        this.selectedDirectMessageId,
-        indexFile
-      );
+    let documentId: string = '';
+
+    if (this.path === 'directMessages' ) {
+      debugger;
+      documentId = this.selectedDirectMessageId;
     }
-    this.storageService.deleteFiles(this.post.id, fileName);
+    if (this.path === 'channels') {
+      debugger;
+      documentId = this.selectedChannel.id;
+    }
+    this.postsService.deleteFile(
+      this.indexPost,
+      documentId,
+      this.path,
+      indexFile
+    );
+    this.storageService.deleteFile(this.post.id, fileName);
     e.stopPropagation();
   }
 

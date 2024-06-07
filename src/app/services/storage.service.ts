@@ -44,7 +44,7 @@ export class StorageService {
     return Promise.all(uploadPromises);
   }
 
-  async deleteFiles(postId: string, fileName: string) {
+  async deleteFile(postId: string, fileName: string) {
     const fileRef = ref(this.storage, `posts/${postId}/${fileName}`);
     try {
       await deleteObject(fileRef);
