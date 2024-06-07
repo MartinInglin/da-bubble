@@ -60,7 +60,7 @@ declare const twemoji: any; // Deklariere Twemoji als Modul
     FormsModule,
     ReactiveFormsModule,
     PostComponent,
-    PostInputComponent
+    PostInputComponent,
   ],
   templateUrl: './main-content.component.html',
   styleUrl: './main-content.component.scss',
@@ -113,10 +113,11 @@ export class MainContentComponent implements OnInit, OnDestroy {
   searchResults$: Observable<(Channel | User)[]> = of([]);
   searchResults: (Channel | User)[] | undefined;
   searchTerm: string = '';
+  dateForLine: string = '';
   constructor(
     private dialog: MatDialog,
     private directMessagesService: DirectMessagesService,
-    private fb: FormBuilder,
+    private fb: FormBuilder
   ) {
     this.form = this.fb.group({
       recipient: [''],
@@ -134,7 +135,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
           this.selectedChannel = channel ?? new Channel();
           console.log('Current channel:', this.selectedChannel);
 
-          this.filteredChannels = this.allUsers.filter(c =>
+          this.filteredChannels = this.allUsers.filter((c) =>
             c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
           );
 
@@ -143,9 +144,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
             this.chatSelected = false;
             this.getUserCount(); // Benutzerzähler aktualisieren
           }
-
         }
-
       }
     );
 
@@ -155,12 +154,10 @@ export class MainContentComponent implements OnInit, OnDestroy {
           this.allUsers = users ?? []; // Benutzerdaten aktualisieren
           console.log('All users:', this.allUsers);
 
-          this.filteredUsers = this.allUsers.filter(u =>
+          this.filteredUsers = this.allUsers.filter((u) =>
             u.name.toLowerCase().includes(this.searchTerm.toLowerCase())
           );
-          
         }
-
       }
     );
 
@@ -187,7 +184,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.searchResults$ = this.form.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap(formValue => {
+      switchMap((formValue) => {
         const term = formValue.recipient;
         console.log('Form value changes:', term); // Added log to check form value changes
         this.searchTerm = typeof term === 'string' ? term : '';
@@ -196,7 +193,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.searchResults$.subscribe(results => {
+    this.searchResults$.subscribe((results) => {
       console.log('Search results:', results);
       this.searchResults = results;
     });
@@ -220,19 +217,17 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
   selectRecipient(recipient: Channel | User) {
     const recipientString: any =
-      recipient instanceof Channel
-        ? `#${recipient.name}`
-        : `@${recipient.id}`;
-        this.form.setValue({ recipient: recipientString });
+      recipient instanceof Channel ? `#${recipient.name}` : `@${recipient.id}`;
+    this.form.setValue({ recipient: recipientString });
   }
 
-  search(searchTerm: string): Observable<(User)[]> {
+  search(searchTerm: string): Observable<User[]> {
     console.log('Search term in search function:', searchTerm); // Added log to check search term in search function
-    const filteredChannels = this.allUsers.filter(
-      channel => channel.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredChannels = this.allUsers.filter((channel) =>
+      channel.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    const filteredUsers = this.allUsers.filter(
-      user => user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredUsers = this.allUsers.filter((user) =>
+      user.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     const results = [...filteredChannels, ...filteredUsers];
     console.log('Filtered results:', results); // Added log to check filtered results
@@ -324,12 +319,11 @@ export class MainContentComponent implements OnInit, OnDestroy {
       width: '415px',
       position: {
         top: `${rect.bottom + window.scrollY + 10}px`,
-        left: `${rect.left + window.scrollX - 400}px`
+        left: `${rect.left + window.scrollX - 400}px`,
       },
       data: { channelId: channelId },
     });
   }
-  
 
   openAddUserToChannelDialog(channelId: string, addUserDialog: HTMLElement) {
     const rect = addUserDialog.getBoundingClientRect();
@@ -338,7 +332,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
       height: '800px',
       position: {
         top: `${rect.bottom + window.scrollY + 10}px`,
-        left: `${rect.left + window.scrollX - 475}px`
+        left: `${rect.left + window.scrollX - 475}px`,
       },
       data: { channelId: channelId },
     });
@@ -364,11 +358,18 @@ export class MainContentComponent implements OnInit, OnDestroy {
     const today = new Date(); // Aktuelles Datum
     const dayOfWeekIndex = date.getDay(); // Hole den Wochentag als Zahl (0-6)
 
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear()).slice(-2);
+    const formattedDate = `${day}.${month}.${year}`;
+
     // Überprüfe, ob das Datum heute ist
     if (date.toDateString() === today.toDateString()) {
+      this.dateForLine = 'heute';
       return 'heute'; // Gib 'heute' zurück, wenn das Datum heute ist
     } else {
-      return daysOfWeek[dayOfWeekIndex]; // Andernfalls gib den Namen des Wochentags zurück
+      this.dateForLine = `${daysOfWeek[dayOfWeekIndex]} ${formattedDate}`;
+      return `${daysOfWeek[dayOfWeekIndex]} ${formattedDate}`; // Andernfalls gib den Namen des Wochentags zurück
     }
   }
 
@@ -426,7 +427,9 @@ export class MainContentComponent implements OnInit, OnDestroy {
   async getUserCount(): Promise<void> {
     try {
       if (this.selectedChannel && this.selectedChannel.id) {
-        this.userCount = await this.channelsService.countUsersInChannel(this.selectedChannel.id);
+        this.userCount = await this.channelsService.countUsersInChannel(
+          this.selectedChannel.id
+        );
       }
     } catch (error) {
       console.error('Error fetching user count:', error);
