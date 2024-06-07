@@ -160,3 +160,12 @@ mat-card-content {
           }
     }
 }
+
+@media (max-width: 750px) {
+    mat-card {
+        max-width: 500px;
+        width: 100%;
+        border-radius: 30px;
+        padding: 45px 20px 45px 20px;
+    }
+}

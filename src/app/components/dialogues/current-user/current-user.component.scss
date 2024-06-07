@@ -34,7 +34,7 @@ mat-card-content {
         align-items: center;
         justify-content: center;
         transition: scale 75ms ease-in-out;
-        
+
         &:hover {
             background-color: $background;
             scale: 1.05;
@@ -165,6 +165,15 @@ mat-card-content {
             opacity: 0.5;
             transition: 75ms ease-in-out;
             cursor: pointer;
-          }
+        }
+    }
+}
+
+@media (max-width: 750px) {
+    mat-card {
+        max-width: 500px;
+        width: 100%;
+        border-radius: 30px;
+        padding: 45px 20px 45px 20px;
     }
 }

@@ -216,3 +216,12 @@ form {
         }
     }
 }
+
+@media (max-width: 750px) {
+    mat-card {
+        max-width: 415px;
+        width: 100%;
+        border-radius: 20px 0px 20px 20px;
+        padding: 20px 16px 20px 16px;
+    }
+}

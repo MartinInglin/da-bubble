@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy} from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
@@ -9,6 +9,7 @@ import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dial
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { UserMenuComponent } from '../../dialogues/user-menu/user-menu.component';
+import { UserMenuMobileComponent } from '../../dialogues/user-menu-mobile/user-menu-mobile.component';
 
 @Component({
   selector: 'app-header',
@@ -17,6 +18,7 @@ import { UserMenuComponent } from '../../dialogues/user-menu/user-menu.component
     RouterModule,
     MatDialogModule,
     UserMenuComponent,
+    UserMenuMobileComponent,
     MatCardModule,
     MatButtonModule,
     CommonModule
@@ -33,7 +35,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private userSubscription: Subscription = new Subscription();
   private routeSubscription: Subscription = new Subscription();
   currentUser: User | null = null;
-  dialogRef: MatDialogRef<UserMenuComponent> | null = null;
   isDialogOpen = false;
   showRegisterElement = true;
   menuDown = './../../../../assets/images/icons/keyboard_arrow_down.svg';
@@ -61,11 +62,35 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   openDialog(): void {
     if (this.currentUser) {
-      const dialogRef = this.dialog.open(UserMenuComponent, {
-        width: '282px',
+      if (window.innerWidth <= 750) {
+        this.openMobileDialog();
+      } else {
+        const dialogRef = this.dialog.open(UserMenuComponent, {
+          width: '282px',
+          position: {
+            top: '120px',
+            right: '30px'
+          },
+          panelClass: 'mat-dialog-content',
+        });
+        dialogRef.componentInstance.currentUser = new User(this.currentUser);
+
+        this.isDialogOpen = true;
+
+        dialogRef.afterClosed().subscribe(() => {
+          this.isDialogOpen = false;
+        });
+      }
+    }
+  }
+
+  openMobileDialog(): void {
+    if (this.currentUser) {
+      const dialogRef = this.dialog.open(UserMenuMobileComponent, {
+        width: '100%',
         position: {
-          top: '120px',
-          right: '30px'
+          bottom: '0',
+          right: '50%',
         },
         panelClass: 'mat-dialog-content',
       });

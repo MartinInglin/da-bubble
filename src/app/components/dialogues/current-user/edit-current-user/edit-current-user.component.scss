@@ -318,3 +318,12 @@
     z-index: 10;
     border-radius: 30px 0px 30px 30px;
   }
+
+  @media (max-width: 750px) {
+    .edit-user-card {
+        max-width: 500px;
+        width: 100%;
+        border-radius: 30px;
+        padding: 45px 20px 45px 20px;
+    }
+}
