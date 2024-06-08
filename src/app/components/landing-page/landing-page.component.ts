@@ -90,8 +90,12 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleThread() {
-    this.drawerThread.toggle();
+  openThread() {
+    this.drawerThread.open();
+  }
+
+  closeThread() {
+    this.drawerThread.close();
   }
 
   ngOnDestroy(): void {

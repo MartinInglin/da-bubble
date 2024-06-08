@@ -20,12 +20,12 @@
     </nav>
 
     <!-- ChatSpace -->
-    <app-main-content class="mainContent" (toggleThread)="toggleThread()"></app-main-content>
+    <app-main-content class="mainContent" (toggleThread)="openThread()"></app-main-content>
     
     <!-- Thread Section -->
     <mat-drawer-container autosize>
       <mat-drawer #drawerThread="matDrawer" mode="side" position="end">
-        <app-thread (toggleThread)="toggleThread()"></app-thread>
+        <app-thread (toggleThread)="closeThread()"></app-thread>
       </mat-drawer>
     </mat-drawer-container>
 
