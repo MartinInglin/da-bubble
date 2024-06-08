@@ -186,9 +186,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       switchMap((formValue) => {
         const term = formValue.recipient;
-        console.log('Form value changes:', term); // Added log to check form value changes
         this.searchTerm = typeof term === 'string' ? term : '';
-        console.log('Search term:', this.searchTerm); // Added log to check search term
         return this.searchTerm ? this.search(this.searchTerm) : of([]);
       })
     );

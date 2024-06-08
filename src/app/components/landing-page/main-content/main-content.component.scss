@@ -362,12 +362,12 @@ cdk-overlay-connected-position-bounding-box {
   width: 100%;
   justify-content: center;
   align-items: start;
-  gap: 20px;
   height: 150px;
   span {
     font-weight: bold;
     font-size: 24px;
     margin-left: 50px;
+    margin-bottom: 20px;
   }
   input {
     width: 80%;
@@ -452,20 +452,28 @@ cdk-overlay-connected-position-bounding-box {
 // }
 .newMessage ul {
   list-style-type: none;
-  padding: 0;
-  margin: 0;
-  border: 1px solid #ccc;
-  background-color: rgb(85, 189, 189);
-  height: 50px;
-  max-height: 200px;
-  overflow-y: auto;
+  padding: 10px;
+  background-color: #eceefe;
+  height: fit-content;
+  width: fit-content;
+  margin-left: 50px;
+width: fit-content;
+  text-align: center;
+  border-radius: 30px;
+display: flex;
+align-items: center;
+flex-direction: column;
+position: absolute;
 }
 
 .newMessage li {
   padding: 8px;
   cursor: pointer;
+  width: 100%;
+
 }
 
 .newMessage li:hover {
-  background-color: #f0f0f0;
+  background-color: #ffffff;
+  border-radius: 10px;
 }
