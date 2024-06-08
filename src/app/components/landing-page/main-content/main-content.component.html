@@ -76,9 +76,9 @@
           [post]="post"
           [currentUserId]="currentUser.id"
           [selectedChannel]="selectedChannel"
-          (click)="openThread(post)"
           [indexPost]="index"
           [path]="'channels'"
+          (openThread)="openThread(post)"
         >
           <div class="message-details">
             <!-- Message actions and time details -->
