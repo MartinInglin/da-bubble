@@ -12,7 +12,7 @@
         </button>
       </div>
 
-      <!-- Individual message within the thread -->
+      <!-- First post within the thread -->
       <div class="message-content">
         @for (post of selectedThread.posts | slice:0:1; track post) {
         <app-post
@@ -37,6 +37,13 @@
 
         @for (post of selectedThread.posts | slice:1; track post; let index =
         $index) {
+          @if (dateForLine != formatDate(post.timestamp)) {
+            <div class="dateLine">
+              <div class="Line">
+                <span>{{ formatDate(post.timestamp) }}</span>
+              </div>
+            </div>
+            }
         <app-post
           [post]="post"
           [currentUserId]="currentUser.id"

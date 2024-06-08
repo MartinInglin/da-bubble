@@ -38,6 +38,7 @@ import { PostInputComponent } from '../post-input/post-input.component';
   styleUrl: './thread.component.scss',
 })
 export class ThreadComponent implements OnInit {
+  dateForLine: string = '';
   allUsers: User[] = [];
   comments: boolean = true;
   message: string = '';
@@ -141,5 +142,34 @@ export class ThreadComponent implements OnInit {
 
   closeThread(): void {
     this.toggleThread.emit();
+  }
+
+  formatDate(timestamp: number): string {
+    const daysOfWeek = [
+      'Sonntag',
+      'Montag',
+      'Dienstag',
+      'Mittwoch',
+      'Donnerstag',
+      'Freitag',
+      'Samstag',
+    ];
+    const date = new Date(timestamp);
+    const today = new Date(); // Aktuelles Datum
+    const dayOfWeekIndex = date.getDay(); // Hole den Wochentag als Zahl (0-6)
+
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear()).slice(-2);
+    const formattedDate = `${day}.${month}.${year}`;
+
+    // Überprüfe, ob das Datum heute ist
+    if (date.toDateString() === today.toDateString()) {
+      this.dateForLine = 'heute';
+      return 'heute'; // Gib 'heute' zurück, wenn das Datum heute ist
+    } else {
+      this.dateForLine = `${daysOfWeek[dayOfWeekIndex]} ${formattedDate}`;
+      return `${daysOfWeek[dayOfWeekIndex]} ${formattedDate}`; // Andernfalls gib den Namen des Wochentags zurück
+    }
   }
 }

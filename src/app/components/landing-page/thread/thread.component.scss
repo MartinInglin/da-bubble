@@ -75,14 +75,38 @@ aside {
   }
 }
 
+/* Styling for the message content */
 .message-content {
+  height: 53vh; /* Mindesthöhe auf 50% der Bildschirmhöhe setzen */
   padding-top: 20px;
   width: 100%;
   overflow-y: scroll;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
+  /* Styling for the line separator */
+  .dateLine {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .Line {
+    width: 95%;
+    background-color: #eceefe;
+    height: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    span {
+      z-index: 2;
+      height: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      border: 2px solid #eceefe;
+      border-radius: 30px;
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+  }
 }
 
 /* Input section styling */
@@ -150,8 +174,11 @@ aside {
 .message-details {
   display: flex;
   gap: 20px;
-  width: 90%;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
   align-items: center;
+  margin-bottom: 12px;
   .number-answers {
     color: rgba(0, 0, 255, 0.288);
     font-weight: 550;
