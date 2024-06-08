@@ -19,14 +19,13 @@ import { Subscription } from 'rxjs';
 import { UsersService } from '../../services/firestore/users.service';
 import { ChannelsService } from '../../services/firestore/channels.service';
 import { DirectMessagesService } from '../../services/firestore/direct-messages.service';
-import { NewChannelComponent } from '../dialogues/new-channel/new-channel.component';
 import {
   MatDialog,
   MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
 import { StateService } from '../../services/stateservice.service';
-
+import { SideNavComponent } from './side-nav/side-nav.component';
 
 @Component({
   selector: 'app-landing-page',
@@ -40,8 +39,8 @@ import { StateService } from '../../services/stateservice.service';
     MainContentComponent,
     MatIconModule,
     HeaderComponent,
-    NewChannelComponent,
     MatDialogModule,
+    SideNavComponent,
   ],
 
   templateUrl: './landing-page.component.html',
@@ -53,27 +52,17 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   @ViewChild('drawerThread') drawerThread!: MatDrawer;
 
   usersService = inject(UsersService);
-  channelsService = inject(ChannelsService);
-  directMessagesService = inject(DirectMessagesService);
   stateService = inject(StateService);
 
   private userSubscription: Subscription = new Subscription();
-  private allUsersSubscription: Subscription = new Subscription();
 
   currentUser: User = new User();
-  allUsers: User[] = [];
   i: any = ([] = '');
 
-  showContacts: boolean = false;
-  showChannels: boolean = false;
   isOpen: boolean = false;
   drawer: any;
   loading: boolean = true;
   isThreadOpen: boolean = false;
-
-  arrowOpen: any = '/assets/images/icons/arrow_drop_up.svg';
-  arrowClosed: any = '/assets/images/icons/arrow_drop_down.svg';
-
 
   users: any = [];
   menuOpen: string = 'Workspace-Menü öffnen';
@@ -84,35 +73,12 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe(
-      (allUsers) => {
-        this.allUsers = allUsers ?? [];
-        console.log('All Users:', this.allUsers);
-      }
-    );
-
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       if (user) {
-        // Überprüfe, ob ein Benutzerobjekt vorhanden ist
-        this.currentUser = user ?? new User(); // Weise das Benutzerobjekt direkt zu
+        this.currentUser = user ?? new User();
         console.log('Current User:', this.currentUser);
       }
     });
-
-    this.stateService.showContacts$.subscribe(show => {
-      this.showContacts = show;
-    });
-
-    this.stateService.showChannels$.subscribe(show => {
-      this.showChannels = show;
-    });
-  }
-
-  async getAllUsers() {
-    this.usersService.getAllUsers();
-  }
-
-  getAllChannelsForUser(userId: string): void {
   }
 
   showContactsSide() {}
@@ -120,34 +86,17 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   toggle(drawer: any): void {
     this.isOpen = !this.isOpen;
     if (drawer) {
-      drawer.toggle(); // Ensure this method exists and works as expected
+      drawer.toggle();
     }
   }
 
-  toggleThread() { 
-    this.drawerThread.toggle()
+  toggleThread() {
+    this.drawerThread.toggle();
   }
 
   ngOnDestroy(): void {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
     }
-    if (this.allUsersSubscription) {
-      this.allUsersSubscription.unsubscribe();
-    }
-  }
-
-  openNewChannelDialog(): void {
-    const dialogRef = this.dialog.open(NewChannelComponent, {
-      width: '872px',
-      height: '539px',
-    });
-    dialogRef.componentInstance.currentUser = new User(this.currentUser);
-  }
-
-  closeChannelsAndContacts(){
-    console.log('hallo');
-    this.stateService.setShowContacts(false);
-    this.stateService.setShowChannels(false);
   }
 }

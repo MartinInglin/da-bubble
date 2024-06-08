@@ -9,78 +9,15 @@
         </div>
       </button>
     </div>
+
     <!-- SideNav -->
     <nav class="sidenav">
       <mat-drawer-container class="example-container" autosize>
         <mat-drawer #drawer class="example-sidenav" mode="side">
-          <div class="head-side-menu">
-            <div class="head-side-menu-first">
-              <img src="assets/images/icons/workspace_logo.png" alt="" />
-              <span>DevSpace</span>
-            </div>
-            <div class="head-side-menu-link">
-              <img (click)="closeChannelsAndContacts()" class="edit-square-button" src="assets/images/icons/16. edit_square.svg" alt="" />
-            </div>
-          </div>
-          <!-- Channel-List -->
-          <div class="channels-head">
-            <div class="channel-head-first" (click)="showChannels = !showChannels">
-              <img class="drop-down-img" [src]="showChannels ? arrowOpen : arrowClosed" alt="Toggle Contacts" />
-              <div class="channels-list">
-                <img src="assets/images/icons/workspaces.svg" alt="" />
-                <span>Channels</span>
-              </div>
-            </div>
-            <div class="head-side-menu-link">
-              <img (click)="openNewChannelDialog()" class="add-channel-button" src="assets/images/icons/add_icon.svg" alt="" />
-            </div>
-          </div>
-
-          <table class="channels" *ngIf="showChannels">
-            <tr *ngFor="let channel of currentUser.channels; let i = index">
-              <td (click)="channelsService.getDataChannel(channel.id)">
-                <span class="span-hashtag">#</span>
-                <span class="current-user-name">{{ currentUser.channels[i].name }}</span>
-              </td>
-            </tr>
-            <tr>
-              <td class="channel-add">
-                <img src="assets/images/icons/add_circle.svg" alt="" />
-                <span (click)="openNewChannelDialog()">Channel hinzufügen</span>
-              </td>
-            </tr>
-          </table>
-          <!-- Strich -->
-          <div class="channels-head">
-            <!-- Contacts-List -->
-            <div class="channel-head-first" (click)="showContacts = !showContacts">
-              <img class="arrow-drop-down" [src]="showContacts ? arrowOpen : arrowClosed" alt="Toggle Contacts" />
-              <div class="contacts-list">
-                <img class="contact-list-account-img" src="assets/images/icons/account_circle.svg" alt="" />
-                <span>Direktnachrichten</span>
-              </div>
-            </div>
-          </div>
-
-          <table class="contacts" *ngIf="showContacts">
-            <tr *ngFor="let user of allUsers; let i = index">
-              <td (click)="
-                  directMessagesService.getDataDirectMessage(
-                    user.id,
-                    currentUser
-                  )
-                ">
-                <img [src]="user.avatar" alt="Profilbild" />
-                <div *ngIf="user.isSignedIn" class="online"></div>
-                <div *ngIf="!user.isSignedIn" class="offline"></div>
-                <span>{{ user.name }}</span>
-              </td>
-            </tr>
-          </table>
+          <app-side-nav [currentUser]="currentUser"></app-side-nav>
         </mat-drawer>
       </mat-drawer-container>
     </nav>
-    <!-- SideNav -->
 
     <!-- ChatSpace -->
     <app-main-content class="mainContent" (toggleThread)="toggleThread()"></app-main-content>

@@ -49,7 +49,9 @@ export class UsersService {
         console.error('Error parsing stored user data:', error);
       }
     }
+
     this.getAllUsers();
+
     const currentUserId = this.currentUserSubject.value?.id;
     if (currentUserId) {
       this.getCurrentUser(currentUserId);
@@ -141,7 +143,7 @@ export class UsersService {
     this.unsubscribe = onSnapshot(collectionRef, (snapshot) => {
       const data = snapshot.docs.map(
         (doc) => new User({ id: doc.id, ...doc.data() })
-      );
+      );     
       this.allUsersSubject.next(data);
     });
   }

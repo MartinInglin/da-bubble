@@ -38,61 +38,6 @@ mat-drawer-container {
   padding: 20px;
 }
 
-/* Side navigation header */
-.head-side-menu {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  justify-content: space-between;
-  flex-direction: row;
-  margin-bottom: 20px;
-  gap: 20px;
-
-  span {
-    font-size: 24px;
-    font-weight: 700;
-  }
-
-  .head-side-menu-first {
-    display: flex;
-    align-items: center;
-    gap: 25px;
-    cursor: pointer;
-
-    img {
-      cursor: auto;
-    }
-  }
-}
-
-/* Styling for the link in the side navigation header */
-.head-side-menu-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: none;
-  padding: 3px;
-  border-radius: 50%;
-
-  img {
-    height: 40px;
-    width: 40px;
-  }
-
-  &:hover {
-    background-color: #eceefe;
-    cursor: pointer;
-    
-    .edit-square-button {
-      content: url("./../../../assets/images/icons/16.\ edit_square_blue.svg");
-    }
-
-    .add-channel-button {
-      content: url("./../../../assets/images/icons/add_icon_blue.svg");
-    }
-  }
-}
-
 /* Menu button */
 .menuBtn {
   position: absolute;
@@ -137,7 +82,6 @@ mat-drawer-container {
   width: fit-content;
 }
 
-
 .threadContent {
   height: 90vh;
 }
@@ -148,230 +92,9 @@ mat-drawer-container {
   height: 90vh;
 }
 
-/* Styling for the header of channels */
-.channels-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-direction: row;
-  height: 40px;
-  padding: 10px;
-  margin-bottom: 10px;
-
-}
-
-.channel-head-first {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-direction: row;
-  gap: 35px;
-  width: fit-content;
-  cursor: pointer;
-
-  &:hover {
-
-
-    .drop-down-img,
-    .arrow-drop-down {
-      content: url("./../../../assets/images/icons/arrow_drop_down_blue.svg");
-      transform: scale(1.1);
-    }
-
-    .contact-list-account-img {
-      content: url("./../../../assets/images/icons/account_circle_blue.svg");
-      height: 27px;
-    }
-
-    .contacts-list {
-      color: #535af1;
-    }
-  }
-}
-
-/* Styling for the channels list */
-.channels-list {
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  width: fit-content;
-  justify-content: center;
-  height: 40px;
-  width: fit-content;
-  gap: 15px;
-  transition: padding 200ms ease-in-out;
-  transition: margin 200ms ease-in-out;
-
-  img {
-    height: 27px;
-  }
-
-  span {
-    font-size: 20px;
-    font-weight: 700;
-  }
-
-  &:hover {
-    img {
-      content: url("./../../../assets/images/icons/workspace_blue.svg");
-
-    }
-
-
-    padding-bottom: 2px;
-    margin-left: -2px;
-    color: #535af1;
-
-  }
-}
-
-.contacts-list {
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  width: fit-content;
-  justify-content: center;
-  height: 40px;
-  width: fit-content;
-  gap: 15px;
-  transition: padding 200ms ease-in-out;
-
-  img {
-    height: 27px;
-  }
-
-  span {
-    font-size: 20px;
-    font-weight: 700;
-  }
-
-  &:hover {
-    img {
-      content: url("./../../../assets/images/icons/account_circle_blue.svg");
-
-    }
-    padding-top: 2px;
-    padding-left: 2px;
-    color: #535af1;
-  }
-}
-
-.channel-add {
-  &:hover {
-    img {
-      content: url("./../../../assets/images/icons/add_circle_blue.svg");
-    }
-  }
-}
-
-/* Styling for table data in channels and contacts */
-.channels {
-  width: 100%;
-
-  tr {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 10px;
-  }
-
-  td {
-    height: 33px;
-    font-size: 18px;
-    width: 70%;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    padding: 4px 20px 4px 20px;
-    transition: padding 100ms ease-in-out;
-
-    /* Hover effect for table data in channels and contacts */
-    &:hover {
-      border-radius: 20px;
-      background-color: #eceefe;
-
-      .span-hashtag {
-        color: #535af1;
-      }
-
-      .current-user-name {
-        padding-bottom: 2px;
-      }
-    }
-  }
-
-  .span-hashtag {
-    font-weight: 600;
-    font-size: 21px;
-  }
-}
-
-.offline {
-  height: 14px;
-  width: 14px;
-  position: relative;
-  right: 23px;
-  top: 16px;
-  border: 2px solid white;
-  border-radius: 100%;
-  background-color: $text-gray;
-}
-
-.contacts {
-  width: 100%;
-
-  tr {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 10px;
-
-  }
-
-  td {
-    height: 58px;
-    font-size: 18px;
-    width: 70%;
-    display: flex;
-    padding: 0px 25px 0px 25px;
-    justify-content: start;
-    align-items: center;
-    cursor: pointer;
-    transition: padding 100ms ease-in-out;
-    img {
-      height: 50px;
-      width: 50px;
-    }
-
-    span {
-      font-size: 18px;
-    }
-
-    &:hover {
-      border-radius: 30px;
-      background-color: #eceefe;
-      padding-left: 28px;
-    }
-  }
-
-  .online {
-    height: 14px;
-    width: 14px;
-    position: relative;
-    right: 23px;
-    top: 16px;
-    border: 2px solid white;
-    border-radius: 100%;
-    background-color: $online-green;
-}
-}
-
 // Media Querries
-@media (max-width: 768px) { /* Adjust breakpoint as needed */
+@media (max-width: 768px) {
+  /* Adjust breakpoint as needed */
   .Content {
     display: flex; /* Allow stacking elements vertically */
   }
@@ -381,31 +104,32 @@ mat-drawer-container {
     width: 100%; /* Take full width */
     // transform: translateX(-100%); /* Hide sidenav initially */
     transition: transform 0.8s ease-in-out; /* Smooth transition */
-    mat-drawer-container{
+    mat-drawer-container {
       justify-content: center;
       align-items: center;
       display: flex;
     }
   }
 
-  .sidenav.open { /* Add class on menu open */
-    transform: translateX(100%); 
-    display: swap; 
+  .sidenav.open {
+    /* Add class on menu open */
+    transform: translateX(100%);
+    display: swap;
   }
 
   // .sidenav:not(.open) {
   //   transform: translateX(-100%); /* Hide sidenav when closed */
   // }
 
-  .mainContent{
+  .mainContent {
     flex: 1; /* Allow main content to fill remaining space */
     overflow-y: auto; /* Enable scrolling for long content */
     transition: opacity 0.3s ease-in-out; /* Smooth opacity change */
   }
 
-  .mainContent.hidden { /* Add class on menu open */
+  .mainContent.hidden {
+    /* Add class on menu open */
     opacity: 0; /* Hide main content when menu is open */
     pointer-events: none; /* Prevent interaction with hidden content */
   }
-
 }
