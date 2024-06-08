@@ -23,12 +23,11 @@
     <app-main-content class="mainContent" (toggleThread)="toggleThread()"></app-main-content>
     
     <!-- Thread Section -->
-    <mat-drawer-container class="thread-container" autosize>
-      <mat-drawer #drawerThread="matDrawer" class="thread-sidenav" mode="side" position="end">
-        <app-thread class="threadContent" (toggleThread)="toggleThread()"></app-thread>
+    <mat-drawer-container autosize>
+      <mat-drawer #drawerThread="matDrawer" mode="side" position="end">
+        <app-thread (toggleThread)="toggleThread()"></app-thread>
       </mat-drawer>
     </mat-drawer-container>
 
   </div>
-  <!-- MainContent -->
 </section>

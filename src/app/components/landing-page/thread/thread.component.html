@@ -1,9 +1,5 @@
 <!-- Aside element conditionally rendered based on 'comments' property -->
 <aside *ngIf="comments">
-  <!-- Container for the thread -->
-  <div id="thread">
-    <!-- Thread content -->
-    <div class="thread-content">
       <!-- Header of the thread -->
       <div class="head-thread">
         <div class="head-thread-text">
@@ -59,6 +55,4 @@
         [selectedThread]="selectedThread"
         [path]="'threads'"
       ></app-post-input>
-    </div>
-  </div>
 </aside>

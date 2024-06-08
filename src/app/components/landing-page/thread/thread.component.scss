@@ -2,7 +2,12 @@
 
 /* Set height of the aside element */
 aside {
-  max-height: 100%;
+  height: 100%;
+  background-color: white;
+  width: 435px;
+  border-radius: 30px;
+  display: flex;
+  flex-direction: column;
   a {
     cursor: pointer;
     &:hover {
@@ -17,7 +22,7 @@ aside {
 
 /* Styling for the thread container */
 #thread {
-  height: 85.5vh;
+  height: 100%;
   background-color: white;
   width: 435px;
   border-radius: 30px;
@@ -72,13 +77,13 @@ aside {
 }
 
 .message-content {
-  height: 53vh; /* Mindesthöhe auf 50% der Bildschirmhöhe setzen */
   padding-top: 20px;
   width: 100%;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex: 1;
 }
 
 /* Input section styling */
