@@ -28,11 +28,10 @@
 /* Styling for the header section */
 header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  flex-direction: row;
-  width: 100%;
+  align-items: center;
   height: 100px;
+  width: 100%;
   box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2);
   margin-bottom: 10px;
 
@@ -398,12 +397,6 @@ cdk-overlay-connected-position-bounding-box {
       background-color: rgb(165 165 165 / 40%);
       cursor: pointer;
     }
-  }
-}
-
-@media (min-height: 1050px) {
-  .message-content {
-    min-height: 56vh; /* Setzt die Mindesthöhe auf 1000px, wenn die Höhe des Viewports mindestens 1000px beträgt */
   }
 }
 
