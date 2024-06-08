@@ -9,7 +9,6 @@ import {
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
-import { Channel } from '../../models/channel.class';
 import { HeaderComponent } from '../shared/header/header.component';
 import { ThreadComponent } from './thread/thread.component';
 import { MainContentComponent } from './main-content/main-content.component';
@@ -17,13 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { User } from '../../models/user.class';
 import { Subscription } from 'rxjs';
 import { UsersService } from '../../services/firestore/users.service';
-import { ChannelsService } from '../../services/firestore/channels.service';
-import { DirectMessagesService } from '../../services/firestore/direct-messages.service';
-import {
-  MatDialog,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { StateService } from '../../services/stateservice.service';
 import { SideNavComponent } from './side-nav/side-nav.component';
 
@@ -80,8 +73,6 @@ export class LandingPageComponent implements OnInit, OnDestroy {
       }
     });
   }
-
-  showContactsSide() {}
 
   toggle(drawer: any): void {
     this.isOpen = !this.isOpen;
