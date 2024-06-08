@@ -9,6 +9,7 @@ import {
   updateDoc,
   query,
   arrayUnion,
+  where,
 } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { RegistrationService } from '../registration.service';
@@ -178,7 +179,6 @@ export class UsersService {
       return Promise.resolve();
     });
     await Promise.all(updatePromises);
-    console.log('Channel added to all users.');
   }
 
   async updateUser(userId: string, partialUser: Partial<User>): Promise<void> {
@@ -186,10 +186,25 @@ export class UsersService {
 
     try {
       await updateDoc(userDocRef, partialUser);
-      console.log('User updated in Firestore.');
     } catch (error) {
       console.error('Error updating user in Firestore:', error);
     }
+    if (partialUser.name) {
+      this.changeUserNameInPosts(partialUser.name, userId);
+    }
+
+  }
+
+  async changeUserNameInPosts(newUserName: string, currentUserId: string) {
+    debugger;
+    const directMessagesRef = collection(this.firestore, 'directMessages');
+
+    const q = query(directMessagesRef, where("posts.userId", "==", currentUserId));
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      console.log("Found documents", doc.data());
+    });
   }
 
   setCurrentUserNull() {
