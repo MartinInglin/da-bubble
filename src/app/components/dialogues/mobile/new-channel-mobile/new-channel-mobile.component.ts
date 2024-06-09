@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
-import { AddUserToNewChannelComponent } from '../../add-user-to-new-channel/add-user-to-new-channel.component';
+import { AddUserToNewChannelMobileComponent } from '../add-user-to-new-channel-mobile/add-user-to-new-channel-mobile.component';
 import { MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import { ChannelsService } from '../../../../services/firestore/channels.service';
 import { User } from '../../../../models/user.class';
@@ -46,13 +46,12 @@ export class NewChannelMobileComponent {
     }
   }
   openAddUserDialog(channelId: string): void {
-    const dialogRef = this.dialog.open(AddUserToNewChannelComponent, {
-      width: '710px',
+    const dialogRef = this.dialog.open(AddUserToNewChannelMobileComponent, {
+      width: '100%',
       position: {
-        top: '20%'
+        bottom: '0%'
       },
       data: { channelId: channelId },
-      panelClass: 'custom-dialog-container'
     });
   }
 
