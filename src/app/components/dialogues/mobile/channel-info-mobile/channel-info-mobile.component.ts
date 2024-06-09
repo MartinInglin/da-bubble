@@ -5,17 +5,15 @@ import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { ChannelInfoEditComponent } from './channel-info-edit/channel-info-edit.component';
-import { StateService } from '../../../services/stateservice.service';
+import { ChannelInfoEditComponent } from '../../channel-info/channel-info-edit/channel-info-edit.component';
 import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Channel } from '../../../models/channel.class';
-import { ChannelsService } from '../../../services/firestore/channels.service';
-import { User } from '../../../models/user.class';
-import { UsersService } from '../../../services/firestore/users.service';
+import { Channel } from '../../../../models/channel.class';
+import { ChannelsService } from '../../../../services/firestore/channels.service';
+import { User } from '../../../../models/user.class';
+import { UsersService } from '../../../../services/firestore/users.service';
 
 @Component({
-  selector: 'app-channel-info',
-  template: 'passed in {{ data.channelId}}',
+  selector: 'app-channel-info-mobile',
   standalone: true,
   imports: [
     CommonModule,
@@ -23,12 +21,12 @@ import { UsersService } from '../../../services/firestore/users.service';
     MatCardModule,
     MatIconModule,
     MatButtonModule,
-    MatDialogModule,
+    MatDialogModule
   ],
-  templateUrl: './channel-info.component.html',
-  styleUrl: './channel-info.component.scss',
+  templateUrl: './channel-info-mobile.component.html',
+  styleUrl: './channel-info-mobile.component.scss'
 })
-export class ChannelInfoComponent implements OnInit, OnDestroy {
+export class ChannelInfoMobileComponent {
   channel: Channel | null = null;
   currentUser: User | null = null;
   channelSubscription: any;
@@ -37,12 +35,11 @@ export class ChannelInfoComponent implements OnInit, OnDestroy {
 
   constructor(
     private dialog: MatDialog,
-    public dialogRef: MatDialogRef<ChannelInfoComponent>,
+    public dialogRef: MatDialogRef<ChannelInfoMobileComponent>,
     private channelsService: ChannelsService,
     private usersService: UsersService,
-    private stateService: StateService,
-    @Inject(MAT_DIALOG_DATA) public data: { channelId: string }
-  ) { }
+    @Inject(MAT_DIALOG_DATA) public data: {channelId: string}
+  ) {}
 
   ngOnInit(): void {
     this.loadChannelData();
@@ -52,7 +49,7 @@ export class ChannelInfoComponent implements OnInit, OnDestroy {
   }
 
   loadChannelData(): void {
-    if (!this.data.channelId) return;
+    if (!this.data.channelId) return; 
     this.channelSubscription = this.channelsService.channelSubject$.subscribe(
       (channel) => {
         this.channel = channel;
@@ -69,10 +66,10 @@ export class ChannelInfoComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(ChannelInfoEditComponent, {
       width: '872px',
       position: {
-        top: '185px',
-        right: '180px',
+        top: '11%',
+        right: '25%'
       },
-      data: {
+      data: { 
         channelId: this.channel.id,
         name: this.channel.name,
         description: this.channel.description
@@ -93,9 +90,6 @@ export class ChannelInfoComponent implements OnInit, OnDestroy {
       .catch(error => {
         console.error('Error leaving channel:', error);
       });
-
-    this.stateService.setShowContacts(false);
-    this.stateService.setShowChannels(false);
   }
 
   onNoClick(): void {

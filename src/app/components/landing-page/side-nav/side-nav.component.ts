@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { StateService } from '../../../services/stateservice.service';
 import { NewChannelComponent } from '../../dialogues/new-channel/new-channel.component';
+import { NewChannelMobileComponent } from '../../dialogues/mobile/new-channel-mobile/new-channel-mobile.component';
 import { User } from '../../../models/user.class';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ChannelsService } from '../../../services/firestore/channels.service';
@@ -32,11 +33,12 @@ export class SideNavComponent {
 
   showContacts: boolean = false;
   showChannels: boolean = false;
+  isDialogOpen: boolean = false;
 
   arrowOpen: any = '/assets/images/icons/arrow_drop_up.svg';
   arrowClosed: any = '/assets/images/icons/arrow_drop_down.svg';
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.stateService.showContacts$.subscribe((show) => {
@@ -65,15 +67,43 @@ export class SideNavComponent {
   }
 
   openNewChannelDialog(): void {
-    const dialogRef = this.dialog.open(NewChannelComponent, {
-      width: '872px',
-      height: '539px',
-    });
-    dialogRef.componentInstance.currentUser = new User(this.currentUser);
+    if (this.currentUser) {
+      if (window.innerWidth <= 750) {
+        this.openMobileDialog();
+      } else {
+        const dialogRef = this.dialog.open(NewChannelComponent, {
+          width: '872px',
+          height: '539px',
+        });
+        dialogRef.componentInstance.currentUser = new User(this.currentUser);
+
+        this.isDialogOpen = true;
+
+        dialogRef.afterClosed().subscribe(() => {
+          this.isDialogOpen = false;
+        });
+      }
+    }
   }
 
-  ngOnDestroy(): void {
-    if (this.allUsersSubscription) {
+  openMobileDialog(): void {
+    if (this.currentUser) {
+      const dialogRef = this.dialog.open(NewChannelMobileComponent, {
+        width: '100%',
+        height: '100vh',
+      });
+      dialogRef.componentInstance.currentUser = new User(this.currentUser);
+
+      this.isDialogOpen = true;
+
+      dialogRef.afterClosed().subscribe(() => {
+        this.isDialogOpen = false;
+      });
+    }
+  }
+
+    ngOnDestroy(): void {
+      if(this.allUsersSubscription) {
       this.allUsersSubscription.unsubscribe();
     }
     if (this.showChannelsSubscription) {

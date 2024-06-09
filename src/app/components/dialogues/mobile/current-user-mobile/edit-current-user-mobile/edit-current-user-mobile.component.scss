@@ -1,0 +1,331 @@
+@import "./../../../../../../styles.scss";
+
+.edit-user-card {
+    max-width: 500px;
+    width: 100%;
+    max-height: fit-content;
+    height: 95vh;
+    padding: 45px 20px 45px 20px;
+    font-family: 'Nunito';
+    border-radius: 30px;
+
+    mat-card-content {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        overflow-x: hidden;
+    }
+}
+
+.detail-view-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+
+    p {
+        font-size: 24px;
+        font-weight: 700px;
+        line-height: 32.74px;
+        margin: 0;
+    }
+
+    button {
+        height: 40px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: scale 75ms ease-in-out;
+
+        &:hover {
+            background-color: $background;
+            scale: 1.05;
+        }
+
+        img {
+            height: 13.5px;
+            width: 13.5px;
+        }
+    }
+
+}
+
+.profile-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    .current-avatar {
+        height: 200px;
+        width: 200px;
+        border-radius: 50%;
+        transition: scale 75ms ease-in-out;
+
+        &:hover {
+            cursor: pointer;
+            scale: 1.05;
+        }
+    }
+}
+
+.change-avatar-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    img {
+        height: 200px;
+        width: 200px;
+        border-radius: 50%;
+    }
+
+    .choose-avatar-container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+
+        img {
+            height: 64px;
+            width: 64px;
+            transition: scale 75ms ease-in-out;
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed !important;
+            }
+
+            &:hover {
+                cursor: pointer;
+                scale: 1.05;
+            }
+        }
+    }
+
+    button {
+        width: fit-content;
+        height: 49px;
+        border-radius: 25px;
+        padding: 12px 25px 12px 25px;
+        border: 1px solid $purple2;
+        color: $purple1;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 24.55px;
+        text-align: center;
+        transition: all 75ms ease-in-out;
+        background-color: white;
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed !important;
+        }
+
+        &:hover {
+            background-color: $purple2;
+            color: white;
+            cursor: pointer;
+        }
+    }
+}
+
+.edit-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    input {
+        height: 52px;
+        width: 98%;
+        border-radius: 30px;
+        border: solid 1px $light-purple-lines;
+        padding-left: 15px;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24.55px;
+
+        &::placeholder {
+            color: $text-gray;
+            font-family: 'Nunito';
+        }
+    }
+}
+
+.name-container {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+
+    p {
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 27.28px;
+    }
+
+    img {
+        height: 25px;
+        width: 25px;
+    }
+}
+
+.button-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+
+    .cancel {
+        height: 49px;
+        width: 141px;
+        border-radius: 50px;
+        background-color: white;
+        border: solid 1px #797EF3;
+        color: #797EF3;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 24.55px;
+        text-align: center;
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed !important;
+        }
+
+        &:hover {
+            cursor: pointer;
+            background-color: #797EF3;
+            color: white;
+        }
+    }
+
+    .save {
+        height: 49px;
+        width: 141px;
+        border-radius: 50px;
+        background-color: #444DF2;
+        border: solid 1px #444DF2;
+        color: white;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 24.55px;
+        text-align: center;
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed !important;
+        }
+
+        &:hover {
+            cursor: pointer;
+            opacity: 0.5;
+            color: white;
+        }
+    }
+}
+
+.change-mail-card {
+    position: absolute;
+    padding: 40px;
+    top: 65%;
+    left: 50%;
+    width: 100%;
+    max-width: 480px;
+    border-radius: 30px;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    z-index: 20;
+
+    mat-card-content {
+        display: flex;
+        flex-direction: column;
+        gap: 45px;
+    }
+}
+
+.change-mail-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+
+    input {
+        height: 52px;
+        width: 100%;
+        border-radius: 30px;
+        border: solid 1px $light-purple-lines;
+        padding-left: 15px;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24.55px;
+
+        &::placeholder {
+            color: $text-gray;
+            font-family: 'Nunito';
+        }
+    }
+
+    button {
+        height: 49px;
+        width: 141px;
+        border-radius: 50px;
+        background-color: #444DF2;
+        border: solid 1px #444DF2;
+        color: white;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 24.55px;
+        text-align: center;
+
+        &:hover {
+            cursor: pointer;
+            opacity: 0.5;
+            color: white;
+        }
+    }
+}
+
+.change-passwort-button {
+    color: $purple1;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 24.55px;
+    border: none;
+    background-color: white;
+    text-align: start;
+
+    &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+}
+
+.wrong {
+    color: red;
+    font-size: 14px;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    border-radius: 30px 0px 30px 30px;
+  }
+
+@media (max-width: 400px) {
+    .change-avatar-container {
+        button {
+            height: fit-content;
+    }
+}
+}

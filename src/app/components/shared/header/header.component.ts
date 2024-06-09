@@ -9,7 +9,7 @@ import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dial
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { UserMenuComponent } from '../../dialogues/user-menu/user-menu.component';
-import { UserMenuMobileComponent } from '../../dialogues/user-menu-mobile/user-menu-mobile.component';
+import { UserMenuMobileComponent } from '../../dialogues/mobile/user-menu-mobile/user-menu-mobile.component';
 
 @Component({
   selector: 'app-header',

@@ -4,13 +4,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
-import { AddUserToNewChannelComponent } from '../add-user-to-new-channel/add-user-to-new-channel.component';
+import { AddUserToNewChannelMobileComponent } from '../add-user-to-new-channel-mobile/add-user-to-new-channel-mobile.component';
 import { MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import { ChannelsService } from '../../../services/firestore/channels.service';
-import { User } from '../../../models/user.class';
+import { ChannelsService } from '../../../../services/firestore/channels.service';
+import { User } from '../../../../models/user.class';
 
 @Component({
-  selector: 'app-new-channel',
+  selector: 'app-new-channel-mobile',
   standalone: true,
   imports: [
     CommonModule,
@@ -20,10 +20,10 @@ import { User } from '../../../models/user.class';
     FormsModule,
     MatDialogModule
   ],
-  templateUrl: './new-channel.component.html',
-  styleUrl: './new-channel.component.scss'
+  templateUrl: './new-channel-mobile.component.html',
+  styleUrl: './new-channel-mobile.component.scss'
 })
-export class NewChannelComponent {
+export class NewChannelMobileComponent {
   channelName: string = '';
   channelDescription: string = '';
   
@@ -32,7 +32,7 @@ export class NewChannelComponent {
   constructor(
     private dialog: MatDialog,
     private channelsService: ChannelsService,
-    public dialogRef: MatDialogRef<NewChannelComponent>
+    public dialogRef: MatDialogRef<NewChannelMobileComponent>
   ) {}
 
   createChannelAndOpenDialog(): void {
@@ -45,15 +45,13 @@ export class NewChannelComponent {
         .catch(error => console.error('Error creating channel: ', error));
     }
   }
-  
   openAddUserDialog(channelId: string): void {
-    const dialogRef = this.dialog.open(AddUserToNewChannelComponent, {
-      width: '710px',
+    const dialogRef = this.dialog.open(AddUserToNewChannelMobileComponent, {
+      width: '100%',
       position: {
-        top: '20%'
+        bottom: '0%'
       },
       data: { channelId: channelId },
-      panelClass: 'custom-dialog-container'
     });
   }
 

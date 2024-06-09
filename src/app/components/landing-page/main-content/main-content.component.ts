@@ -31,6 +31,7 @@ import {
   MatDialogModule,
 } from '@angular/material/dialog';
 import { ChannelInfoComponent } from '../../dialogues/channel-info/channel-info.component';
+import { ChannelInfoMobileComponent } from '../../dialogues/mobile/channel-info-mobile/channel-info-mobile.component';
 import { MembersComponent } from '../../dialogues/members/members.component';
 import { AddUserToChannelComponent } from '../../dialogues/add-user-to-channel/add-user-to-channel.component';
 import { ProfileDetailViewComponent } from '../../dialogues/profile-detail-view/profile-detail-view.component';
@@ -89,6 +90,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   userCount: number = 0;
   channelSelected: boolean = false;
   chatSelected: boolean = false;
+  isDialogOpen: boolean = false;
   form: FormGroup;
   searchTerm: string = '';
   dateForLine: string = '';
@@ -227,14 +229,43 @@ export class MainContentComponent implements OnInit, OnDestroy {
   }
 
   openChannelInfoDialog(channelId: string): void {
-    const dialogRef = this.dialog.open(ChannelInfoComponent, {
-      width: '872px',
-      position: {
-        top: '11%',
-        right: '27%',
-      },
-      data: { channelId: channelId },
-    });
+    if (this.currentUser) {
+      if (window.innerWidth <= 750) {
+        this.openChannelInfoMobileDialog();
+      } else {
+        const dialogRef = this.dialog.open(ChannelInfoComponent, {
+          width: '872px',
+          position: {
+            top: '185px',
+            right: '180px',
+          },
+          data: { channelId: channelId },
+        });
+        dialogRef.componentInstance.currentUser = new User(this.currentUser);
+
+        this.isDialogOpen = true;
+
+        dialogRef.afterClosed().subscribe(() => {
+          this.isDialogOpen = false;
+        });
+      }
+    }
+  }
+
+  openChannelInfoMobileDialog(): void {
+    if (this.currentUser) {
+      const dialogRef = this.dialog.open(ChannelInfoMobileComponent, {
+        width: '100%',
+        height: '100vh',
+      });
+      dialogRef.componentInstance.currentUser = new User(this.currentUser);
+
+      this.isDialogOpen = true;
+
+      dialogRef.afterClosed().subscribe(() => {
+        this.isDialogOpen = false;
+      });
+    }
   }
 
   openMembersDialog(channelId: string, membersDialog: HTMLElement): void {

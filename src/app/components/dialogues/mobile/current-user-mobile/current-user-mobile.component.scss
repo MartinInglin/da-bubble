@@ -1,17 +1,18 @@
-@import "./../../../../styles.scss";
+@import "./../../../../../styles.scss";
 
 mat-card {
-    width: 500px;
+    max-width: 500px;
+    width: 100%;
     height: fit-content;
-    border-radius: 30px;
-    padding: 40px;
+    padding: 45px 20px 45px 20px;
     font-family: 'Nunito';
+    border-radius: 30px;
 }
 
 mat-card-content {
     display: flex;
     flex-direction: column;
-    gap: 45px;
+    gap: 20px;
 }
 
 .detail-view-header {
@@ -34,7 +35,7 @@ mat-card-content {
         align-items: center;
         justify-content: center;
         transition: scale 75ms ease-in-out;
-        
+
         &:hover {
             background-color: $background;
             scale: 1.05;
@@ -62,13 +63,38 @@ mat-card-content {
 }
 
 .name-container {
-    p {
-        font-size: 32px;
-        font-weight: 700;
-        line-height: 43.65px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    .edit-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        p {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 43.65px;
+        }
+
+        button {
+            border: none;
+            background-color: white;
+            color: $purple3;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 24.55px;
+            transition: scale 75ms ease-in-out;
+
+            &:hover {
+                cursor: pointer;
+                scale: 1.05;
+            }
+        }
     }
 
-    .online {
+    .status {
         font-size: 20px;
         font-weight: 400;
         line-height: 27.28px;
@@ -79,23 +105,6 @@ mat-card-content {
 
         div {
             background-color: $online-green;
-            height: 16px;
-            width: 16px;
-            border-radius: 100%;
-        }
-    }
-
-    .offline {
-        font-size: 20px;
-        font-weight: 400;
-        line-height: 27.28px;
-        color: $text-gray;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-
-        div {
-            background-color: $text-gray;
             height: 16px;
             width: 16px;
             border-radius: 100%;
@@ -157,27 +166,6 @@ mat-card-content {
             opacity: 0.5;
             transition: 75ms ease-in-out;
             cursor: pointer;
-          }
-    }
-}
-
-@media (max-width: 750px) {
-    mat-card {
-        max-width: 500px;
-        width: 100%;
-        height: 95vh;
-        border-radius: 30px;
-        padding: 45px 20px 45px 20px;
-    }
-
-    mat-card-content {
-        overflow-x: hidden;
-        overflow-y: auto;
-    }
-
-    .mail-container {
-        a {
-            padding-left: 0;
         }
     }
 }
