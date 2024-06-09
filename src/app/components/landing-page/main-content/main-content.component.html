@@ -168,6 +168,7 @@
           selectedDirectMessage.posts.length === 0
         "
       >
+        @if (otherUserDirectMessage.id != currentUser.id) {
         <div class="messageAvatarName">
           <img src="{{ otherUserDirectMessage.avatar }}" alt="" />
           <span>{{ otherUserDirectMessage.name }}</span>
@@ -175,10 +176,24 @@
 
         <div>
           <p>
-            Diese Unterhaltun findet nur zwischen
+            Diese Unterhaltung findet nur zwischen
             {{ otherUserDirectMessage.name }} und dir statt.
           </p>
         </div>
+        } @if (otherUserDirectMessage.id == currentUser.id) {
+        <div class="messageAvatarName">
+          <img src="{{ otherUserDirectMessage.avatar }}" alt="" />
+          <span>{{ otherUserDirectMessage.name }} (Du)</span>
+        </div>
+
+        <div>
+          <p>
+            Dieser Raum ist nur für dich da. Mache dir Notizen, liste deine
+            To-dos auf oder bewahre Links und Dateien griffbereit auf. Du kannst
+            hier auch gerne Dinge mit dir selbst besprechen.
+          </p>
+        </div>
+        }
       </div>
     </div>
     <!-- Input Feld am unteren Rand des Containers -->

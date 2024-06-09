@@ -7,19 +7,15 @@ import {
   getDoc,
   getDocs,
   onSnapshot,
-  query,
   setDoc,
   updateDoc,
-  where,
 } from '@angular/fire/firestore';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { DirectMessage } from '../../models/direct-message.class';
 import { MinimalUser } from '../../models/minimal_user.class';
 import { User } from '../../models/user.class';
 import { Post } from '../../models/post.class';
 import { v4 as uuidv4 } from 'uuid';
-import { UsersService } from './users.service';
-import { user } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -47,12 +43,14 @@ export class DirectMessagesService {
         doc(this.firestore, 'directMessages', idDirectMessage),
         (doc) => {
           const directMessageData = doc.data() as DirectMessage;
-          this.directMessageSubject.next(directMessageData);
           console.log(directMessageData);
+
+          this.directMessageSubject.next(directMessageData);
         }
       );
     } else {
       this.createDirectMessage(userId, currentUser);
+      debugger;
     }
   }
   /**
@@ -72,7 +70,6 @@ export class DirectMessagesService {
       const collectionRef = collection(this.firestore, 'directMessages');
 
       const querySnapshot = await getDocs(collectionRef);
-
       for (const doc of querySnapshot.docs) {
         const users = doc.data()['users'];
         const hasCurrentUserId = users.some(
@@ -83,6 +80,7 @@ export class DirectMessagesService {
         );
 
         if (hasCurrentUserId && hasUserId) {
+          debugger;
           return doc.id;
         }
       }
@@ -105,7 +103,7 @@ export class DirectMessagesService {
     const newDocRef = doc(directMessageRef);
 
     const users = await this.createMinimalUsers(userId, currentUser);
-
+    debugger;
     const directMessageData: DirectMessage = {
       id: newDocRef.id,
       users: users,
@@ -143,7 +141,7 @@ export class DirectMessagesService {
     try {
       const userDocRef = doc(this.firestore, 'users', userId);
       const userDoc = await getDoc(userDocRef);
-
+      debugger;
       if (userDoc.exists()) {
         const userData = userDoc.data();
 
