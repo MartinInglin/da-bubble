@@ -32,7 +32,7 @@ export class PostComponent {
   @Input() indexPost!: number;
   @Input() path!: 'directMessages' | 'threads' | 'channels';
 
-  @Output() toggleThread = new EventEmitter<void>();
+  @Output() openThread = new EventEmitter();
 
   ngOnInit() {
     this.checkIfPostFromCurrentUser();
@@ -64,7 +64,6 @@ export class PostComponent {
       pathToDocument = `${this.path}/${this.selectedDirectMessageId}`;
       this.postsService.deleteFile(this.indexPost, pathToDocument, indexFile);
       e.stopPropagation();
-
     } else if (this.path === 'channels') {
       pathToDocument = `${this.path}/${this.selectedChannel.id}`;
       this.postsService.deleteFile(this.indexPost, pathToDocument, indexFile);
@@ -72,17 +71,22 @@ export class PostComponent {
 
       try {
         pathToDocument = `channels/${this.selectedChannel.id}/threads/${this.post.id}`;
-        const threadExists = await this.postsService.checkIfThreadExists(pathToDocument);
+        const threadExists = await this.postsService.checkIfThreadExists(
+          pathToDocument
+        );
         if (threadExists) {
           this.indexPost = 0;
-          this.postsService.deleteFile(this.indexPost, pathToDocument, indexFile);
+          this.postsService.deleteFile(
+            this.indexPost,
+            pathToDocument,
+            indexFile
+          );
         } else {
           console.log('Thread does not exist');
         }
       } catch (error) {
         console.error('Error checking if thread exists:', error);
       }
-
     } else if (this.path === 'threads') {
       pathToDocument = `channels/${this.selectedChannel.id}/${this.path}/${this.selectedThreadId}`;
       this.postsService.deleteFile(this.indexPost, pathToDocument, indexFile);
@@ -110,5 +114,9 @@ export class PostComponent {
   toggleShowEditMessage() {
     this.showEditMessage = !this.showEditMessage;
     console.log(this.showEditMessage);
+  }
+
+  sendOpenThreadToParent(post: Post) {
+    this.openThread.emit(post);
   }
 }

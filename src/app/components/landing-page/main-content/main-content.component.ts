@@ -29,7 +29,6 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import {
   MatDialog,
   MatDialogModule,
-  MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
 import { ChannelInfoComponent } from '../../dialogues/channel-info/channel-info.component';
 import { MembersComponent } from '../../dialogues/members/members.component';
@@ -72,8 +71,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
   channelsService = inject(ChannelsService);
   usersService = inject(UsersService);
-  storageService = inject(StorageService);
-  message: any = '';
   stateService = inject(StateService);
   threadsService = inject(ThreadsService);
 
@@ -87,33 +84,18 @@ export class MainContentComponent implements OnInit, OnDestroy {
   selectedChannel: Channel = new Channel();
   selectedDirectMessage: DirectMessage = new DirectMessage();
   otherUserDirectMessage: MinimalUser = new MinimalUser();
-
-  openDialog = true;
-
   filteredUsers: User[] = [];
   allUsers: User[] = [];
   userCount: number = 0;
-  userId: any;
-  emojis: string[] = [
-    '😊',
-    '❤️',
-    '😂',
-    '🎉',
-    '🌟',
-    '🎈',
-    '🌈',
-    '🍕',
-    '🚀',
-    '⚡',
-  ];
   channelSelected: boolean = false;
   chatSelected: boolean = false;
-  files: File[] = [];
   form: FormGroup;
-  searchResults$: Observable<(Channel | User)[]> = of([]);
-  searchResults: (Channel | User)[] | undefined;
   searchTerm: string = '';
   dateForLine: string = '';
+
+  searchResults$: Observable<(Channel | User)[]> = of([]);
+  searchResults: (Channel | User)[] | undefined;
+
   constructor(
     private dialog: MatDialog,
     private directMessagesService: DirectMessagesService,
@@ -133,7 +115,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
       (channel) => {
         if (channel) {
           this.selectedChannel = channel ?? new Channel();
-          console.log('Current channel:', this.selectedChannel);
 
           this.filteredChannels = this.allUsers.filter((c) =>
             c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
@@ -142,7 +123,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
           this.channelSelected = !!this.selectedChannel.id;
           if (this.channelSelected) {
             this.chatSelected = false;
-            this.getUserCount(); // Benutzerzähler aktualisieren
+            this.getUserCount();
           }
         }
       }
@@ -151,8 +132,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.usersSubscription = this.usersService.allUsersSubject$.subscribe(
       (users) => {
         if (users) {
-          this.allUsers = users ?? []; // Benutzerdaten aktualisieren
-          console.log('All users:', this.allUsers);
+          this.allUsers = users ?? [];
 
           this.filteredUsers = this.allUsers.filter((u) =>
             u.name.toLowerCase().includes(this.searchTerm.toLowerCase())
@@ -164,7 +144,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.directMessageSubscription =
       this.directMessagesService.directMessage$.subscribe((directMessage) => {
         this.selectedDirectMessage = directMessage ?? new DirectMessage();
-        console.log('Selected Message: ', this.selectedDirectMessage);
 
         this.chatSelected = !!directMessage;
         if (this.chatSelected) {
@@ -186,9 +165,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       switchMap((formValue) => {
         const term = formValue.recipient;
-        console.log('Form value changes:', term); // Added log to check form value changes
         this.searchTerm = typeof term === 'string' ? term : '';
-        console.log('Search term:', this.searchTerm); // Added log to check search term
         return this.searchTerm ? this.search(this.searchTerm) : of([]);
       })
     );
@@ -234,13 +211,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
     return of(results);
   }
 
-  linkContactInMessage(x: string) {
-    let messageTextarea = document.getElementById('message-textarea');
-    if (messageTextarea) {
-      messageTextarea.textContent += '@' + x + ' '; // Append the name to the textarea with a space
-    }
-  }
-
   ngOnDestroy(): void {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
@@ -255,10 +225,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
       this.directMessageSubscription.unsubscribe();
     }
   }
-  showEmoji(emoji: string): string {
-    // Verwende Twemoji.show() oder Twemoji.parse() um das Emoji zu rendern
-    return twemoji.parse(emoji);
-  }
 
   openChannelInfoDialog(channelId: string): void {
     const dialogRef = this.dialog.open(ChannelInfoComponent, {
@@ -269,48 +235,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
       },
       data: { channelId: channelId },
     });
-  }
-
-  async sendMessage(): Promise<void> {
-    if (this.message.trim()) {
-      try {
-        await this.channelsService.savePost(
-          this.selectedChannel.id,
-          this.message,
-          this.currentUser,
-          this.files
-        );
-        this.message = '';
-        this.files = [];
-      } catch (error) {
-        console.error('Error posting message:', error);
-      }
-    }
-  }
-
-  savePost() {
-    this.channelsService.savePost(
-      this.selectedChannel.id,
-      this.message,
-      this.currentUser,
-      this.files
-    );
-  }
-
-  async sendMessageToContact() {
-    if (this.message.trim() && this.selectedDirectMessage?.id) {
-      try {
-        await this.directMessagesService.savePost(
-          this.selectedDirectMessage.id,
-          this.message,
-          this.currentUser
-        );
-        this.message = '';
-        console.log(this.message, 'has ben sent');
-      } catch (error) {
-        console.error('Error posting Directmessage:', error);
-      }
-    }
   }
 
   openMembersDialog(channelId: string, membersDialog: HTMLElement): void {
@@ -378,31 +302,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
     const hours = date.getHours();
     const minutes = date.getMinutes().toString().padStart(2, '0');
     return `${hours}:${minutes} Uhr`;
-  }
-
-  openFileDialog() {
-    this.fileInput.nativeElement.click();
-  }
-
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      this.files.push(file);
-      console.log(this.files);
-    }
-  }
-
-  removeFile(index: number) {
-    this.files.splice(index, 1);
-  }
-
-  downloadFile(downloadURL: string) {
-    this.storageService.getFile(downloadURL);
-  }
-
-  addEmojiToMessage(emoji: string): void {
-    this.message += emoji;
   }
 
   /**

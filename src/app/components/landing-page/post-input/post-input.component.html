@@ -1,5 +1,5 @@
 
-<div class="inputContent">
+<div class="input-content">
     <div class="textArea">
       <textarea name="" id="message-textarea" placeholder="Nachricht an #{{ selectedChannel.name }}"
         [(ngModel)]="message"></textarea>
@@ -51,8 +51,8 @@
           </div>
         </div>
 
-        <a (click)="savePost()">
-          <img src="assets/images/icons/send_icon.svg" alt="" />
+        <a (click)="savePost()" class="save-post">
+          <img src="assets/images/icons/send_icon.svg" alt=""/>
         </a>
       </div>
     </div>

@@ -17,7 +17,6 @@ import { ChannelsService } from '../../../services/firestore/channels.service';
 import { UsersService } from '../../../services/firestore/users.service';
 import { Subscription } from 'rxjs';
 import { Channel } from '../../../models/channel.class';
-import { DirectMessage } from '../../../models/direct-message.class';
 import { Thread } from '../../../models/thread.class';
 import { PostComponent } from '../post/post.component';
 import { PostInputComponent } from '../post-input/post-input.component';
@@ -38,23 +37,10 @@ import { PostInputComponent } from '../post-input/post-input.component';
   styleUrl: './thread.component.scss',
 })
 export class ThreadComponent implements OnInit {
+  dateForLine: string = '';
   allUsers: User[] = [];
   comments: boolean = true;
-  message: string = '';
   currentUser: User = new User();
-  emojis: string[] = [
-    '😊',
-    '❤️',
-    '😂',
-    '🎉',
-    '🌟',
-    '🎈',
-    '🌈',
-    '🍕',
-    '🚀',
-    '⚡',
-  ];
-  userId: any;
   selectedChannel: Channel = new Channel();
   selectedThread: Thread = new Thread();
 
@@ -104,42 +90,36 @@ export class ThreadComponent implements OnInit {
     this.threadSubscription.unsubscribe();
   }
 
-  toggleComments() {
-    this.comments = true;
-  }
-
-  directMessage = new DirectMessage({
-    id: '123',
-    users: [
-      { id: '1', avatar: 'path_to_avatar1' },
-      { id: '2', avatar: 'path_to_avatar2' },
-      // more users...
-    ],
-    posts: [],
-  });
-
-  savePost() {
-    if (this.channelId && this.threadId && this.message && this.currentUser) {
-      this.threadsService.savePost(
-        this.channelId,
-        this.threadId,
-        this.message,
-        this.currentUser
-      );
-      console.log('Beitrag erfolgreich gespeichert');
-    } else {
-      console.error('Fehlende Daten für die Speicherung des Beitrags');
-    }
-  }
-
-  linkContactInMessage(x: string) {
-    let messageTextarea = document.getElementById('message-textarea');
-    if (messageTextarea) {
-      messageTextarea.textContent += '@' + x + ' '; // Append the name to the textarea with a space
-    }
-  }
-
   closeThread(): void {
     this.toggleThread.emit();
+  }
+
+  formatDate(timestamp: number): string {
+    const daysOfWeek = [
+      'Sonntag',
+      'Montag',
+      'Dienstag',
+      'Mittwoch',
+      'Donnerstag',
+      'Freitag',
+      'Samstag',
+    ];
+    const date = new Date(timestamp);
+    const today = new Date(); // Aktuelles Datum
+    const dayOfWeekIndex = date.getDay(); // Hole den Wochentag als Zahl (0-6)
+
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear()).slice(-2);
+    const formattedDate = `${day}.${month}.${year}`;
+
+    // Überprüfe, ob das Datum heute ist
+    if (date.toDateString() === today.toDateString()) {
+      this.dateForLine = 'heute';
+      return 'heute'; // Gib 'heute' zurück, wenn das Datum heute ist
+    } else {
+      this.dateForLine = `${daysOfWeek[dayOfWeekIndex]} ${formattedDate}`;
+      return `${daysOfWeek[dayOfWeekIndex]} ${formattedDate}`; // Andernfalls gib den Namen des Wochentags zurück
+    }
   }
 }

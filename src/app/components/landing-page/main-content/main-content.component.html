@@ -1,5 +1,5 @@
 <!-- Main content of the document -->
-<main id="mainContent">
+<main class="main-content-container">
   <!-- Channel -->
 
   <!-- Header section with channel name and contact information -->
@@ -26,7 +26,7 @@
     </div>
   </header>
 
-  <div class="height-65vh" *ngIf="channelSelected">
+  <div class="header-post-input-container" *ngIf="channelSelected">
     <header>
       <div
         (click)="openChannelInfoDialog(selectedChannel.id)"
@@ -76,9 +76,9 @@
           [post]="post"
           [currentUserId]="currentUser.id"
           [selectedChannel]="selectedChannel"
-          (click)="openThread(post)"
           [indexPost]="index"
           [path]="'channels'"
+          (openThread)="openThread(post)"
         >
           <div class="message-details">
             <!-- Message actions and time details -->
@@ -117,7 +117,7 @@
 
   <!-- Direct Message -->
 
-  <div class="height-65vh" *ngIf="chatSelected">
+  <div class="header-post-input-container" *ngIf="chatSelected">
     <!-- Header section with channel name and contact information -->
     <header *ngIf="chatSelected">
       <div class="channelName" *ngIf="selectedDirectMessage.users.length > 0">
@@ -137,12 +137,12 @@
       <div *ngFor="let post of selectedDirectMessage.posts; let index = index">
         <!-- Date line for messages -->
         @if (dateForLine != formatDate(post.timestamp)) {
-          <div class="dateLine">
-            <div class="Line">
-              <span>{{ formatDate(post.timestamp) }}</span>
-            </div>
+        <div class="dateLine">
+          <div class="Line">
+            <span>{{ formatDate(post.timestamp) }}</span>
           </div>
-          }
+        </div>
+        }
 
         <!-- Post -->
         <app-post
@@ -181,17 +181,16 @@
         </div>
       </div>
     </div>
+    <!-- Input Feld am unteren Rand des Containers -->
+    @if (chatSelected) {
+    <app-post-input
+      class="post-input"
+      [selectedChannel]="selectedChannel"
+      [selectedDirectMessage]="selectedDirectMessage"
+      [allUsers]="allUsers"
+      [currentUser]="currentUser"
+      [path]="'directMessages'"
+    ></app-post-input>
+    }
   </div>
-
-  <!-- Input Feld am unteren Rand des Containers -->
-  @if (chatSelected) {
-  <app-post-input
-    class="post-input"
-    [selectedChannel]="selectedChannel"
-    [selectedDirectMessage]="selectedDirectMessage"
-    [allUsers]="allUsers"
-    [currentUser]="currentUser"
-    [path]="'directMessages'"
-  ></app-post-input>
-  }
 </main>

@@ -49,7 +49,11 @@
       <img src="assets/images/icons/add_circle.svg" alt="" />
       <img src="assets/images/icons/add_reaction.svg" alt="" />
       @if (path === 'channels') {
-      <img src="assets/images/icons/comment.svg" alt="" />
+      <img
+        src="assets/images/icons/comment.svg"
+        alt=""
+        (click)="sendOpenThreadToParent(post)"
+      />
       }
       <img
         src="assets/images/icons/edit_message.svg"
@@ -65,7 +69,7 @@
   <div class="documents-container">
     @for (file of post.files; track file; let index = $index) {
     <div class="document" (click)="downloadFile(file.url, $event)">
-        {{ file.name }}
+      {{ file.name }}
 
       <img
         class="delete-file"
@@ -140,7 +144,11 @@
       <img src="assets/images/icons/add_circle.svg" alt="" />
       <img src="assets/images/icons/add_reaction.svg" alt="" />
       @if (path === 'channels') {
-      <img src="assets/images/icons/comment.svg" alt="" />
+      <img
+        src="assets/images/icons/comment.svg"
+        alt=""
+        (click)="sendOpenThreadToParent(post)"
+      />
       }
     </div>
   </div>

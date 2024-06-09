@@ -51,21 +51,26 @@ export class PostInputComponent {
   ];
   message: string = '';
 
-  removeFile(index: number) {
-    this.files.splice(index, 1);
-  }
+
 
   openFileDialog() {
     this.fileInput.nativeElement.click();
   }
 
   onFileSelected(event: Event) {
+    debugger;
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       this.files.push(file);
-      console.log(this.files);
+      console.log("File added", this.files);
+      input.value = '';
     }
+  }
+
+  removeFile(index: number) {
+    this.files.splice(index, 1);
+    console.log("File removed", this.files);
   }
 
   addEmojiToMessage(emoji: string): void {
@@ -112,6 +117,7 @@ export class PostInputComponent {
     };
     await updateDoc(docRef, { posts: arrayUnion(post) });
     this.message = '';
+    this.files = [];
   }
 
   getDocRef(): DocumentReference | undefined {

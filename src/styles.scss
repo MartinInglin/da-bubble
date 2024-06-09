@@ -18,13 +18,12 @@ body {
   background-color: #eceefe;
   display: flex;
   flex-direction: column;
-  padding: 10px;
   box-sizing: border-box;
-  // overflow: hidden;
 }
 
 body {
   margin: 0;
+  padding: 20px;
 }
 
 app-root {
@@ -36,7 +35,8 @@ app-root {
 app-login,
 app-register,
 app-reset-password,
-app-choose-avatar {
+app-choose-avatar,
+app-landing-page {
   flex: 1;
 }
 
