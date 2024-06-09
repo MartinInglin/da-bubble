@@ -75,7 +75,6 @@ export class SideNavComponent {
           width: '872px',
           height: '539px',
         });
-        dialogRef.componentInstance.currentUser = new User(this.currentUser);
 
         this.isDialogOpen = true;
 
@@ -92,7 +91,6 @@ export class SideNavComponent {
         width: '100%',
         height: '100vh',
       });
-      dialogRef.componentInstance.currentUser = new User(this.currentUser);
 
       this.isDialogOpen = true;
 
