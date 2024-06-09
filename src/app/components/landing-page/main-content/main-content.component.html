@@ -168,7 +168,7 @@
           selectedDirectMessage.posts.length === 0
         "
       >
-        @if (otherUserDirectMessage.id != currentUser.id) {
+        @if (!selectedDirectMessage.isPrivateMessage) {
         <div class="messageAvatarName">
           <img src="{{ otherUserDirectMessage.avatar }}" alt="" />
           <span>{{ otherUserDirectMessage.name }}</span>
@@ -180,10 +180,10 @@
             {{ otherUserDirectMessage.name }} und dir statt.
           </p>
         </div>
-        } @if (otherUserDirectMessage.id == currentUser.id) {
+        } @if (selectedDirectMessage.isPrivateMessage) {
         <div class="messageAvatarName">
-          <img src="{{ otherUserDirectMessage.avatar }}" alt="" />
-          <span>{{ otherUserDirectMessage.name }} (Du)</span>
+          <img src="{{ currentUser.avatar }}" alt="" />
+          <span>{{ currentUser.name }} (Du)</span>
         </div>
 
         <div>

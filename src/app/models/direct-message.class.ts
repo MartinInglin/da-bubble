@@ -5,6 +5,7 @@ export class DirectMessage {
   id: string;
   users: MinimalUser[];
   posts: Post[];
+  isPrivateMessage: boolean;
 
   constructor(obj?: any) {
     (this.id = obj ? obj.id : ''),
@@ -14,5 +15,6 @@ export class DirectMessage {
           avatar: user.avatar,
         })) || []);
     this.posts = obj?.posts?.map((post: Post) => new Post(post)) || [];
+    this.isPrivateMessage = obj?.isPrivateMessage || false;
   }
 }
