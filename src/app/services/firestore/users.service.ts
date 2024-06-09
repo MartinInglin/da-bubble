@@ -198,19 +198,23 @@ export class UsersService {
   }
 
   changeUserNameInPosts(newUserName: string, currentUserId: string) {
-      let path: 'channels' | 'directMessages' | 'threads';
-  
-      path = 'directMessages'
-      this.changeUserNameInCollection(path, currentUserId, newUserName);
+    let path: 'channels' | 'directMessages' | 'threads';
 
-      path = 'channels'
-      this.changeUserNameInCollection(path, currentUserId, newUserName);
+    path = 'directMessages';
+    this.changeUserNameInCollection(path, currentUserId, newUserName);
 
-      this.updateThreadsInChannels(currentUserId, newUserName);
+    path = 'channels';
+    this.changeUserNameInCollection(path, currentUserId, newUserName);
+
+    path = 'threads';
+    this.changeUserNameInCollection(path, currentUserId, newUserName)
   }
-  
 
-  async changeUserNameInCollection(path: string, currentUserId:string, newUserName: string) {
+  async changeUserNameInCollection(
+    path: string,
+    currentUserId: string,
+    newUserName: string
+  ) {
     const collectionRef = collection(this.firestore, path);
     const querySnapshot = await getDocs(collectionRef);
 
@@ -229,51 +233,13 @@ export class UsersService {
         });
 
         if (updatedPosts) {
-          const documentRef = doc(
-            this.firestore,
-            path,
-            document.id
-          );
+          const documentRef = doc(this.firestore, path, document.id);
           await updateDoc(documentRef, { posts: posts });
           console.log(`Updated document ${document.id} with new user name.`);
         }
       }
     });
   }
-
-  async updateThreadsInChannels(currentUserId: string, newUserName: string) {
-    const channelsRef = collection(this.firestore, 'channels');
-    const querySnapshot = await getDocs(channelsRef);
-
-    querySnapshot.forEach(async (channelDoc) => {
-        const threadsRef = collection(this.firestore, `channels/${channelDoc.id}/threads`);
-
-        const threadsSnapshot = await getDocs(threadsRef);
-
-        threadsSnapshot.forEach(async (threadDoc) => {
-            const data = threadDoc.data();
-            const posts = data['posts'];
-
-            if (Array.isArray(posts)) {
-                let updatedPosts = false;
-
-                posts.forEach((post) => {
-                    if (post.userId === currentUserId) {
-                        post.name = newUserName;
-                        updatedPosts = true;
-                    }
-                });
-
-                if (updatedPosts) {
-                    const threadRef = doc(this.firestore, `channels/${channelDoc.id}/threads`, threadDoc.id);
-                    await updateDoc(threadRef, { posts: posts });
-                    console.log(`Updated thread ${threadDoc.id} in channel ${channelDoc.id} with new user name.`);
-                }
-            }
-        });
-    });
-}
-
 
   setCurrentUserNull() {
     this.currentUserSubject.next(null);

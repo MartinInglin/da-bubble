@@ -34,7 +34,7 @@ export class PostComponent {
 
   @Output() openThread = new EventEmitter();
 
-  ngOnInit() {
+  constructor() {
     this.checkIfPostFromCurrentUser();
   }
 
@@ -58,57 +58,63 @@ export class PostComponent {
   }
 
   async deleteFile(fileName: string, e: Event, indexFile: number) {
-    let pathToDocument: string = '';
-
     if (this.path === 'directMessages') {
-      pathToDocument = `${this.path}/${this.selectedDirectMessageId}`;
-      this.postsService.deleteFile(this.indexPost, pathToDocument, indexFile);
+      const documentId = this.selectedDirectMessageId;
+      this.deleteFileOnCollection(this.path, documentId, indexFile);
       e.stopPropagation();
     } else if (this.path === 'channels') {
-      pathToDocument = `${this.path}/${this.selectedChannel.id}`;
-      this.postsService.deleteFile(this.indexPost, pathToDocument, indexFile);
+      const documentId = this.selectedChannel.id;
+      this.deleteFileOnCollection(this.path, documentId, indexFile);
+      this.deleteFileOnCorrespondingThread(indexFile);
       e.stopPropagation();
-
-      try {
-        pathToDocument = `channels/${this.selectedChannel.id}/threads/${this.post.id}`;
-        const threadExists = await this.postsService.checkIfThreadExists(
-          pathToDocument
-        );
-        if (threadExists) {
-          this.indexPost = 0;
-          this.postsService.deleteFile(
-            this.indexPost,
-            pathToDocument,
-            indexFile
-          );
-        } else {
-          console.log('Thread does not exist');
-        }
-      } catch (error) {
-        console.error('Error checking if thread exists:', error);
-      }
     } else if (this.path === 'threads') {
-      pathToDocument = `channels/${this.selectedChannel.id}/${this.path}/${this.selectedThreadId}`;
-      this.postsService.deleteFile(this.indexPost, pathToDocument, indexFile);
-      e.stopPropagation();
-
-      if (this.indexPost == 0) {
-        pathToDocument = `channels/${this.selectedChannel.id}`;
-        try {
-          this.indexPost = await this.postsService.getIndexPostInChannel(
-            this.post.id,
-            pathToDocument
-          );
-        } catch (error) {
-          console.error('Error setting indexPost:', error);
-        }
-        this.postsService.deleteFile(this.indexPost, pathToDocument, indexFile);
-        e.stopPropagation();
-      }
+      const documentId = this.selectedThreadId;
+      this.deleteFileOnCollection(this.path, documentId, indexFile);
+      this.deleteFileOnCorrespondingChannel(documentId, indexFile);
     }
 
     this.storageService.deleteFile(this.post.id, fileName);
     e.stopPropagation();
+  }
+
+  async deleteFileOnCorrespondingThread(indexFile: number) {
+    try {
+      this.path = 'threads';
+      const documentId = this.post.id
+      this.indexPost = 0;
+      const threadExists = await this.postsService.checkIfThreadExists(
+        documentId
+      );
+      if (threadExists) {
+        this.deleteFileOnCollection(this.path, documentId, indexFile);
+      } else {
+        console.log('Thread does not exist');
+      }
+    } catch (error) {
+      console.log('Failed to delete file on corresponding thread', error);
+    }
+  }
+
+  async deleteFileOnCorrespondingChannel(
+    documentId: string,
+    indexFile: number
+  ) {
+    try {
+      this.path = 'channels';
+      documentId = this.selectedChannel.id;
+      this.indexPost = await this.postsService.getIndexPostInChannel(
+        this.post.id,
+        documentId
+      );
+      this.deleteFileOnCollection(this.path, documentId, indexFile);
+    } catch (error) {
+      console.log('Failed to delete file on corresponding channel', error);
+    }
+  }
+
+  deleteFileOnCollection(path: string, documentId: string, indexFile: number) {
+    const pathToDocument = `${path}/${documentId}`;
+    this.postsService.deleteFile(this.indexPost, pathToDocument, indexFile);
   }
 
   toggleShowEditMessage() {
@@ -120,3 +126,35 @@ export class PostComponent {
     this.openThread.emit(post);
   }
 }
+
+// try {
+//   pathToDocument = `channels/${this.selectedChannel.id}/threads/${this.post.id}`;
+
+//   if (threadExists) {
+//     this.indexPost = 0;
+//     this.postsService.deleteFile(
+//       this.indexPost,
+//       pathToDocument,
+//       indexFile
+//     );
+//   } else {
+//
+//   }
+// } catch (error) {
+//   console.error('Error checking if thread exists:', error);
+// }
+// } else if (this.path === 'threads') {
+// pathToDocument = `channels/${this.selectedChannel.id}/${this.path}/${this.selectedThreadId}`;
+// this.postsService.deleteFile(this.indexPost, pathToDocument, indexFile);
+// e.stopPropagation();
+
+// if (this.indexPost == 0) {
+//   ;
+//   try {
+
+//   } catch (error) {
+//     console.error('Error setting indexPost:', error);
+//   }
+//   this.postsService.deleteFile(this.indexPost, pathToDocument, indexFile);
+//   e.stopPropagation();
+// }

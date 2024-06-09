@@ -26,10 +26,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import {
-  MatDialog,
-  MatDialogModule,
-} from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ChannelInfoComponent } from '../../dialogues/channel-info/channel-info.component';
 import { ChannelInfoMobileComponent } from '../../dialogues/mobile/channel-info-mobile/channel-info-mobile.component';
 import { MembersComponent } from '../../dialogues/members/members.component';
@@ -37,7 +34,6 @@ import { AddUserToChannelComponent } from '../../dialogues/add-user-to-channel/a
 import { ProfileDetailViewComponent } from '../../dialogues/profile-detail-view/profile-detail-view.component';
 import { DirectMessagesService } from '../../../services/firestore/direct-messages.service';
 import { DirectMessage } from '../../../models/direct-message.class';
-import { StorageService } from '../../../services/storage.service';
 import { FormsModule } from '@angular/forms';
 import { Post } from '../../../models/post.class';
 import { StateService } from '../../../services/stateservice.service';
@@ -74,6 +70,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   usersService = inject(UsersService);
   stateService = inject(StateService);
   threadsService = inject(ThreadsService);
+  directMessagesService = inject(DirectMessagesService);
 
   private userSubscription: Subscription = new Subscription();
   private channelSubscription: Subscription = new Subscription();
@@ -98,11 +95,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   searchResults$: Observable<(Channel | User)[]> = of([]);
   searchResults: (Channel | User)[] | undefined;
 
-  constructor(
-    private dialog: MatDialog,
-    private directMessagesService: DirectMessagesService,
-    private fb: FormBuilder
-  ) {
+  constructor(private dialog: MatDialog, private fb: FormBuilder) {
     this.form = this.fb.group({
       recipient: [''],
     });

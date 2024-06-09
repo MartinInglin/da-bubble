@@ -16,12 +16,9 @@ import {
 import { Channel } from '../../models/channel.class';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { MinimalUser } from '../../models/minimal_user.class';
-import { Post } from '../../models/post.class';
-import { v4 as uuidv4 } from 'uuid';
 import { User } from '../../models/user.class';
-import { Reaction } from '../../models/reaction.class';
 import { StorageService } from '../storage.service';
-import { MinimalFile } from '../../interfaces/minimal_file';
+import { PostsService } from './posts.service';
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +26,7 @@ import { MinimalFile } from '../../interfaces/minimal_file';
 export class ChannelsService {
   firestore = inject(Firestore);
   storageService = inject(StorageService);
+  postsService = inject(PostsService);
 
   private channelSubject: BehaviorSubject<Channel | null> =
     new BehaviorSubject<Channel | null>(null);
@@ -36,7 +34,7 @@ export class ChannelsService {
   public channelSubject$: Observable<Channel | null> =
     this.channelSubject.asObservable();
 
-  constructor() { }
+  constructor() {}
 
   /**
    * This function gets the data of a selected channel. It therefore needs the id of the requested channel. The data is provided as an observable that any component can subscribe to.
@@ -107,7 +105,7 @@ export class ChannelsService {
         name: currentUser.name,
         avatar: currentUser.avatar,
         id: currentUser.id,
-        email: currentUser.email
+        email: currentUser.email,
       },
     ];
     return users;
@@ -137,11 +135,11 @@ export class ChannelsService {
   async getUserById(userId: string): Promise<User> {
     const userDocRef = doc(this.firestore, 'users', userId);
     const userDoc = await getDoc(userDocRef);
-  
+
     if (!userDoc.exists()) {
       throw new Error('User does not exist');
     }
-  
+
     return userDoc.data() as User;
   }
 
@@ -255,11 +253,15 @@ export class ChannelsService {
     await deleteDoc(doc(this.firestore, 'channels', channelId));
   }
 
-  async updateChannel(channelId: string, name: string, description: string): Promise<void> {
+  async updateChannel(
+    channelId: string,
+    name: string,
+    description: string
+  ): Promise<void> {
     try {
       const changes = {
         name: name,
-        description: description
+        description: description,
       };
       await this.changePropertiesChannel(channelId, changes);
     } catch (error) {
@@ -354,116 +356,10 @@ export class ChannelsService {
     await batch.commit();
   }
 
-  /**
-   * This function saves a post a user writes in a channel.
-   *
-   * @param channelId string
-   * @param message string
-   * @param currentUser object of type user.
-   */
-  async savePost(
+  async addSingleUserToChannel(
     channelId: string,
-    message: string,
-    currentUser: User,
-    files: File[]
-  ) {
-    const postId = this.createId()
-    const minimalFiles: MinimalFile[] = await this.storageService.saveFiles(postId, files);
-    console.log(minimalFiles);
-
-
-    const channelRef = doc(this.firestore, 'channels', channelId);
-
-    const post: Post = {
-      id: postId,
-      name: currentUser.name,
-      avatar: currentUser.avatar,
-      message: message,
-      timestamp: this.getUTXTimestamp(),
-      reactions: [],
-      edited: false,
-      files: minimalFiles,
-      userId: currentUser.id,
-    };
-    await updateDoc(channelRef, { posts: arrayUnion(post) });
-
-
-    this.storageService.saveFiles(postId, files)
-  }
-
-  // filesToMinimalFiles(files: File[], downloadURLs: string[]): MinimalFile[] {
-  //   return files.map((file) => {
-  //     return {
-  //       name: file.name,
-  //       url: downloadURLs,
-  //     };
-  //   });
-  // }
-
-  /**
-   * This function creates a unique id.
-   *
-   * @returns id as string
-   */
-  createId(): string {
-    return uuidv4();
-  }
-
-  /**
-   * This function gets the actual UTX timestamp.
-   *
-   * @returns UTX timestamp as number
-   */
-  getUTXTimestamp(): number {
-    return Date.now();
-  }
-
-  /**
-   * This function is there if the user edits a post. The timestamp is updated and the variable edited is set to true so a message (edited) can be displayed.
-   *
-   * @param channelId string
-   * @param postIndex number
-   * @param newMessage string
-   * @returns -
-   */
-  async editPost(
-    channelId: string,
-    postIndex: number,
-    newMessage: string
+    user: MinimalUser
   ): Promise<void> {
-    try {
-      const channelRef = doc(this.firestore, 'channels', channelId);
-
-      const channelDoc = await getDoc(channelRef);
-      if (!channelDoc.exists()) {
-        console.error('Thread does not exist');
-        return;
-      }
-
-      const channelData = channelDoc.data();
-      const posts: Post[] = channelData['posts'];
-
-      if (postIndex >= posts.length || postIndex < 0) {
-        console.error('Invalid post index');
-        return;
-      }
-
-      posts[postIndex] = {
-        ...posts[postIndex],
-        message: newMessage,
-        timestamp: this.getUTXTimestamp(),
-        edited: true,
-      };
-
-      await updateDoc(channelRef, { posts });
-
-      console.log('Post successfully updated!');
-    } catch (error) {
-      console.error('Error updating post: ', error);
-    }
-  }
-
-  async addSingleUserToChannel(channelId: string, user: MinimalUser): Promise<void> {
     const channelDocRef = doc(this.firestore, 'channels', channelId);
     const channelDoc = await getDoc(channelDocRef);
 
@@ -482,7 +378,6 @@ export class ChannelsService {
     }
   }
 
-
   async addAllUsersToChannel(channelId: string): Promise<void> {
     const collectionRef = collection(this.firestore, 'users');
     const querySnapshot = await getDocs(collectionRef);
@@ -497,7 +392,7 @@ export class ChannelsService {
     }
 
     const channelData = channelDoc.data() as Channel;
-    const existingUserIds = channelData.users.map(user => user.id);
+    const existingUserIds = channelData.users.map((user) => user.id);
 
     querySnapshot.forEach((docSnapshot) => {
       const userData = docSnapshot.data() as User;
@@ -506,7 +401,7 @@ export class ChannelsService {
           id: userData.id,
           name: userData.name,
           avatar: userData.avatar,
-          email: userData.email
+          email: userData.email,
         };
         channelData.users.push(minimalUser);
         const userDocRef = doc(this.firestore, 'users', userData.id);
@@ -537,50 +432,5 @@ export class ChannelsService {
       console.error('Error fetching channel:', error);
       return null;
     }
-  }
-
-  async saveReaction(
-    currentUser: User,
-    channelId: string,
-    postIndex: number,
-    reactionIcon: string
-  ) {
-    const channelRef = doc(this.firestore, 'channels', channelId);
-    const channelDoc = await getDoc(channelRef);
-
-    if (!channelDoc.exists()) {
-      console.error('Thread does not exist');
-      return;
-    }
-
-    const channelData = channelDoc.data();
-    const post: Post = channelData['posts'][postIndex];
-
-    const reactionIndex = this.userHasCommented(currentUser.id, post);
-
-    if (typeof reactionIndex === 'number') {
-      post.reactions[reactionIndex].reaction = reactionIcon;
-    } else {
-      this.createNewReaction(currentUser, reactionIcon, post);
-    }
-  }
-
-  userHasCommented(currentUserId: string, post: Post): boolean | number {
-    for (let i = 0; i < post.reactions.length; i++) {
-      if (post.reactions[i].userId === currentUserId) {
-        return i;
-      }
-    }
-    return false;
-  }
-
-  createNewReaction(currentUser: User, reactionIcon: string, post: Post) {
-    const reaction: Reaction = {
-      userName: currentUser.name,
-      userId: currentUser.id,
-      reaction: reactionIcon,
-    };
-
-    post.reactions.push(reaction);
   }
 }
