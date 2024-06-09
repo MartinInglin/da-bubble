@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ChannelInfoEditComponent } from './channel-info-edit/channel-info-edit.component';
+import { StateService } from '../../../services/stateservice.service';
 import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Channel } from '../../../models/channel.class';
 import { ChannelsService } from '../../../services/firestore/channels.service';
@@ -22,7 +23,7 @@ import { UsersService } from '../../../services/firestore/users.service';
     MatCardModule,
     MatIconModule,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
   ],
   templateUrl: './channel-info.component.html',
   styleUrl: './channel-info.component.scss',
@@ -39,8 +40,9 @@ export class ChannelInfoComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef<ChannelInfoComponent>,
     private channelsService: ChannelsService,
     private usersService: UsersService,
-    @Inject(MAT_DIALOG_DATA) public data: {channelId: string}
-  ) {}
+    private stateService: StateService,
+    @Inject(MAT_DIALOG_DATA) public data: { channelId: string }
+  ) { }
 
   ngOnInit(): void {
     this.loadChannelData();
@@ -50,7 +52,7 @@ export class ChannelInfoComponent implements OnInit, OnDestroy {
   }
 
   loadChannelData(): void {
-    if (!this.data.channelId) return; 
+    if (!this.data.channelId) return;
     this.channelSubscription = this.channelsService.channelSubject$.subscribe(
       (channel) => {
         this.channel = channel;
@@ -70,7 +72,7 @@ export class ChannelInfoComponent implements OnInit, OnDestroy {
         top: '11%',
         right: '25%'
       },
-      data: { 
+      data: {
         channelId: this.channel.id,
         name: this.channel.name,
         description: this.channel.description
@@ -91,6 +93,9 @@ export class ChannelInfoComponent implements OnInit, OnDestroy {
       .catch(error => {
         console.error('Error leaving channel:', error);
       });
+
+    this.stateService.setShowContacts(false);
+    this.stateService.setShowChannels(false);
   }
 
   onNoClick(): void {

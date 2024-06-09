@@ -56,13 +56,15 @@ export class AddUserToNewChannelComponent implements OnDestroy, OnInit {
     this.userSubscription = this.usersService.currentUser$.subscribe(user => {
       this.currentUser = user;
     });
-    
+  
     this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe(
       (allUsers) => {
         this.allUsers = allUsers ?? [];
+        this.updateFilteredUsers();
       }
     );
   }
+  
 
   addAllUsersToChannel(): void {
     if (this.peopleType === 'all') {
@@ -128,14 +130,17 @@ export class AddUserToNewChannelComponent implements OnDestroy, OnInit {
             avatar: user.avatar,
             email: user.email
           };
-          await this.channelsService.addSingleUserToChannel(this.data.channelId, minimalUser);
-          
-          const channel = await this.channelsService.getChannelById(this.data.channelId);
-          if (channel) {
-            await this.usersService.addChannelToSingleUser(user.id, {
-              id: channel.id,
-              name: channel.name
-            });
+          try {
+            await this.channelsService.addSingleUserToChannel(this.data.channelId, minimalUser);
+            const channel = await this.channelsService.getChannelById(this.data.channelId);
+            if (channel) {
+              await this.usersService.addChannelToSingleUser(user.id, {
+                id: channel.id,
+                name: channel.name
+              });
+            }
+          } catch (error) {
+            console.error('Fehler beim Hinzufügen des Benutzers zum Kanal:', error);
           }
         }
       }

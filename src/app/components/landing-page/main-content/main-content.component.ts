@@ -241,6 +241,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
           },
           data: { channelId: channelId },
         });
+        dialogRef.componentInstance.currentUser = new User(this.currentUser);
 
         this.isDialogOpen = true;
 
@@ -257,6 +258,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
         width: '100%',
         height: '100vh',
       });
+      dialogRef.componentInstance.currentUser = new User(this.currentUser);
 
       this.isDialogOpen = true;
 

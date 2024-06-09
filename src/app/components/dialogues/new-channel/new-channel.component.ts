@@ -45,6 +45,7 @@ export class NewChannelComponent {
         .catch(error => console.error('Error creating channel: ', error));
     }
   }
+  
   openAddUserDialog(channelId: string): void {
     const dialogRef = this.dialog.open(AddUserToNewChannelComponent, {
       width: '710px',
