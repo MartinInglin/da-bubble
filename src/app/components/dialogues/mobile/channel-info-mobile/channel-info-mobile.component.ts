@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ChannelInfoEditComponent } from '../../channel-info/channel-info-edit/channel-info-edit.component';
+import { StateService } from '../../../../services/stateservice.service';
 import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Channel } from '../../../../models/channel.class';
 import { ChannelsService } from '../../../../services/firestore/channels.service';
@@ -38,6 +39,7 @@ export class ChannelInfoMobileComponent {
     public dialogRef: MatDialogRef<ChannelInfoMobileComponent>,
     private channelsService: ChannelsService,
     private usersService: UsersService,
+    private stateService: StateService,
     @Inject(MAT_DIALOG_DATA) public data: {channelId: string}
   ) {}
 
@@ -90,6 +92,9 @@ export class ChannelInfoMobileComponent {
       .catch(error => {
         console.error('Error leaving channel:', error);
       });
+
+    this.stateService.setShowContacts(false);
+    this.stateService.setShowChannels(false);
   }
 
   onNoClick(): void {
