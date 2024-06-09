@@ -1,4 +1,4 @@
-@import "./../../../../styles.scss";
+@import "./../../../../../styles.scss";
 
 mat-card {
     max-width: 100% !important;
@@ -34,11 +34,11 @@ mat-card-content {
             color: #535af1;
 
             .profile {
-                content: url(./../../../../assets/images/icons/account_circle_blue.svg);
+                content: url(./../../../../../assets/images/icons/account_circle_blue.svg);
             }
 
             .logout {
-                content: url(./../../../../assets/images/icons/logout_blue.svg);
+                content: url(./../../../../../assets/images/icons/logout_blue.svg);
             }
         }
     }

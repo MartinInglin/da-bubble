@@ -4,13 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { UserMenuComponent } from '../../user-menu/user-menu.component';
+import { UserMenuComponent } from '../../../user-menu/user-menu.component';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { UsersService } from '../../../../services/firestore/users.service';
-import { AuthService } from '../../../../services/auth.service';
-import { User } from '../../../../models/user.class';
+import { UsersService } from '../../../../../services/firestore/users.service';
+import { AuthService } from '../../../../../services/auth.service';
+import { User } from '../../../../../models/user.class';
 import { Subscription } from 'rxjs';
-import { SnackbarService } from '../../../../services/snackbar.service';
+import { SnackbarService } from '../../../../../services/snackbar.service';
 
 @Component({
   selector: 'app-edit-current-user-mobile',

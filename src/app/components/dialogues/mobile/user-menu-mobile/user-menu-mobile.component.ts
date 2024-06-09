@@ -8,8 +8,8 @@ import {
   MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
-import { AuthService } from '../../../services/auth.service';
-import { User } from '../../../models/user.class';
+import { AuthService } from '../../../../services/auth.service';
+import { User } from '../../../../models/user.class';
 
 @Component({
   selector: 'app-user-menu-mobile',
