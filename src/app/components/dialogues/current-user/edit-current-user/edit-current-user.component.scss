@@ -2,6 +2,7 @@
 
 .edit-user-card {
     width: 500px;
+    max-height: 85vh;
     height: fit-content;
     padding: 40px;
     font-family: 'Nunito';
@@ -11,6 +12,9 @@
         display: flex;
         flex-direction: column;
         gap: 45px;
+        padding-right: 20px;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
 }
 
@@ -139,7 +143,7 @@
 
     input {
         height: 52px;
-        width: 100%;
+        width: 99%;
         border-radius: 30px;
         border: solid 1px $light-purple-lines;
         padding-left: 15px;
