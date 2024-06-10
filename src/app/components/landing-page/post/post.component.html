@@ -16,8 +16,11 @@
         <span class="edited">(bearbeitet)</span>
         }
       </div>
-      <div class="message-text-current-user">
+      <div class="message-text-current-user" *ngIf="!wantToEditMessage">
         <span>{{ post.message }}</span>
+      </div>
+      <div *ngIf="wantToEditMessage" class="edit-message-container">
+        <textarea [(ngModel)]="post.message"></textarea>
       </div>
       @if (post.reactions.length > 0) {
       <div class="reactions-container">
@@ -60,7 +63,7 @@
         alt=""
         (click)="toggleShowEditMessage()"
       />
-      <div class="edit-message" [ngClass]="{ show: showEditMessage }">
+      <div class="edit-message" (click)="toggleWantToEditMessage()" [ngClass]="{ show: showEditMessage }">
         <span>Nachricht bearbeiten</span>
       </div>
     </div>

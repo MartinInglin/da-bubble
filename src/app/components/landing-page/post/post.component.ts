@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject, NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Post } from '../../../models/post.class';
 import { StorageService } from '../../../services/storage.service';
 import { CommonModule } from '@angular/common';
@@ -10,7 +11,7 @@ import { PostsService } from '../../../services/firestore/posts.service';
 @Component({
   selector: 'app-post',
   standalone: true,
-  imports: [CommonModule, MatMenuModule, MatTooltipModule],
+  imports: [CommonModule, MatMenuModule, MatTooltipModule, FormsModule],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss',
 })
@@ -23,6 +24,7 @@ export class PostComponent {
   reactionIndex: number = 0;
   showEditMessage: boolean = false;
   postFromCurrentUser: boolean = false;
+  wantToEditMessage: boolean = false;
 
   @Input() post: Post = new Post();
   @Input() currentUserId: string = '';
@@ -120,6 +122,11 @@ export class PostComponent {
   toggleShowEditMessage() {
     this.showEditMessage = !this.showEditMessage;
     console.log(this.showEditMessage);
+  }
+
+  toggleWantToEditMessage() {
+    this.wantToEditMessage = !this.wantToEditMessage;
+    this.toggleShowEditMessage();
   }
 
   sendOpenThreadToParent(post: Post) {

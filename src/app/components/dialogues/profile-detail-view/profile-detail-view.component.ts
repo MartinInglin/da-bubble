@@ -16,7 +16,7 @@ import { UsersService } from '../../../services/firestore/users.service';
     CommonModule,
     MatCardModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
   ],
   templateUrl: './profile-detail-view.component.html',
   styleUrls: ['./profile-detail-view.component.scss']
@@ -59,6 +59,14 @@ export class ProfileDetailViewComponent implements OnInit {
     this.usersService.getAllUsers();
   }
 
+  async sendDirectMessage() {
+    try {
+      await this.directMessagesService.getDataDirectMessage(this.userId, this.currentUser);
+      this.onNoClick();
+    } catch (error) {
+      console.error('Error sending direct message:', error);
+    }
+  }
 
   onNoClick(): void {
     this.dialogRef.close();

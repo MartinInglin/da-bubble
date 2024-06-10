@@ -26,7 +26,7 @@
         <a [href]="'mailto:' + userEmail">{{ userEmail }}</a>
       </div>
       <div (click)="onNoClick()" class="message-button">
-        <button (click)="directMessagesService.getDataDirectMessage(userId, currentUser); onNoClick()"><img src="assets/images/icons/chat_bubble.svg">Nachricht</button>
+        <button (click)="sendDirectMessage()"><img src="assets/images/icons/chat_bubble.svg">Nachricht</button>
       </div>
     </mat-card-content>
   </mat-card>
