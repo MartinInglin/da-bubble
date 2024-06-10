@@ -12,15 +12,21 @@
     <input
       type="text"
       formControlName="recipient"
-      placeholder="An: #channel, oder @jemand oder E-mail Adresse"
+      placeholder="An: #channel oder @jemand"
     />
-    <div *ngIf="searchResults && searchResults.length">
+    <div *ngIf="searchResults && searchResults.length" class="list">
       <ul>
-        <li
-          *ngFor="let result of searchResults"
-          (click)="selectRecipient(result)"
-        >
-          {{ result.name }} ({{ result.id ? "Channel" : "Direct Message" }})
+        <li *ngFor="let result of searchResults">
+          <div class="container-name-avatar" *ngIf="isUser(result)" (click)="openDirectMessage(result.id, currentUser)">
+            <img src="{{result.avatar}}" alt="">
+            <p>{{ result.name }}</p>
+          </div>
+
+          <div class="container-name-avatar" *ngIf="!isUser(result)" (click)="openChannel(result.id)">
+            <p>{{ result.name }}</p>
+
+          </div>
+
         </li>
       </ul>
     </div>

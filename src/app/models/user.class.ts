@@ -8,9 +8,10 @@ export class User {
   email: string;
   avatar: string;
   channels: MinimalChannel[];
-  directMessages: MinimalUser[];
+  directMessages: any[];
   isGoogleAccount: boolean;
   isSignedIn: boolean;
+  isChannel: boolean;
 
   constructor(obj?: any) {
     this.id = obj?.id || '';
@@ -21,6 +22,7 @@ export class User {
     this.directMessages = obj?.directMessages?.map((user: User) => ({ id: user.id, avatar: user.avatar })) || [];
     this.isGoogleAccount = obj?.isGoogleAccount || false;
     this.isSignedIn = obj?.isSignedIn || false;
+    this.isChannel = obj?.isChannel || false;
   }
 }
 

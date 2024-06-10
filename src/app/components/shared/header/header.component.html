@@ -4,17 +4,35 @@
     <img src="assets/images/icons/Logo_name.png" alt="LOGO-DABUBBLE" />
   </div>
 
-  <div *ngIf="currentUser?.isSignedIn" class="searchBar">
-    <input type="text" id="searchBar" placeholder="Code learning durchsuchen..." />
-    <img src="assets/images/icons/search.svg" alt="Search" (click)="search()" />
+
+  <div class="searchBar" [formGroup]="form">
+
+    <input type="text" formControlName="recipient" placeholder="An: #channel oder @jemand" />
+    <img class="searchImg" src="../../../../assets/images/icons/search.svg" alt="">
+    <div *ngIf="searchResults && searchResults.length" class="list">
+      <ul>
+        <li *ngFor="let result of searchResults">
+          <div class="container-name-avatar" *ngIf="isUser(result)" (click)="openDirectMessage(result.id, currentUser)">
+            <img src="{{result.avatar}}" alt="">
+            <span>{{ result.name }}</span>
+          </div>
+
+          <div class="container-name-avatar" *ngIf="!isUser(result)" (click)="openChannel(result.id)">
+            <span>{{ result.name }}</span>
+
+          </div>
+
+        </li>
+      </ul>
+    </div>
   </div>
 
-  <div *ngIf="currentUser?.isSignedIn" class="user" (click)="openDialog()" (mouseover)="onMouseOver()"
-    (mouseout)="onMouseOut()">
-    <span class="name">{{ currentUser?.name}}</span>
-    <div> 
-      <img class="avatar" [src]="currentUser?.avatar" alt="USER" />
-      <div *ngIf="currentUser?.isSignedIn" class="online"></div>
+
+  <div *ngIf="currentUser?.isSignedIn" class="user" (click)="openDialog()" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()">
+    <span class="name">{{ currentUser.name}}</span>
+    <div>
+      <img class="avatar" [src]="currentUser.avatar" alt="USER" />
+      <div *ngIf="currentUser.isSignedIn" class="online"></div>
     </div>
 
     <img class="menuDropDown" [src]="menuDown" alt="MENU" #userDiv />

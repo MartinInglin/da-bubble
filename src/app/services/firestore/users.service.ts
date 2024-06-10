@@ -85,6 +85,7 @@ export class UsersService {
       channels: [],
       isGoogleAccount: false,
       isSignedIn: false,
+      isChannel: false,
     };
 
     await setDoc(doc(this.firestore, 'users', userId), user);
@@ -113,6 +114,7 @@ export class UsersService {
         channels: [],
         isGoogleAccount: true,
         isSignedIn: false,
+        isChannel: false,
       };
       await setDoc(doc(this.firestore, 'users', userId), user);
     }

@@ -11,7 +11,7 @@ import { HeaderComponent } from './components/shared/header/header.component';
   imports: [
     RouterOutlet,
     HeaderComponent,
-    LandingPageComponent,
+    LandingPageComponent
   ],
 
   templateUrl: './app.component.html',

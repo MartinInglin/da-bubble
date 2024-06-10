@@ -90,6 +90,8 @@ export class ChannelsService {
       description: description,
       users: users,
       posts: [],
+      isDirectMessage: false,
+      isChannel: false,
     };
 
     await setDoc(newDocRef, channelData);

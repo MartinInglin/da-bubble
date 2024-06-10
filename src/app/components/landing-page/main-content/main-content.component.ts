@@ -44,6 +44,7 @@ import { Observable } from 'rxjs';
 import { PostComponent } from '../post/post.component';
 import { MinimalUser } from '../../../models/minimal_user.class';
 import { PostInputComponent } from '../post-input/post-input.component';
+import { user } from '@angular/fire/auth';
 
 declare const twemoji: any; // Deklariere Twemoji als Modul
 
@@ -79,7 +80,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   private usersSubscription: Subscription = new Subscription();
   private directMessageSubscription: Subscription = new Subscription();
 
-  filteredChannels: User[] = [];
+  filteredChannels: Channel[] = [];
   currentUser: User = new User();
   selectedChannel: Channel = new Channel();
   selectedDirectMessage: DirectMessage = new DirectMessage();
@@ -98,9 +99,10 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
   constructor(
     private dialog: MatDialog,
-    private directMessagesService: DirectMessagesService,
+    public directMessagesService: DirectMessagesService,
     private fb: FormBuilder
   ) {
+    this.directMessagesService = directMessagesService;
     this.form = this.fb.group({
       recipient: [''],
     });
@@ -109,6 +111,14 @@ export class MainContentComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       this.currentUser = user ?? new User();
+
+      const channels: Channel[] = this.currentUser.channels.map(
+        (minimalChannel) => new Channel(minimalChannel)
+      );
+
+      this.filteredChannels = channels.filter((c) =>
+        c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
     });
 
     this.channelSubscription = this.channelsService.channelSubject$.subscribe(
@@ -116,9 +126,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
         if (channel) {
           this.selectedChannel = channel ?? new Channel();
 
-          this.filteredChannels = this.allUsers.filter((c) =>
-            c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-          );
+        
 
           this.channelSelected = !!this.selectedChannel.id;
           if (this.channelSelected) {
@@ -137,6 +145,8 @@ export class MainContentComponent implements OnInit, OnDestroy {
           this.filteredUsers = this.allUsers.filter((u) =>
             u.name.toLowerCase().includes(this.searchTerm.toLowerCase())
           );
+
+        
         }
       }
     );
@@ -179,6 +189,25 @@ export class MainContentComponent implements OnInit, OnDestroy {
       this.searchResults = results;
     });
   }
+  // isChannel(obj: any ): obj is Channel {
+  //   return (obj as Channel).isDirectMessage !== undefined;
+  // }
+
+
+  isUser(result: Channel | User): result is User {
+    return (result as User).avatar !== undefined;
+  }
+  
+  openChannel(x:string){
+    this.channelsService.getDataChannel(x);
+    this.form.get('recipient')?.setValue(''); 
+  }
+
+  openDirectMessage(x:string, y: any){
+    this.directMessagesService.getDataDirectMessage(x , y);
+    this.form.get('recipient')?.setValue(''); 
+  }
+
 
   getOtherUserDirectMessage() {
     for (let i = 0; i < this.selectedDirectMessage.users.length; i++) {
@@ -198,18 +227,30 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.form.setValue({ recipient: recipientString });
   }
 
-  search(searchTerm: string): Observable<User[]> {
-    console.log('Search term in search function:', searchTerm); // Added log to check search term in search function
-    const filteredChannels = this.allUsers.filter((channel) =>
-      channel.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    const filteredUsers = this.allUsers.filter((user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    const results = [...filteredChannels, ...filteredUsers];
-    console.log('Filtered results:', results); // Added log to check filtered results
-    return of(results);
+  search(searchTerm: string): Observable<(Channel | User)[]> {
+    console.log('Search term in search function:', searchTerm);
+    if (searchTerm.startsWith('#')) {
+      // Suche nach Kanälen
+      const filteredChannels = this.filteredChannels.filter((channel) =>
+        channel.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase()) && !channel.isDirectMessage // Entfernen Sie "#" aus dem Suchbegriff
+      );
+      return of(filteredChannels);
+    } else if (searchTerm.startsWith('@')) {
+      // Suche nach Benutzern
+      const filteredUsers = this.allUsers.filter((user) =>
+        user.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase()) && !user.isChannel // Entfernen Sie "@" aus dem Suchbegriff
+      );
+      return of(filteredUsers);
+    }  else {
+      // Handle cases where search term doesn't start with '#' or '@'
+      // You can return an empty observable or a specific message here
+      return of([]); // Return an empty observable for no matches
+    }
   }
+  
+  
+  
+  
 
   ngOnDestroy(): void {
     if (this.userSubscription) {

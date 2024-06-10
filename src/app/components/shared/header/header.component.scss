@@ -82,11 +82,11 @@ header {
     height: 70px;
     border-radius: 42px;
     padding-left: 20px;
-    font-size: 32px;
+    font-size: 28px;
     border: none;
   }
 
-  img {
+  .searchImg {
     position: relative;
     right: 60px;
     width: 30px;
@@ -131,15 +131,62 @@ header {
 }
 
 .online {
-    height: 14px;
-    width: 14px;
-    position: relative;
-    top: 20px;
-    right: 18px;
-    border: 2px solid white;
-    border-radius: 100%;
-    background-color: $online-green;
+  height: 14px;
+  width: 14px;
+  position: relative;
+  top: 20px;
+  right: 18px;
+  border: 2px solid white;
+  border-radius: 100%;
+  background-color: $online-green;
 }
+
+.list ul {
+  list-style-type: none;
+  padding: 10px;
+  background-color: #eceefe;
+  height: 500px;
+  left: 30%;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  position: absolute;
+  top: 10%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.list li {
+  padding: 8px;
+  cursor: pointer;
+  width: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+ 
+}
+.container-name-avatar{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  height: 45px;
+  span{
+    font-size: 20px;
+    font-weight: bold;
+  }
+  img{
+    max-height: 30px;
+    margin-right: 20px;
+  }
+}
+
+.list li:hover {
+  background-color: #ffffff;
+  border-radius: 10px;
+}
+
 
 @media (max-width: 1180px) {
   input#searchBar::placeholder {
@@ -157,8 +204,8 @@ header {
   }
 }
 @media (max-width: 750px) {
-  .searchBar, .menuDropDown {
+  .searchBar,
+  .menuDropDown {
     display: none;
   }
-
 }
