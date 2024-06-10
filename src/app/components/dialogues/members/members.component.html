@@ -11,7 +11,7 @@
             </div>
             <div class="members">
                 <div class="single-member" *ngFor="let user of users" (click)="openDetailViewDialog(user)">
-                  <img [src]="user.avatar">
+                 <div  class="image-container"><img [src]="user.avatar"></div>
                   <div *ngIf="user.isSignedIn" class="online"></div>
                   <div *ngIf="!user.isSignedIn" class="offline"></div>
                   {{ user.name }}

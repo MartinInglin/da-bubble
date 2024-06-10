@@ -46,7 +46,7 @@ export class AddUserToNewChannelMobileComponent {
   constructor(
     public dialogRef: MatDialogRef<AddUserToNewChannelMobileComponent>,
     private usersService: UsersService,
-    private channelsService: ChannelsService,
+    public channelsService: ChannelsService,
     @Inject(MAT_DIALOG_DATA) public data: { channelId: string }
   ) {
     this.channelId = data.channelId;

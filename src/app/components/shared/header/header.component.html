@@ -9,15 +9,17 @@
     <img src="assets/images/icons/search.svg" alt="Search" (click)="search()" />
   </div>
 
-  <div *ngIf="currentUser?.isSignedIn" class="user" (click)="openDialog()" (mouseover)="onMouseOver()"
-    (mouseout)="onMouseOut()">
+  <div *ngIf="currentUser?.isSignedIn" class="user" (click)="openDialog()" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()">
     <span class="name">{{ currentUser?.name}}</span>
-    <div> 
-      <img class="avatar" [src]="currentUser?.avatar" alt="USER" />
+    <div>
+      <div class="image-container">
+        <img class="avatar" [src]="currentUser?.avatar" alt="USER" />
+      </div>
       <div *ngIf="currentUser?.isSignedIn" class="online"></div>
     </div>
 
     <img class="menuDropDown" [src]="menuDown" alt="MENU" #userDiv />
+
   </div>
 
   <div *ngIf="showRegisterElement" class="register">

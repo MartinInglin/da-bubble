@@ -36,12 +36,19 @@ header {
     font-weight: 700;
   }
 
-  img {
-    max-height: 70px;
-    border-radius: 50%;
+  .image-container {
+    height: 70px;
+    width: 70px;
 
-    &:hover {
-      cursor: pointer;
+    img {
+      height: 70px;
+      width: 70px;
+      border-radius: 100%;
+      object-fit: cover;
+
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 
@@ -49,6 +56,7 @@ header {
     color: $purple2;
   }
 }
+
 .menuDropDown {
   img {
     height: 30px !important;
@@ -131,14 +139,14 @@ header {
 }
 
 .online {
-    height: 14px;
-    width: 14px;
-    position: relative;
-    top: 20px;
-    right: 18px;
-    border: 2px solid white;
-    border-radius: 100%;
-    background-color: $online-green;
+  height: 14px;
+  width: 14px;
+  position: relative;
+  top: 20px;
+  right: 18px;
+  border: 2px solid white;
+  border-radius: 100%;
+  background-color: $online-green;
 }
 
 @media (max-width: 1180px) {
@@ -151,13 +159,17 @@ header {
   .name {
     display: none;
   }
+
   .user {
     justify-content: end;
     width: fit-content;
   }
 }
+
 @media (max-width: 750px) {
-  .searchBar, .menuDropDown {
+
+  .searchBar,
+  .menuDropDown {
     display: none;
   }
 

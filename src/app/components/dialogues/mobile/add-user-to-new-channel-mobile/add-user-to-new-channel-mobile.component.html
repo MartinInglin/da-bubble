@@ -40,7 +40,7 @@
         </mat-radio-group>
         <div class="button-container">
           <div class="message-button">
-            <button (click)="onSubmit()">Erstellen</button>
+            <button (click)="onSubmit(); channelsService.getDataChannel(channelId)">Erstellen</button>
           </div>
         </div>
       </mat-card-content>
