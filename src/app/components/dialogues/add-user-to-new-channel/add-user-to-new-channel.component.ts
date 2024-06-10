@@ -46,7 +46,7 @@ export class AddUserToNewChannelComponent implements OnDestroy, OnInit {
   constructor(
     public dialogRef: MatDialogRef<AddUserToNewChannelComponent>,
     private usersService: UsersService,
-    private channelsService: ChannelsService,
+    public channelsService: ChannelsService,
     @Inject(MAT_DIALOG_DATA) public data: { channelId: string }
   ) {
     this.channelId = data.channelId;
