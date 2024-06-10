@@ -15,6 +15,7 @@ import { User } from '../../models/user.class';
 import { Channel } from '../../models/channel.class';
 import { DirectMessage } from '../../models/direct-message.class';
 import { Thread } from '../../models/thread.class';
+import { ThreadsService } from './threads.service';
 import { Reaction } from '../../models/reaction.class';
 
 @Injectable({
@@ -23,8 +24,9 @@ import { Reaction } from '../../models/reaction.class';
 export class PostsService {
   firestore = inject(Firestore);
   storageService = inject(StorageService);
+  threadsService = inject(ThreadsService);
 
-  constructor() {}
+  constructor() { }
 
   /**
    * This function saves a post a user writes in a channel, direct message or thread.
@@ -118,23 +120,22 @@ export class PostsService {
    * @returns object as post
    */
   async editPost(
-    channelId: string,
-    threadId: string,
+    path: string,
+    documentId: string,
     postIndex: number,
     newMessage: string
   ): Promise<void> {
     try {
-      const channelRef = doc(this.firestore, 'channels', channelId);
-      const threadRef = doc(channelRef, 'threads', threadId);
+      const docRef = doc(this.firestore, path, documentId);
+      const docSnap = await getDoc(docRef);
 
-      const threadDoc = await getDoc(threadRef);
-      if (!threadDoc.exists()) {
-        console.error('Thread does not exist');
+      if (!docSnap.exists()) {
+        console.error('Document does not exist');
         return;
       }
 
-      const threadData = threadDoc.data();
-      const posts: Post[] = threadData['posts'];
+      const docData = docSnap.data();
+      const posts: Post[] = docData['posts'];
 
       if (postIndex >= posts.length || postIndex < 0) {
         console.error('Invalid post index');
@@ -148,7 +149,7 @@ export class PostsService {
         edited: true,
       };
 
-      await updateDoc(threadRef, { posts });
+      await updateDoc(docRef, { posts });
 
       console.log('Post successfully updated!');
     } catch (error) {
@@ -187,6 +188,7 @@ export class PostsService {
       console.error('Error deleting file: ', error);
     }
   }
+
 
   async getIndexPostInChannel(
     postId: string,

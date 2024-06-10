@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject, NgModule } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Post } from '../../../models/post.class';
 import { StorageService } from '../../../services/storage.service';
@@ -126,7 +126,45 @@ export class PostComponent {
 
   toggleWantToEditMessage() {
     this.wantToEditMessage = !this.wantToEditMessage;
+    if (this.wantToEditMessage) {
+      setTimeout(() => {
+        const textarea = document.querySelector('textarea');
+        if (textarea) {
+          textarea.focus();
+        }
+      }, 0);
+    }
     this.toggleShowEditMessage();
+  }
+
+  async saveEditedMessage() {
+    try {
+      if (this.post.message.trim() === '') {
+        console.error('Message is empty');
+        return;
+      }
+
+      let path = '';
+      let documentId = '';
+
+      if (this.path === 'channels') {
+        path = 'channels';
+        documentId = this.selectedChannel.id;
+      } else if (this.path === 'directMessages') {
+        path = 'directMessages';
+        documentId = this.selectedDirectMessageId;
+      } else if (this.path === 'threads') {
+        path = 'threads';
+        documentId = this.selectedThreadId;
+      }
+
+      await this.postsService.editPost(path, documentId, this.indexPost, this.post.message);
+
+      this.wantToEditMessage = false;
+      console.log('Message saved successfully');
+    } catch (error) {
+      console.error('Error saving message: ', error);
+    }
   }
 
   sendOpenThreadToParent(post: Post) {

@@ -20,7 +20,7 @@
         <span>{{ post.message }}</span>
       </div>
       <div *ngIf="wantToEditMessage" class="edit-message-container">
-        <textarea [(ngModel)]="post.message"></textarea>
+        <textarea [(ngModel)]="post.message" (keyup.enter)="saveEditedMessage()"></textarea>
       </div>
       @if (post.reactions.length > 0) {
       <div class="reactions-container">
