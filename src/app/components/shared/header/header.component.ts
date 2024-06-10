@@ -9,7 +9,6 @@ import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dial
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { UserMenuComponent } from '../../dialogues/user-menu/user-menu.component';
-import { UserMenuMobileComponent } from '../../dialogues/user-menu-mobile/user-menu-mobile.component';
 import {
   FormBuilder,
   FormControl,
@@ -20,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 import { DirectMessagesService } from '../../../services/firestore/direct-messages.service';
 import { Channel } from '../../../models/channel.class';
 import { ChannelsService } from '../../../services/firestore/channels.service';
+import { UserMenuMobileComponent } from '../../dialogues/mobile/user-menu-mobile/user-menu-mobile.component';
 
 @Component({
   selector: 'app-header',
@@ -119,7 +119,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     );
 
     this.searchResults$.subscribe((results) => {
-      console.log('Search results:', results);
       this.searchResults = results;
     });
 
@@ -152,23 +151,32 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   search(searchTerm: string): Observable<(Channel | User)[]> {
-    console.log('Search term in search function:', searchTerm);
+    // Suche nach Kanälen
     if (searchTerm.startsWith('#')) {
-      // Suche nach Kanälen
       const filteredChannels = this.filteredChannels.filter((channel) =>
         channel.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase()) && !channel.isDirectMessage // Entfernen Sie "#" aus dem Suchbegriff
       );
       return of(filteredChannels);
-    } else if (searchTerm.startsWith('@')) {
-      // Suche nach Benutzern
+    }
+    // Suche nach Benutzern
+    else if (searchTerm.startsWith('@')) {
       const filteredUsers = this.allUsers.filter((user) =>
         user.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase()) && !user.isChannel // Entfernen Sie "@" aus dem Suchbegriff
       );
       return of(filteredUsers);
-    }  else {
-      // Handle cases where search term doesn't start with '#' or '@'
-      // You can return an empty observable or a specific message here
-      return of([]); // Return an empty observable for no matches
+    }
+    // Allgemeine Suche (ohne Präfix)
+    else {
+      const filteredChannels = this.filteredChannels.filter((channel) =>
+        channel.name.toLowerCase().includes(searchTerm.toLowerCase()) && !channel.isDirectMessage
+      );
+      const filteredUsers = this.allUsers.filter((user) =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) && !user.isChannel
+      );
+  
+      // Zusammenführen der Suchergebnisse
+      const results = [...filteredChannels, ...filteredUsers];
+      return of(results);
     }
   }
 

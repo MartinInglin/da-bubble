@@ -7,19 +7,15 @@ import {
   getDoc,
   getDocs,
   onSnapshot,
-  query,
   setDoc,
   updateDoc,
-  where,
 } from '@angular/fire/firestore';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { DirectMessage } from '../../models/direct-message.class';
 import { MinimalUser } from '../../models/minimal_user.class';
 import { User } from '../../models/user.class';
 import { Post } from '../../models/post.class';
 import { v4 as uuidv4 } from 'uuid';
-import { UsersService } from './users.service';
-import { user } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -40,21 +36,41 @@ export class DirectMessagesService {
    * @param currentUser objecet User
    */
   async getDataDirectMessage(userId: string, currentUser: User) {
-    const idDirectMessage = await this.getIdDirectMessage(userId, currentUser);
+    const directMessageId = await this.getIdDirectMessage(userId, currentUser);
 
-    if (idDirectMessage) {
+    if (directMessageId) {
       const unsub = onSnapshot(
-        doc(this.firestore, 'directMessages', idDirectMessage),
+        doc(this.firestore, 'directMessages', directMessageId),
         (doc) => {
           const directMessageData = doc.data() as DirectMessage;
-          this.directMessageSubject.next(directMessageData);
           console.log(directMessageData);
+
+          this.directMessageSubject.next(directMessageData);
         }
       );
     } else {
       this.createDirectMessage(userId, currentUser);
     }
   }
+
+  getDataPrivateDirectMessage(currentUser: User) {
+    const directMessageId = currentUser.privateDirectMessageId;
+
+    if (directMessageId) {
+      const unsub = onSnapshot(
+        doc(this.firestore, 'directMessages', directMessageId),
+        (doc) => {
+          const directMessageData = doc.data() as DirectMessage;
+          console.log(directMessageData);
+
+          this.directMessageSubject.next(directMessageData);
+        }
+      );
+    } else {
+      this.createPrivateDirectMessage(currentUser);
+    }
+  }
+
   /**
    * This function gets the ID of the document of the direct message or null if the document does not exist yet.
    *
@@ -72,7 +88,6 @@ export class DirectMessagesService {
       const collectionRef = collection(this.firestore, 'directMessages');
 
       const querySnapshot = await getDocs(collectionRef);
-
       for (const doc of querySnapshot.docs) {
         const users = doc.data()['users'];
         const hasCurrentUserId = users.some(
@@ -103,30 +118,70 @@ export class DirectMessagesService {
   async createDirectMessage(userId: string, currentUser: User): Promise<void> {
     const directMessageRef = collection(this.firestore, 'directMessages');
     const newDocRef = doc(directMessageRef);
-
     const users = await this.createMinimalUsers(userId, currentUser);
+    const directMessageData: DirectMessage = {
+      id: newDocRef.id,
+      users: users,
+      posts: [],
+      isPrivateMessage: false,
+    };
+
+    await setDoc(newDocRef, directMessageData);
+
+    const directMessageId = directMessageData.id;
+
+    if (directMessageId) {
+      const unsub = onSnapshot(
+        doc(this.firestore, 'directMessages', directMessageId),
+        (doc) => {
+          const directMessageData = doc.data() as DirectMessage;
+          this.directMessageSubject.next(directMessageData);
+        }
+      );
+    }
+  }
+
+  async createPrivateDirectMessage(currentUser: User): Promise<void> {
+    const directMessageRef = collection(this.firestore, 'directMessages');
+    const newDocRef = doc(directMessageRef);
+
+    const users: MinimalUser[] = [
+      {
+        id: currentUser.id,
+        avatar: currentUser.avatar,
+        name: currentUser.name,
+        email: currentUser.email,
+      },
+    ];
 
     const directMessageData: DirectMessage = {
       id: newDocRef.id,
       users: users,
       posts: [],
+      isPrivateMessage: true,
     };
 
     await setDoc(newDocRef, directMessageData);
-    console.log('Direct message successfully created!');
 
-    const idDirectMessage = directMessageData.id;
+    const directMessageId = directMessageData.id;
 
-    if (idDirectMessage) {
+    if (directMessageId) {
       const unsub = onSnapshot(
-        doc(this.firestore, 'directMessages', idDirectMessage),
+        doc(this.firestore, 'directMessages', directMessageId),
         (doc) => {
           const directMessageData = doc.data() as DirectMessage;
           this.directMessageSubject.next(directMessageData);
-          console.log(directMessageData);
         }
       );
     }
+    this.writeDirectMessageIdOnUser(currentUser, directMessageId);
+  }
+
+  async writeDirectMessageIdOnUser(currentUser: User, directMessageId: string) {
+    const docRef = doc(this.firestore, 'users', currentUser.id);
+    await updateDoc(docRef, {
+      privateDirectMessageId: directMessageId,
+    });
   }
 
   /**
@@ -143,7 +198,6 @@ export class DirectMessagesService {
     try {
       const userDocRef = doc(this.firestore, 'users', userId);
       const userDoc = await getDoc(userDocRef);
-
       if (userDoc.exists()) {
         const userData = userDoc.data();
 

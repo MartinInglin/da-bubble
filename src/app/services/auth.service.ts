@@ -65,6 +65,7 @@ export class AuthService {
           if (userCredential.user) {
             const id = userCredential.user.uid;
             return this.usersService.createUser(id).then(() => {
+              this.signOut(userCredential.user.uid)
               this.router.navigate(['/login']);
               this.snackbarService.openSnackBar(
                 'Benutzer erfolreich erstellt. Bitte melde dich an.',

@@ -283,4 +283,26 @@
     font-size: 14px;
     color: rgba(0, 0, 0, 0.425);
   }
+
 }
+
+.edit-message-container {
+  width: 100%;
+
+  textarea{
+    width: 100%;
+    background-color: $purple2;
+    border: none;
+    min-height: 35px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    resize: none;
+    color: white;
+
+    &:focus {
+      outline: none;
+    }
+  }
+  }

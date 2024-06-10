@@ -2,7 +2,6 @@ import {
   Component,
   EventEmitter,
   Output,
-  Input,
   inject,
   OnInit,
   OnDestroy,
@@ -26,17 +25,14 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import {
-  MatDialog,
-  MatDialogModule,
-} from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ChannelInfoComponent } from '../../dialogues/channel-info/channel-info.component';
+import { ChannelInfoMobileComponent } from '../../dialogues/mobile/channel-info-mobile/channel-info-mobile.component';
 import { MembersComponent } from '../../dialogues/members/members.component';
 import { AddUserToChannelComponent } from '../../dialogues/add-user-to-channel/add-user-to-channel.component';
 import { ProfileDetailViewComponent } from '../../dialogues/profile-detail-view/profile-detail-view.component';
 import { DirectMessagesService } from '../../../services/firestore/direct-messages.service';
 import { DirectMessage } from '../../../models/direct-message.class';
-import { StorageService } from '../../../services/storage.service';
 import { FormsModule } from '@angular/forms';
 import { Post } from '../../../models/post.class';
 import { StateService } from '../../../services/stateservice.service';
@@ -74,6 +70,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   usersService = inject(UsersService);
   stateService = inject(StateService);
   threadsService = inject(ThreadsService);
+  directMessagesService = inject(DirectMessagesService);
 
   private userSubscription: Subscription = new Subscription();
   private channelSubscription: Subscription = new Subscription();
@@ -90,19 +87,15 @@ export class MainContentComponent implements OnInit, OnDestroy {
   userCount: number = 0;
   channelSelected: boolean = false;
   chatSelected: boolean = false;
+  isDialogOpen: boolean = false;
   form: FormGroup;
   searchTerm: string = '';
-  dateForLine: string = '';
 
   searchResults$: Observable<(Channel | User)[]> = of([]);
   searchResults: (Channel | User)[] | undefined;
 
-  constructor(
-    private dialog: MatDialog,
-    public directMessagesService: DirectMessagesService,
-    private fb: FormBuilder
-  ) {
-    this.directMessagesService = directMessagesService;
+
+  constructor(private dialog: MatDialog, private fb: FormBuilder) {
     this.form = this.fb.group({
       recipient: [''],
     });
@@ -119,6 +112,8 @@ export class MainContentComponent implements OnInit, OnDestroy {
       this.filteredChannels = channels.filter((c) =>
         c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
+      this.currentUser = user ?? new User();      
+
     });
 
     this.channelSubscription = this.channelsService.channelSubject$.subscribe(
@@ -181,7 +176,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
     );
 
     this.searchResults$.subscribe((results) => {
-      console.log('Search results:', results);
       this.searchResults = results;
     });
 
@@ -228,7 +222,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
   }
 
   search(searchTerm: string): Observable<(Channel | User)[]> {
-    console.log('Search term in search function:', searchTerm);
     if (searchTerm.startsWith('#')) {
       // Suche nach Kanälen
       const filteredChannels = this.filteredChannels.filter((channel) =>
@@ -242,8 +235,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
       );
       return of(filteredUsers);
     }  else {
-      // Handle cases where search term doesn't start with '#' or '@'
-      // You can return an empty observable or a specific message here
       return of([]); // Return an empty observable for no matches
     }
   }
@@ -268,14 +259,43 @@ export class MainContentComponent implements OnInit, OnDestroy {
   }
 
   openChannelInfoDialog(channelId: string): void {
-    const dialogRef = this.dialog.open(ChannelInfoComponent, {
-      width: '872px',
-      position: {
-        top: '11%',
-        right: '27%',
-      },
-      data: { channelId: channelId },
-    });
+    if (this.currentUser) {
+      if (window.innerWidth <= 750) {
+        this.openChannelInfoMobileDialog();
+      } else {
+        const dialogRef = this.dialog.open(ChannelInfoComponent, {
+          width: '872px',
+          position: {
+            top: '185px',
+            right: '180px',
+          },
+          data: { channelId: channelId },
+        });
+        dialogRef.componentInstance.currentUser = new User(this.currentUser);
+
+        this.isDialogOpen = true;
+
+        dialogRef.afterClosed().subscribe(() => {
+          this.isDialogOpen = false;
+        });
+      }
+    }
+  }
+
+  openChannelInfoMobileDialog(): void {
+    if (this.currentUser) {
+      const dialogRef = this.dialog.open(ChannelInfoMobileComponent, {
+        width: '100%',
+        height: '100vh',
+      });
+      dialogRef.componentInstance.currentUser = new User(this.currentUser);
+
+      this.isDialogOpen = true;
+
+      dialogRef.afterClosed().subscribe(() => {
+        this.isDialogOpen = false;
+      });
+    }
   }
 
   openMembersDialog(channelId: string, membersDialog: HTMLElement): void {
@@ -330,10 +350,8 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
     // Überprüfe, ob das Datum heute ist
     if (date.toDateString() === today.toDateString()) {
-      this.dateForLine = 'heute';
       return 'heute'; // Gib 'heute' zurück, wenn das Datum heute ist
     } else {
-      this.dateForLine = `${daysOfWeek[dayOfWeekIndex]} ${formattedDate}`;
       return `${daysOfWeek[dayOfWeekIndex]} ${formattedDate}`; // Andernfalls gib den Namen des Wochentags zurück
     }
   }

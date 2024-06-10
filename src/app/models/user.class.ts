@@ -1,5 +1,3 @@
-
-import { MinimalUser } from "../models/minimal_user.class";
 import { MinimalChannel } from "./minimal_channel.class";
 
 export class User {
@@ -8,7 +6,8 @@ export class User {
   email: string;
   avatar: string;
   channels: MinimalChannel[];
-  directMessages: any[];
+  // directMessages: any[] = [];
+  privateDirectMessageId: string;
   isGoogleAccount: boolean;
   isSignedIn: boolean;
   isChannel: boolean;
@@ -18,8 +17,9 @@ export class User {
     this.name = obj?.name || '';
     this.email = obj?.email || '';
     this.avatar = obj?.avatar || '';
+    // this.directMessages = obj?.directMessages || [];
     this.channels = obj?.channels?.map((channel: MinimalChannel) => ({ id: channel.id, name: channel.name })) || [];
-    this.directMessages = obj?.directMessages?.map((user: User) => ({ id: user.id, avatar: user.avatar })) || [];
+    this.privateDirectMessageId = obj?.privateDirectMessageId || '';
     this.isGoogleAccount = obj?.isGoogleAccount || false;
     this.isSignedIn = obj?.isSignedIn || false;
     this.isChannel = obj?.isChannel || false;

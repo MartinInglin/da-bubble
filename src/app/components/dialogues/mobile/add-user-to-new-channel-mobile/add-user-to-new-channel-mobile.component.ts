@@ -7,15 +7,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { UsersService } from '../../../services/firestore/users.service';
-import { ChannelsService } from '../../../services/firestore/channels.service';
-import { MinimalChannel } from '../../../models/minimal_channel.class';
+import { UsersService } from '../../../../services/firestore/users.service';
+import { ChannelsService } from '../../../../services/firestore/channels.service';
+import { MinimalChannel } from '../../../../models/minimal_channel.class';
 import { Subscription } from 'rxjs';
-import { User } from '../../../models/user.class';
-import { MinimalUser } from '../../../models/minimal_user.class';
+import { User } from '../../../../models/user.class';
+import { MinimalUser } from '../../../../models/minimal_user.class';
 
 @Component({
-  selector: 'app-add-user-to-new-channel',
+  selector: 'app-add-user-to-new-channel-mobile',
   standalone: true,
   imports: [
     CommonModule,
@@ -26,10 +26,10 @@ import { MinimalUser } from '../../../models/minimal_user.class';
     MatRadioModule,
     MatSelectModule,
   ],
-  templateUrl: './add-user-to-new-channel.component.html',
-  styleUrls: ['./add-user-to-new-channel.component.scss'],
+  templateUrl: './add-user-to-new-channel-mobile.component.html',
+  styleUrl: './add-user-to-new-channel-mobile.component.scss'
 })
-export class AddUserToNewChannelComponent implements OnDestroy, OnInit {
+export class AddUserToNewChannelMobileComponent {
   peopleType: string = 'all';
   channelId: string = '';
   currentUser: User | null = null;
@@ -44,7 +44,7 @@ export class AddUserToNewChannelComponent implements OnDestroy, OnInit {
   private userSubscription: Subscription = new Subscription();
 
   constructor(
-    public dialogRef: MatDialogRef<AddUserToNewChannelComponent>,
+    public dialogRef: MatDialogRef<AddUserToNewChannelMobileComponent>,
     private usersService: UsersService,
     public channelsService: ChannelsService,
     @Inject(MAT_DIALOG_DATA) public data: { channelId: string }
@@ -56,15 +56,13 @@ export class AddUserToNewChannelComponent implements OnDestroy, OnInit {
     this.userSubscription = this.usersService.currentUser$.subscribe(user => {
       this.currentUser = user;
     });
-  
+    
     this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe(
       (allUsers) => {
         this.allUsers = allUsers ?? [];
-        this.updateFilteredUsers();
       }
     );
   }
-  
 
   addAllUsersToChannel(): void {
     if (this.peopleType === 'all') {
@@ -130,17 +128,14 @@ export class AddUserToNewChannelComponent implements OnDestroy, OnInit {
             avatar: user.avatar,
             email: user.email
           };
-          try {
-            await this.channelsService.addSingleUserToChannel(this.data.channelId, minimalUser);
-            const channel = await this.channelsService.getChannelById(this.data.channelId);
-            if (channel) {
-              await this.usersService.addChannelToSingleUser(user.id, {
-                id: channel.id,
-                name: channel.name
-              });
-            }
-          } catch (error) {
-            console.error('Fehler beim Hinzufügen des Benutzers zum Kanal:', error);
+          await this.channelsService.addSingleUserToChannel(this.data.channelId, minimalUser);
+          
+          const channel = await this.channelsService.getChannelById(this.data.channelId);
+          if (channel) {
+            await this.usersService.addChannelToSingleUser(user.id, {
+              id: channel.id,
+              name: channel.name
+            });
           }
         }
       }

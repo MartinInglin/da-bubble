@@ -10,6 +10,9 @@ import {
   query,
   arrayUnion,
   where,
+  QuerySnapshot,
+  CollectionReference,
+  DocumentData,
 } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { RegistrationService } from '../registration.service';
@@ -81,7 +84,7 @@ export class UsersService {
       name: userData.name,
       email: userData.email,
       avatar: avatar,
-      directMessages: [],
+      privateDirectMessageId: '',
       channels: [],
       isGoogleAccount: false,
       isSignedIn: false,
@@ -110,7 +113,7 @@ export class UsersService {
         name: userName,
         email: userEmail,
         avatar: userAvatar,
-        directMessages: [],
+        privateDirectMessageId: '',
         channels: [],
         isGoogleAccount: true,
         isSignedIn: false,
@@ -130,7 +133,6 @@ export class UsersService {
       doc(this.firestore, 'users', userId),
       (doc) => {
         const userData = doc.data() as User;
-        console.log('Firestore document updated:', userData);
         this.currentUserSubject.next(userData);
         sessionStorage.setItem('currentUser', JSON.stringify(userData));
       }
@@ -146,7 +148,7 @@ export class UsersService {
     this.unsubscribe = onSnapshot(collectionRef, (snapshot) => {
       const data = snapshot.docs.map(
         (doc) => new User({ id: doc.id, ...doc.data() })
-      );     
+      );
       this.allUsersSubject.next(data);
     });
   }
@@ -194,18 +196,48 @@ export class UsersService {
     if (partialUser.name) {
       this.changeUserNameInPosts(partialUser.name, userId);
     }
-
   }
 
-  async changeUserNameInPosts(newUserName: string, currentUserId: string) {
-    debugger;
-    const directMessagesRef = collection(this.firestore, 'directMessages');
+  changeUserNameInPosts(newUserName: string, currentUserId: string) {
+    let path: 'channels' | 'directMessages' | 'threads';
 
-    const q = query(directMessagesRef, where("posts.userId", "==", currentUserId));
+    path = 'directMessages';
+    this.changeUserNameInCollection(path, currentUserId, newUserName);
 
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      console.log("Found documents", doc.data());
+    path = 'channels';
+    this.changeUserNameInCollection(path, currentUserId, newUserName);
+
+    path = 'threads';
+    this.changeUserNameInCollection(path, currentUserId, newUserName)
+  }
+
+  async changeUserNameInCollection(
+    path: string,
+    currentUserId: string,
+    newUserName: string
+  ) {
+    const collectionRef = collection(this.firestore, path);
+    const querySnapshot = await getDocs(collectionRef);
+
+    querySnapshot.forEach(async (document) => {
+      const data = document.data();
+      const posts = data['posts'];
+
+      if (Array.isArray(posts)) {
+        let updatedPosts = false;
+
+        posts.forEach((post) => {
+          if (post.userId === currentUserId) {
+            post.name = newUserName;
+            updatedPosts = true;
+          }
+        });
+
+        if (updatedPosts) {
+          const documentRef = doc(this.firestore, path, document.id);
+          await updateDoc(documentRef, { posts: posts });
+        }
+      }
     });
   }
 
@@ -215,6 +247,5 @@ export class UsersService {
 
   public unsubscribeFromData() {
     this.unsubscribe();
-    console.log('Unsubscribe current user');
   }
 }

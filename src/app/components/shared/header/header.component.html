@@ -6,8 +6,29 @@
 
 
   <div class="searchBar" [formGroup]="form">
+    <input type="text" formControlName="recipient" placeholder="Code learning durchsuchen..." />
+    <img class="searchImg" src="../../../../assets/images/icons/search.svg" alt="">
+    <div *ngIf="searchResults && searchResults.length" class="list">
+      <ul>
+        <li *ngFor="let result of searchResults">
+          <div class="container-name-avatar" *ngIf="isUser(result)" (click)="openDirectMessage(result.id, currentUser)">
+            <img src="{{result.avatar}}" alt="">
+            <span>{{ result.name }}</span>
+          </div>
+  
+          <div class="container-name-avatar" *ngIf="!isUser(result)" (click)="openChannel(result.id)">
+            <span>{{ result.name }}</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
 
-    <input type="text" formControlName="recipient" placeholder="An: #channel oder @jemand" />
+
+  <!-- <div class="searchBar" [formGroup]="form">
+
+    <input type="text" formControlName="recipient" placeholder="Code learning durchsuchen..." />
     <img class="searchImg" src="../../../../assets/images/icons/search.svg" alt="">
     <div *ngIf="searchResults && searchResults.length" class="list">
       <ul>
@@ -25,17 +46,19 @@
         </li>
       </ul>
     </div>
-  </div>
+  </div> -->
 
 
   <div *ngIf="currentUser?.isSignedIn" class="user" (click)="openDialog()" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()">
     <span class="name">{{ currentUser.name}}</span>
-    <div>
-      <img class="avatar" [src]="currentUser.avatar" alt="USER" />
+    <div class="name-avatar">
+      <img [src]="currentUser.avatar" alt="USER" />
       <div *ngIf="currentUser.isSignedIn" class="online"></div>
+
     </div>
 
     <img class="menuDropDown" [src]="menuDown" alt="MENU" #userDiv />
+
   </div>
 
   <div *ngIf="showRegisterElement" class="register">
