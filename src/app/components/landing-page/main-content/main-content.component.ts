@@ -2,7 +2,6 @@ import {
   Component,
   EventEmitter,
   Output,
-  Input,
   inject,
   OnInit,
   OnDestroy,
@@ -90,7 +89,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
   isDialogOpen: boolean = false;
   form: FormGroup;
   searchTerm: string = '';
-  dateForLine: string = '';
 
   searchResults$: Observable<(Channel | User)[]> = of([]);
   searchResults: (Channel | User)[] | undefined;
@@ -103,7 +101,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
-      this.currentUser = user ?? new User();
+      this.currentUser = user ?? new User();      
     });
 
     this.channelSubscription = this.channelsService.channelSubject$.subscribe(
@@ -313,10 +311,8 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
     // Überprüfe, ob das Datum heute ist
     if (date.toDateString() === today.toDateString()) {
-      this.dateForLine = 'heute';
       return 'heute'; // Gib 'heute' zurück, wenn das Datum heute ist
     } else {
-      this.dateForLine = `${daysOfWeek[dayOfWeekIndex]} ${formattedDate}`;
       return `${daysOfWeek[dayOfWeekIndex]} ${formattedDate}`; // Andernfalls gib den Namen des Wochentags zurück
     }
   }

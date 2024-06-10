@@ -69,7 +69,6 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       if (user) {
         this.currentUser = user ?? new User();
-        console.log('Current User:', this.currentUser);
       }
     });
   }

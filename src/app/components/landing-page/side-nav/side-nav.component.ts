@@ -52,7 +52,6 @@ export class SideNavComponent {
     this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe(
       (allUsers) => {
         this.allUsers = allUsers ?? [];
-        console.log('All Users:', this.allUsers);
       }
     );
   }

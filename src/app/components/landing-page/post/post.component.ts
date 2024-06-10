@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject} from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Post } from '../../../models/post.class';
 import { StorageService } from '../../../services/storage.service';
@@ -36,14 +36,15 @@ export class PostComponent {
 
   @Output() openThread = new EventEmitter();
 
-  constructor() {
+  constructor() {}
+
+  ngOnInit() {
     this.checkIfPostFromCurrentUser();
   }
 
   checkIfPostFromCurrentUser() {
     if (this.currentUserId === this.post.userId) {
       this.postFromCurrentUser = true;
-      console.log('Post from current user: ', this.postFromCurrentUser);
     }
   }
 
@@ -82,7 +83,7 @@ export class PostComponent {
   async deleteFileOnCorrespondingThread(indexFile: number) {
     try {
       this.path = 'threads';
-      const documentId = this.post.id
+      const documentId = this.post.id;
       this.indexPost = 0;
       const threadExists = await this.postsService.checkIfThreadExists(
         documentId
@@ -158,7 +159,12 @@ export class PostComponent {
         documentId = this.selectedThreadId;
       }
 
-      await this.postsService.editPost(path, documentId, this.indexPost, this.post.message);
+      await this.postsService.editPost(
+        path,
+        documentId,
+        this.indexPost,
+        this.post.message
+      );
 
       this.wantToEditMessage = false;
       console.log('Message saved successfully');

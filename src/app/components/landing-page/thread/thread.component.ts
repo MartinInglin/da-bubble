@@ -78,7 +78,6 @@ export class ThreadComponent implements OnInit {
     this.threadSubscription = this.threadsService.threadSubject$.subscribe(
       (thread) => {
         this.selectedThread = thread ?? new Thread();
-        console.log('Current thread', this.selectedThread);
       }
     );
   }

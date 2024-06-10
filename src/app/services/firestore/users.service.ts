@@ -131,7 +131,6 @@ export class UsersService {
       doc(this.firestore, 'users', userId),
       (doc) => {
         const userData = doc.data() as User;
-        console.log('Firestore document updated:', userData);
         this.currentUserSubject.next(userData);
         sessionStorage.setItem('currentUser', JSON.stringify(userData));
       }
@@ -235,7 +234,6 @@ export class UsersService {
         if (updatedPosts) {
           const documentRef = doc(this.firestore, path, document.id);
           await updateDoc(documentRef, { posts: posts });
-          console.log(`Updated document ${document.id} with new user name.`);
         }
       }
     });

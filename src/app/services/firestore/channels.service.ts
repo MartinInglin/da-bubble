@@ -47,7 +47,6 @@ export class ChannelsService {
       (doc) => {
         const channelData = doc.data() as Channel;
         this.channelSubject.next(channelData);
-        console.log(channelData);
       }
     );
   }
