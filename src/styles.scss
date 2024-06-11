@@ -99,6 +99,10 @@ p {
 }
 
 @media (max-width: 750px) {
+  body {
+    padding: 0px;
+  }
+
   .cdk-global-overlay-wrapper {
     width: 100vw !important;
     justify-content: center !important;
