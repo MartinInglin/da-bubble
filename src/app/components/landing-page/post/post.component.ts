@@ -140,39 +140,89 @@ export class PostComponent {
 
   async saveEditedMessage() {
     try {
-      if (this.post.message.trim() === '') {
+      if (this.isMessageEmpty()) {
         console.error('Message is empty');
         return;
       }
-
-      let path = '';
-      let documentId = '';
-
-      if (this.path === 'channels') {
-        path = 'channels';
-        documentId = this.selectedChannel.id;
-      } else if (this.path === 'directMessages') {
-        path = 'directMessages';
-        documentId = this.selectedDirectMessageId;
-      } else if (this.path === 'threads') {
-        path = 'threads';
-        documentId = this.selectedThreadId;
-      }
-
-      await this.postsService.editPost(
-        path,
-        documentId,
-        this.indexPost,
-        this.post.message
-      );
-
+  
+      const { path, documentId } = this.getPathAndDocumentId();
+  
+      await this.updatePost(path, documentId);
+  
+      await this.updateCorrespondingEntries();
+  
       this.wantToEditMessage = false;
-      console.log('Message saved successfully');
     } catch (error) {
       console.error('Error saving message: ', error);
     }
   }
-
+  
+  isMessageEmpty(): boolean {
+    return this.post.message.trim() === '';
+  }
+  
+  getPathAndDocumentId(): { path: string, documentId: string } {
+    let path = '';
+    let documentId = '';
+  
+    if (this.path === 'channels') {
+      path = 'channels';
+      documentId = this.selectedChannel.id;
+    } else if (this.path === 'directMessages') {
+      path = 'directMessages';
+      documentId = this.selectedDirectMessageId;
+    } else if (this.path === 'threads') {
+      path = 'threads';
+      documentId = this.selectedThreadId;
+    }
+  
+    return { path, documentId };
+  }
+  
+  async updatePost(path: string, documentId: string): Promise<void> {
+    await this.postsService.editPost(
+      path,
+      documentId,
+      this.indexPost,
+      this.post.message
+    );
+  }
+  
+  async updateCorrespondingEntries(): Promise<void> {
+    if (this.path === 'channels') {
+      await this.updateCorrespondingThread();
+    } else if (this.path === 'threads') {
+      await this.updateCorrespondingChannel();
+    }
+  }
+  
+  async updateCorrespondingThread(): Promise<void> {
+    const threadExists = await this.postsService.checkIfThreadExists(this.post.id);
+    if (threadExists) {
+      await this.postsService.editPost(
+        'threads',
+        this.post.id,
+        0,
+        this.post.message
+      );
+    }
+  }
+  
+  async updateCorrespondingChannel(): Promise<void> {
+    const indexPostInChannel = await this.postsService.getIndexPostInChannel(
+      this.post.id,
+      this.selectedChannel.id
+    );
+    if (indexPostInChannel !== -1) {
+      await this.postsService.editPost(
+        'channels',
+        this.selectedChannel.id,
+        indexPostInChannel,
+        this.post.message
+      );
+    }
+  }
+ 
   sendOpenThreadToParent(post: Post) {
     this.openThread.emit(post);
   }

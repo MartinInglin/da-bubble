@@ -128,30 +128,29 @@ export class PostsService {
     try {
       const docRef = doc(this.firestore, path, documentId);
       const docSnap = await getDoc(docRef);
-
+  
       if (!docSnap.exists()) {
         console.error('Document does not exist');
         return;
       }
-
+  
       const docData = docSnap.data();
       const posts: Post[] = docData['posts'];
-
+  
       if (postIndex >= posts.length || postIndex < 0) {
         console.error('Invalid post index');
         return;
       }
-
+  
       posts[postIndex] = {
         ...posts[postIndex],
         message: newMessage,
         timestamp: this.getUTXTimestamp(),
         edited: true,
       };
-
+  
       await updateDoc(docRef, { posts });
-
-      console.log('Post successfully updated!');
+  
     } catch (error) {
       console.error('Error updating post: ', error);
     }
