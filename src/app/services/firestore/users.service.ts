@@ -139,9 +139,6 @@ export class UsersService {
     );
   }
 
-  /**
-   * This function gets the data of all users and stores it as an observable. Every component that needs this data can subscribe to it.
-   */
   getAllUsers(): void {
     const collectionRef = collection(this.firestore, 'users');
 
@@ -149,9 +146,12 @@ export class UsersService {
       const data = snapshot.docs.map(
         (doc) => new User({ id: doc.id, ...doc.data() })
       );
+      // Sort the data alphabetically by name
+      data.sort((a, b) => a.name.localeCompare(b.name));
       this.allUsersSubject.next(data);
     });
   }
+
 
   async addChannelToSingleUser(
     userId: string,

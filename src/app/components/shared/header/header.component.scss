@@ -32,8 +32,9 @@ header {
 
   span {
     font-size: 32px;
-    white-space: nowrap;
-    font-weight: 700;
+  white-space: nowrap;
+  font-weight: 700;
+  flex-grow: 1; 
   }
 
   .image-container {
@@ -151,7 +152,6 @@ header {
 
 .list {
   position: absolute;
-  top: 100%; 
   left: 25%;
   right: 25%;
   z-index: 1000; 
@@ -230,8 +230,17 @@ header {
 }
 
 @media (max-width: 1180px) {
-  input#searchBar::placeholder {
-    color: transparent;
+  .searchBar input::placeholder {
+    // color: transparent;
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 1060px) {
+
+  .searchBar input::placeholder {
+    // color: transparent;
+    font-size: 18px;
   }
 }
 
@@ -244,6 +253,7 @@ header {
     justify-content: end;
     width: fit-content;
   }
+ 
 }
 
 @media (max-width: 750px) {

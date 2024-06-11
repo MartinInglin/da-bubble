@@ -85,7 +85,7 @@ mat-drawer-container {
 }
 
 // Media Querries
-@media (max-width: 768px) {
+@media (max-width: 450px) {
   /* Adjust breakpoint as needed */
   .Content {
     display: flex; /* Allow stacking elements vertically */

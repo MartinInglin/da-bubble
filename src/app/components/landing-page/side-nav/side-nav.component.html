@@ -12,6 +12,28 @@
     />
   </div>
 </div>
+
+
+<div class="searchBar d-none" id="searchBar" [formGroup]="form">
+  <input type="text" formControlName="recipient" placeholder="Code learning durchsuchen..." />
+  <div *ngIf="searchResults && searchResults.length" class="list">
+    <ul>
+      <li *ngFor="let result of searchResults">
+        <div class="container-name-avatar" *ngIf="isUser(result)" (click)="openDirectMessage(result.id, currentUser)">
+          <img src="{{result.avatar}}" alt="">
+          <span>{{ result.name }}</span>
+        </div>
+
+        <div class="container-name-avatar" *ngIf="!isUser(result)" (click)="openChannel(result.id)">
+          <span>{{ result.name }}</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+
+
 <!-- Channel-List -->
 <div class="channels-head">
   <div class="channel-head-first" (click)="showChannels = !showChannels">
