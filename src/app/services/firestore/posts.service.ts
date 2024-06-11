@@ -26,7 +26,7 @@ export class PostsService {
   storageService = inject(StorageService);
   threadsService = inject(ThreadsService);
 
-  constructor() { }
+  constructor() {}
 
   /**
    * This function saves a post a user writes in a channel, direct message or thread.
@@ -128,29 +128,28 @@ export class PostsService {
     try {
       const docRef = doc(this.firestore, path, documentId);
       const docSnap = await getDoc(docRef);
-  
+
       if (!docSnap.exists()) {
         console.error('Document does not exist');
         return;
       }
-  
+
       const docData = docSnap.data();
       const posts: Post[] = docData['posts'];
-  
+
       if (postIndex >= posts.length || postIndex < 0) {
         console.error('Invalid post index');
         return;
       }
-  
+
       posts[postIndex] = {
         ...posts[postIndex],
         message: newMessage,
         timestamp: this.getUTXTimestamp(),
         edited: true,
       };
-  
+
       await updateDoc(docRef, { posts });
-  
     } catch (error) {
       console.error('Error updating post: ', error);
     }
@@ -187,7 +186,6 @@ export class PostsService {
       console.error('Error deleting file: ', error);
     }
   }
-
 
   async getIndexPostInChannel(
     postId: string,
@@ -229,47 +227,56 @@ export class PostsService {
   }
 
   async saveReaction(
+    reaction: Reaction,
+    path: string,
+    documentId: string,
     currentUser: User,
-    directMessageId: string,
-    postIndex: number,
-    reactionIcon: string
+    indexPost: number
   ) {
-    const directMessageRef = doc(this.firestore, 'channels', directMessageId);
-    const directMessageDoc = await getDoc(directMessageRef);
+    const documentRef = doc(this.firestore, path, documentId);
+    const document = await getDoc(documentRef);
+    const documentData = document.data();
+    if (documentData) {
+      let reactions: Reaction[] = documentData['posts'][indexPost]['reactions'];
+      const indexReaction = this.checkIfReactionExists(reaction, reactions);
+      if (indexReaction !== -1) {
+        reactions.splice(indexReaction, 1);
+        console.log('Reaction deleted');
+      } else {
+        reactions.push(reaction);
+        console.log('Reaction added');
+      }
+      const updatedPosts = documentData['posts'];
+      updatedPosts[indexPost]['reactions'] = reactions;
 
-    if (!directMessageDoc.exists()) {
-      console.error('Thread does not exist');
-      return;
+      await updateDoc(documentRef, { posts: updatedPosts });
+      console.log(reactions);
     }
 
-    const directMessageData = directMessageDoc.data();
-    const post: Post = directMessageData['posts'][postIndex];
-
-    const reactionIndex = this.userHasCommented(currentUser.id, post);
-
-    if (typeof reactionIndex === 'number') {
-      post.reactions[reactionIndex].reaction = reactionIcon;
-    } else {
-      this.createNewReaction(currentUser, reactionIcon, post);
-    }
+    //falls es ein Channel gibt, muss er überprüfen, ob es einen thread gibt und da die Änderung ebenfalls vornehmen
+    //falls es ein Thread ist, muss er die Änderung im Channel ebenfalls vornehmen
+    //Auf dem User muss die Reaktion gespeichert und die Ältere gelöscht werden
   }
 
-  userHasCommented(currentUserId: string, post: Post): boolean | number {
-    for (let i = 0; i < post.reactions.length; i++) {
-      if (post.reactions[i].userId === currentUserId) {
+  checkIfReactionExists(reaction: Reaction, reactions: Reaction[]): number {
+    debugger;
+    for (let i = 0; i < reactions.length; i++) {
+      const storedReaction = reactions[i];
+      if (this.reactionsEqual(storedReaction, reaction)) {
         return i;
       }
     }
-    return false;
+    return -1;
   }
 
-  createNewReaction(currentUser: User, reactionIcon: string, post: Post) {
-    const reaction: Reaction = {
-      userName: currentUser.name,
-      userId: currentUser.id,
-      reaction: reactionIcon,
-    };
-
-    post.reactions.push(reaction);
+  reactionsEqual(storedReaction: Reaction, reaction: Reaction): boolean {
+    if (
+      storedReaction.userId === reaction.userId &&
+      storedReaction.userName === reaction.userName &&
+      storedReaction.reaction === reaction.reaction
+    ) {
+      return true;
+    }
+    return false;
   }
 }
