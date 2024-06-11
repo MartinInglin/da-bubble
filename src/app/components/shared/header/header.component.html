@@ -5,7 +5,7 @@
   </div>
 
 
-  <div class="searchBar" [formGroup]="form">
+  <div class="searchBar" *ngIf="currentUser?.isSignedIn"  [formGroup]="form">
     <input type="text" formControlName="recipient" placeholder="Code learning durchsuchen..." />
     <img class="searchImg" src="../../../../assets/images/icons/search.svg" alt="">
     <div *ngIf="searchResults && searchResults.length" class="list">
