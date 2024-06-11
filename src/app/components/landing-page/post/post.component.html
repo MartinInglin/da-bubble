@@ -20,7 +20,10 @@
         <span>{{ post.message }}</span>
       </div>
       <div *ngIf="wantToEditMessage" class="edit-message-container">
-        <textarea [(ngModel)]="post.message" (keyup.enter)="saveEditedMessage()"></textarea>
+        <textarea
+          [(ngModel)]="post.message"
+          (keyup.enter)="saveEditedMessage()"
+        ></textarea>
       </div>
       @if (post.reactions.length > 0) {
       <div class="reactions-container">
@@ -50,7 +53,21 @@
     <div class="menu-hover" [ngClass]="{ show: showMenu }">
       <img src="assets/images/icons/add_circle.svg" alt="" />
       <img src="assets/images/icons/add_circle.svg" alt="" />
-      <img src="assets/images/icons/add_reaction.svg" alt="" />
+      <img
+        src="assets/images/icons/add_reaction.svg"
+        alt=""
+        [matMenuTriggerFor]="aboveMenu"
+      />
+      <mat-menu #aboveMenu="matMenu" yPosition="below">
+        <div class="emoji-container">
+          @for (emoji of emojis; track emoji; let index = $index) {
+          <span class="emoji" mat-menu-item (click)="saveReaction(emoji)">{{
+            emoji
+          }}</span>
+          }
+        </div>
+      </mat-menu>
+
       @if (path === 'channels') {
       <img
         src="assets/images/icons/comment.svg"
@@ -63,7 +80,11 @@
         alt=""
         (click)="toggleShowEditMessage()"
       />
-      <div class="edit-message" (click)="toggleWantToEditMessage()" [ngClass]="{ show: showEditMessage }">
+      <div
+        class="edit-message"
+        (click)="toggleWantToEditMessage()"
+        [ngClass]="{ show: showEditMessage }"
+      >
         <span>Nachricht bearbeiten</span>
       </div>
     </div>
@@ -145,7 +166,20 @@
     <div class="menu-hover" [ngClass]="{ show: showMenu }">
       <img src="assets/images/icons/add_circle.svg" alt="" />
       <img src="assets/images/icons/add_circle.svg" alt="" />
-      <img src="assets/images/icons/add_reaction.svg" alt="" />
+      <img
+        src="assets/images/icons/add_reaction.svg"
+        alt=""
+        [matMenuTriggerFor]="aboveMenu"
+      />
+      <mat-menu #aboveMenu="matMenu" yPosition="below">
+        <div class="emoji-container">
+          @for (emoji of emojis; track emoji; let index = $index) {
+            <span class="emoji" mat-menu-item (click)="saveReaction(emoji)">{{
+              emoji
+            }}</span>
+            }
+        </div>
+      </mat-menu>
       @if (path === 'channels') {
       <img
         src="assets/images/icons/comment.svg"

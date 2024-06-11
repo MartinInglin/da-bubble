@@ -17,7 +17,7 @@
         @for (post of selectedThread.posts | slice:0:1; track post) {
         <app-post
           [post]="selectedThread.posts[0]"
-          [currentUserId]="currentUser.id"
+          [currentUser]="currentUser"
           [selectedChannel]="selectedChannel"
           [selectedThreadId]="selectedThread.id"
           [indexPost]="0"
@@ -44,7 +44,7 @@
             </div>
         <app-post
           [post]="post"
-          [currentUserId]="currentUser.id"
+          [currentUser]="currentUser"
           [selectedChannel]="selectedChannel"
           [selectedThreadId]="selectedThread.id"
           [indexPost]="index + 1"

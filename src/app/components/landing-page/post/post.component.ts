@@ -7,6 +7,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { Channel } from '../../../models/channel.class';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PostsService } from '../../../services/firestore/posts.service';
+import { SnackbarService } from '../../../services/snackbar.service';
+import { Reaction } from '../../../models/reaction.class';
+import { User } from '../../../models/user.class';
 
 @Component({
   selector: 'app-post',
@@ -18,6 +21,7 @@ import { PostsService } from '../../../services/firestore/posts.service';
 export class PostComponent {
   storageService = inject(StorageService);
   postsService = inject(PostsService);
+  snackbarService = inject(SnackbarService);
 
   showMenu: boolean = false;
   showReaction: boolean = false;
@@ -25,9 +29,21 @@ export class PostComponent {
   showEditMessage: boolean = false;
   postFromCurrentUser: boolean = false;
   wantToEditMessage: boolean = false;
+  emojis: string[] = [
+    '😊',
+    '❤️',
+    '😂',
+    '🎉',
+    '🌟',
+    '🎈',
+    '🌈',
+    '🍕',
+    '🚀',
+    '⚡',
+  ];
 
   @Input() post: Post = new Post();
-  @Input() currentUserId: string = '';
+  @Input() currentUser: User = new User();
   @Input() selectedChannel!: Channel;
   @Input() selectedDirectMessageId: string = '';
   @Input() selectedThreadId: string = '';
@@ -43,7 +59,7 @@ export class PostComponent {
   }
 
   checkIfPostFromCurrentUser() {
-    if (this.currentUserId === this.post.userId) {
+    if (this.currentUser.id === this.post.userId) {
       this.postFromCurrentUser = true;
     }
   }
@@ -140,72 +156,117 @@ export class PostComponent {
 
   async saveEditedMessage() {
     try {
-      if (this.post.message.trim() === '') {
-        console.error('Message is empty');
+      if (this.isMessageEmpty()) {
+        this.snackbarService.openSnackBar(
+          'Bitte Nachricht eingeben.',
+          'Schließen'
+        );
         return;
       }
 
-      let path = '';
-      let documentId = '';
+      const { path, documentId } = this.getPathAndDocumentId();
 
-      if (this.path === 'channels') {
-        path = 'channels';
-        documentId = this.selectedChannel.id;
-      } else if (this.path === 'directMessages') {
-        path = 'directMessages';
-        documentId = this.selectedDirectMessageId;
-      } else if (this.path === 'threads') {
-        path = 'threads';
-        documentId = this.selectedThreadId;
-      }
+      await this.updatePost(path, documentId);
 
-      await this.postsService.editPost(
-        path,
-        documentId,
-        this.indexPost,
-        this.post.message
-      );
+      await this.updateCorrespondingEntries();
 
       this.wantToEditMessage = false;
-      console.log('Message saved successfully');
     } catch (error) {
       console.error('Error saving message: ', error);
+    }
+  }
+
+  isMessageEmpty(): boolean {
+    return this.post.message.trim() === '';
+  }
+
+  getPathAndDocumentId(): { path: string; documentId: string } {
+    let path = '';
+    let documentId = '';
+
+    if (this.path === 'channels') {
+      path = 'channels';
+      documentId = this.selectedChannel.id;
+    } else if (this.path === 'directMessages') {
+      path = 'directMessages';
+      documentId = this.selectedDirectMessageId;
+    } else if (this.path === 'threads') {
+      path = 'threads';
+      documentId = this.selectedThreadId;
+    }
+
+    return { path, documentId };
+  }
+
+  async updatePost(path: string, documentId: string): Promise<void> {
+    await this.postsService.editPost(
+      path,
+      documentId,
+      this.indexPost,
+      this.post.message
+    );
+  }
+
+  async updateCorrespondingEntries(): Promise<void> {
+    if (this.path === 'channels') {
+      await this.updateCorrespondingThread();
+    } else if (this.path === 'threads') {
+      await this.updateCorrespondingChannel();
+    }
+  }
+
+  async updateCorrespondingThread(): Promise<void> {
+    const threadExists = await this.postsService.checkIfThreadExists(
+      this.post.id
+    );
+    if (threadExists) {
+      await this.postsService.editPost(
+        'threads',
+        this.post.id,
+        0,
+        this.post.message
+      );
+    }
+  }
+
+  async updateCorrespondingChannel(): Promise<void> {
+    const indexPostInChannel = await this.postsService.getIndexPostInChannel(
+      this.post.id,
+      this.selectedChannel.id
+    );
+    if (indexPostInChannel !== -1) {
+      await this.postsService.editPost(
+        'channels',
+        this.selectedChannel.id,
+        indexPostInChannel,
+        this.post.message
+      );
     }
   }
 
   sendOpenThreadToParent(post: Post) {
     this.openThread.emit(post);
   }
+
+  saveReaction(emoji: string) {
+    const reaction: Reaction = {
+      userName: this.currentUser.name,
+      userId: this.currentUser.id,
+      reaction: emoji,
+    };
+
+    let documentId;
+    if (this.path === 'channels') {
+      documentId = this.selectedChannel.id;
+    } else if (this.path === 'directMessages') {
+      documentId = this.selectedDirectMessageId;
+    } else if (this.path === 'threads') {
+      documentId = this.selectedThreadId;
+    } else {
+      console.log('Document Id not found.');
+    }
+    if (documentId) {
+      this.postsService.saveReaction(reaction, this.path, documentId, this.currentUser, this.indexPost);
+    }
+  }
 }
-
-// try {
-//   pathToDocument = `channels/${this.selectedChannel.id}/threads/${this.post.id}`;
-
-//   if (threadExists) {
-//     this.indexPost = 0;
-//     this.postsService.deleteFile(
-//       this.indexPost,
-//       pathToDocument,
-//       indexFile
-//     );
-//   } else {
-//
-//   }
-// } catch (error) {
-//   console.error('Error checking if thread exists:', error);
-// }
-// } else if (this.path === 'threads') {
-// pathToDocument = `channels/${this.selectedChannel.id}/${this.path}/${this.selectedThreadId}`;
-// this.postsService.deleteFile(this.indexPost, pathToDocument, indexFile);
-// e.stopPropagation();
-
-// if (this.indexPost == 0) {
-//   ;
-//   try {
-
-//   } catch (error) {
-//     console.error('Error setting indexPost:', error);
-//   }
-//   this.postsService.deleteFile(this.indexPost, pathToDocument, indexFile);
-//   e.stopPropagation();
-// }

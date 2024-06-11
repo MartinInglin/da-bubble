@@ -32,11 +32,14 @@ import { MinimalUser } from '../../../models/minimal_user.class';
 export class AddUserToNewChannelComponent implements OnDestroy, OnInit {
   peopleType: string = 'all';
   channelId: string = '';
+
   currentUser: User | null = null;
   selectedUser: User | null = null;
+
   allUsers: User[] = [];
   filteredUsers: User[] = [];
   selectedUsers: string[] = [];
+
   showResults: boolean = false;
 
   private usersSubscription: Subscription | undefined;
@@ -65,7 +68,6 @@ export class AddUserToNewChannelComponent implements OnDestroy, OnInit {
     );
   }
   
-
   addAllUsersToChannel(): void {
     if (this.peopleType === 'all') {
       if (this.allUsers) {

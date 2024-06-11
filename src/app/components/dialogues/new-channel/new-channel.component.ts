@@ -24,6 +24,7 @@ import { User } from '../../../models/user.class';
   styleUrl: './new-channel.component.scss'
 })
 export class NewChannelComponent {
+  
   channelName: string = '';
   channelDescription: string = '';
   

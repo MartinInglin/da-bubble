@@ -5,7 +5,8 @@
   </div>
 
 
-  <div class="searchBar" id="searchBar" [formGroup]="form">
+
+  <div class="searchBar" *ngIf="currentUser?.isSignedIn" [formGroup]="form">
     <input type="text" formControlName="recipient" placeholder="Code learning durchsuchen..." />
     <img class="searchImg" src="../../../../assets/images/icons/search.svg" alt="">
     <div *ngIf="searchResults && searchResults.length" class="list">
@@ -15,7 +16,7 @@
             <img src="{{result.avatar}}" alt="">
             <span>{{ result.name }}</span>
           </div>
-  
+
           <div class="container-name-avatar" *ngIf="!isUser(result)" (click)="openChannel(result.id)">
             <span>{{ result.name }}</span>
           </div>
@@ -24,10 +25,14 @@
     </div>
   </div>
   
+
+
   <div *ngIf="currentUser?.isSignedIn" class="user" (click)="openDialog()" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()">
     <span class="name">{{ currentUser.name}}</span>
     <div class="name-avatar">
-      <img [src]="currentUser.avatar" alt="USER" />
+      <div class="image-container">
+        <img [src]="currentUser.avatar" alt="USER" />
+      </div>
       <div *ngIf="currentUser.isSignedIn" class="online"></div>
 
     </div>
