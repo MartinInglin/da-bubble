@@ -29,8 +29,10 @@ export class AddUserToChannelComponent implements OnInit, OnDestroy {
   usersInChannel: MinimalUser[] = [];
   filteredUsers: User[] = [];
   selectedUsers: string[] = [];
-  showResults: boolean = false;
   allUsers: User[] = [];
+
+  showResults: boolean = false;
+  
   channelName: string = '';
 
   private allUsersSubscription: Subscription = new Subscription();

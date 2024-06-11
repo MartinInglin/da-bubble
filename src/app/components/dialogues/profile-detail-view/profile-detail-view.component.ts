@@ -22,16 +22,19 @@ import { UsersService } from '../../../services/firestore/users.service';
   styleUrls: ['./profile-detail-view.component.scss']
 })
 export class ProfileDetailViewComponent implements OnInit {
+
+  directMessagesService = inject(DirectMessagesService);
+  usersService = inject(UsersService);
+
   userId: string;
   userName: string;
   userEmail: string;
   userAvatar: string;
+
   isSignedIn: boolean = false;
+
   currentUser: User = new User();
   allUsers: User[] = [];
-
-  directMessagesService = inject(DirectMessagesService);
-  usersService = inject(UsersService);
 
   constructor(
     public dialogRef: MatDialogRef<ProfileDetailViewComponent>,

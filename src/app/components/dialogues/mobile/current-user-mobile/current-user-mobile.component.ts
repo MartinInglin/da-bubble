@@ -25,6 +25,7 @@ import { EditCurrentUserMobileComponent } from './edit-current-user-mobile/edit-
   styleUrl: './current-user-mobile.component.scss'
 })
 export class CurrentUserMobileComponent {
+  
   private userSubscription: Subscription = new Subscription();
 
   currentUser: User | null = null;

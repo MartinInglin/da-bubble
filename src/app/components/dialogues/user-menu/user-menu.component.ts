@@ -24,7 +24,9 @@ import { User } from '../../../models/user.class';
   styleUrl: './user-menu.component.scss',
 })
 export class UserMenuComponent {
+
   authService = inject(AuthService);
+  
   currentUser: User = new User();
 
   constructor(

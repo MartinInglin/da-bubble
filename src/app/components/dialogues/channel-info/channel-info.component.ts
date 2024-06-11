@@ -31,6 +31,7 @@ import { UsersService } from '../../../services/firestore/users.service';
 export class ChannelInfoComponent implements OnInit, OnDestroy {
   channel: Channel | null = null;
   currentUser: User | null = null;
+  
   channelSubscription: any;
 
   private userSubscription: Subscription = new Subscription();

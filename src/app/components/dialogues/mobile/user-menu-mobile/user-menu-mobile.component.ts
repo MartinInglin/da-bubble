@@ -20,6 +20,7 @@ import { User } from '../../../../models/user.class';
 })
 export class UserMenuMobileComponent {
   authService = inject(AuthService);
+  
   currentUser: User = new User();
 
   constructor(

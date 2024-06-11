@@ -32,11 +32,14 @@ import { MinimalUser } from '../../../../models/minimal_user.class';
 export class AddUserToNewChannelMobileComponent {
   peopleType: string = 'all';
   channelId: string = '';
+
   currentUser: User | null = null;
   selectedUser: User | null = null;
+
   allUsers: User[] = [];
   filteredUsers: User[] = [];
   selectedUsers: string[] = [];
+  
   showResults: boolean = false;
 
   private usersSubscription: Subscription | undefined;

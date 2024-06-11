@@ -28,20 +28,25 @@ import { SnackbarService } from '../../../../../services/snackbar.service';
   styleUrl: './edit-current-user-mobile.component.scss'
 })
 export class EditCurrentUserMobileComponent {
+  @ViewChild('fileInput') fileInput!: ElementRef;
+  
   private userSubscription: Subscription = new Subscription();
   private originalEmail: string = '';
-  
-  currentUser: User | null = null;
-  updatedName: string = '';
-  updatedEmail: string = '';
+
   wantChangeMail: boolean = false;
   wantChangePassword: boolean = false;
-  password: string = '';
-  newPassword: string = '';
   passwordIsFalse: boolean = false;
   isPasswordVerified: boolean = false;
   changeAvatar: boolean = false;
 
+  currentUser: User | null = null;
+  imagePreviewUrl: string | null = null;
+
+  updatedName: string = '';
+  updatedEmail: string = '';
+  password: string = '';
+  newPassword: string = '';
+  selectedAvatar: string = '';
   availableAvatars: string[] = [
     'assets/images/avatars/avatar_1.svg',
     'assets/images/avatars/avatar_2.svg',
@@ -50,11 +55,7 @@ export class EditCurrentUserMobileComponent {
     'assets/images/avatars/avatar_5.svg',
     'assets/images/avatars/avatar_6.svg'
   ];
-  selectedAvatar: string = '';
   file: File = new File([], '');
-  imagePreviewUrl: string | null = null;
-
-  @ViewChild('fileInput') fileInput!: ElementRef;
 
   readonly maxFileSize = 5 * 1024 * 1024;
 
