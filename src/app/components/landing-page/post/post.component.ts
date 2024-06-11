@@ -7,6 +7,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { Channel } from '../../../models/channel.class';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PostsService } from '../../../services/firestore/posts.service';
+import { SnackbarService } from '../../../services/snackbar.service';
 
 @Component({
   selector: 'app-post',
@@ -18,6 +19,7 @@ import { PostsService } from '../../../services/firestore/posts.service';
 export class PostComponent {
   storageService = inject(StorageService);
   postsService = inject(PostsService);
+  snackbarService = inject(SnackbarService);
 
   showMenu: boolean = false;
   showReaction: boolean = false;
@@ -141,7 +143,7 @@ export class PostComponent {
   async saveEditedMessage() {
     try {
       if (this.isMessageEmpty()) {
-        console.error('Message is empty');
+        this.snackbarService.openSnackBar('Bitte Nachricht eingeben.', 'Schließen');
         return;
       }
   
