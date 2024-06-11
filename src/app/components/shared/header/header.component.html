@@ -15,7 +15,7 @@
             <img src="{{result.avatar}}" alt="">
             <span>{{ result.name }}</span>
           </div>
-  
+
           <div class="container-name-avatar" *ngIf="!isUser(result)" (click)="openChannel(result.id)">
             <span>{{ result.name }}</span>
           </div>
@@ -23,7 +23,7 @@
       </ul>
     </div>
   </div>
-  
+
 
 
   <!-- <div class="searchBar" [formGroup]="form">
@@ -52,7 +52,9 @@
   <div *ngIf="currentUser?.isSignedIn" class="user" (click)="openDialog()" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()">
     <span class="name">{{ currentUser.name}}</span>
     <div class="name-avatar">
-      <img [src]="currentUser.avatar" alt="USER" />
+      <div class="image-container">
+        <img [src]="currentUser.avatar" alt="USER" />
+      </div>
       <div *ngIf="currentUser.isSignedIn" class="online"></div>
 
     </div>

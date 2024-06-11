@@ -180,6 +180,7 @@ export class AuthService {
     this.signInWithEmail(email, password);
   }
 
+
   /**
    * This function signs in the user if the user is verified.
    *
@@ -243,7 +244,6 @@ export class AuthService {
       isSignedIn: false,
     });
   }
-
   /**
    * This function sends an email to a user in case he forgets his password.
    *

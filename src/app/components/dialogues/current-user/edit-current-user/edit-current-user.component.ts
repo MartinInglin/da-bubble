@@ -116,7 +116,7 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.imagePreviewUrl = e.target.result;
-        this.selectedAvatar = e.target.result; // Use the uploaded image as the selected avatar
+        this.selectedAvatar = e.target.result;
       };
       reader.readAsDataURL(this.file);
     }
