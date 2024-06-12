@@ -75,7 +75,6 @@ export class PostComponent {
       let reaction = reactions[i];
 
       if (this.reactionsToDislplay.length == 0) {
-        debugger;
         let newReaction: SortedReaction = {
           emoji: reaction.emoji,
           userName: [reaction.userName],
