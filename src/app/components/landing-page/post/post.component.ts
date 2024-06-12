@@ -248,7 +248,7 @@ export class PostComponent {
     this.openThread.emit(post);
   }
 
-  saveReaction(emoji: string) {
+  async saveReaction(emoji: string) {
     const reaction: Reaction = {
       userName: this.currentUser.name,
       userId: this.currentUser.id,
@@ -256,17 +256,39 @@ export class PostComponent {
     };
 
     let documentId;
-    if (this.path === 'channels') {
+    let localPath = this.path;
+    let localIndexPost = this.post
+
+    if (localPath === 'channels') {
       documentId = this.selectedChannel.id;
-    } else if (this.path === 'directMessages') {
+      this.callSaveReactionInPostService(documentId, reaction, localPath);
+
+      localPath = 'threads';
+      documentId = this.post.id;
+      const localIndexPost = 0;
+      this.callSaveReactionInPostService(documentId, reaction, localPath, localIndexPost);
+
+    } else if (localPath === 'directMessages') {
       documentId = this.selectedDirectMessageId;
-    } else if (this.path === 'threads') {
+
+    } else if (localPath === 'threads') {
       documentId = this.selectedThreadId;
+      this.callSaveReactionInPostService(documentId, reaction, localPath);
+
+      localPath = 'channels';
+      documentId = this.selectedChannel.id;
+      const localIndexPost = await this.postsService.getIndexPostInChannel(this.post.id, documentId);
+      this.callSaveReactionInPostService(documentId, reaction, localPath, localIndexPost)
     } else {
       console.log('Document Id not found.');
     }
+
+  }
+
+  callSaveReactionInPostService(documentId: string, reaction: Reaction, localPath: string, localIndexPost?: number) {
     if (documentId) {
-      this.postsService.saveReaction(reaction, this.path, documentId, this.currentUser, this.indexPost);
+      const indexPost = (localIndexPost !== undefined) ? localIndexPost : this.indexPost;
+      this.postsService.saveReaction(reaction, localPath, documentId, this.currentUser, indexPost);
     }
   }
 }

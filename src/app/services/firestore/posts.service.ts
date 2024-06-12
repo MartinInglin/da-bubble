@@ -241,16 +241,13 @@ export class PostsService {
       const indexReaction = this.checkIfReactionExists(reaction, reactions);
       if (indexReaction !== -1) {
         reactions.splice(indexReaction, 1);
-        console.log('Reaction deleted');
       } else {
         reactions.push(reaction);
-        console.log('Reaction added');
       }
       const updatedPosts = documentData['posts'];
       updatedPosts[indexPost]['reactions'] = reactions;
 
       await updateDoc(documentRef, { posts: updatedPosts });
-      console.log(reactions);
     }
 
     //falls es ein Channel gibt, muss er überprüfen, ob es einen thread gibt und da die Änderung ebenfalls vornehmen
@@ -258,8 +255,10 @@ export class PostsService {
     //Auf dem User muss die Reaktion gespeichert und die Ältere gelöscht werden
   }
 
+
+
   checkIfReactionExists(reaction: Reaction, reactions: Reaction[]): number {
-    debugger;
+
     for (let i = 0; i < reactions.length; i++) {
       const storedReaction = reactions[i];
       if (this.reactionsEqual(storedReaction, reaction)) {
