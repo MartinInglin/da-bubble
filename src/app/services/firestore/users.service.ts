@@ -258,7 +258,7 @@ export class UsersService {
 
     if (docData) {
       const savedEmojis = docData['savedEmojis'];
-      if (savedEmojis[0] === emoji) {
+      if (savedEmojis[1] === emoji) {
         return;
       } else if (savedEmojis.length == 2) {
         savedEmojis.splice(0, 1);

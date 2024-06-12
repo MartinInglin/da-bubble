@@ -60,6 +60,10 @@
       font-size: 16px;
       color: $text-gray;
     }
+
+    img {
+      border-radius: 50%;
+    }
   }
   .menu-hover {
     display: none;
@@ -71,6 +75,21 @@
     align-items: center;
     padding: 8px 15px 8px 20px;
     background-color: white;
+    gap: 5px;
+
+    .users-emojis {
+      font-size: 24px;
+      border-radius: 50%;
+      height: 32px;
+      width: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &:hover {
+        cursor: pointer;
+        background-color: $background;
+      }
+    }
 
     img {
       height: 24px;
@@ -282,6 +301,9 @@
     font-weight: 400;
     font-size: 16px;
     color: $text-gray;
+  }
+  img {
+    border-radius: 50%;
   }
 }
 

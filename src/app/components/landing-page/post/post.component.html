@@ -56,8 +56,9 @@
       }
     </div>
     <div class="menu-hover" [ngClass]="{ show: showMenu }">
-      <img src="assets/images/icons/add_circle.svg" alt="" />
-      <img src="assets/images/icons/add_circle.svg" alt="" />
+      @for (emoji of currentUser.savedEmojis; track emoji) {
+      <div class="users-emojis" (click)="saveReaction(emoji)">{{ emoji }}</div>
+      }
       <img
         src="assets/images/icons/add_reaction.svg"
         alt=""
@@ -174,8 +175,9 @@
       }
     </div>
     <div class="menu-hover" [ngClass]="{ show: showMenu }">
-      <img src="assets/images/icons/add_circle.svg" alt="" />
-      <img src="assets/images/icons/add_circle.svg" alt="" />
+      @for (emoji of currentUser.savedEmojis; track emoji) {
+        <div class="users-emojis" (click)="saveReaction(emoji)">{{ emoji }}</div>
+        }
       <img
         src="assets/images/icons/add_reaction.svg"
         alt=""
