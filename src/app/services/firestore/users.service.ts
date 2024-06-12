@@ -13,6 +13,7 @@ import {
   QuerySnapshot,
   CollectionReference,
   DocumentData,
+  getDoc,
 } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { RegistrationService } from '../registration.service';
@@ -89,6 +90,7 @@ export class UsersService {
       isGoogleAccount: false,
       isSignedIn: false,
       isChannel: false,
+      savedEmojis: [],
     };
 
     await setDoc(doc(this.firestore, 'users', userId), user);
@@ -118,6 +120,7 @@ export class UsersService {
         isGoogleAccount: true,
         isSignedIn: false,
         isChannel: false,
+        savedEmojis: [],
       };
       await setDoc(doc(this.firestore, 'users', userId), user);
     }
@@ -151,7 +154,6 @@ export class UsersService {
       this.allUsersSubject.next(data);
     });
   }
-
 
   async addChannelToSingleUser(
     userId: string,
@@ -208,7 +210,7 @@ export class UsersService {
     this.changeUserNameInCollection(path, currentUserId, newUserName);
 
     path = 'threads';
-    this.changeUserNameInCollection(path, currentUserId, newUserName)
+    this.changeUserNameInCollection(path, currentUserId, newUserName);
   }
 
   async changeUserNameInCollection(
@@ -247,5 +249,23 @@ export class UsersService {
 
   public unsubscribeFromData() {
     this.unsubscribe();
+  }
+
+  async saveUsedEmoji(currentUserId: string, emoji: string) {
+    const docRef = doc(this.firestore, 'users', currentUserId);
+    const document = await getDoc(docRef);
+    const docData = document.data();
+
+    if (docData) {
+      const savedEmojis = docData['savedEmojis'];
+      if (savedEmojis[0] === emoji) {
+        return;
+      } else if (savedEmojis.length == 2) {
+        savedEmojis.splice(0, 1);
+      }
+      savedEmojis.push(emoji);
+
+      await updateDoc(docRef, { savedEmojis: savedEmojis });
+    }
   }
 }

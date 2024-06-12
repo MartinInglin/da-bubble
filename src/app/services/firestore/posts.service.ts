@@ -17,6 +17,7 @@ import { DirectMessage } from '../../models/direct-message.class';
 import { Thread } from '../../models/thread.class';
 import { ThreadsService } from './threads.service';
 import { Reaction } from '../../models/reaction.class';
+import { UsersService } from './users.service';
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +25,7 @@ import { Reaction } from '../../models/reaction.class';
 export class PostsService {
   firestore = inject(Firestore);
   storageService = inject(StorageService);
+  usersService = inject(UsersService);
   threadsService = inject(ThreadsService);
 
   constructor() {}
@@ -243,22 +245,16 @@ export class PostsService {
         reactions.splice(indexReaction, 1);
       } else {
         reactions.push(reaction);
+        this.usersService.saveUsedEmoji(currentUser.id, reaction.emoji);
       }
       const updatedPosts = documentData['posts'];
       updatedPosts[indexPost]['reactions'] = reactions;
 
       await updateDoc(documentRef, { posts: updatedPosts });
     }
-
-    //falls es ein Channel gibt, muss er überprüfen, ob es einen thread gibt und da die Änderung ebenfalls vornehmen
-    //falls es ein Thread ist, muss er die Änderung im Channel ebenfalls vornehmen
-    //Auf dem User muss die Reaktion gespeichert und die Ältere gelöscht werden
   }
 
-
-
   checkIfReactionExists(reaction: Reaction, reactions: Reaction[]): number {
-
     for (let i = 0; i < reactions.length; i++) {
       const storedReaction = reactions[i];
       if (this.reactionsEqual(storedReaction, reaction)) {
