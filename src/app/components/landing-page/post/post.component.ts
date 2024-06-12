@@ -33,7 +33,7 @@ export class PostComponent {
 
   showMenu: boolean = false;
   showReaction: boolean = false;
-  reactionIndex: number = 0;
+  reactionIndex: number = -1;
   showEditMessage: boolean = false;
   postFromCurrentUser: boolean = false;
   wantToEditMessage: boolean = false;
@@ -365,5 +365,10 @@ export class PostComponent {
       );
       this.sortReactions();
     }
+  }
+
+  toggleTooltip(show: boolean, index: number) {
+    this.showReaction = show;
+    this.reactionIndex = index
   }
 }

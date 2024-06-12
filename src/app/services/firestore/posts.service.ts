@@ -233,7 +233,6 @@ export class PostsService {
     currentUser: User,
     indexPost: number
   ) {
-    debugger;
     const documentRef = doc(this.firestore, path, documentId);
     const document = await getDoc(documentRef);
     const documentData = document.data();

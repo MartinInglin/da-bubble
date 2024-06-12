@@ -30,16 +30,21 @@
       <div class="reactions-container">
         @for (reaction of reactionsToDislplay; track reaction; let index =
         $index) {
-        <div class="reaction">
-          <div
-            (mouseenter)="showReaction = true; reactionIndex = index"
-            (mouseleave)="showReaction = false"
-          >
+        <div
+          class="reaction"
+          (mouseenter)="toggleTooltip(true, index)"
+          (mouseleave)="toggleTooltip(false, index)"
+          (click)="saveReaction(reaction.emoji)"
+        >
+          <div>
             {{ reaction.emoji }}
           </div>
           <div class="amount-reactions">{{ reaction.userId.length }}</div>
-          <div class="tooltip-reaction" [ngClass]="{ show: showReaction }">
-            <img src="assets/images/icons/add_icon.svg" alt="" />
+          <div
+            class="tooltip-reaction-left"
+            [ngClass]="{ show: showReaction && reactionIndex === index }"
+          >
+            <div>{{ reaction.emoji }}</div>
             @for (name of reaction.userName; track name) {
             <div class="name-reaction">{{ name }}</div>
             }
@@ -47,12 +52,6 @@
           </div>
         </div>
         }
-
-        <img
-          class="add-reaction"
-          src="assets/images/icons/add_reaction.svg"
-          alt=""
-        />
       </div>
       }
     </div>
@@ -149,16 +148,21 @@
       <div class="reactions-container">
         @for (reaction of reactionsToDislplay; track reaction; let index =
         $index) {
-        <div class="reaction">
-          <div
-            (mouseenter)="showReaction = true; reactionIndex = index"
-            (mouseleave)="showReaction = false"
-          >
+        <div
+          class="reaction"
+          (mouseenter)="toggleTooltip(true, index)"
+          (mouseleave)="toggleTooltip(false, index)"
+          (click)="saveReaction(reaction.emoji)"
+        >
+          <div>
             {{ reaction.emoji }}
           </div>
           <div class="amount-reactions">{{ reaction.userId.length }}</div>
-          <div class="tooltip-reaction" [ngClass]="{ show: showReaction }">
-            <img src="assets/images/icons/add_icon.svg" alt="" />
+          <div
+            class="tooltip-reaction"
+            [ngClass]="{ show: showReaction && reactionIndex === index }"
+          >
+            <div>{{ reaction.emoji }}</div>
             @for (name of reaction.userName; track name) {
             <div class="name-reaction">{{ name }}</div>
             }
@@ -166,12 +170,6 @@
           </div>
         </div>
         }
-
-        <img
-          class="add-reaction"
-          src="assets/images/icons/add_reaction.svg"
-          alt=""
-        />
       </div>
       }
     </div>

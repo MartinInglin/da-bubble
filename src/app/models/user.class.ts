@@ -6,7 +6,6 @@ export class User {
   email: string;
   avatar: string;
   channels: MinimalChannel[];
-  // directMessages: any[] = [];
   privateDirectMessageId: string;
   isGoogleAccount: boolean;
   isSignedIn: boolean;
@@ -17,7 +16,6 @@ export class User {
     this.name = obj?.name || '';
     this.email = obj?.email || '';
     this.avatar = obj?.avatar || '';
-    // this.directMessages = obj?.directMessages || [];
     this.channels = obj?.channels?.map((channel: MinimalChannel) => ({ id: channel.id, name: channel.name })) || [];
     this.privateDirectMessageId = obj?.privateDirectMessageId || '';
     this.isGoogleAccount = obj?.isGoogleAccount || false;
