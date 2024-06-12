@@ -233,6 +233,7 @@ export class PostsService {
     currentUser: User,
     indexPost: number
   ) {
+    debugger;
     const documentRef = doc(this.firestore, path, documentId);
     const document = await getDoc(documentRef);
     const documentData = document.data();
@@ -272,7 +273,7 @@ export class PostsService {
     if (
       storedReaction.userId === reaction.userId &&
       storedReaction.userName === reaction.userName &&
-      storedReaction.reaction === reaction.reaction
+      storedReaction.emoji === reaction.emoji
     ) {
       return true;
     }

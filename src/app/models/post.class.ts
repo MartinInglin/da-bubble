@@ -22,7 +22,7 @@ export class Post {
       obj?.reactions?.map((reaction: Reaction) => ({
         userName: reaction.userId,
         userId: reaction.userName,
-        reaction: reaction.reaction,
+        emoji: reaction.emoji,
       })) || [];
     this.edited = obj?.edited || false;
     this.files =

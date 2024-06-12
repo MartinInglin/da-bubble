@@ -25,22 +25,28 @@
           (keyup.enter)="saveEditedMessage()"
         ></textarea>
       </div>
-      @if (post.reactions.length > 0) {
+      @if (reactionsToDislplay.length > 0) {
+
       <div class="reactions-container">
-        <div class="reactions">
-          <!-- 0 must be changed to index later-->
-          <img
-            src="assets/images/icons/add_icon.svg "
-            (mouseenter)="showReaction = true; reactionIndex = 0"
+        @for (reaction of reactionsToDislplay; track reaction; let index =
+        $index) {
+        <div class="reaction">
+          <div
+            (mouseenter)="showReaction = true; reactionIndex = index"
             (mouseleave)="showReaction = false"
-          />
-          <div class="amount-reactions">1</div>
+          >
+            {{ reaction.emoji }}
+          </div>
+          <div class="amount-reactions">{{ reaction.userId.length }}</div>
           <div class="tooltip-reaction" [ngClass]="{ show: showReaction }">
             <img src="assets/images/icons/add_icon.svg" alt="" />
-            <div class="name-reaction">Name der Person</div>
+            @for (name of reaction.userName; track name) {
+            <div class="name-reaction">{{ name }}</div>
+            }
             <div>hat reagiert</div>
           </div>
         </div>
+        }
 
         <img
           class="add-reaction"
@@ -138,22 +144,28 @@
       <div class="message-text">
         <span>{{ post.message }}</span>
       </div>
-      @if (post.reactions.length > 0) {
+      @if (reactionsToDislplay.length > 0) {
+
       <div class="reactions-container">
-        <div class="reactions">
-          <!-- 0 must be changed to index later on-->
-          <img
-            src="assets/images/icons/add_icon.svg "
-            (mouseenter)="showReaction = true; reactionIndex = 0"
+        @for (reaction of reactionsToDislplay; track reaction; let index =
+        $index) {
+        <div class="reaction">
+          <div
+            (mouseenter)="showReaction = true; reactionIndex = index"
             (mouseleave)="showReaction = false"
-          />
-          <div class="amount-reactions">1</div>
+          >
+            {{ reaction.emoji }}
+          </div>
+          <div class="amount-reactions">{{ reaction.userId.length }}</div>
           <div class="tooltip-reaction" [ngClass]="{ show: showReaction }">
             <img src="assets/images/icons/add_icon.svg" alt="" />
-            <div class="name-reaction">Name der Person</div>
+            @for (name of reaction.userName; track name) {
+            <div class="name-reaction">{{ name }}</div>
+            }
             <div>hat reagiert</div>
           </div>
         </div>
+        }
 
         <img
           class="add-reaction"
@@ -174,10 +186,10 @@
       <mat-menu #aboveMenu="matMenu" yPosition="below">
         <div class="emoji-container">
           @for (emoji of emojis; track emoji; let index = $index) {
-            <span class="emoji" mat-menu-item (click)="saveReaction(emoji)">{{
-              emoji
-            }}</span>
-            }
+          <span class="emoji" mat-menu-item (click)="saveReaction(emoji)">{{
+            emoji
+          }}</span>
+          }
         </div>
       </mat-menu>
       @if (path === 'channels') {

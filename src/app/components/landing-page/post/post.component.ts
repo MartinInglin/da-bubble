@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  SimpleChanges,
+  inject,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Post } from '../../../models/post.class';
 import { StorageService } from '../../../services/storage.service';
@@ -10,6 +17,7 @@ import { PostsService } from '../../../services/firestore/posts.service';
 import { SnackbarService } from '../../../services/snackbar.service';
 import { Reaction } from '../../../models/reaction.class';
 import { User } from '../../../models/user.class';
+import { SortedReaction } from '../../../models/sorted-reaction.class';
 
 @Component({
   selector: 'app-post',
@@ -41,6 +49,7 @@ export class PostComponent {
     '🚀',
     '⚡',
   ];
+  reactionsToDislplay: SortedReaction[] = [];
 
   @Input() post: Post = new Post();
   @Input() currentUser: User = new User();
@@ -56,6 +65,50 @@ export class PostComponent {
 
   ngOnInit() {
     this.checkIfPostFromCurrentUser();
+    this.sortReactions();
+  }
+
+  sortReactions() {
+    const reactions: Reaction[] = this.post.reactions;
+
+    for (let i = 0; i < reactions.length; i++) {
+      let reaction = reactions[i];
+
+      if (this.reactionsToDislplay.length == 0) {
+        debugger;
+        let newReaction: SortedReaction = {
+          emoji: reaction.emoji,
+          userName: [reaction.userName],
+          userId: [reaction.userId]
+        }
+        this.reactionsToDislplay.push(newReaction);
+      } else {
+        let indexReaction: number = this.checkIfReactionExists(reaction);
+        if (indexReaction != -1) {
+          let newUserName = reactions[i].userName;
+          let newUserId = reactions[i].userId;
+          this.reactionsToDislplay[indexReaction].userName.push(newUserName);
+          this.reactionsToDislplay[indexReaction].userId.push(newUserId);
+        } else {
+          let newReaction: SortedReaction = {
+            emoji: reaction.emoji,
+            userName: [reaction.userName],
+            userId: [reaction.userId]
+          }
+          this.reactionsToDislplay.push(newReaction);
+        }
+      }
+    }
+    console.log('Reactions to display:', this.reactionsToDislplay);
+  }
+
+  checkIfReactionExists(reaction: Reaction) {
+    for (let j = 0; j < this.reactionsToDislplay.length; j++) {
+      if (reaction.emoji === this.reactionsToDislplay[j].emoji) {
+        return j;
+      }
+    }
+    return -1;
   }
 
   checkIfPostFromCurrentUser() {
@@ -252,12 +305,12 @@ export class PostComponent {
     const reaction: Reaction = {
       userName: this.currentUser.name,
       userId: this.currentUser.id,
-      reaction: emoji,
+      emoji: emoji,
     };
 
     let documentId;
     let localPath = this.path;
-    let localIndexPost = this.post
+    let localIndexPost = this.indexPost;
 
     if (localPath === 'channels') {
       documentId = this.selectedChannel.id;
@@ -265,30 +318,53 @@ export class PostComponent {
 
       localPath = 'threads';
       documentId = this.post.id;
-      const localIndexPost = 0;
-      this.callSaveReactionInPostService(documentId, reaction, localPath, localIndexPost);
-
+      localIndexPost = 0;
+      this.callSaveReactionInPostService(
+        documentId,
+        reaction,
+        localPath,
+        localIndexPost
+      );
     } else if (localPath === 'directMessages') {
       documentId = this.selectedDirectMessageId;
-
     } else if (localPath === 'threads') {
       documentId = this.selectedThreadId;
       this.callSaveReactionInPostService(documentId, reaction, localPath);
 
       localPath = 'channels';
       documentId = this.selectedChannel.id;
-      const localIndexPost = await this.postsService.getIndexPostInChannel(this.post.id, documentId);
-      this.callSaveReactionInPostService(documentId, reaction, localPath, localIndexPost)
+      const localIndexPost = await this.postsService.getIndexPostInChannel(
+        this.post.id,
+        documentId
+      );
+      this.callSaveReactionInPostService(
+        documentId,
+        reaction,
+        localPath,
+        localIndexPost
+      );
     } else {
       console.log('Document Id not found.');
     }
-
   }
 
-  callSaveReactionInPostService(documentId: string, reaction: Reaction, localPath: string, localIndexPost?: number) {
+  async callSaveReactionInPostService(
+    documentId: string,
+    reaction: Reaction,
+    localPath: string,
+    localIndexPost?: number
+  ) {
     if (documentId) {
-      const indexPost = (localIndexPost !== undefined) ? localIndexPost : this.indexPost;
-      this.postsService.saveReaction(reaction, localPath, documentId, this.currentUser, indexPost);
+      const indexPost =
+        localIndexPost !== undefined ? localIndexPost : this.indexPost;
+      await this.postsService.saveReaction(
+        reaction,
+        localPath,
+        documentId,
+        this.currentUser,
+        indexPost
+      );
+      this.sortReactions();
     }
   }
 }
