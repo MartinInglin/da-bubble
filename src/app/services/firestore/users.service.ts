@@ -195,28 +195,29 @@ export class UsersService {
     } catch (error) {
       console.error('Error updating user in Firestore:', error);
     }
-    if (partialUser.name) {
-      this.changeUserNameInPosts(partialUser.name, userId);
+
+    if (partialUser) {
+      this.changeUserNameInPosts(partialUser, userId);
     }
   }
 
-  changeUserNameInPosts(newUserName: string, currentUserId: string) {
+  changeUserNameInPosts(partialUser: Partial<User>, currentUserId: string) {
     let path: 'channels' | 'directMessages' | 'threads';
 
     path = 'directMessages';
-    this.changeUserNameInCollection(path, currentUserId, newUserName);
+    this.changeUserNameInCollection(path, currentUserId, partialUser);
 
     path = 'channels';
-    this.changeUserNameInCollection(path, currentUserId, newUserName);
+    this.changeUserNameInCollection(path, currentUserId, partialUser);
 
     path = 'threads';
-    this.changeUserNameInCollection(path, currentUserId, newUserName);
+    this.changeUserNameInCollection(path, currentUserId, partialUser);
   }
 
   async changeUserNameInCollection(
     path: string,
     currentUserId: string,
-    newUserName: string
+    partialUser: Partial<User>
   ) {
     const collectionRef = collection(this.firestore, path);
     const querySnapshot = await getDocs(collectionRef);
@@ -230,7 +231,8 @@ export class UsersService {
 
         posts.forEach((post) => {
           if (post.userId === currentUserId) {
-            post.name = newUserName;
+            post.name = partialUser.name;
+            post.avatar = partialUser.avatar;
             updatedPosts = true;
           }
         });
