@@ -137,7 +137,7 @@ export class EditCurrentUserMobileComponent {
         email: this.wantChangeMail ? this.updatedEmail : this.currentUser.email,
         avatar: this.selectedAvatar
       };
-      await this.usersService.updateUser(this.currentUser.id, updatedData);
+      await this.usersService.updateUser(this.currentUser, updatedData);
       this.dialogRef.close();
     }
   }

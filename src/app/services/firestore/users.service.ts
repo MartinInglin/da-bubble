@@ -21,6 +21,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { UserCredential } from '@angular/fire/auth';
 import { StorageService } from '../storage.service';
 import { MinimalChannel } from '../../models/minimal_channel.class';
+import { Post } from '../../models/post.class';
+import { Reaction } from '../../models/reaction.class';
 
 @Injectable({
   providedIn: 'root',
@@ -187,8 +189,11 @@ export class UsersService {
     await Promise.all(updatePromises);
   }
 
-  async updateUser(userId: string, partialUser: Partial<User>): Promise<void> {
-    const userDocRef = doc(this.firestore, 'users', userId);
+  async updateUser(
+    currentUser: User,
+    partialUser: Partial<User>
+  ): Promise<void> {
+    const userDocRef = doc(this.firestore, 'users', currentUser.id);
 
     try {
       await updateDoc(userDocRef, partialUser);
@@ -197,26 +202,26 @@ export class UsersService {
     }
 
     if (partialUser) {
-      this.changeUserNameInPosts(partialUser, userId);
+      this.createPathToCollection(partialUser, currentUser);
     }
   }
 
-  changeUserNameInPosts(partialUser: Partial<User>, currentUserId: string) {
+  createPathToCollection(partialUser: Partial<User>, currentUser: User) {
     let path: 'channels' | 'directMessages' | 'threads';
 
     path = 'directMessages';
-    this.changeUserNameInCollection(path, currentUserId, partialUser);
+    this.getDataCollection(path, currentUser, partialUser);
 
     path = 'channels';
-    this.changeUserNameInCollection(path, currentUserId, partialUser);
+    this.getDataCollection(path, currentUser, partialUser);
 
     path = 'threads';
-    this.changeUserNameInCollection(path, currentUserId, partialUser);
+    this.getDataCollection(path, currentUser, partialUser);
   }
 
-  async changeUserNameInCollection(
+  async getDataCollection(
     path: string,
-    currentUserId: string,
+    currentUser: User,
     partialUser: Partial<User>
   ) {
     const collectionRef = collection(this.firestore, path);
@@ -227,22 +232,74 @@ export class UsersService {
       const posts = data['posts'];
 
       if (Array.isArray(posts)) {
-        let updatedPosts = false;
-
-        posts.forEach((post) => {
-          if (post.userId === currentUserId) {
-            post.name = partialUser.name;
-            post.avatar = partialUser.avatar;
-            updatedPosts = true;
-          }
-        });
-
-        if (updatedPosts) {
-          const documentRef = doc(this.firestore, path, document.id);
-          await updateDoc(documentRef, { posts: posts });
-        }
+        await this.updatePostInFirestore(
+          path,
+          document.id,
+          posts,
+          currentUser,
+          partialUser
+        );
+      }
+      if (partialUser.name !== currentUser.name) {
+        await this.updateReactionIFirestore(
+          path,
+          document.id,
+          posts,
+          currentUser,
+          partialUser
+        );
       }
     });
+  }
+
+  async updatePostInFirestore(
+    path: string,
+    documentId: string,
+    posts: Partial<Post>[],
+    currentUser: User,
+    partialUser: Partial<User>
+  ) {
+    let updatedPosts = false;
+
+    posts.forEach((post) => {
+      if (post.userId === currentUser.id) {
+        post.name = partialUser.name;
+        post.avatar = partialUser.avatar;
+        updatedPosts = true;
+      }
+    });
+
+    if (updatedPosts) {
+      const documentRef = doc(this.firestore, path, documentId);
+      await updateDoc(documentRef, { posts: posts });
+    }
+  }
+
+  async updateReactionIFirestore(
+    path: string,
+    documentId: string,
+    posts: Partial<Post>[],
+    currentUser: User,
+    partialUser: Partial<User>
+  ) {
+    let updatedPosts = false;
+
+    posts.forEach((post) => {
+      if (post.reactions) {
+        post.reactions.forEach((reaction) => {
+          if (reaction.userId === currentUser.id) {
+            if (partialUser.name) {
+              reaction.userName = partialUser.name;
+              updatedPosts = true;
+            }
+          }
+        });
+      }
+    });
+    if (updatedPosts) {
+      const documentRef = doc(this.firestore, path, documentId);
+      await updateDoc(documentRef, { posts: posts });
+    }
   }
 
   setCurrentUserNull() {
@@ -271,3 +328,12 @@ export class UsersService {
     }
   }
 }
+
+// posts.forEach((post: Post) => {
+//   let reactions = post.reactions;
+//   reactions.forEach(reaction => {
+//     if (reaction.userId === currentUserId) {
+//       reaction.userName = partialUser.name
+//     }
+//   });
+// })
