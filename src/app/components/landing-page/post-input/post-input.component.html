@@ -1,7 +1,7 @@
 
 <div class="input-content">
     <div class="textArea">
-      <textarea name="" id="message-textarea" placeholder="Nachricht an #{{ selectedChannel.name }}"
+      <textarea name="" id="message-textarea" (keyup.enter)="savePost()" placeholder="Nachricht an #{{ selectedChannel.name }}"
         [(ngModel)]="message"></textarea>
 
       @if (files.length > 0) {

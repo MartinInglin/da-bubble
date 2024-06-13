@@ -86,9 +86,9 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
     this.wantChangePassword = !this.wantChangePassword;
   }
 
-  selectAvatar(avatar: string): void {
+  selectAvatar(imageURLAvatar: string): void {
     this.imagePreviewUrl = null;
-    this.selectedAvatar = avatar;
+    this.selectedAvatar = imageURLAvatar;
   }
 
   openFileDialog() {

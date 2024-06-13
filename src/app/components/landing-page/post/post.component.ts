@@ -35,6 +35,7 @@ export class PostComponent {
   showReaction: boolean = false;
   reactionIndex: number = -1;
   showEditMessage: boolean = false;
+  editingDisabled: boolean = false;
   postFromCurrentUser: boolean = false;
   wantToEditMessage: boolean = false;
   emojis: string[] = [
@@ -61,7 +62,7 @@ export class PostComponent {
 
   @Output() openThread = new EventEmitter();
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit() {
     this.checkIfPostFromCurrentUser();
@@ -194,8 +195,10 @@ export class PostComponent {
   }
 
   toggleWantToEditMessage() {
-    this.wantToEditMessage = !this.wantToEditMessage;
-    if (this.wantToEditMessage) {
+    if (!this.editingDisabled) {
+      this.editingDisabled = true;
+      this.wantToEditMessage = true;
+
       setTimeout(() => {
         const textarea = document.querySelector('textarea');
         if (textarea) {
@@ -203,8 +206,8 @@ export class PostComponent {
         }
       }, 0);
     }
-    this.toggleShowEditMessage();
   }
+
 
   async saveEditedMessage() {
     try {
@@ -215,7 +218,6 @@ export class PostComponent {
         );
         return;
       }
-
       const { path, documentId } = this.getPathAndDocumentId();
 
       await this.updatePost(path, documentId);
@@ -223,8 +225,12 @@ export class PostComponent {
       await this.updateCorrespondingEntries();
 
       this.wantToEditMessage = false;
+      this.editingDisabled = false;
+
     } catch (error) {
       console.error('Error saving message: ', error);
+    } finally {
+      this.editingDisabled = false;
     }
   }
 
