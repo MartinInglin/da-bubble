@@ -54,32 +54,30 @@ export class SideNavComponent {
   arrowClosed: any = '/assets/images/icons/arrow_drop_down.svg';
 
   constructor(private dialog: MatDialog,private fb: FormBuilder,) { 
-    // this.directMessagesService = directMessagesService;
+    // Erstellen des Formulars mit einem einzelnen Eingabefeld 'recipient'
     this.form = this.fb.group({
       recipient: [''],
     });
   }
 
   ngOnInit(): void {
+     // Abonnement zum Anzeigen der Kontakte
     this.stateService.showContacts$.subscribe((show) => {
       this.showContacts = show;
     });
 
+    // Abonnement zum Anzeigen der Kanäle
     this.stateService.showChannels$.subscribe((show) => {
       this.showChannels = show;
     });
 
-    // this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe(
-    //   (allUsers) => {
-    //     this.allUsers = allUsers ?? [];
-    //   }
-    // );
-
+      // Abonnement zur Aktualisierung der Liste aller Benutzer
     this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe(
       (users) => {
         if (users) {
           this.allUsers = users ?? [];
 
+        // Filtern der Benutzer basierend auf dem Suchbegriff
           this.filteredUsers = this.allUsers.filter((u) =>
             u.name.toLowerCase().includes(this.searchTerm.toLowerCase())
           );
@@ -89,6 +87,7 @@ export class SideNavComponent {
       }
     );
 
+// Abonnement zur Verarbeitung von Formularänderungen
     this.searchResults$ = this.form.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -108,14 +107,17 @@ export class SideNavComponent {
     });
   }
 
+  // Getter für das Eingabefeld 'recipient'
   get recipient(): FormControl {
     return this.form.get('recipient') as FormControl;
   }
 
+  // Funktion zur Überprüfung, ob ein Ergebnis ein Benutzer ist
   isUser(result: Channel | User): result is User {
     return (result as User).avatar !== undefined;
   }
 
+  // Funktion zur Suche nach Kanälen oder Benutzern basierend auf dem Suchbegriff
   search(searchTerm: string): Observable<(Channel | User)[]> {
     // Suche nach Kanälen
     if (searchTerm.startsWith('#')) {
@@ -146,25 +148,30 @@ export class SideNavComponent {
     }
   }
 
+// Funktion zum Öffnen eines Kanals
   openChannel(x:string){
     this.channelsService.getDataChannel(x);
     this.form.get('recipient')?.setValue(''); 
   }
 
+  // Funktion zum Öffnen einer Direktnachricht
   openDirectMessage(x:string, y: any){
     this.directMessagesService.getDataDirectMessage(x , y);
     this.form.get('recipient')?.setValue(''); 
   }
 
+   // Funktion zum Schließen der Kanal- und Kontaktansicht
   closeChannelsAndContacts() {
     this.stateService.setShowContacts(false);
     this.stateService.setShowChannels(false);
   }
 
+  // Funktion zum Abrufen aller Benutzer
   async getAllUsers() {
     this.usersService.getAllUsers();
   }
 
+  // Funktion zum Öffnen des Dialogs für einen neuen Kanal
   openNewChannelDialog(): void {
     if (this.currentUser) {
       if (window.innerWidth <= 750) {
@@ -185,6 +192,7 @@ export class SideNavComponent {
     }
   }
 
+  // Funktion zum Öffnen des mobilen Dialogs für einen neuen Kanal
   openMobileDialog(): void {
     if (this.currentUser) {
       const dialogRef = this.dialog.open(NewChannelMobileComponent, {
@@ -201,6 +209,7 @@ export class SideNavComponent {
     }
   }
 
+  // Aufräumarbeiten bei der Zerstörung der Komponente
   ngOnDestroy(): void {
     if (this.allUsersSubscription) {
       this.allUsersSubscription.unsubscribe();

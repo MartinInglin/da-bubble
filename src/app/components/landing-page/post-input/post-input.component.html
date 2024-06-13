@@ -1,59 +1,61 @@
-
+<!-- input Content -->
 <div class="input-content">
-    <div class="textArea">
-      <textarea name="" id="message-textarea" (keyup.enter)="savePost()" placeholder="Nachricht an #{{ selectedChannel.name }}"
-        [(ngModel)]="message"></textarea>
+  <div class="textArea">
+    <textarea name="" id="message-textarea" (keyup.enter)="savePost()" placeholder="Nachricht an #{{ selectedChannel.name }}" [(ngModel)]="message"></textarea>
 
-      @if (files.length > 0) {
-      <div class="documents-container">
-        @for (file of files; track file; let index = $index) {
-        <div class="document" (click)="removeFile(index)">
-          {{ file.name }}
-        </div>
-        }
+    @if (files.length > 0) {
+    <div class="documents-container">
+      @for (file of files; track file; let index = $index) {
+      <div class="document" (click)="removeFile(index)">
+        {{ file.name }}
       </div>
       }
-      <div class="icons">
-        <div class="buttons">
-          <a class="addIcon" (click)="openFileDialog()">
-            <img src="assets/images/icons/add_icon.svg" alt="" />
-          </a>
-          <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)" />
-
-          <div class="seperator"></div>
-
-          <!-- Liste für Emojis -->
-          <div class="link-emojis">
-            <button mat-button [matMenuTriggerFor]="aboveMenu">
-              <img src="assets/images/icons/smiley-Icon.svg" alt="" />
-            </button>
-            <mat-menu #aboveMenu="matMenu" yPosition="above">
-              <div class="emoji-container">
-                <span *ngFor="let emoji of emojis" class="emoji" mat-menu-item (click)="addEmojiToMessage(emoji)">{{ emoji }}</span>
-              </div>
-            </mat-menu>
-            <!-- Liste für Verlinkungen von Kontakten -->
-            <button mat-button [matMenuTriggerFor]="contactLinks">
-              <img src="assets/images/icons/link_icon.svg" alt="" />
-            </button>
-            <mat-menu #contactLinks="matMenu" yPosition="above">
-              <div class="link-container">
-                <table class="links">
-                  <tr *ngFor="let user of allUsers">
-                    <td (click)="linkContactInMessage(user.name)">
-                      <img [src]="user.avatar" alt="Profilbild" />
-                      <span>{{ user.name }}</span>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </mat-menu>
-          </div>
-        </div>
-
-        <a (click)="savePost()" class="save-post">
-          <img src="assets/images/icons/send_icon.svg" alt=""/>
+    </div>
+    }
+    <!-- action buttons in input area -->
+    <div class="icons">
+      <div class="buttons">
+        <!-- addIcon -->
+        <a class="addIcon" (click)="openFileDialog()">
+          <img src="assets/images/icons/add_icon.svg" alt="" />
         </a>
+        <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)" />
+<!-- seperator -->
+        <div class="seperator"></div>
+
+        <!-- Liste für Emojis -->
+        <div class="link-emojis">
+          <button mat-button [matMenuTriggerFor]="aboveMenu">
+            <img src="assets/images/icons/smiley-Icon.svg" alt="" />
+          </button>
+          <mat-menu #aboveMenu="matMenu" yPosition="above">
+            <div class="emoji-container">
+              <span *ngFor="let emoji of emojis" class="emoji" mat-menu-item (click)="addEmojiToMessage(emoji)">{{ emoji }}</span>
+            </div>
+          </mat-menu>
+          <!-- Liste für Verlinkungen von Kontakten -->
+          <button mat-button [matMenuTriggerFor]="contactLinks">
+            <img src="assets/images/icons/link_icon.svg" alt="" />
+          </button>
+          <mat-menu #contactLinks="matMenu" yPosition="above">
+            <div class="link-container">
+              <table class="links">
+                <tr *ngFor="let user of allUsers">
+                  <!-- Link contact in message -->
+                  <td (click)="linkContactInMessage(user.name)">
+                    <img [src]="user.avatar" alt="Profilbild" />
+                    <span>{{ user.name }}</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </mat-menu>
+        </div>
       </div>
+      <!-- savePost -->
+      <a (click)="savePost()" class="save-post">
+        <img src="assets/images/icons/send_icon.svg" alt="" />
+      </a>
     </div>
   </div>
+</div>

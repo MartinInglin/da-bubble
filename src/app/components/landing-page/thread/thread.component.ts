@@ -61,20 +61,26 @@ export class ThreadComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    // Subscribe to currentUser observable from usersService
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       this.currentUser = user ?? new User();
     });
 
+     // Subscribe to allUsers observable from usersService
     this.usersSubscription = this.usersService.allUsersSubject$.subscribe(
       (users) => {
         this.allUsers = users ?? []; // Benutzerdaten aktualisieren
       }
     );
+
+    // Subscribe to selectedChannel observable from channelsService
     this.channelSubscription = this.channelsService.channelSubject$.subscribe(
       (channel) => {
         this.selectedChannel = channel ?? new Channel();
       }
     );
+
+    // Subscribe to selectedThread observable from threadsService
     this.threadSubscription = this.threadsService.threadSubject$.subscribe(
       (thread) => {
         this.selectedThread = thread ?? new Thread();
@@ -82,6 +88,7 @@ export class ThreadComponent implements OnInit {
     );
   }
 
+  // Unsubscribe from all observables
   ngOnDestroy(): void {
     this.userSubscription.unsubscribe();
     this.usersSubscription.unsubscribe();
@@ -89,10 +96,12 @@ export class ThreadComponent implements OnInit {
     this.threadSubscription.unsubscribe();
   }
 
+  // Emit toggleThread event
   closeThread(): void {
     this.toggleThread.emit();
   }
 
+  // Array of days of the week in German
   formatDate(timestamp: number): string {
     const daysOfWeek = [
       'Sonntag',

@@ -1,3 +1,4 @@
+<!-- head of sidenav -->
 <div class="head-side-menu">
   <div class="head-side-menu-first">
     <img src="assets/images/icons/workspace_logo.png" alt="" />
@@ -13,7 +14,7 @@
   </div>
 </div>
 
-
+<!-- searchBar -->
 <div class="searchBar d-none" id="searchBar" [formGroup]="form">
   <input type="text" formControlName="recipient" placeholder="Code learning durchsuchen..." />
   <div *ngIf="searchResults && searchResults.length" class="list">
@@ -56,7 +57,7 @@
     />
   </div>
 </div>
-
+<!-- Channels -->
 <table class="channels" *ngIf="showChannels">
   <tr *ngFor="let channel of currentUser.channels; let i = index">
     <td (click)="channelsService.getDataChannel(channel.id)">
@@ -90,7 +91,7 @@
     </div>
   </div>
 </div>
-
+<!-- Contacts -->
 <table class="contacts" *ngIf="showContacts">
   <tr class="table-row">
     <td

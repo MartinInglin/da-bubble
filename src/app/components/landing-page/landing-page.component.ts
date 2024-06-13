@@ -66,6 +66,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {
+    // Subscribe to the current user observable from usersService
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       if (user) {
         this.currentUser = user ?? new User();
@@ -73,6 +74,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     });
   }
 
+  // Toggle drawer open/close state
   toggle(drawer: any): void {
     this.isOpen = !this.isOpen;
     if (drawer) {
@@ -81,13 +83,16 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   }
 
   openThread() {
+     // Open the thread drawer
     this.drawerThread.open();
   }
 
   closeThread() {
+    // Close the thread drawer
     this.drawerThread.close();
   }
 
+  // Unsubscribe from userSubscription if exists
   ngOnDestroy(): void {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();

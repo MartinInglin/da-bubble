@@ -1,11 +1,12 @@
 <header>
+  <!-- Logo -->
   <div class="logo">
     <img src="assets/images/icons/logo_da_bubble.png" alt="LOGO-DABUBBLE" />
     <img src="assets/images/icons/Logo_name.png" alt="LOGO-DABUBBLE" />
   </div>
 
 
-
+  <!-- searchBar -->
   <div class="searchBar" *ngIf="currentUser?.isSignedIn" [formGroup]="form">
     <input type="text" formControlName="recipient" placeholder="Code learning durchsuchen..." />
     <img class="searchImg" src="../../../../assets/images/icons/search.svg" alt="">
@@ -16,7 +17,6 @@
             <img src="{{result.avatar}}" alt="">
             <span>{{ result.name }}</span>
           </div>
-
           <div class="container-name-avatar" *ngIf="!isUser(result)" (click)="openChannel(result.id)">
             <span>{{ result.name }}</span>
           </div>
@@ -24,9 +24,9 @@
       </ul>
     </div>
   </div>
-  
 
 
+  <!-- Name and Avatar if signed in -->
   <div *ngIf="currentUser?.isSignedIn" class="user" (click)="openDialog()" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()">
     <span class="name">{{ currentUser.name}}</span>
     <div class="name-avatar">
@@ -34,13 +34,12 @@
         <img [src]="currentUser.avatar" alt="USER" />
       </div>
       <div *ngIf="currentUser.isSignedIn" class="online"></div>
-
     </div>
-
+    <!-- menu for logOut -->
     <img class="menuDropDown" [src]="menuDown" alt="MENU" #userDiv />
-
   </div>
 
+  <!-- If not registered -->
   <div *ngIf="showRegisterElement" class="register">
     <p>Neu bei DABubble?</p>
     <a routerLink="/register">Konto erstellen</a>

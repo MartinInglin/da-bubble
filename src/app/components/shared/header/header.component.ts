@@ -74,98 +74,103 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    // Subscribe to currentUser$ observable to update currentUser
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       this.currentUser = user ?? new User();
 
+      // Map minimalChannel data to Channel objects and filter by searchTerm
       const channels: Channel[] = this.currentUser.channels.map(
         (minimalChannel) => new Channel(minimalChannel)
       );
-
       this.filteredChannels = channels.filter((c) =>
         c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     });
 
+    // Subscribe to router events to toggle register element visibility
     this.routeSubscription = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.showRegisterElement = event.url === '/' || event.url === '/login';
       }
     });
 
+    // Subscribe to allUsersSubject$ observable to update allUsers
     this.userSubscription = this.usersService.allUsersSubject$.subscribe(
       (users) => {
         if (users) {
           this.allUsers = users ?? [];
 
+          // Filter allUsers by searchTerm
           this.filteredUsers = this.allUsers.filter((u) =>
             u.name.toLowerCase().includes(this.searchTerm.toLowerCase())
           );
-
-        
         }
       }
     );
 
-    
+ // Observe form value changes for search and update searchResults$
+ this.searchResults$ = this.form.valueChanges.pipe(
+  debounceTime(300),
+  distinctUntilChanged(),
+  switchMap((formValue) => {
+    const term = formValue.recipient;
+    this.searchTerm = typeof term === 'string' ? term : '';
+    return this.searchTerm ? this.search(this.searchTerm) : of([]);
+  })
+);
 
-    this.searchResults$ = this.form.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap((formValue) => {
-        const term = formValue.recipient;
-        this.searchTerm = typeof term === 'string' ? term : '';
-        return this.searchTerm ? this.search(this.searchTerm) : of([]);
-      })
-    );
+// Subscribe to searchResults$ and update searchResults
+this.searchResults$.subscribe((results) => {
+  this.searchResults = results;
+});
+}
 
-    this.searchResults$.subscribe((results) => {
-      this.searchResults = results;
-    });
+// Get recipient form control
+get recipient(): FormControl {
+return this.form.get('recipient') as FormControl;
+}
 
-    this.searchResults$.subscribe((results) => {
-      this.searchResults = results;
-    });
-  }
+// Type guard to check if result is a User
+isUser(result: Channel | User): result is User {
+return (result as User).avatar !== undefined;
+}
 
-  get recipient(): FormControl {
-    return this.form.get('recipient') as FormControl;
-  }
-  isUser(result: Channel | User): result is User {
-    return (result as User).avatar !== undefined;
-  }
-  
-  openChannel(x:string){
-    this.channelsService.getDataChannel(x);
+  // Open channel based on recipient ID
+  openChannel(id: string): void {
+    this.channelsService.getDataChannel(id);
     this.form.get('recipient')?.setValue(''); 
   }
 
-  openDirectMessage(x:string, y: any){
-    this.directMessagesService.getDataDirectMessage(x , y);
+  // Open direct message based on recipient ID and other parameters
+  openDirectMessage(id: string, data: any): void {
+    this.directMessagesService.getDataDirectMessage(id, data);
     this.form.get('recipient')?.setValue(''); 
   }
 
+  // Select recipient and set form value accordingly
   selectRecipient(recipient: Channel | User) {
     const recipientString: any =
       recipient instanceof Channel ? `#${recipient.name}` : `@${recipient.id}`;
     this.form.setValue({ recipient: recipientString });
   }
 
+  // Perform search based on searchTerm and return Observable of results
   search(searchTerm: string): Observable<(Channel | User)[]> {
-    // Suche nach Kanälen
+    // Search for channels if searchTerm starts with '#'
     if (searchTerm.startsWith('#')) {
       const filteredChannels = this.filteredChannels.filter((channel) =>
-        channel.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase()) && !channel.isDirectMessage // Entfernen Sie "#" aus dem Suchbegriff
+        channel.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase()) && !channel.isDirectMessage
       );
       return of(filteredChannels);
     }
-    // Suche nach Benutzern
+    // Search for users if searchTerm starts with '@'
     else if (searchTerm.startsWith('@')) {
       const filteredUsers = this.allUsers.filter((user) =>
-        user.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase()) && !user.isChannel // Entfernen Sie "@" aus dem Suchbegriff
+        user.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase()) && !user.isChannel
       );
-      return of(filteredUsers);
+      return of(this.filterCurrentUser(filteredUsers));
     }
-    // Allgemeine Suche (ohne Präfix)
+    // General search (no prefix)
     else {
       const filteredChannels = this.filteredChannels.filter((channel) =>
         channel.name.toLowerCase().includes(searchTerm.toLowerCase()) && !channel.isDirectMessage
@@ -174,15 +179,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) && !user.isChannel
       );
   
-      // Zusammenführen der Suchergebnisse
+      // Merge search results
       const results = [...filteredChannels, ...filteredUsers];
-      return of(results);
+      return of(this.filterCurrentUser(results));
     }
   }
 
-
+  // Filter out currentUser from search results
+  private filterCurrentUser(results: (Channel | User)[]): (Channel | User)[] {
+    return results.filter(result => {
+      if (this.isUser(result)) {
+        return result.id !== this.currentUser.id;
+      }
+      return true;
+    });
+  }
 
   ngOnDestroy(): void {
+    // Unsubscribe from all subscriptions
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
     }
@@ -191,11 +205,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Open user menu dialog based on window width
   openDialog(): void {
     if (this.currentUser) {
       if (window.innerWidth <= 750) {
         this.openMobileDialog();
       } else {
+        // Open desktop user menu dialog
         const dialogRef = this.dialog.open(UserMenuComponent, {
           width: '282px',
           position: {
@@ -208,6 +224,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
         this.isDialogOpen = true;
 
+        // Close dialog handler
         dialogRef.afterClosed().subscribe(() => {
           this.isDialogOpen = false;
         });
@@ -215,6 +232,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Open mobile user menu dialog
   openMobileDialog(): void {
     if (this.currentUser) {
       const dialogRef = this.dialog.open(UserMenuMobileComponent, {
@@ -229,19 +247,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
       this.isDialogOpen = true;
 
+      // Close dialog handler
       dialogRef.afterClosed().subscribe(() => {
         this.isDialogOpen = false;
       });
     }
   }
 
+  // Handle mouse over event for menu arrow icon
   onMouseOver(): void {
     this.menuDown = './../../../../assets/images/icons/keyboard_arrow_down_blue.svg';
   }
 
+  // Handle mouse out event for menu arrow icon
   onMouseOut(): void {
     this.menuDown = './../../../../assets/images/icons/keyboard_arrow_down.svg';
   }
-
-
 }

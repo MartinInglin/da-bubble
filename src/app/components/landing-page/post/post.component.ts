@@ -69,6 +69,7 @@ export class PostComponent {
     this.sortReactions();
   }
 
+  // Sort reactions to display
   sortReactions() {
     const reactions: Reaction[] = this.post.reactions;
 
@@ -102,6 +103,7 @@ export class PostComponent {
     console.log('Reactions to display:', this.reactionsToDislplay);
   }
 
+  // Check if reaction exists
   checkIfReactionExists(reaction: Reaction) {
     for (let j = 0; j < this.reactionsToDislplay.length; j++) {
       if (reaction.emoji === this.reactionsToDislplay[j].emoji) {
@@ -111,12 +113,14 @@ export class PostComponent {
     return -1;
   }
 
+  // Check if post is from current user
   checkIfPostFromCurrentUser() {
     if (this.currentUser.id === this.post.userId) {
       this.postFromCurrentUser = true;
     }
   }
 
+  // Format timestamp to string
   formatDateTime(timestamp: number): string {
     const date = new Date(timestamp);
     const hours = date.getHours();
@@ -124,11 +128,13 @@ export class PostComponent {
     return `${hours}:${minutes} Uhr`;
   }
 
+  // Download file
   downloadFile(downloadURL: string, e: Event) {
     this.storageService.getFile(downloadURL);
     e.stopPropagation();
   }
 
+  // Delete file
   async deleteFile(fileName: string, e: Event, indexFile: number) {
     if (this.path === 'directMessages') {
       const documentId = this.selectedDirectMessageId;
@@ -149,6 +155,7 @@ export class PostComponent {
     e.stopPropagation();
   }
 
+  // Delete file on corresponding thread
   async deleteFileOnCorrespondingThread(indexFile: number) {
     try {
       this.path = 'threads';
@@ -167,6 +174,7 @@ export class PostComponent {
     }
   }
 
+   // Delete file on corresponding channel
   async deleteFileOnCorrespondingChannel(
     documentId: string,
     indexFile: number
@@ -184,16 +192,19 @@ export class PostComponent {
     }
   }
 
+   // Delete file on a collection
   deleteFileOnCollection(path: string, documentId: string, indexFile: number) {
     const pathToDocument = `${path}/${documentId}`;
     this.postsService.deleteFile(this.indexPost, pathToDocument, indexFile);
   }
 
+  // Toggle edit message display
   toggleShowEditMessage() {
     this.showEditMessage = !this.showEditMessage;
     console.log(this.showEditMessage);
   }
 
+   // Toggle want to edit message state
   toggleWantToEditMessage() {
     if (!this.editingDisabled) {
       this.editingDisabled = true;
@@ -208,7 +219,7 @@ export class PostComponent {
     }
   }
 
-
+// Save edited message
   async saveEditedMessage() {
     try {
       if (this.isMessageEmpty()) {
@@ -234,10 +245,12 @@ export class PostComponent {
     }
   }
 
+  // Check if message is empty
   isMessageEmpty(): boolean {
     return this.post.message.trim() === '';
   }
 
+  // Get path and document ID
   getPathAndDocumentId(): { path: string; documentId: string } {
     let path = '';
     let documentId = '';
@@ -256,6 +269,7 @@ export class PostComponent {
     return { path, documentId };
   }
 
+  // Update post
   async updatePost(path: string, documentId: string): Promise<void> {
     await this.postsService.editPost(
       path,
@@ -265,6 +279,7 @@ export class PostComponent {
     );
   }
 
+  // Update corresponding entries
   async updateCorrespondingEntries(): Promise<void> {
     if (this.path === 'channels') {
       await this.updateCorrespondingThread();
@@ -273,6 +288,7 @@ export class PostComponent {
     }
   }
 
+   // Update corresponding thread
   async updateCorrespondingThread(): Promise<void> {
     const threadExists = await this.postsService.checkIfThreadExists(
       this.post.id
@@ -287,6 +303,7 @@ export class PostComponent {
     }
   }
 
+   // Update corresponding channel
   async updateCorrespondingChannel(): Promise<void> {
     const indexPostInChannel = await this.postsService.getIndexPostInChannel(
       this.post.id,
@@ -302,10 +319,12 @@ export class PostComponent {
     }
   }
 
+  // Send open thread event to parent
   sendOpenThreadToParent(post: Post) {
     this.openThread.emit(post);
   }
 
+  // Save reaction
   async saveReaction(emoji: string) {
     const reaction: Reaction = {
       userName: this.currentUser.name,
@@ -353,6 +372,7 @@ export class PostComponent {
     }
   }
 
+  // Call save reaction in post service
   async callSaveReactionInPostService(
     documentId: string,
     reaction: Reaction,
@@ -373,6 +393,7 @@ export class PostComponent {
     }
   }
 
+  // Toggle tooltip display
   toggleTooltip(show: boolean, index: number) {
     this.showReaction = show;
     this.reactionIndex = index

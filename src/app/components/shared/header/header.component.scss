@@ -153,15 +153,12 @@ header {
 
 .list {
   position: absolute;
-  left: 25%;
-  right: 25%;
+ top: 89px;
   z-index: 1000; 
   background-color: #eceefe;
 
   border: 1px solid #ccc;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  overflow-x: hidden;
-  overflow-y: scroll;
   border-radius: 30px;
   height: 500px;
   width: 300px;

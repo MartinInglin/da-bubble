@@ -50,6 +50,9 @@ export class PostInputComponent {
   ];
   message: string = '';
 
+  /**
+   * saves the post
+   */
   savePost() {
     this.postsService.savePost(
       this.files,
@@ -64,10 +67,16 @@ export class PostInputComponent {
     this.files = [];
   }
 
+  /**
+   * opens the file dialog
+   */
   openFileDialog() {
     this.fileInput.nativeElement.click();
   }
 
+  /**
+   * selects a file
+   */
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -78,19 +87,23 @@ export class PostInputComponent {
     }
   }
 
+  /**
+   * rewmoves file
+   */
   removeFile(index: number) {
     this.files.splice(index, 1);
     console.log('File removed', this.files);
   }
 
+  /**
+   * adds emoji to message
+   */
   addEmojiToMessage(emoji: string): void {
     this.message += emoji;
   }
 
   /**
-   * This function writes the name of a user into the textarea, if the user selects one in the @ user menu.
-   *
-   * @param userName Name of the user the from the list that opens if a click on the @ symbol happens.
+   *links contacts name in message
    */
   linkContactInMessage(userName: string) {
     this.message += '@' + userName + ' ';
