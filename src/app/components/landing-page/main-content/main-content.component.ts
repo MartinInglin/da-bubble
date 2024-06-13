@@ -112,7 +112,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
       this.filteredChannels = channels.filter((c) =>
         c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
-      this.currentUser = user ?? new User();      
+      this.currentUser = user ?? new User();
 
     });
 
@@ -121,7 +121,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
         if (channel) {
           this.selectedChannel = channel ?? new Channel();
 
-        
+
 
           this.channelSelected = !!this.selectedChannel.id;
           if (this.channelSelected) {
@@ -141,7 +141,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
             u.name.toLowerCase().includes(this.searchTerm.toLowerCase())
           );
 
-        
+
         }
       }
     );
@@ -186,20 +186,19 @@ export class MainContentComponent implements OnInit, OnDestroy {
   // isChannel(obj: any ): obj is Channel {
   //   return (obj as Channel).isDirectMessage !== undefined;
   // }
-
-
+  
   isUser(result: Channel | User): result is User {
     return (result as User).avatar !== undefined;
   }
-  
-  openChannel(x:string){
+
+  openChannel(x: string) {
     this.channelsService.getDataChannel(x);
-    this.form.get('recipient')?.setValue(''); 
+    this.form.get('recipient')?.setValue('');
   }
 
-  openDirectMessage(x:string, y: any){
-    this.directMessagesService.getDataDirectMessage(x , y);
-    this.form.get('recipient')?.setValue(''); 
+  openDirectMessage(x: string, y: any) {
+    this.directMessagesService.getDataDirectMessage(x, y);
+    this.form.get('recipient')?.setValue('');
   }
 
 
@@ -234,14 +233,10 @@ export class MainContentComponent implements OnInit, OnDestroy {
         user.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase()) && !user.isChannel // Entfernen Sie "@" aus dem Suchbegriff
       );
       return of(filteredUsers);
-    }  else {
+    } else {
       return of([]); // Return an empty observable for no matches
     }
   }
-  
-  
-  
-  
 
   ngOnDestroy(): void {
     if (this.userSubscription) {

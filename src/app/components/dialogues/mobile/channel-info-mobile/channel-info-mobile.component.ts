@@ -30,6 +30,7 @@ import { UsersService } from '../../../../services/firestore/users.service';
 export class ChannelInfoMobileComponent {
   channel: Channel | null = null;
   currentUser: User | null = null;
+  
   channelSubscription: any;
 
   private userSubscription: Subscription = new Subscription();

@@ -89,7 +89,6 @@ export class SideNavComponent {
       }
     );
 
-
     this.searchResults$ = this.form.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
