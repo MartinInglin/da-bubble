@@ -76,10 +76,7 @@ export class UsersService {
     let avatar = userData.avatar;
 
     if (userData.avatarFile && userData.avatarFile.name !== 'empty.txt') {
-      avatar = await this.storageService.saveImageUser(
-        userId,
-        userData.avatarFile
-      );
+      avatar = await this.storageService.saveImageUser(userData.avatarFile);
     }
 
     const user: User = {

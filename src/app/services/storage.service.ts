@@ -12,14 +12,11 @@ import { SnackbarService } from './snackbar.service';
 @Injectable({
   providedIn: 'root',
 })
-
 export class StorageService {
   snackbarService = inject(SnackbarService);
   private storage = getStorage();
 
-
-
-  constructor() { }
+  constructor() {}
 
   async saveFiles(postId: string, files: File[]): Promise<MinimalFile[]> {
     const MAX_TOTAL_FILE_SIZE_MB = 5;
@@ -27,7 +24,10 @@ export class StorageService {
     const totalSize = files.reduce((acc, file) => acc + file.size, 0);
 
     if (totalSize > MAX_TOTAL_FILE_SIZE_BYTES) {
-      this.snackbarService.openSnackBar('Die Dateien sind zu groß. Du kannst maximal 5MB speichern.', 'Schließen');
+      this.snackbarService.openSnackBar(
+        'Die Dateien sind zu groß. Du kannst maximal 5MB speichern.',
+        'Schließen'
+      );
       throw new Error('Total size of all files exceeds 5MB.');
     }
 
@@ -48,18 +48,42 @@ export class StorageService {
     const fileRef = ref(this.storage, `posts/${postId}/${fileName}`);
     try {
       await deleteObject(fileRef);
-      console.log("File deleted successfully");
     } catch (error) {
-      console.error("An error occurred while deleting the file:", error);
+      console.error('An error occurred while deleting the file:', error);
     }
   }
 
-  async saveImageUser(userId: string, file: File): Promise<string> {
+  async saveImageUser(file: File): Promise<string> {
     const fileRef = ref(this.storage, `imagesUsers/${file.name}`);
     const uploadTask = await uploadBytes(fileRef, file);
     const downloadURL = await getDownloadURL(uploadTask.ref);
 
     return downloadURL;
+  }
+
+  deleteOldFile(fileURL: string) {
+    const fileName = this.getFileNameFromURL(fileURL);
+    this.deleteImageUser(fileName);
+  }
+
+  getFileNameFromURL(fileURL: string): string {
+    const pathParts = new URL(fileURL).pathname.split('/');
+    for (const part of pathParts) {
+      const match = part.match(/^imagesUsers%2F(.+)/);
+      if (match) {
+        return match[1];
+      }
+    }
+    return '';
+  }
+
+  async deleteImageUser(fileName: string) {
+    const fileRef = ref(this.storage, `imagesUsers/${fileName}`);
+    try {
+      await deleteObject(fileRef);
+    } catch (error) {
+      console.error('Image not deleted in storage', error);
+    }
   }
 
   async getFile(downloadUrl: string) {
@@ -81,5 +105,4 @@ export class StorageService {
     xhr.open('GET', downloadUrl);
     xhr.send();
   }
-
 }
