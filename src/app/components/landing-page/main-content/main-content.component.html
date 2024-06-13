@@ -126,7 +126,7 @@
     <header *ngIf="chatSelected">
       <div class="channelName" *ngIf="selectedDirectMessage.users.length > 0">
         <div class="avatarName">
-          <img src="{{ otherUserDirectMessage.avatar }}" alt="" />
+          <img  class="user-avatar-image" src="{{ otherUserDirectMessage.avatar }}" alt="" />
           {{ otherUserDirectMessage.name }}
         </div>
       </div>
@@ -172,7 +172,7 @@
       >
         @if (!selectedDirectMessage.isPrivateMessage) {
         <div class="messageAvatarName">
-          <img src="{{ otherUserDirectMessage.avatar }}" alt="" />
+          <img  class="user-avatar-image" src="{{ otherUserDirectMessage.avatar }}" alt="" />
           <span>{{ otherUserDirectMessage.name }}</span>
         </div>
 
@@ -184,7 +184,7 @@
         </div>
         } @if (selectedDirectMessage.isPrivateMessage) {
         <div class="messageAvatarName">
-          <img src="{{ currentUser.avatar }}" alt="" />
+          <img class="user-avatar-image" src="{{ currentUser.avatar }}" alt="" />
           <span>{{ currentUser.name }} (Du)</span>
         </div>
 

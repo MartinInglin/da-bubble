@@ -119,6 +119,8 @@ mat-radio-group {
         img {
             height: 44px;
             width: 44px;
+            border-radius: 100%;
+            object-fit: cover;
         }
 
         p {
