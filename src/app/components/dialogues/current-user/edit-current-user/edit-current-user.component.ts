@@ -1,6 +1,13 @@
-import { Component, OnDestroy, OnInit, ElementRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  ElementRef,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,6 +18,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { User } from '../../../../models/user.class';
 import { Subscription } from 'rxjs';
 import { SnackbarService } from '../../../../services/snackbar.service';
+import { StorageService } from '../../../../services/storage.service';
 
 @Component({
   selector: 'app-edit-current-user',
@@ -22,14 +30,16 @@ import { SnackbarService } from '../../../../services/snackbar.service';
     MatButtonModule,
     UserMenuComponent,
     FormsModule,
-    MatDialogModule
+    MatDialogModule,
   ],
   templateUrl: './edit-current-user.component.html',
-  styleUrls: ['./edit-current-user.component.scss']
+  styleUrls: ['./edit-current-user.component.scss'],
 })
 export class EditCurrentUserComponent implements OnInit, OnDestroy {
+  storageService = inject(StorageService);
+
   @ViewChild('fileInput') fileInput!: ElementRef;
-  
+
   private userSubscription: Subscription = new Subscription();
   private originalEmail: string = '';
 
@@ -53,7 +63,7 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
     'assets/images/avatars/avatar_3.svg',
     'assets/images/avatars/avatar_4.svg',
     'assets/images/avatars/avatar_5.svg',
-    'assets/images/avatars/avatar_6.svg'
+    'assets/images/avatars/avatar_6.svg',
   ];
   file: File = new File([], '');
 
@@ -67,7 +77,7 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.userSubscription = this.usersService.currentUser$.subscribe(user => {
+    this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       this.currentUser = user;
       if (user) {
         this.updatedName = user.name;
@@ -103,10 +113,16 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
         if (this.file.size <= this.maxFileSize) {
           this.displayImagePreview();
         } else {
-          this.snackbarService.openSnackBar('Die Datei ist zu groß. Bitte wähle eine Datei, die kleiner als 5 MB ist.', 'Schließen');
+          this.snackbarService.openSnackBar(
+            'Die Datei ist zu groß. Bitte wähle eine Datei, die kleiner als 5 MB ist.',
+            'Schließen'
+          );
         }
       } else {
-        this.snackbarService.openSnackBar('Bitte wähle ein Dateiformat jpg oder png.', 'Schliessen');
+        this.snackbarService.openSnackBar(
+          'Bitte wähle ein Dateiformat jpg oder png.',
+          'Schliessen'
+        );
       }
     }
   }
@@ -132,10 +148,17 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
         return;
       }
 
+      if (this.file.name !== '') {
+        this.storageService.deleteOldFile(this.currentUser.avatar)
+        this.selectedAvatar = await this.storageService.saveImageUser(
+          this.file
+        );
+      }
+
       const updatedData = {
         name: this.updatedName,
         email: this.wantChangeMail ? this.updatedEmail : this.currentUser.email,
-        avatar: this.selectedAvatar
+        avatar: this.selectedAvatar,
       };
       await this.usersService.updateUser(this.currentUser, updatedData);
       this.dialogRef.close();
@@ -144,11 +167,14 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
 
   async changeMailAdress(): Promise<void> {
     if (this.currentUser && this.password) {
-      const isValid = await this.authService.verifyPassword(this.currentUser.email, this.password);
+      const isValid = await this.authService.verifyPassword(
+        this.currentUser.email,
+        this.password
+      );
       this.isPasswordVerified = isValid;
       if (isValid) {
         await this.saveChanges();
-        this.authService.changeEmail(this.updatedEmail, this.password)
+        this.authService.changeEmail(this.updatedEmail, this.password);
       } else {
         this.passwordIsFalse = true;
       }
@@ -157,16 +183,25 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
 
   async changePassword(): Promise<void> {
     if (this.currentUser && this.password && this.newPassword) {
-      const isValid = await this.authService.verifyPassword(this.currentUser.email, this.password);
+      const isValid = await this.authService.verifyPassword(
+        this.currentUser.email,
+        this.password
+      );
       if (isValid) {
         await this.authService.changePassword(this.newPassword);
-        this.snackbarService.openSnackBar('Passwort erfolgreich geändert.', 'Schließen');
+        this.snackbarService.openSnackBar(
+          'Passwort erfolgreich geändert.',
+          'Schließen'
+        );
         this.wantChangePassword = false;
         this.password = '';
         this.newPassword = '';
       } else {
         this.passwordIsFalse = true;
-        this.snackbarService.openSnackBar('Das alte Passwort ist falsch.', 'Schließen');
+        this.snackbarService.openSnackBar(
+          'Das alte Passwort ist falsch.',
+          'Schließen'
+        );
       }
     }
   }
@@ -175,7 +210,7 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailPattern.test(this.updatedEmail);
   }
-  
+
   cancelChanges(): void {
     this.wantChangeMail = false;
     this.updatedEmail = this.originalEmail;
