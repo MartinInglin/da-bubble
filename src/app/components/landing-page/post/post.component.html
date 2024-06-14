@@ -62,6 +62,7 @@
       <img
         src="assets/images/icons/add_reaction.svg"
         alt=""
+        class="emoji-reaction-button"
         [matMenuTriggerFor]="aboveMenu"
       />
       <mat-menu #aboveMenu="matMenu" yPosition="below">
@@ -79,12 +80,14 @@
         src="assets/images/icons/comment.svg"
         alt=""
         (click)="sendOpenThreadToParent(post)"
+        class="comment-button"
       />
       }
       <img
         src="assets/images/icons/edit_message.svg"
         alt=""
         (click)="toggleShowEditMessage()"
+        class="edit-button"
       />
       <div
         class="edit-message"
