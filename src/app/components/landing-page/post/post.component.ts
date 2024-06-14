@@ -67,6 +67,8 @@ export class PostComponent {
   ngOnInit() {
     this.checkIfPostFromCurrentUser();
     this.sortReactions();
+    console.log(this.post);
+    
   }
 
   // Sort reactions to display
@@ -100,7 +102,6 @@ export class PostComponent {
         }
       }
     }
-    console.log('Reactions to display:', this.reactionsToDislplay);
   }
 
   // Check if reaction exists
@@ -126,6 +127,16 @@ export class PostComponent {
     const hours = date.getHours();
     const minutes = date.getMinutes().toString().padStart(2, '0');
     return `${hours}:${minutes} Uhr`;
+  }
+
+  formatDate(timestamp: number): string {
+    const date = new Date(timestamp);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    const hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${day}.${month}.${year} ${hours}:${minutes} Uhr`;
   }
 
   // Download file
@@ -201,7 +212,6 @@ export class PostComponent {
   // Toggle edit message display
   toggleShowEditMessage() {
     this.showEditMessage = !this.showEditMessage;
-    console.log(this.showEditMessage);
   }
 
    // Toggle want to edit message state

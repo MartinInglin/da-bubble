@@ -1,7 +1,11 @@
 <!-- Current user -->
 @if (postFromCurrentUser) {
 <div class="message">
-  <div class="message-container-current-user" (mouseenter)="showMenu = true" (mouseleave)="showMenu = false; showEditMessage = false">
+  <div
+    class="message-container-current-user"
+    (mouseenter)="showMenu = true"
+    (mouseleave)="showMenu = false; showEditMessage = false"
+  >
     <img src="{{ post.avatar }}" alt="" />
 
     <div class="message-box-current-user">
@@ -16,19 +20,30 @@
         <span>{{ post.message }}</span>
       </div>
       <div *ngIf="wantToEditMessage" class="edit-message-container">
-        <textarea [(ngModel)]="post.message" (keyup.enter)="saveEditedMessage()"></textarea>
+        <textarea
+          [(ngModel)]="post.message"
+          (keyup.enter)="saveEditedMessage()"
+        ></textarea>
       </div>
       @if (reactionsToDislplay.length > 0) {
 
       <div class="reactions-container">
         @for (reaction of reactionsToDislplay; track reaction; let index =
         $index) {
-        <div class="reaction" (mouseenter)="toggleTooltip(true, index)" (mouseleave)="toggleTooltip(false, index)" (click)="saveReaction(reaction.emoji)">
+        <div
+          class="reaction"
+          (mouseenter)="toggleTooltip(true, index)"
+          (mouseleave)="toggleTooltip(false, index)"
+          (click)="saveReaction(reaction.emoji)"
+        >
           <div>
             {{ reaction.emoji }}
           </div>
           <div class="amount-reactions">{{ reaction.userId.length }}</div>
-          <div class="tooltip-reaction-left" [ngClass]="{ show: showReaction && reactionIndex === index }">
+          <div
+            class="tooltip-reaction-left"
+            [ngClass]="{ show: showReaction && reactionIndex === index }"
+          >
             <div>{{ reaction.emoji }}</div>
             @for (name of reaction.userName; track name) {
             <div class="name-reaction">{{ name }}</div>
@@ -44,22 +59,38 @@
       @for (emoji of currentUser.savedEmojis; track emoji) {
       <div class="users-emojis" (click)="saveReaction(emoji)">{{ emoji }}</div>
       }
-      <img src="assets/images/icons/add_reaction.svg" alt="" [matMenuTriggerFor]="aboveMenu" />
+      <img
+        src="assets/images/icons/add_reaction.svg"
+        alt=""
+        [matMenuTriggerFor]="aboveMenu"
+      />
       <mat-menu #aboveMenu="matMenu" yPosition="below">
         <div class="emoji-container">
           @for (emoji of emojis; track emoji; let index = $index) {
           <span class="emoji" mat-menu-item (click)="saveReaction(emoji)">{{
             emoji
-            }}</span>
+          }}</span>
           }
         </div>
       </mat-menu>
 
       @if (path === 'channels') {
-      <img src="assets/images/icons/comment.svg" alt="" (click)="sendOpenThreadToParent(post)" />
+      <img
+        src="assets/images/icons/comment.svg"
+        alt=""
+        (click)="sendOpenThreadToParent(post)"
+      />
       }
-      <img src="assets/images/icons/edit_message.svg" alt="" (click)="toggleShowEditMessage()" />
-      <div class="edit-message" (click)="toggleWantToEditMessage()" [ngClass]="{ show: showEditMessage }">
+      <img
+        src="assets/images/icons/edit_message.svg"
+        alt=""
+        (click)="toggleShowEditMessage()"
+      />
+      <div
+        class="edit-message"
+        (click)="toggleWantToEditMessage()"
+        [ngClass]="{ show: showEditMessage }"
+      >
         <span>Nachricht bearbeiten</span>
       </div>
     </div>
@@ -70,16 +101,22 @@
     <div class="document" (click)="downloadFile(file.url, $event)">
       {{ file.name }}
 
-      <img class="delete-file" src="assets/images/icons/close.svg" alt="" matTooltip="Diese Datei löschen" (click)="deleteFile(file.name, $event, index)" />
+      <img
+        class="delete-file"
+        src="assets/images/icons/close.svg"
+        alt=""
+        matTooltip="Diese Datei löschen"
+        (click)="deleteFile(file.name, $event, index)"
+      />
     </div>
     }
   </div>
-  } @if (path === 'channels') {
+  } @if (path === 'channels' && post.amountAnswers && post.amountAnswers > 0 &&
+  post.lastAnswer) {
   <div class="message-details">
     <!-- Message actions and time details -->
-    <a>Antworten</a>
-    <span>Letzte Antwort:{{ formatDateTime(selectedChannel.posts[0].timestamp) }}
-    </span>
+    <a>{{ post.amountAnswers }} Antworten</a>
+    <span>Letzte Antwort:{{ formatDate(post.lastAnswer) }} </span>
   </div>
   }
 </div>
@@ -88,7 +125,11 @@
 <!--Not current User-->
 @if (!postFromCurrentUser) {
 <div class="message">
-  <div class="message-container" (mouseenter)="showMenu = true" (mouseleave)="showMenu = false">
+  <div
+    class="message-container"
+    (mouseenter)="showMenu = true"
+    (mouseleave)="showMenu = false"
+  >
     <img src="{{ post.avatar }}" alt="" />
 
     <div class="message-box">
@@ -107,12 +148,20 @@
       <div class="reactions-container">
         @for (reaction of reactionsToDislplay; track reaction; let index =
         $index) {
-        <div class="reaction" (mouseenter)="toggleTooltip(true, index)" (mouseleave)="toggleTooltip(false, index)" (click)="saveReaction(reaction.emoji)">
+        <div
+          class="reaction"
+          (mouseenter)="toggleTooltip(true, index)"
+          (mouseleave)="toggleTooltip(false, index)"
+          (click)="saveReaction(reaction.emoji)"
+        >
           <div>
             {{ reaction.emoji }}
           </div>
           <div class="amount-reactions">{{ reaction.userId.length }}</div>
-          <div class="tooltip-reaction" [ngClass]="{ show: showReaction && reactionIndex === index }">
+          <div
+            class="tooltip-reaction"
+            [ngClass]="{ show: showReaction && reactionIndex === index }"
+          >
             <div>{{ reaction.emoji }}</div>
             @for (name of reaction.userName; track name) {
             <div class="name-reaction">{{ name }}</div>
@@ -128,18 +177,26 @@
       @for (emoji of currentUser.savedEmojis; track emoji) {
       <div class="users-emojis" (click)="saveReaction(emoji)">{{ emoji }}</div>
       }
-      <img src="assets/images/icons/add_reaction.svg" alt="" [matMenuTriggerFor]="aboveMenu" />
+      <img
+        src="assets/images/icons/add_reaction.svg"
+        alt=""
+        [matMenuTriggerFor]="aboveMenu"
+      />
       <mat-menu #aboveMenu="matMenu" yPosition="below">
         <div class="emoji-container">
           @for (emoji of emojis; track emoji; let index = $index) {
           <span class="emoji" mat-menu-item (click)="saveReaction(emoji)">{{
             emoji
-            }}</span>
+          }}</span>
           }
         </div>
       </mat-menu>
       @if (path === 'channels') {
-      <img src="assets/images/icons/comment.svg" alt="" (click)="sendOpenThreadToParent(post)" />
+      <img
+        src="assets/images/icons/comment.svg"
+        alt=""
+        (click)="sendOpenThreadToParent(post)"
+      />
       }
     </div>
   </div>
@@ -151,12 +208,12 @@
     </div>
     }
   </div>
-  } @if (path === 'channels') {
+  } @if (path === 'channels' && post.amountAnswers && post.amountAnswers > 0 &&
+  post.lastAnswer) {
   <div class="message-details">
     <!-- Message actions and time details -->
-    <a>Antworten</a>
-    <span>Letzte Antwort:{{ formatDateTime(selectedChannel.posts[0].timestamp) }}
-    </span>
+    <a>{{ post.amountAnswers }} Antworten</a>
+    <span>Letzte Antwort:{{ formatDate(post.lastAnswer) }} </span>
   </div>
   }
 </div>

@@ -17,16 +17,22 @@
     <div *ngIf="searchResults && searchResults.length" class="list">
       <ul>
         <li *ngFor="let result of searchResults">
-          <div class="container-name-avatar" *ngIf="isUser(result)" (click)="openDirectMessage(result.id, currentUser)">
-            <img src="{{result.avatar}}" alt="">
+          <div
+            class="container-name-avatar"
+            *ngIf="isUser(result)"
+            (click)="openDirectMessage(result.id, currentUser)"
+          >
+            <img src="{{ result.avatar }}" alt="" />
             <p>{{ result.name }}</p>
           </div>
 
-          <div class="container-name-avatar" *ngIf="!isUser(result)" (click)="openChannel(result.id)">
+          <div
+            class="container-name-avatar"
+            *ngIf="!isUser(result)"
+            (click)="openChannel(result.id)"
+          >
             <p>{{ result.name }}</p>
-
           </div>
-
         </li>
       </ul>
     </div>
@@ -84,11 +90,6 @@
           [path]="'channels'"
           (openThread)="openThread(post)"
         >
-          <div class="message-details">
-            <!-- Message actions and time details -->
-            <a>Antworten</a>
-            <span>Letzte Antwort:{{ formatDateTime(post.timestamp) }} </span>
-          </div>
         </app-post>
       </div>
       }
@@ -126,7 +127,11 @@
     <header *ngIf="chatSelected">
       <div class="channelName" *ngIf="selectedDirectMessage.users.length > 0">
         <div class="avatarName">
-          <img  class="user-avatar-image" src="{{ otherUserDirectMessage.avatar }}" alt="" />
+          <img
+            class="user-avatar-image"
+            src="{{ otherUserDirectMessage.avatar }}"
+            alt=""
+          />
           {{ otherUserDirectMessage.name }}
         </div>
       </div>
@@ -172,7 +177,11 @@
       >
         @if (!selectedDirectMessage.isPrivateMessage) {
         <div class="messageAvatarName">
-          <img  class="user-avatar-image" src="{{ otherUserDirectMessage.avatar }}" alt="" />
+          <img
+            class="user-avatar-image"
+            src="{{ otherUserDirectMessage.avatar }}"
+            alt=""
+          />
           <span>{{ otherUserDirectMessage.name }}</span>
         </div>
 
@@ -184,7 +193,11 @@
         </div>
         } @if (selectedDirectMessage.isPrivateMessage) {
         <div class="messageAvatarName">
-          <img class="user-avatar-image" src="{{ currentUser.avatar }}" alt="" />
+          <img
+            class="user-avatar-image"
+            src="{{ currentUser.avatar }}"
+            alt=""
+          />
           <span>{{ currentUser.name }} (Du)</span>
         </div>
 
