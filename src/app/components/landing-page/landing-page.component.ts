@@ -43,6 +43,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   openThreadEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   @ViewChild('drawerThread') drawerThread!: MatDrawer;
+  // @ViewChild('drawer') drawer!: MatDrawer;
 
   usersService = inject(UsersService);
   stateService = inject(StateService);
@@ -66,7 +67,6 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {
-    // Subscribe to the current user observable from usersService
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       if (user) {
         this.currentUser = user ?? new User();
@@ -74,7 +74,6 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Toggle drawer open/close state
   toggle(drawer: any): void {
     this.isOpen = !this.isOpen;
     if (drawer) {
@@ -83,13 +82,31 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   }
 
   openThread() {
-     // Open the thread drawer
+    this.isThreadOpen = true;
     this.drawerThread.open();
   }
 
   closeThread() {
-    // Close the thread drawer
+    this.isThreadOpen = false;
     this.drawerThread.close();
+  }
+
+  showSidenav() {
+    this.isOpen = true;
+    this.isThreadOpen = false;
+  }
+
+  showMainContent() {
+    this.isOpen = false;
+    this.isThreadOpen = false;
+  }
+
+  handleContactClick() {
+    console.log('hallo');
+    
+    this.isOpen = false;
+    this.isThreadOpen = false;
+    this.drawer.close();
   }
 
   // Unsubscribe from userSubscription if exists

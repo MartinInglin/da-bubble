@@ -11,23 +11,34 @@
     </div>
 
     <!-- SideNav -->
-    <nav class="sidenav">
+    <nav class="sidenav" [ngClass]="{'hidden': !isOpen, 'visible': isOpen}">
       <mat-drawer-container class="example-container" autosize>
         <mat-drawer #drawer class="example-sidenav" mode="side">
-          <app-side-nav [currentUser]="currentUser"></app-side-nav>
+          <app-side-nav [currentUser]="currentUser"  (contactClicked)="handleContactClick()"></app-side-nav>
         </mat-drawer>
       </mat-drawer-container>
     </nav>
 
     <!-- Channels or direct messages -->
-    <app-main-content class="mainContent" (toggleThread)="openThread()"></app-main-content>
+    <app-main-content 
+      class="mainContent" 
+      [ngClass]="{'hidden': isOpen || isThreadOpen, 'visible': !isOpen && !isThreadOpen }" 
+      (toggleThread)="openThread()">
+    </app-main-content>
     
     <!-- Thread Section -->
     <mat-drawer-container autosize>
       <mat-drawer #drawerThread="matDrawer" mode="side" position="end">
-        <app-thread (toggleThread)="closeThread()"></app-thread>
+        <app-thread 
+          class="thread" 
+          [ngClass]="{'hidden': !isThreadOpen}" 
+          (toggleThread)="closeThread()">
+        </app-thread>
       </mat-drawer>
     </mat-drawer-container>
-
   </div>
 </section>
+
+
+
+

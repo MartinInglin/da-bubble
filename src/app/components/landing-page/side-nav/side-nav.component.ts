@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { StateService } from '../../../services/stateservice.service';
 import { NewChannelComponent } from '../../dialogues/new-channel/new-channel.component';
 import { NewChannelMobileComponent } from '../../dialogues/mobile/new-channel-mobile/new-channel-mobile.component';
@@ -26,13 +26,14 @@ import { Channel } from '../../../models/channel.class';
   templateUrl: './side-nav.component.html',
   styleUrl: './side-nav.component.scss',
 })
-export class SideNavComponent {
+export class SideNavComponent implements OnInit {
   usersService = inject(UsersService);
   stateService = inject(StateService);
   channelsService = inject(ChannelsService);
   directMessagesService = inject(DirectMessagesService);
 
   @Input() currentUser: User = new User();
+  @Output() contactClicked = new EventEmitter<void>();
 
   private allUsersSubscription: Subscription = new Subscription();
   private showContactsSubscription: Subscription = new Subscription();
@@ -149,16 +150,17 @@ export class SideNavComponent {
   }
 
 // Funktion zum Öffnen eines Kanals
-  openChannel(x:string){
-    this.channelsService.getDataChannel(x);
-    this.form.get('recipient')?.setValue(''); 
-  }
+openChannel(x: string) {
+  this.channelsService.getDataChannel(x);
+  this.form.get('recipient')?.setValue('');
+  this.contactClicked.emit(); // Emit event when contact is clicked
+}
 
-  // Funktion zum Öffnen einer Direktnachricht
-  openDirectMessage(x:string, y: any){
-    this.directMessagesService.getDataDirectMessage(x , y);
-    this.form.get('recipient')?.setValue(''); 
-  }
+openDirectMessage(x: string, y: any) {
+  this.directMessagesService.getDataDirectMessage(x, y);
+  this.form.get('recipient')?.setValue('');
+  this.contactClicked.emit(); // Emit event when contact is clicked
+}
 
    // Funktion zum Schließen der Kanal- und Kontaktansicht
   closeChannelsAndContacts() {
