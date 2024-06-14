@@ -61,17 +61,16 @@ export class AuthService {
         userData.password
       )
         //exchange after testing from here to Line 70
-        .then((userCredential) => {
+        .then(async (userCredential) => {
           if (userCredential.user) {
             const id = userCredential.user.uid;
-            return this.usersService.createUser(id).then(() => {
-              this.signOut(userCredential.user.uid)
-              this.router.navigate(['/login']);
-              this.snackbarService.openSnackBar(
-                'Benutzer erfolreich erstellt. Bitte melde dich an.',
-                'Schliessen'
-              );
-            });
+            await this.usersService.createUser(id);
+            this.signOut(userCredential.user.uid);
+            this.router.navigate(['/login']);
+            this.snackbarService.openSnackBar(
+              'Benutzer erfolreich erstellt. Bitte melde dich an.',
+              'Schliessen'
+            );
           } else {
             throw new Error('No user credential found');
           }

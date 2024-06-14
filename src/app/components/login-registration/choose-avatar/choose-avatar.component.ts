@@ -11,7 +11,6 @@ import { AuthService } from '../../../services/auth.service';
 import { SnackbarService } from '../../../services/snackbar.service';
 import { RegistrationService } from '../../../services/registration.service';
 
-
 @Component({
   selector: 'app-choose-avatar',
   standalone: true,
@@ -41,18 +40,22 @@ export class ChooseAvatarComponent {
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
-    this.getUserName()
-
-    this.selectedAvatar =
-      this.registrationService.getAvatar() ||
-      'assets/images/avatars/profile.svg';
-
+    this.getUserName();
+  
+    let storedAvatar = this.registrationService.getAvatar();
+  
+    if (!storedAvatar) {
+      storedAvatar = 'assets/images/avatars/profile.svg';
+      this.registrationService.setAvatar(storedAvatar);
+    }
+  
+    this.selectedAvatar = storedAvatar;
+  
     this.form = this.formBuilder.group({
-      avatar: [this.registrationService.getAvatar() || ''],
+      avatar: [storedAvatar],
     });
-
-    
   }
+  
 
   getUserName() {
     this.userName = this.registrationService.getName();
@@ -77,10 +80,16 @@ export class ChooseAvatarComponent {
           this.registrationService.setAvatarFile(this.file);
           this.displayImagePreview();
         } else {
-          this.snackbarService.openSnackBar('Die Datei ist zu groß. Bitte wähle eine Datei, die kleiner als 5 MB ist.', 'Schließen');
+          this.snackbarService.openSnackBar(
+            'Die Datei ist zu groß. Bitte wähle eine Datei, die kleiner als 5 MB ist.',
+            'Schließen'
+          );
         }
       } else {
-        this.snackbarService.openSnackBar('Bitte wähle ein Dateiformat jpg oder png.', 'Schliessen');
+        this.snackbarService.openSnackBar(
+          'Bitte wähle ein Dateiformat jpg oder png.',
+          'Schliessen'
+        );
       }
     }
   }
