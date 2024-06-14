@@ -1,11 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  SimpleChanges,
-  inject,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Post } from '../../../models/post.class';
 import { StorageService } from '../../../services/storage.service';
@@ -18,6 +11,7 @@ import { SnackbarService } from '../../../services/snackbar.service';
 import { Reaction } from '../../../models/reaction.class';
 import { User } from '../../../models/user.class';
 import { SortedReaction } from '../../../models/sorted-reaction.class';
+import { EditingStateService } from '../../../services/editing-post.service';
 
 @Component({
   selector: 'app-post',
@@ -35,7 +29,6 @@ export class PostComponent {
   showReaction: boolean = false;
   reactionIndex: number = -1;
   showEditMessage: boolean = false;
-  editingDisabled: boolean = false;
   postFromCurrentUser: boolean = false;
   wantToEditMessage: boolean = false;
   emojis: string[] = [
@@ -51,6 +44,7 @@ export class PostComponent {
     '⚡',
   ];
   reactionsToDislplay: SortedReaction[] = [];
+  editingPostIndex: number = -1; // Track the index of the post being edited
 
   @Input() post: Post = new Post();
   @Input() currentUser: User = new User();
@@ -62,13 +56,12 @@ export class PostComponent {
 
   @Output() openThread = new EventEmitter();
 
-  constructor() { }
+  constructor(private editingStateService: EditingStateService) { } // Inject the EditingStateService
 
   ngOnInit() {
     this.checkIfPostFromCurrentUser();
     this.sortReactions();
     console.log(this.post);
-    
   }
 
   // Sort reactions to display
@@ -211,14 +204,18 @@ export class PostComponent {
 
   // Toggle edit message display
   toggleShowEditMessage() {
+    if (this.editingStateService.getEditingPostIndex() !== -1) {
+      this.snackbarService.openSnackBar('Du kannst nur eine Nachricht gleichzeitig bearbeiten.', 'Schließen');
+      return;
+    }
     this.showEditMessage = !this.showEditMessage;
   }
 
    // Toggle want to edit message state
   toggleWantToEditMessage() {
-    if (!this.editingDisabled) {
-      this.editingDisabled = true;
+    if (this.editingStateService.getEditingPostIndex() === -1) {
       this.wantToEditMessage = true;
+      this.editingStateService.setEditingPostIndex(this.indexPost);
 
       setTimeout(() => {
         const textarea = document.querySelector('textarea');
@@ -246,12 +243,11 @@ export class PostComponent {
       await this.updateCorrespondingEntries();
 
       this.wantToEditMessage = false;
-      this.editingDisabled = false;
 
     } catch (error) {
       console.error('Error saving message: ', error);
     } finally {
-      this.editingDisabled = false;
+      this.editingStateService.clearEditingPostIndex();
     }
   }
 
