@@ -4,6 +4,8 @@
 section {
   height: 85vh;
   box-sizing: border-box;
+  display: flex;
+  justify-content: center;
 }
 
 /* Content container */
@@ -13,13 +15,17 @@ section {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
 }
 
-.sidenav {
+
+
+.sidenav, .mainContent, .thread {
   height: 100%;
 }
+
+
 
 /* Side navigation container */
 mat-drawer-container {
@@ -82,65 +88,52 @@ mat-drawer-container {
 .mainContent {
   flex: 1;
   height: 100%;
+  width: 1920px;
 }
 
-// Media Querries
-@media (max-width: 450px) {
-  /* Adjust breakpoint as needed */
+@media (max-width: 800px) {
+
+  .hidden {
+    display: none !important;
+  }
+  
+  .visible {
+    display: block;
+    width: 100%;
+  }
+
   section {
-    height: 99.9%;
+    height: 100%;
+  }
+
+  .example-sidenav {
+   width: 100%;
   }
 
   .Content {
     display: flex;
-    /* Allow stacking elements vertically */
-    margin: 0;
-    gap: 0;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    // flex-direction: column;
+    // gap: 0;
   }
 
-  .sidenav {
+  .sidenav, .mainContent, .thread {
     width: 100%;
     height: 100%;
-    // transform: translateX(-100%); /* Hide sidenav initially */
-    transition: transform 0.8s ease-in-out;
-
-    mat-drawer-container {
-      align-items: center;
-      display: flex;
-      width: 100%;
-      height: 100%;
-      border-radius: 0px;
-    }
+    transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
   }
 
-  .example-sidenav {
-    width: 100%;
-  }
-
-  .sidenav.open {
-    /* Add class on menu open */
-    transform: translateX(100%);
-    display: swap;
-  }
-
-  // .sidenav:not(.open) {
-  //   transform: translateX(-100%); /* Hide sidenav when closed */
-  // }
-
-  .mainContent {
-    flex: 1;
-    /* Allow main content to fill remaining space */
-    overflow-y: auto;
-    /* Enable scrolling for long content */
-    transition: opacity 0.3s ease-in-out;
-    /* Smooth opacity change */
-  }
-
-  .mainContent.hidden {
-    /* Add class on menu open */
+  .hidden {
     opacity: 0;
-    /* Hide main content when menu is open */
     pointer-events: none;
-    /* Prevent interaction with hidden content */
+    transform: translateX(100%);
+  }
+
+  .visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
   }
 }

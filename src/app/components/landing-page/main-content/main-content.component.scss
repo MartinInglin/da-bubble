@@ -13,6 +13,7 @@
   display: flex;
   flex-direction: column;
   max-width: 1920px;
+  min-width: 350px;
   a {
     cursor: pointer;
     &:hover {
@@ -430,85 +431,11 @@ cdk-overlay-connected-position-bounding-box {
     margin-left: 30px;
     }
     input::placeholder {
-      color: transparent;
+font-size: 14px;
     }
   }
 }
 
-// .message-container {
-//   display: flex;
-//   align-items: flex-start;
-// }
-
-// .message-container.my-message {
-//   flex-direction: row-reverse;
-//   text-align: right;
-// }
-
-// .message-container.my-message .message-box {
-//   background-color: #e0f7fa; /* Beispielhintergrund für eigene Nachrichten */
-// }
-
-// .message-container.my-message img {
-//   margin-left: 10px;
-//   margin-right: 0;
-// }
-
-// .message-box {
-//   padding: 10px;
-//   border-radius: 10px;
-//   background-color: #f0f0f0; /* Beispielhintergrund für andere Nachrichten */
-// }
-
-// .message-details {
-//   font-size: 0.8em;
-//   color: #666;
-// }
-// .list ul {
-//   list-style-type: none;
-//   padding: 10px;
-//   background-color: #eceefe;
-//   height: 500px;
-//   left: 10%;
-//   border-radius: 30px;
-//   display: flex;
-//   align-items: center;
-//   flex-direction: column;
-//   position: absolute;
-//   top: 25%;
-//   overflow-x: hidden;
-//   overflow-y: scroll;
-// }
-
-// .list li {
-//   padding: 8px;
-//   cursor: pointer;
-//   width: 250px;
-//   display: flex;
-//   align-items: center;
-//   justify-content: flex-start;
- 
-// }
-// .container-name-avatar{
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   flex-direction: row;
-//   height: 45px;
-//   p{
-//     font-size: 20px;
-//     font-weight: bold;
-//   }
-//   img{
-//     max-height: 30px;
-//     margin-right: 20px;
-//   }
-// }
-
-// .list li:hover {
-//   background-color: #ffffff;
-//   border-radius: 10px;
-// }
 
 .list {
   position: absolute;
