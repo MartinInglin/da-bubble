@@ -51,7 +51,7 @@ export class SideNavComponent {
   isDialogOpen: boolean = false;
 
   arrowOpen: any = '/assets/images/icons/arrow_drop_up.svg';
-  arrowClosed: any = '/assets/images/icons/arrow_drop_down.svg';
+  arrowClosed: any = '/assets/images/icons/arrow_drop_right.svg';
 
   constructor(private dialog: MatDialog,private fb: FormBuilder,) { 
     // Erstellen des Formulars mit einem einzelnen Eingabefeld 'recipient'
