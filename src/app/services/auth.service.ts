@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { HostListener, Injectable, inject } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import {
   Auth,
@@ -221,29 +221,40 @@ export class AuthService {
    * @returns Calls the signOut function of fire auth.
    */
   async signOut(currentUserId: string) {
-    this.usersService.unsubscribeFromData();
-    this.setIsSignedInFalse(currentUserId);
-    sessionStorage.removeItem('currentUser');
-    this.usersService.setCurrentUserNull();
+    try {
+      await this.setIsSignedInFalse(currentUserId);
+    } catch (error) {
+      this.snackbarService.openSnackBar(
+        'Failed to update sign-in status. Please try again.',
+        'Close'
+      );
+      return;
+    }
 
-    return signOut(this.auth)
-      .then(() => {
-        this.router.navigate(['/login']);
-      })
-      .catch((error) => {
-        this.snackbarService.openSnackBar(
-          'Logout hat nicht geklappt. Versuche es erneut.',
-          'Schliessen'
-        );
-      });
+    try {
+      this.usersService.unsubscribeFromData();
+      sessionStorage.removeItem('currentUser');
+      this.usersService.setCurrentUserNull();
+
+      await signOut(this.auth);
+      this.router.navigate(['/login']);
+    } catch (error) {
+      this.snackbarService.openSnackBar(
+        'Logout failed. Please try again.',
+        'Close'
+      );
+    }
   }
 
   async setIsSignedInFalse(userId: string) {
-    const docRef = doc(this.firestore, 'users', userId);
-    await updateDoc(docRef, {
-      isSignedIn: false,
-    });
+    try {
+      const docRef = doc(this.firestore, 'users', userId);
+      await updateDoc(docRef, { isSignedIn: false });
+    } catch (error) {
+      throw new Error('Failed to update sign-in status');
+    }
   }
+
   /**
    * This function sends an email to a user in case he forgets his password.
    *

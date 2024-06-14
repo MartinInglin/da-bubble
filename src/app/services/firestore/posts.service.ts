@@ -118,20 +118,21 @@ export class PostsService {
     timestampLastPost: number,
     postId: string
   ) {
-    const indexPost: number = await this.getIndexPostInChannel(postId, channelId);
+    const indexPost: number = await this.getIndexPostInChannel(
+      postId,
+      channelId
+    );
     const documentRef = doc(this.firestore, 'channels', channelId);
     const document = await getDoc(documentRef);
     const data = document.data();
 
-
     if (data) {
-      debugger;
       const posts: Post[] = data['posts'];
 
       if (indexPost >= 0 && indexPost < posts.length) {
         posts[indexPost].amountAnswers = amountPosts;
         posts[indexPost].lastAnswer = timestampLastPost;
-  
+
         await updateDoc(documentRef, { posts });
       }
     }
@@ -255,7 +256,6 @@ export class PostsService {
     postId: string,
     documentId: string
   ): Promise<number> {
-    debugger;
     try {
       const docRef = doc(this.firestore, 'channels', documentId);
       const document = await getDoc(docRef);

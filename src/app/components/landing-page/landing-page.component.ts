@@ -1,6 +1,7 @@
 import {
   Component,
   EventEmitter,
+  HostListener,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -19,6 +20,7 @@ import { UsersService } from '../../services/firestore/users.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { StateService } from '../../services/stateservice.service';
 import { SideNavComponent } from './side-nav/side-nav.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -44,6 +46,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
 
   @ViewChild('drawerThread') drawerThread!: MatDrawer;
 
+  authService = inject(AuthService);
   usersService = inject(UsersService);
   stateService = inject(StateService);
 
@@ -83,7 +86,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   }
 
   openThread() {
-     // Open the thread drawer
+    // Open the thread drawer
     this.drawerThread.open();
   }
 
