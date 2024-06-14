@@ -207,18 +207,23 @@ export class PostsService {
         return;
       }
 
-      posts[postIndex] = {
-        ...posts[postIndex],
-        message: newMessage,
-        timestamp: this.getUTXTimestamp(),
-        edited: true,
-      };
+      const currentPost = posts[postIndex];
 
-      await updateDoc(docRef, { posts });
+      if (currentPost.message !== newMessage) {
+        posts[postIndex] = {
+          ...currentPost,
+          message: newMessage,
+          timestamp: this.getUTXTimestamp(),
+          edited: true,
+        };
+
+        await updateDoc(docRef, { posts });
+      }
     } catch (error) {
       console.error('Error updating post: ', error);
     }
   }
+
 
   async deleteFile(
     indexPost: number,
