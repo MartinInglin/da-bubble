@@ -113,7 +113,7 @@
   </div>
   } @if (path === 'channels' && post.amountAnswers && post.amountAnswers > 0 &&
   post.lastAnswer) {
-  <div class="message-details">
+  <div class="message-details" (click)="sendOpenThreadToParent(post)">
     <!-- Message actions and time details -->
     <a>{{ post.amountAnswers }} Antworten</a>
     <span>Letzte Antwort:{{ formatDate(post.lastAnswer) }} </span>
@@ -210,9 +210,9 @@
   </div>
   } @if (path === 'channels' && post.amountAnswers && post.amountAnswers > 0 &&
   post.lastAnswer) {
-  <div class="message-details">
+  <div class="message-details" (click)="sendOpenThreadToParent(post)">
     <!-- Message actions and time details -->
-    <a>{{ post.amountAnswers }} Antworten</a>
+    <a >{{ post.amountAnswers }} Antworten</a>
     <span>Letzte Antwort:{{ formatDate(post.lastAnswer) }} </span>
   </div>
   }
