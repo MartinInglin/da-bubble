@@ -25,7 +25,7 @@
 
         <!-- Liste für Emojis -->
         <div class="link-emojis">
-          <button mat-button [matMenuTriggerFor]="aboveMenu">
+          <button class="smiley-icon-button" [matMenuTriggerFor]="aboveMenu">
             <img src="assets/images/icons/smiley-Icon.svg" alt="" />
           </button>
           <mat-menu #aboveMenu="matMenu" yPosition="above">
@@ -34,7 +34,7 @@
             </div>
           </mat-menu>
           <!-- Liste für Verlinkungen von Kontakten -->
-          <button mat-button [matMenuTriggerFor]="contactLinks">
+          <button [matMenuTriggerFor]="contactLinks" class="link-button">
             <img src="assets/images/icons/link_icon.svg" alt="" />
           </button>
           <mat-menu #contactLinks="matMenu" yPosition="above">
