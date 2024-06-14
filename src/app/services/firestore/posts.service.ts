@@ -18,6 +18,7 @@ import { Thread } from '../../models/thread.class';
 import { ThreadsService } from './threads.service';
 import { Reaction } from '../../models/reaction.class';
 import { UsersService } from './users.service';
+import { ChannelsService } from './channels.service';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +28,7 @@ export class PostsService {
   storageService = inject(StorageService);
   usersService = inject(UsersService);
   threadsService = inject(ThreadsService);
+  channelsService = inject(ChannelsService);
 
   constructor() {}
 
@@ -38,7 +40,7 @@ export class PostsService {
     files: File[],
     currentUser: User,
     message: string,
-    path: string,
+    path: 'directMessages' | 'threads' | 'channels',
     selectedChannel: Channel,
     selectedDirectMessage: DirectMessage,
     selectedThread: Thread
@@ -73,6 +75,67 @@ export class PostsService {
       userId: currentUser.id,
     };
     await updateDoc(docRef, { posts: arrayUnion(post) });
+
+    if (path === 'threads') {
+      const document = await getDoc(docRef);
+      const data = document.data();
+      const threadData = data as Thread;
+
+      const amountPosts: number = await this.getAmountPosts(threadData);
+      const timestampLastPost: number = await this.getTimestampLastPost(
+        threadData,
+        amountPosts
+      );
+      this.updateAmountAnswersAndTime(
+        selectedChannel.id,
+        amountPosts,
+        timestampLastPost,
+        selectedThread.posts[0].id
+      );
+    }
+  }
+
+  async getAmountPosts(threadData: Thread): Promise<number> {
+    if (threadData) {
+      return threadData.posts.length - 1;
+    }
+    return 0;
+  }
+
+  async getTimestampLastPost(
+    threadData: Thread,
+    amountPosts: number
+  ): Promise<number> {
+    if (threadData) {
+      return threadData.posts[amountPosts].timestamp;
+    }
+    return 0;
+  }
+
+  async updateAmountAnswersAndTime(
+    channelId: string,
+    amountPosts: number,
+    timestampLastPost: number,
+    postId: string
+  ) {
+    const indexPost: number = await this.getIndexPostInChannel(
+      postId,
+      channelId
+    );
+    const documentRef = doc(this.firestore, 'channels', channelId);
+    const document = await getDoc(documentRef);
+    const data = document.data();
+
+    if (data) {
+      const posts: Post[] = data['posts'];
+
+      if (indexPost >= 0 && indexPost < posts.length) {
+        posts[indexPost].amountAnswers = amountPosts;
+        posts[indexPost].lastAnswer = timestampLastPost;
+
+        await updateDoc(documentRef, { posts });
+      }
+    }
   }
 
   getDocRef(
@@ -144,18 +207,23 @@ export class PostsService {
         return;
       }
 
-      posts[postIndex] = {
-        ...posts[postIndex],
-        message: newMessage,
-        timestamp: this.getUTXTimestamp(),
-        edited: true,
-      };
+      const currentPost = posts[postIndex];
 
-      await updateDoc(docRef, { posts });
+      if (currentPost.message !== newMessage) {
+        posts[postIndex] = {
+          ...currentPost,
+          message: newMessage,
+          timestamp: this.getUTXTimestamp(),
+          edited: true,
+        };
+
+        await updateDoc(docRef, { posts });
+      }
     } catch (error) {
       console.error('Error updating post: ', error);
     }
   }
+
 
   async deleteFile(
     indexPost: number,

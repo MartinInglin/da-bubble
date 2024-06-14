@@ -49,11 +49,18 @@ mat-card-content {
         align-items: center;
         justify-content: center;
         transition: scale 75ms ease-in-out;
+        background-color: rgba(0, 0, 0, 0);
+        border: none;
+        border-radius: 100%;
 
         &:hover {
+            cursor: pointer;
             background-color: $background;
-            color: $purple1;
             scale: 1.05;
+
+            img {
+                content: url("./../../../../assets/images/icons/close_blue.svg")
+            }
         }
 
         img {
@@ -143,12 +150,12 @@ mat-card-content {
             border-radius: 50%;
             background-color: rgba(255, 255, 255, 0);
             transition: scale 75ms ease-in-out;
-    
+
             &:hover {
                 scale: 1.05;
                 cursor: pointer;
             }
-    
+
             img {
                 height: 13.5px;
                 width: 13.5px;

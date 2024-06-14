@@ -1,4 +1,5 @@
 @import "./../../../../styles.scss";
+
 mat-card {
     width: 872px;
     height: fit-content;
@@ -40,11 +41,18 @@ mat-card-content {
         align-items: center;
         justify-content: center;
         transition: scale 75ms ease-in-out;
+        background-color: rgba(0, 0, 0, 0);
+        border: none;
+        border-radius: 100%;
 
         &:hover {
+            cursor: pointer;
             background-color: $background;
-            color: $purple1;
             scale: 1.05;
+
+            img {
+                content: url("./../../../../assets/images/icons/close_blue.svg")
+            }
         }
 
         img {
@@ -65,7 +73,7 @@ mat-card-content {
     .name-container {
         display: flex;
         gap: 10px;
-        
+
         img {
             height: 24px;
             width: 24px;
@@ -82,7 +90,7 @@ mat-card-content {
 .edit-container {
     display: flex;
     justify-content: space-between;
-    
+
     span {
         font-size: 18px;
         font-weight: 700;
@@ -166,6 +174,6 @@ mat-card-content {
             opacity: 0.5;
             transition: 75ms ease-in-out;
             cursor: pointer;
-          }
+        }
     }
 }

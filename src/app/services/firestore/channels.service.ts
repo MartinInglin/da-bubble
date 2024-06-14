@@ -18,7 +18,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { MinimalUser } from '../../models/minimal_user.class';
 import { User } from '../../models/user.class';
 import { StorageService } from '../storage.service';
-import { PostsService } from './posts.service';
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +25,6 @@ import { PostsService } from './posts.service';
 export class ChannelsService {
   firestore = inject(Firestore);
   storageService = inject(StorageService);
-  postsService = inject(PostsService);
 
   private channelSubject: BehaviorSubject<Channel | null> =
     new BehaviorSubject<Channel | null>(null);

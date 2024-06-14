@@ -11,6 +11,8 @@ export class Post {
   edited: boolean;
   files: MinimalFile[];
   userId: string;
+  amountAnswers?: number;
+  lastAnswer?: number;
 
   constructor(obj?: any) {
     this.id = obj?.id || '';
@@ -31,5 +33,7 @@ export class Post {
         fileURL: obj?.url,
       })) || [];
     this.userId = obj?.userId || '';
+    this.amountAnswers = obj?.amountAnswers || 0;
+    this.lastAnswer = obj?.lastAnswer || 0;
   }
 }

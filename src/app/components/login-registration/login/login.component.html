@@ -20,6 +20,7 @@
             class="input-email"
             [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"
             placeholder="beispielname@email.com"
+            autocomplete="off"
           />
           @if (submitted && f['email'].errors) {
           <div class="invalid-feedback">
