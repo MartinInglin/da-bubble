@@ -75,10 +75,16 @@
   width: fit-content;
   cursor: pointer;
 
+  .drop-down-img,
+  .arrow-drop-down {
+    height: 10px;
+    width: 10px;
+  }
+
   &:hover {
     .drop-down-img,
     .arrow-drop-down {
-      content: url("./../../../../assets/images/icons/arrow_drop_right_blue.svg");
+      content: url("./../../../../assets/images/icons/arrow_drop_down_blue.svg");
     }
 
     .contact-list-account-img {
@@ -361,10 +367,8 @@
 
 @media (max-width: 800px) {
   .mat-drawer.mat-drawer-side {
-    width: 100%!important;
-}
-  
-
+    width: 100% !important;
+  }
 }
 
 @media (max-width: 450px) {

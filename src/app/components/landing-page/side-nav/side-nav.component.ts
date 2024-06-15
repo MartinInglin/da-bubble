@@ -51,7 +51,7 @@ export class SideNavComponent implements OnInit {
   showChannels: boolean = false;
   isDialogOpen: boolean = false;
 
-  arrowOpen: any = '/assets/images/icons/arrow_drop_up.svg';
+  arrowOpen: any = '/assets/images/icons/arrow_drop_down.svg';
   arrowClosed: any = '/assets/images/icons/arrow_drop_right.svg';
 
   constructor(private dialog: MatDialog,private fb: FormBuilder,) { 
