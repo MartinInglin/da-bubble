@@ -94,7 +94,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
   searchResults$: Observable<(Channel | User)[]> = of([]);
   searchResults: (Channel | User)[] | undefined;
 
-
   constructor(private dialog: MatDialog, private fb: FormBuilder) {
     this.form = this.fb.group({
       recipient: [''],
@@ -113,15 +112,12 @@ export class MainContentComponent implements OnInit, OnDestroy {
         c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
       this.currentUser = user ?? new User();
-
     });
 
     this.channelSubscription = this.channelsService.channelSubject$.subscribe(
       (channel) => {
         if (channel) {
           this.selectedChannel = channel ?? new Channel();
-
-
 
           this.channelSelected = !!this.selectedChannel.id;
           if (this.channelSelected) {
@@ -140,8 +136,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
           this.filteredUsers = this.allUsers.filter((u) =>
             u.name.toLowerCase().includes(this.searchTerm.toLowerCase())
           );
-
-
         }
       }
     );
@@ -183,7 +177,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
       this.searchResults = results;
     });
   }
-/**
+  /**
    * This function checks if the given result is a user.
    * @param result - The result to check.
    * @returns True if the result is a user, false otherwise.
@@ -201,7 +195,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.form.get('recipient')?.setValue('');
   }
 
-   /**
+  /**
    *This function opens a direct message based on the given ID and user.
    * @param x - The ID of the direct message.
    * @param y - The user associated with the direct message.
@@ -222,7 +216,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
   }
 
-   /**
+  /**
    * Getter for the recipient form control.
    * @returns The recipient form control.
    */
@@ -230,7 +224,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     return this.form.get('recipient') as FormControl;
   }
 
-   /**
+  /**
    * This function selects a recipient (channel or user) and updates the form value.
    * @param recipient - The selected recipient.
    */
@@ -240,7 +234,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.form.setValue({ recipient: recipientString });
   }
 
-   /**
+  /**
    * This function searches for channels or users based on the search term.
    * @param searchTerm - The term to search for.
    * @returns An observable of the search results (channels or users).
@@ -248,29 +242,34 @@ export class MainContentComponent implements OnInit, OnDestroy {
   search(searchTerm: string): Observable<(Channel | User)[]> {
     if (searchTerm.startsWith('#')) {
       // Suche nach Kanälen
-      const filteredChannels = this.filteredChannels.filter((channel) =>
-        channel.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase()) && !channel.isDirectMessage // Entfernen Sie "#" aus dem Suchbegriff
+      const filteredChannels = this.filteredChannels.filter(
+        (channel) =>
+          channel.name
+            .toLowerCase()
+            .includes(searchTerm.slice(1).toLowerCase()) &&
+          !channel.isDirectMessage // Entfernen Sie "#" aus dem Suchbegriff
       );
       return of(filteredChannels);
     } else if (searchTerm.startsWith('@')) {
       // Suche nach Benutzern
-      const filteredUsers = this.allUsers.filter((user) =>
-        user.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase()) && !user.isChannel // Entfernen Sie "@" aus dem Suchbegriff
+      const filteredUsers = this.allUsers.filter(
+        (user) =>
+          user.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase()) &&
+          !user.isChannel // Entfernen Sie "@" aus dem Suchbegriff
       );
       return of(this.filterCurrentUser(filteredUsers));
-
     } else {
       return of([]); // Return an empty observable for no matches
     }
   }
 
-    /**
+  /**
    * This function filters out the current user from the search results.
    * @param results - The search results to filter.
    * @returns The filtered search results.
    */
   private filterCurrentUser(results: (Channel | User)[]): (Channel | User)[] {
-    return results.filter(result => {
+    return results.filter((result) => {
       if (this.isUser(result)) {
         return result.id !== this.currentUser.id;
       }
@@ -324,7 +323,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
   }
 
-   /**
+  /**
    * This function opens the channel info mobile dialog.
    */
   openChannelInfoMobileDialog(): void {
@@ -343,7 +342,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
   }
 
-   /**
+  /**
    * This function opens the members dialog for the given channel ID.
    * @param channelId - The ID of the channel.
    * @param membersDialog - The HTML element for positioning the dialog.
@@ -378,7 +377,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     });
   }
 
-    /**
+  /**
    * This function opens the add user to channel dialog for the given channel ID.
    * @param channelId - The ID of the channel.
    * @param addUserDialog - The HTML element for positioning the dialog.
@@ -389,7 +388,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     });
   }
 
-   /**
+  /**
    * This function opens the profile detail view dialog.
    */
   formatDate(timestamp: number): string {
@@ -419,7 +418,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
   }
 
-   /**
+  /**
    * This function formats a timestamp into a date and time string.
    * @param timestamp - The timestamp to format.
    * @returns The formatted date and time string.
@@ -450,7 +449,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     );
   }
 
-   /**
+  /**
    * This function gets the user count for the selected channel.
    */
   async getUserCount(): Promise<void> {

@@ -5,6 +5,7 @@
   ></app-start-animation>
   }
 
+  @if(animationFinished) {
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="card">
       <div class="title">
@@ -101,4 +102,5 @@
       </button>
     </div>
   </form>
+}
 </div>
