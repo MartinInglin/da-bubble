@@ -1,20 +1,19 @@
-import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { ChannelInfoEditMobileComponent } from './channel-info-edit-mobile/channel-info-edit-mobile.component';
-import { StateService } from '../../../../services/stateservice.service';
-import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Channel } from '../../../../models/channel.class';
-import { ChannelsService } from '../../../../services/firestore/channels.service';
-import { User } from '../../../../models/user.class';
-import { UsersService } from '../../../../services/firestore/users.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Channel } from '../../../../../models/channel.class';
+import { ChannelsService } from '../../../../../services/firestore/channels.service';
+import { User } from '../../../../../models/user.class';
+import { UsersService } from '../../../../../services/firestore/users.service';
 
 @Component({
-  selector: 'app-channel-info-mobile',
+  selector: 'app-channel-info-edit-mobile',
   standalone: true,
   imports: [
     CommonModule,
@@ -22,27 +21,29 @@ import { UsersService } from '../../../../services/firestore/users.service';
     MatCardModule,
     MatIconModule,
     MatButtonModule,
-    MatDialogModule
+    FormsModule
   ],
-  templateUrl: './channel-info-mobile.component.html',
-  styleUrl: './channel-info-mobile.component.scss'
+  templateUrl: './channel-info-edit-mobile.component.html',
+  styleUrl: './channel-info-edit-mobile.component.scss'
 })
-export class ChannelInfoMobileComponent {
-  channel: Channel | null = null;
+export class ChannelInfoEditMobileComponent implements OnInit, OnDestroy {
+  updatedName: string;
+  updatedDescription: string;
   currentUser: User | null = null;
-  
+  channel: Channel | null = null;
   channelSubscription: any;
 
   private userSubscription: Subscription = new Subscription();
 
   constructor(
-    private dialog: MatDialog,
-    public dialogRef: MatDialogRef<ChannelInfoMobileComponent>,
+    public dialogRef: MatDialogRef<ChannelInfoEditMobileComponent>,
     private channelsService: ChannelsService,
     private usersService: UsersService,
-    private stateService: StateService,
-    @Inject(MAT_DIALOG_DATA) public data: {channelId: string}
-  ) {}
+    @Inject(MAT_DIALOG_DATA) public data: { channelId: string, channelName: string, channelDescription: string }
+  ) {
+    this.updatedName = data.channelName;
+    this.updatedDescription = data.channelDescription;
+  }
 
   ngOnInit(): void {
     this.loadChannelData();
@@ -52,10 +53,14 @@ export class ChannelInfoMobileComponent {
   }
 
   loadChannelData(): void {
-    if (!this.data.channelId) return; 
+    if (!this.data.channelId) return;
     this.channelSubscription = this.channelsService.channelSubject$.subscribe(
       (channel) => {
         this.channel = channel;
+        if (channel) {
+          this.updatedName = channel.name;
+          this.updatedDescription = channel.description || '';
+        }
       },
       (error) => {
         console.error('Error loading channel data:', error);
@@ -64,22 +69,20 @@ export class ChannelInfoMobileComponent {
     this.channelsService.getDataChannel(this.data.channelId);
   }
 
-  openDialog(): void {
+  saveChanges(): void {
     if (!this.channel) return;
-    const dialogRef = this.dialog.open(ChannelInfoEditMobileComponent, {
-      width: '100%',
-      height: '100vh',
-      data: { 
-        channelId: this.channel.id,
-        name: this.channel.name,
-        description: this.channel.description
-      }
-    });
+
+    this.channelsService.updateChannel(this.data.channelId, this.updatedName, this.updatedDescription)
+      .then(() => {
+        this.dialogRef.close();
+      })
+      .catch(error => {
+        console.error('Fehler beim Speichern der Änderungen:', error);
+      });
   }
 
   leaveChannel(): void {
     if (!this.currentUser || !this.channel) return;
-
     const channelId = this.channel.id;
     const currentUserId = this.currentUser.id;
 
@@ -90,18 +93,15 @@ export class ChannelInfoMobileComponent {
       .catch(error => {
         console.error('Error leaving channel:', error);
       });
-
-    this.stateService.setShowContacts(false);
-    this.stateService.setShowChannels(false);
-  }
-
-  onNoClick(): void {
-    this.dialogRef.close();
   }
 
   ngOnDestroy(): void {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
     }
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 }
