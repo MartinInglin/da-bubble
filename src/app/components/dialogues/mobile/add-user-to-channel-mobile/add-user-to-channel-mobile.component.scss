@@ -1,7 +1,8 @@
-@import "./../../../../styles.scss";
+@import "./../../../../../styles.scss";
 
 mat-card {
-    width: 514px;
+    max-width: 514px;
+    width: 100%;
     height: fit-content;
     border-radius: 30px 0px 30px 30px;
     padding: 40px;
@@ -59,7 +60,7 @@ mat-card-content {
             scale: 1.05;
 
             img {
-                content: url("./../../../../assets/images/icons/close_blue.svg")
+                content: url("./../../../../../assets/images/icons/close_blue.svg")
             }
         }
 
@@ -73,10 +74,9 @@ mat-card-content {
 .user-list {
     position: absolute;
     background-color: white;
-    width: 300px;
+    width: fit-content;
     z-index: 1;
     top: 200px;
-    left: 90px;
     border-radius: 0px 20px 20px 20px;
     display: flex;
     gap: 15px;
@@ -161,7 +161,7 @@ mat-card-content {
                 width: 13.5px;
 
                 &:hover {
-                    content: url("./../../../../assets/images/icons/close_blue.svg");
+                    content: url("./../../../../../assets/images/icons/close_blue.svg");
                 }
             }
         }
@@ -182,7 +182,7 @@ form {
 
     input {
         height: 55px;
-        width: 434px;
+        width: 100%;
         border-radius: 30px;
         border: solid 1px $light-purple-lines;
         padding-left: 15px;
@@ -222,21 +222,6 @@ form {
             opacity: 0.5;
             transition: 75ms ease-in-out;
             cursor: pointer;
-        }
-    }
-}
-
-@media (max-width: 750px) {
-    mat-card {
-        max-width: 415px;
-        width: 100%;
-        border-radius: 20px 0px 20px 20px;
-        padding: 20px 16px 20px 16px;
-    }
-    
-    .input-container {
-        input {
-            width: 100%;
         }
     }
 }

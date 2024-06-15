@@ -204,7 +204,7 @@ export class UsersService {
   }
 
   createPathToCollection(partialUser: Partial<User>, currentUser: User) {
-    let path: 'channels' | 'directMessages' | 'threads';
+    let path: 'channels' | 'directMessages' | 'threads' | 'landingPage';
 
     path = 'directMessages';
     this.getDataCollection(path, currentUser, partialUser);

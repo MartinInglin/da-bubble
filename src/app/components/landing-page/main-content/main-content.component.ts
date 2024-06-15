@@ -31,6 +31,7 @@ import { ChannelInfoComponent } from '../../dialogues/channel-info/channel-info.
 import { ChannelInfoMobileComponent } from '../../dialogues/mobile/channel-info-mobile/channel-info-mobile.component';
 import { MembersComponent } from '../../dialogues/members/members.component';
 import { AddUserToChannelComponent } from '../../dialogues/add-user-to-channel/add-user-to-channel.component';
+import { AddUserToChannelMobileComponent } from '../../dialogues/mobile/add-user-to-channel-mobile/add-user-to-channel-mobile.component';
 import { ProfileDetailViewComponent } from '../../dialogues/profile-detail-view/profile-detail-view.component';
 import { DirectMessagesService } from '../../../services/firestore/direct-messages.service';
 import { DirectMessage } from '../../../models/direct-message.class';
@@ -304,7 +305,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   openChannelInfoDialog(channelId: string): void {
     if (this.currentUser) {
       if (window.innerWidth <= 750) {
-        this.openChannelInfoMobileDialog();
+        this.openChannelInfoMobileDialog(channelId);
       } else {
         const dialogRef = this.dialog.open(ChannelInfoComponent, {
           width: '872px',
@@ -328,11 +329,12 @@ export class MainContentComponent implements OnInit, OnDestroy {
   /**
    * This function opens the channel info mobile dialog.
    */
-  openChannelInfoMobileDialog(): void {
+  openChannelInfoMobileDialog(channelId: string): void {
     if (this.currentUser) {
       const dialogRef = this.dialog.open(ChannelInfoMobileComponent, {
         width: '100%',
         height: '100vh',
+        data: { channelId: channelId },
       });
       dialogRef.componentInstance.currentUser = new User(this.currentUser);
 
@@ -351,15 +353,26 @@ export class MainContentComponent implements OnInit, OnDestroy {
    */
   openMembersDialog(channelId: string, membersDialog: HTMLElement): void {
     const rect = membersDialog.getBoundingClientRect();
+    const dialogWidth = 415;
+    const screenWidth = window.innerWidth;
+    let leftPosition;
+
+    if (screenWidth <= 500) {
+      leftPosition = (screenWidth - dialogWidth) / 2 + window.scrollX;
+    } else {
+      leftPosition = rect.left + window.scrollX - 400;
+    }
+
     const dialogRef = this.dialog.open(MembersComponent, {
-      width: '415px',
+      width: `${dialogWidth}px`,
       position: {
         top: `${rect.bottom + window.scrollY + 10}px`,
-        left: `${rect.left + window.scrollX - 400}px`,
+        left: `${leftPosition}px`,
       },
       data: { channelId: channelId },
     });
   }
+
 
   /**
    * This function opens the members dialog for the given channel ID.
@@ -368,15 +381,34 @@ export class MainContentComponent implements OnInit, OnDestroy {
    */
   openAddUserToChannelDialog(channelId: string, addUserDialog: HTMLElement) {
     const rect = addUserDialog.getBoundingClientRect();
-    const dialogRef = this.dialog.open(AddUserToChannelComponent, {
-      width: '800px',
-      height: '800px',
-      position: {
-        top: `${rect.bottom + window.scrollY + 10}px`,
-        left: `${rect.left + window.scrollX - 475}px`,
-      },
-      data: { channelId: channelId },
-    });
+    if (window.innerWidth <= 750) {
+      this.openAddUserToChannelMobileDialog(channelId);
+    } else {
+      const dialogRef = this.dialog.open(AddUserToChannelComponent, {
+        width: '800px',
+        height: '800px',
+        position: {
+          top: `${rect.bottom + window.scrollY + 10}px`,
+          left: `${rect.left + window.scrollX - 475}px`,
+        },
+        data: { channelId: channelId }
+      });
+    }
+  }
+
+  openAddUserToChannelMobileDialog(channelId: string,): void {
+    if (this.currentUser) {
+      const dialogRef = this.dialog.open(AddUserToChannelMobileComponent, {
+        width: '514px',
+        height: '514px',
+        data: { channelId: channelId }
+      });
+      this.isDialogOpen = true;
+
+      dialogRef.afterClosed().subscribe(() => {
+        this.isDialogOpen = false;
+      });
+    }
   }
 
   /**

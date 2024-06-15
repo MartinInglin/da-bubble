@@ -83,7 +83,7 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
         this.updatedName = user.name;
         this.updatedEmail = user.email;
         this.originalEmail = user.email;
-        this.selectedAvatar = user.avatar; // Set the default avatar to the current user's avatar
+        this.selectedAvatar = user.avatar;
       }
     });
   }
