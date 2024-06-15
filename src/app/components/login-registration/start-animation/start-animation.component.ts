@@ -1,5 +1,11 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component } from '@angular/core';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-start-animation',
@@ -11,45 +17,39 @@ import { Component } from '@angular/core';
       state('end', style({ transform: 'translateX(-50%)' })),
       transition(':enter', [
         style({ transform: 'translateX(0)' }),
-        animate('500ms')
-      ])
+        animate('500ms'),
+      ]),
     ]),
     trigger('moveTextRightAnimation', [
       state('end', style({ transform: 'translateX(110%)' })),
       transition(':enter', [
         style({ transform: 'translateX(0)' }),
-        animate('500ms 250ms')
-      ])
+        animate('500ms 250ms'),
+      ]),
     ]),
     trigger('moveUpTextAnimation', [
       state('end', style({ transform: 'translate(-110%, -100%)' })),
       transition('* => end', [
         style({ transform: 'translate(0, 0)' }),
-        animate('500ms 500ms')
-      ])
+        animate('500ms 500ms'),
+      ]),
     ]),
     trigger('moveUpLogoAnimation', [
       state('end', style({ transform: 'translate(-70%, -90%)' })),
       transition('* => end', [
         style({ transform: 'translate(0, 0)' }),
-        animate('500ms 500ms')
-      ])
+        animate('500ms 500ms'),
+      ]),
     ]),
     trigger('fadeOutBackgroundHalfAnimation', [
       state('end', style({ opacity: 0 })),
-      transition('* => end', [
-        style({ opacity: 1 }),
-        animate('0ms')
-      ])
+      transition('* => end', [style({ opacity: 1 }), animate('0ms')]),
     ]),
     trigger('fadeOutBackgroundAnimation', [
       state('end', style({ opacity: 0 })),
-      transition('* => end', [
-        style({ opacity: 1 }),
-        animate('500ms 500ms')
-      ])
-    ])
-  ]
+      transition('* => end', [style({ opacity: 1 }), animate('500ms 500ms')]),
+    ]),
+  ],
 })
 export class StartAnimationComponent {
   logoAnimationState = '';
@@ -59,6 +59,8 @@ export class StartAnimationComponent {
   fadeOutBackgroundState = '';
   fadeOutBackgroundHalfState = '';
   isVisible = true;
+
+  @Output() animationFinished = new EventEmitter();
 
   ngOnInit() {
     this.logoAnimationState = 'end';
@@ -80,6 +82,9 @@ export class StartAnimationComponent {
     setTimeout(() => {
       this.isVisible = false;
     }, 2000);
+
+    setTimeout(() => {
+      this.animationFinished.emit();
+    }, 2000);
   }
 }
-

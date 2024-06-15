@@ -14,7 +14,6 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { StartAnimationComponent } from '../start-animation/start-animation.component';
 
-
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -24,7 +23,7 @@ import { StartAnimationComponent } from '../start-animation/start-animation.comp
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    StartAnimationComponent
+    StartAnimationComponent,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -37,6 +36,7 @@ export class LoginComponent {
   });
 
   submitted = false;
+  animationFinished: boolean = false;
 
   constructor(private formBuilder: FormBuilder) {}
 
@@ -45,6 +45,8 @@ export class LoginComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
     });
+
+    this.getStatusStartAnimationFromSessionStorage();
   }
 
   get f(): { [key: string]: AbstractControl } {
@@ -58,10 +60,31 @@ export class LoginComponent {
       return;
     }
 
-    this.authService.signInWithEmail(this.form.value.email, this.form.value.password);
+    this.authService.signInWithEmail(
+      this.form.value.email,
+      this.form.value.password
+    );
   }
 
   signInByGoogle() {
     this.authService.signInByGoogle();
+  }
+
+  setAnimationFinishedTrue(): void {
+    this.animationFinished = true;
+    this.setStatusStartAnimationToSessionStorage();
+  }
+
+  setStatusStartAnimationToSessionStorage() {
+    sessionStorage.setItem('startAnimationHasPlayed', 'true');
+  }
+
+  getStatusStartAnimationFromSessionStorage() {
+    const returnSessionStorage = sessionStorage.getItem(
+      'startAnimationHasPlayed'
+    );
+    if (returnSessionStorage === 'true') {
+      this.animationFinished = true;
+    }
   }
 }
