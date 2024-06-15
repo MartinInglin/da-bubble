@@ -25,14 +25,14 @@ import { Component } from '@angular/core';
       state('end', style({ transform: 'translate(-110%, -100%)' })),
       transition('* => end', [
         style({ transform: 'translate(0, 0)' }),
-        animate('500ms')
+        animate('500ms 500ms')
       ])
     ]),
     trigger('moveUpLogoAnimation', [
       state('end', style({ transform: 'translate(-70%, -90%)' })),
       transition('* => end', [
         style({ transform: 'translate(0, 0)' }),
-        animate('500ms')
+        animate('500ms 500ms')
       ])
     ]),
     trigger('fadeOutBackgroundHalfAnimation', [
@@ -46,7 +46,7 @@ import { Component } from '@angular/core';
       state('end', style({ opacity: 0 })),
       transition('* => end', [
         style({ opacity: 1 }),
-        animate('500ms')
+        animate('500ms 500ms')
       ])
     ])
   ]

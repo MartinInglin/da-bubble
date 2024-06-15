@@ -21,7 +21,8 @@
 
   img {
     position: absolute;
-    left: 10%;
+    left: 5%;
+    width: 30%;
   }
 }
 
@@ -30,7 +31,7 @@
   top: 0;
   left: 0;
   height: 100%;
-  width: 35%;
+  width: 38%;
   background-image: linear-gradient($purple2, $purple1);
 }
 
@@ -43,6 +44,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+
+  img {
+    width: 30%;
+  }
 }
 
 
