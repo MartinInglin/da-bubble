@@ -7,6 +7,7 @@ import {
   OnDestroy,
   ViewChild,
   ElementRef,
+  AfterViewChecked,
 } from '@angular/core';
 import { ChannelsService } from '../../../services/firestore/channels.service';
 import { RouterModule } from '@angular/router';
@@ -177,6 +178,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
       this.searchResults = results;
     });
   }
+
   /**
    * This function checks if the given result is a user.
    * @param result - The result to check.
@@ -428,6 +430,22 @@ export class MainContentComponent implements OnInit, OnDestroy {
     const hours = date.getHours();
     const minutes = date.getMinutes().toString().padStart(2, '0');
     return `${hours}:${minutes} Uhr`;
+  }
+
+  isNewDate(index: number, path: string) {
+    if (index === 0) {
+      return true;
+    }
+    if (path === 'channel') {
+      const currentPostDate = this.formatDate(this.selectedChannel.posts[index].timestamp);
+      const previousPostDate = this.formatDate(this.selectedChannel.posts[index - 1].timestamp);
+      return currentPostDate !== previousPostDate;
+    }
+    if (path === 'directMessage') {
+      const currentPostDate = this.formatDate(this.selectedDirectMessage.posts[index].timestamp);
+      const previousPostDate = this.formatDate(this.selectedDirectMessage.posts[index - 1].timestamp);
+      return currentPostDate !== previousPostDate;
+    } return false
   }
 
   /**

@@ -75,11 +75,13 @@
       @if (selectedChannel.posts.length > 0) {
       <div *ngFor="let post of selectedChannel.posts; let index = index">
         <!-- Date line for messages -->
-        <div class="dateLine">
+        @if (isNewDate(index, 'channel')) {
+        <div class="date-line">
           <div class="Line">
             <span>{{ formatDate(post.timestamp) }}</span>
           </div>
         </div>
+        }
 
         <!-- Post -->
         <app-post
@@ -144,11 +146,13 @@
       selectedDirectMessage.users.length > 0) {
       <div *ngFor="let post of selectedDirectMessage.posts; let index = index">
         <!-- Date line for messages -->
-        <div class="dateLine">
+        @if (isNewDate(index, "directMessage")) {
+        <div class="date-line">
           <div class="Line">
             <span>{{ formatDate(post.timestamp) }}</span>
           </div>
         </div>
+        }
 
         <!-- Post -->
         <app-post

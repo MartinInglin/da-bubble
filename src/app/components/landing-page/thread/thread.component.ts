@@ -130,4 +130,14 @@ export class ThreadComponent implements OnInit {
       return `${daysOfWeek[dayOfWeekIndex]} ${formattedDate}`; // Andernfalls gib den Namen des Wochentags zurück
     }
   }
+
+  isNewDate(index: number) {
+    if (index === 0) {
+      return true;
+    }
+      const currentPostDate = this.formatDate(this.selectedThread.posts[index + 1].timestamp);
+      const previousPostDate = this.formatDate(this.selectedThread.posts[index].timestamp);
+      return currentPostDate !== previousPostDate;
+
+  }
 }
