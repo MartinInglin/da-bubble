@@ -32,7 +32,7 @@ export class AddUserToChannelComponent implements OnInit, OnDestroy {
   allUsers: User[] = [];
 
   showResults: boolean = false;
-  
+
   channelName: string = '';
 
   private allUsersSubscription: Subscription = new Subscription();
@@ -106,29 +106,45 @@ export class AddUserToChannelComponent implements OnInit, OnDestroy {
 
   async addUsersToChannel(): Promise<void> {
     for (const userId of this.selectedUsers) {
-      const user = this.allUsers.find(u => u.id === userId);
+      const user = this.findUserById(userId);
       if (user) {
-        const minimalUser: MinimalUser = {
-          id: user.id,
-          name: user.name,
-          avatar: user.avatar,
-          email: user.email
-        };
+        const minimalUser = this.createMinimalUser(user);
         try {
-          await this.channelsService.addSingleUserToChannel(this.data.channelId, minimalUser);
-          const channel = await this.channelsService.getChannelById(this.data.channelId);
-          if (channel) {
-            await this.userService.addChannelToSingleUser(user.id, {
-              id: channel.id,
-              name: channel.name
-            });
-          }
+          await this.addUserToChannel(this.data.channelId, minimalUser);
+          await this.addChannelToUser(user.id, this.data.channelId);
         } catch (error) {
           console.error('Error adding user to channel:', error);
         }
       }
     }
     this.dialogRef.close();
+  }
+
+  findUserById(userId: string): User | undefined {
+    return this.allUsers.find(u => u.id === userId);
+  }
+
+  createMinimalUser(user: User): MinimalUser {
+    return {
+      id: user.id,
+      name: user.name,
+      avatar: user.avatar,
+      email: user.email
+    };
+  }
+
+  async addUserToChannel(channelId: string, minimalUser: MinimalUser): Promise<void> {
+    await this.channelsService.addSingleUserToChannel(channelId, minimalUser);
+  }
+
+  async addChannelToUser(userId: string, channelId: string): Promise<void> {
+    const channel = await this.channelsService.getChannelById(channelId);
+    if (channel) {
+      await this.userService.addChannelToSingleUser(userId, {
+        id: channel.id,
+        name: channel.name
+      });
+    }
   }
 
   onNoClick(): void {

@@ -4,23 +4,50 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class EditingStateService {
-  private editingPostIndex: number = -1;
+ /**
+   * The index of the post that is currently being edited. 
+   * Default is -1, which means no post is being edited.
+   * @private
+   */
+ private editingPostIndex: number = -1;
 
-  constructor() { }
+ constructor() { }
 
-  getEditingPostIndex(): number {
-    return this.editingPostIndex;
-  }
+ /**
+  * Gets the index of the post that is currently being edited.
+  * 
+  * @returns {number} The index of the post being edited, or -1 if no post is being edited.
+  */
+ getEditingPostIndex(): number {
+   return this.editingPostIndex;
+ }
 
-  setEditingPostIndex(index: number): void {
-    this.editingPostIndex = index;
-  }
+ /**
+  * Sets the index of the post that is currently being edited.
+  * 
+  * @param {number} index - The index of the post to set as being edited.
+  * @returns {void}
+  */
+ setEditingPostIndex(index: number): void {
+   this.editingPostIndex = index;
+ }
 
-  isPostBeingEdited(index: number): boolean {
-    return this.editingPostIndex === index;
-  }
+ /**
+  * Checks if the specified post is being edited.
+  * 
+  * @param {number} index - The index of the post to check.
+  * @returns {boolean} True if the specified post is being edited, false otherwise.
+  */
+ isPostBeingEdited(index: number): boolean {
+   return this.editingPostIndex === index;
+ }
 
-  clearEditingPostIndex(): void {
-    this.editingPostIndex = -1;
-  }
+ /**
+  * Clears the index of the post that is currently being edited.
+  * 
+  * @returns {void}
+  */
+ clearEditingPostIndex(): void {
+   this.editingPostIndex = -1;
+ }
 }
