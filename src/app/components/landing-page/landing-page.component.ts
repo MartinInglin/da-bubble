@@ -99,6 +99,10 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     this.isThreadOpen = false;
   }
 
+  onToggleDrawer(): void {
+    this.isOpen = !this.isOpen; // Toggle the state of isOpen
+  }
+
   showMainContent() {
     this.isOpen = false;
     this.isThreadOpen = false;

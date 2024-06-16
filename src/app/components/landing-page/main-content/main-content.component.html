@@ -71,7 +71,7 @@
     </header>
 
     <!-- Message Content  -->
-    <div class="message-content" id="message-content" #messageContent>
+    <div class="message-content" id="channel-message-content" #channelMessageContent>
       @if (selectedChannel.posts.length > 0) {
       <div *ngFor="let post of selectedChannel.posts; let index = index">
         <!-- Date line for messages -->
@@ -140,7 +140,7 @@
 
     <!-- Message Content  -->
 
-    <div class="message-content" id="message-content" #messageContent>
+    <div class="message-content"  id="direct-message-content" #directMessageContent>
       <!-- Date line for messages -->
       @if (selectedDirectMessage.posts.length > 0 &&
       selectedDirectMessage.users.length > 0) {

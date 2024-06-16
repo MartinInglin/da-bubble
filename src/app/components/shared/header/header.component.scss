@@ -32,9 +32,9 @@ header {
 
   span {
     font-size: 32px;
-  white-space: nowrap;
-  font-weight: 700;
-  flex-grow: 1; 
+    white-space: nowrap;
+    font-weight: 700;
+    flex-grow: 1;
   }
 
   .image-container {
@@ -154,8 +154,8 @@ header {
 
 .list {
   position: absolute;
- top: 89px;
-  z-index: 1000; 
+  top: 89px;
+  z-index: 1000;
   background-color: #eceefe;
 
   border: 1px solid #ccc;
@@ -230,16 +230,19 @@ header {
 
 @media (max-width: 1180px) {
   .searchBar input::placeholder {
-    // color: transparent;
     font-size: 24px;
   }
 }
 
 @media (max-width: 1060px) {
-
   .searchBar input::placeholder {
-    // color: transparent;
     font-size: 18px;
+  }
+}
+
+@media (max-width: 722px) {
+  .searchBar input::placeholder {
+    font-size: 14px;
   }
 }
 
@@ -252,10 +255,9 @@ header {
     justify-content: end;
     width: fit-content;
   }
- 
 }
 
-@media (max-width: 750px) {
+@media (max-width: 650px) {
   .searchBar,
   .menuDropDown {
     display: none;
@@ -265,9 +267,24 @@ header {
     display: none;
   }
 
-  @media (max-width: 500px) {
-  header{
-    justify-content: center;
+  @media (max-width: 600px) {
+    header {
+      justify-content: center;
+    }
+    .user {
+      margin-left: 130px;
+    }
   }
+
+  @media (max-width: 500px) {
+    .user {
+      margin-left: 50px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .user {
+      margin-left: 0px;
+    }
   }
 }

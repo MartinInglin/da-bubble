@@ -14,7 +14,7 @@
     <nav class="sidenav" [ngClass]="{'hidden': !isOpen, 'visible': isOpen}">
       <mat-drawer-container class="example-container" autosize>
         <mat-drawer #drawer class="example-sidenav" mode="side">
-          <app-side-nav [currentUser]="currentUser"  (contactClicked)="handleContactClick()"></app-side-nav>
+          <app-side-nav [currentUser]="currentUser" (toggleDrawer)="onToggleDrawer()"></app-side-nav>
         </mat-drawer>
       </mat-drawer-container>
     </nav>

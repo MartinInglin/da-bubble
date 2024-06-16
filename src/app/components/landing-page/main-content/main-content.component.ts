@@ -68,7 +68,8 @@ export class MainContentComponent implements OnInit, OnDestroy {
   @Output() toggleThread = new EventEmitter<void>();
 
   @ViewChild('fileInput') fileInput!: ElementRef;
-  @ViewChild('messageContent') messageContent!: ElementRef;
+  @ViewChild('channelMessageContent') channelMessageContent!: ElementRef;
+  @ViewChild('directMessageContent') directMessageContent!: ElementRef;
 
   channelsService = inject(ChannelsService);
   usersService = inject(UsersService);
@@ -186,30 +187,50 @@ export class MainContentComponent implements OnInit, OnDestroy {
     });
   }
 
+  
   ngAfterViewInit(): void {
-    this.scrollToBottomWithDelay();
-
-    // MutationObserver für Änderungen in den Nachrichten
-    const observer = new MutationObserver(() => {
-      this.scrollToBottomWithDelay();
-    });
-    observer.observe(this.messageContent.nativeElement, { childList: true });
-
+    if (this.channelMessageContent) {
+      const channelObserver = new MutationObserver(() => {
+        this.scrollToBottom(this.channelMessageContent);
+      });
+      channelObserver.observe(this.channelMessageContent.nativeElement, { childList: true });
+    }
+  
+    if (this.directMessageContent) {
+      const directMessageObserver = new MutationObserver(() => {
+        this.scrollToBottom(this.directMessageContent);
+      });
+      directMessageObserver.observe(this.directMessageContent.nativeElement, { childList: true });
+    }
+  
     this.cdref.detectChanges(); // Trigger change detection
   }
-
+  
   scrollToBottomWithDelay(): void {
-    try {
-      setTimeout(() => {
-        this.messageContent.nativeElement.scrollTop = this.messageContent.nativeElement.scrollHeight;
-      }, 100); // Delay to ensure DOM is fully updated
-    } catch (err) {
-      console.error('Scroll to bottom error:', err);
+    if (this.channelMessageContent) {
+      this.scrollToBottom(this.channelMessageContent);
+    }
+    if (this.directMessageContent) {
+      this.scrollToBottom(this.directMessageContent);
     }
   }
+  
+  scrollToBottom(elementRef: ElementRef): void {
+    if (elementRef) {
+      try {
+        setTimeout(() => {
+          elementRef.nativeElement.scrollTop = elementRef.nativeElement.scrollHeight;
+        }, 100); // Delay to ensure DOM is fully updated
+      } catch (err) {
+        console.error('Scroll to bottom error:', err);
+      }
+    }
+  }
+  
+  
+
 /**
   /**
->>>>>>> 55e6a1b97300c1c835d07084ae544647478a27c7
    * This function checks if the given result is a user.
    * @param result - The result to check.
    * @returns True if the result is a user, false otherwise.
