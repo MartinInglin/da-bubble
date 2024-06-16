@@ -4,6 +4,14 @@
     (animationFinished)="setAnimationFinishedTrue()"
   ></app-start-animation>
   } @if(animationFinished) {
+
+
+
+      <!-- <div class="logo-responsive d-none">
+        <img src="/assets/images/icons/logo_da_bubble.png" alt="">
+        <span>DABubble</span>
+      </div> -->
+      
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="card">
       <div class="title">
@@ -100,5 +108,11 @@
       </button>
     </div>
   </form>
+
+  <div class="register-responsive d-none ">
+    <p>Neu bei DABubble?</p>
+    <a routerLink="/register">Konto erstellen</a>
+  </div>
+
   }
 </div>

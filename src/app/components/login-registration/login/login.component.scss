@@ -61,13 +61,15 @@ mat-form-field {
 }
 
 .input-email {
-  background: url(./../../../../assets/images/icons/mail.svg) no-repeat 28px 17px;
+  background: url(./../../../../assets/images/icons/mail.svg) no-repeat 28px
+    17px;
   padding-left: 80px;
   box-sizing: border-box;
 }
 
 .input-password {
-  background: url(./../../../../assets/images/icons/lock.svg) no-repeat 28px 17px;
+  background: url(./../../../../assets/images/icons/lock.svg) no-repeat 28px
+    17px;
   padding-left: 80px;
   box-sizing: border-box;
 }
@@ -189,4 +191,41 @@ button {
 
 .invalid-feedback {
   color: red;
+}
+
+.d-none {
+  display: none;
+}
+
+
+@media (max-width: 650px) {
+  .card-container{
+    height: 90%;
+  }
+  .d-none {
+    display: flex;
+  }
+  .card {
+    max-width: 460px;
+    gap: 15px;
+    margin: 0px;
+    height: 95%;
+    margin-bottom: 10px;
+    h1 {
+      font-size: 36px;
+      line-height: 0px;
+    }
+    span {
+      font-size: 18px;
+    }
+  }
+  .legal {
+    display: none;
+  }
+  .register-responsive {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
 }
