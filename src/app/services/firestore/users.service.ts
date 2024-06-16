@@ -14,6 +14,7 @@ import {
   CollectionReference,
   DocumentData,
   getDoc,
+  documentId,
 } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { RegistrationService } from '../registration.service';
@@ -23,6 +24,8 @@ import { StorageService } from '../storage.service';
 import { MinimalChannel } from '../../models/minimal_channel.class';
 import { Post } from '../../models/post.class';
 import { Reaction } from '../../models/reaction.class';
+import { Channel } from '../../models/channel.class';
+import { MinimalUser } from '../../models/minimal_user.class';
 
 @Injectable({
   providedIn: 'root',
@@ -226,8 +229,30 @@ export class UsersService {
 
     querySnapshot.forEach(async (document) => {
       const data = document.data();
-      const posts = data['posts'];
 
+      if (path === 'channels') {
+        const users = data['users'];
+        this.updateNameAvatarChannelOrDirectMessage(
+          users,
+          currentUser,
+          partialUser,
+          document.id,
+          path
+        );
+      }
+
+      if (path === 'directMessages') {
+        const users = data['users']
+        this.updateNameAvatarChannelOrDirectMessage(
+          users,
+          currentUser,
+          partialUser,
+          document.id,
+          path
+        );
+      }
+
+      const posts = data['posts'];
       if (Array.isArray(posts)) {
         await this.updatePostInFirestore(
           path,
@@ -247,6 +272,28 @@ export class UsersService {
         );
       }
     });
+  }
+
+  async updateNameAvatarChannelOrDirectMessage(
+    users: MinimalUser[],
+    currentUser: User,
+    partialUser: Partial<User>,
+    documentId: string,
+    path: 'channels' | 'directMessages'
+  ) {
+    let updatedUsers = false;
+    users.forEach((user) => {
+      if (user.id === currentUser.id) {
+        user.name = partialUser.name || currentUser.name;
+        user.avatar = partialUser.avatar || currentUser.avatar;
+        updatedUsers = true;
+      }
+    });
+
+    if (updatedUsers) {
+      const documentRef = doc(this.firestore, path, documentId);
+      await updateDoc(documentRef, { users: users });
+    }
   }
 
   async updatePostInFirestore(
@@ -325,12 +372,3 @@ export class UsersService {
     }
   }
 }
-
-// posts.forEach((post: Post) => {
-//   let reactions = post.reactions;
-//   reactions.forEach(reaction => {
-//     if (reaction.userId === currentUserId) {
-//       reaction.userName = partialUser.name
-//     }
-//   });
-// })

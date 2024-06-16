@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import {
   deleteObject,
   getDownloadURL,
+  getMetadata,
   getStorage,
   ref,
   uploadBytes,
@@ -61,12 +62,20 @@ export class StorageService {
     return downloadURL;
   }
 
-  deleteOldFile(fileURL: string) {
+  async deleteOldFile(fileURL: string) {
     const fileName = this.getFileNameFromURL(fileURL);
-    this.deleteImageUser(fileName);
+
+    if (fileName !== '') {
+      this.deleteImageUser(fileName);
+    }
   }
 
   getFileNameFromURL(fileURL: string): string {
+    try {
+      new URL(fileURL);
+    } catch {
+      return '';
+    }
     const pathParts = new URL(fileURL).pathname.split('/');
     for (const part of pathParts) {
       const match = part.match(/^imagesUsers%2F(.+)/);

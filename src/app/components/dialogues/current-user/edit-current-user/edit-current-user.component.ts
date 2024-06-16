@@ -147,9 +147,9 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
       if (this.wantChangeMail && !this.isPasswordVerified) {
         return;
       }
+      this.storageService.deleteOldFile(this.currentUser.avatar);
 
-      if (this.file.name !== '') {
-        this.storageService.deleteOldFile(this.currentUser.avatar)
+      if (this.file.type === 'image/jpeg' || this.file.type === 'image/png') {
         this.selectedAvatar = await this.storageService.saveImageUser(
           this.file
         );
