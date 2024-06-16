@@ -33,6 +33,12 @@ export class StorageService {
     }
 
     const uploadPromises = files.map(async (file) => {
+      if (file.type === 'image/jpeg' || file.type === 'image/png') {
+        this.snackbarService.openSnackBar(
+          'Bitte wähle ein Dateiformat jpg oder png.',
+          'Schliessen'
+        );
+        throw new Error('Total size of all files exceeds 5MB.');}
       const fileRef = ref(this.storage, `posts/${postId}/${file.name}`);
       const uploadTask = await uploadBytes(fileRef, file);
       const downloadURL = await getDownloadURL(uploadTask.ref);

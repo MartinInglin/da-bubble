@@ -50,7 +50,7 @@ export class ChannelsService {
   }
 
   /**
-   *
+   * This function gets the data of all channels and creates a snapshot.
    */
   getAllChannels() {
     const collectionRef = collection(this.firestore, 'channels');
