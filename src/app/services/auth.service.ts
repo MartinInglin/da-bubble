@@ -172,8 +172,8 @@ export class AuthService {
   }
 
   signInGuestUser() {
-    const email: string = 'a@b.ch';
-    const password: string = 'afopsdnv230lsdksofj_12gerte';
+    const email: string = 'z6nyvjs7@ei17whwl.ch';
+    const password: string = 'VFQqcJjvlOjr';
     console.log('Guest signed in');
 
     this.signInWithEmail(email, password);

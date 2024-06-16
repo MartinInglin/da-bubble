@@ -8,6 +8,7 @@ import {
   ViewChild,
   ElementRef,
   ChangeDetectorRef,
+  AfterViewChecked,
 } from '@angular/core';
 import { ChannelsService } from '../../../services/firestore/channels.service';
 import { RouterModule } from '@angular/router';
@@ -31,6 +32,7 @@ import { ChannelInfoComponent } from '../../dialogues/channel-info/channel-info.
 import { ChannelInfoMobileComponent } from '../../dialogues/mobile/channel-info-mobile/channel-info-mobile.component';
 import { MembersComponent } from '../../dialogues/members/members.component';
 import { AddUserToChannelComponent } from '../../dialogues/add-user-to-channel/add-user-to-channel.component';
+import { AddUserToChannelMobileComponent } from '../../dialogues/mobile/add-user-to-channel-mobile/add-user-to-channel-mobile.component';
 import { ProfileDetailViewComponent } from '../../dialogues/profile-detail-view/profile-detail-view.component';
 import { DirectMessagesService } from '../../../services/firestore/direct-messages.service';
 import { DirectMessage } from '../../../models/direct-message.class';
@@ -98,6 +100,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
 
   constructor(private dialog: MatDialog, private fb: FormBuilder,private cdref: ChangeDetectorRef) {
+
     this.form = this.fb.group({
       recipient: [''],
     });
@@ -115,15 +118,12 @@ export class MainContentComponent implements OnInit, OnDestroy {
         c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
       this.currentUser = user ?? new User();
-
     });
 
     this.channelSubscription = this.channelsService.channelSubject$.subscribe(
       (channel) => {
         if (channel) {
           this.selectedChannel = channel ?? new Channel();
-
-
 
           this.channelSelected = !!this.selectedChannel.id;
           if (this.channelSelected) {
@@ -143,8 +143,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
           this.filteredUsers = this.allUsers.filter((u) =>
             u.name.toLowerCase().includes(this.searchTerm.toLowerCase())
           );
-
-
         }
       }
     );
@@ -210,6 +208,8 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
   }
 /**
+  /**
+>>>>>>> 55e6a1b97300c1c835d07084ae544647478a27c7
    * This function checks if the given result is a user.
    * @param result - The result to check.
    * @returns True if the result is a user, false otherwise.
@@ -227,7 +227,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.form.get('recipient')?.setValue('');
   }
 
-   /**
+  /**
    *This function opens a direct message based on the given ID and user.
    * @param x - The ID of the direct message.
    * @param y - The user associated with the direct message.
@@ -248,7 +248,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
   }
 
-   /**
+  /**
    * Getter for the recipient form control.
    * @returns The recipient form control.
    */
@@ -256,7 +256,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     return this.form.get('recipient') as FormControl;
   }
 
-   /**
+  /**
    * This function selects a recipient (channel or user) and updates the form value.
    * @param recipient - The selected recipient.
    */
@@ -266,7 +266,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.form.setValue({ recipient: recipientString });
   }
 
-   /**
+  /**
    * This function searches for channels or users based on the search term.
    * @param searchTerm - The term to search for.
    * @returns An observable of the search results (channels or users).
@@ -274,29 +274,34 @@ export class MainContentComponent implements OnInit, OnDestroy {
   search(searchTerm: string): Observable<(Channel | User)[]> {
     if (searchTerm.startsWith('#')) {
       // Suche nach Kanälen
-      const filteredChannels = this.filteredChannels.filter((channel) =>
-        channel.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase()) && !channel.isDirectMessage // Entfernen Sie "#" aus dem Suchbegriff
+      const filteredChannels = this.filteredChannels.filter(
+        (channel) =>
+          channel.name
+            .toLowerCase()
+            .includes(searchTerm.slice(1).toLowerCase()) &&
+          !channel.isDirectMessage // Entfernen Sie "#" aus dem Suchbegriff
       );
       return of(filteredChannels);
     } else if (searchTerm.startsWith('@')) {
       // Suche nach Benutzern
-      const filteredUsers = this.allUsers.filter((user) =>
-        user.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase()) && !user.isChannel // Entfernen Sie "@" aus dem Suchbegriff
+      const filteredUsers = this.allUsers.filter(
+        (user) =>
+          user.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase()) &&
+          !user.isChannel // Entfernen Sie "@" aus dem Suchbegriff
       );
       return of(this.filterCurrentUser(filteredUsers));
-
     } else {
       return of([]); // Return an empty observable for no matches
     }
   }
 
-    /**
+  /**
    * This function filters out the current user from the search results.
    * @param results - The search results to filter.
    * @returns The filtered search results.
    */
   private filterCurrentUser(results: (Channel | User)[]): (Channel | User)[] {
-    return results.filter(result => {
+    return results.filter((result) => {
       if (this.isUser(result)) {
         return result.id !== this.currentUser.id;
       }
@@ -329,7 +334,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   openChannelInfoDialog(channelId: string): void {
     if (this.currentUser) {
       if (window.innerWidth <= 750) {
-        this.openChannelInfoMobileDialog();
+        this.openChannelInfoMobileDialog(channelId);
       } else {
         const dialogRef = this.dialog.open(ChannelInfoComponent, {
           width: '872px',
@@ -350,14 +355,15 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
   }
 
-   /**
+  /**
    * This function opens the channel info mobile dialog.
    */
-  openChannelInfoMobileDialog(): void {
+  openChannelInfoMobileDialog(channelId: string): void {
     if (this.currentUser) {
       const dialogRef = this.dialog.open(ChannelInfoMobileComponent, {
         width: '100%',
         height: '100vh',
+        data: { channelId: channelId },
       });
       dialogRef.componentInstance.currentUser = new User(this.currentUser);
 
@@ -369,22 +375,33 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
   }
 
-   /**
+  /**
    * This function opens the members dialog for the given channel ID.
    * @param channelId - The ID of the channel.
    * @param membersDialog - The HTML element for positioning the dialog.
    */
   openMembersDialog(channelId: string, membersDialog: HTMLElement): void {
     const rect = membersDialog.getBoundingClientRect();
+    const dialogWidth = 415;
+    const screenWidth = window.innerWidth;
+    let leftPosition;
+
+    if (screenWidth <= 500) {
+      leftPosition = (screenWidth - dialogWidth) / 2 + window.scrollX;
+    } else {
+      leftPosition = rect.left + window.scrollX - 400;
+    }
+
     const dialogRef = this.dialog.open(MembersComponent, {
-      width: '415px',
+      width: `${dialogWidth}px`,
       position: {
         top: `${rect.bottom + window.scrollY + 10}px`,
-        left: `${rect.left + window.scrollX - 400}px`,
+        left: `${leftPosition}px`,
       },
       data: { channelId: channelId },
     });
   }
+
 
   /**
    * This function opens the members dialog for the given channel ID.
@@ -393,18 +410,37 @@ export class MainContentComponent implements OnInit, OnDestroy {
    */
   openAddUserToChannelDialog(channelId: string, addUserDialog: HTMLElement) {
     const rect = addUserDialog.getBoundingClientRect();
-    const dialogRef = this.dialog.open(AddUserToChannelComponent, {
-      width: '800px',
-      height: '800px',
-      position: {
-        top: `${rect.bottom + window.scrollY + 10}px`,
-        left: `${rect.left + window.scrollX - 475}px`,
-      },
-      data: { channelId: channelId },
-    });
+    if (window.innerWidth <= 750) {
+      this.openAddUserToChannelMobileDialog(channelId);
+    } else {
+      const dialogRef = this.dialog.open(AddUserToChannelComponent, {
+        width: '800px',
+        height: '800px',
+        position: {
+          top: `${rect.bottom + window.scrollY + 10}px`,
+          left: `${rect.left + window.scrollX - 475}px`,
+        },
+        data: { channelId: channelId }
+      });
+    }
   }
 
-    /**
+  openAddUserToChannelMobileDialog(channelId: string,): void {
+    if (this.currentUser) {
+      const dialogRef = this.dialog.open(AddUserToChannelMobileComponent, {
+        width: '514px',
+        height: '514px',
+        data: { channelId: channelId }
+      });
+      this.isDialogOpen = true;
+
+      dialogRef.afterClosed().subscribe(() => {
+        this.isDialogOpen = false;
+      });
+    }
+  }
+
+  /**
    * This function opens the add user to channel dialog for the given channel ID.
    * @param channelId - The ID of the channel.
    * @param addUserDialog - The HTML element for positioning the dialog.
@@ -415,7 +451,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     });
   }
 
-   /**
+  /**
    * This function opens the profile detail view dialog.
    */
   formatDate(timestamp: number): string {
@@ -445,7 +481,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
   }
 
-   /**
+  /**
    * This function formats a timestamp into a date and time string.
    * @param timestamp - The timestamp to format.
    * @returns The formatted date and time string.
@@ -455,6 +491,22 @@ export class MainContentComponent implements OnInit, OnDestroy {
     const hours = date.getHours();
     const minutes = date.getMinutes().toString().padStart(2, '0');
     return `${hours}:${minutes} Uhr`;
+  }
+
+  isNewDate(index: number, path: string) {
+    if (index === 0) {
+      return true;
+    }
+    if (path === 'channel') {
+      const currentPostDate = this.formatDate(this.selectedChannel.posts[index].timestamp);
+      const previousPostDate = this.formatDate(this.selectedChannel.posts[index - 1].timestamp);
+      return currentPostDate !== previousPostDate;
+    }
+    if (path === 'directMessage') {
+      const currentPostDate = this.formatDate(this.selectedDirectMessage.posts[index].timestamp);
+      const previousPostDate = this.formatDate(this.selectedDirectMessage.posts[index - 1].timestamp);
+      return currentPostDate !== previousPostDate;
+    } return false
   }
 
   /**
@@ -476,7 +528,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     );
   }
 
-   /**
+  /**
    * This function gets the user count for the selected channel.
    */
   async getUserCount(): Promise<void> {

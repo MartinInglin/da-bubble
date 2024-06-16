@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import {
   deleteObject,
   getDownloadURL,
+  getMetadata,
   getStorage,
   ref,
   uploadBytes,
@@ -32,6 +33,12 @@ export class StorageService {
     }
 
     const uploadPromises = files.map(async (file) => {
+      if (file.type === 'image/jpeg' || file.type === 'image/png') {
+        this.snackbarService.openSnackBar(
+          'Bitte wähle ein Dateiformat jpg oder png.',
+          'Schliessen'
+        );
+        throw new Error('Total size of all files exceeds 5MB.');}
       const fileRef = ref(this.storage, `posts/${postId}/${file.name}`);
       const uploadTask = await uploadBytes(fileRef, file);
       const downloadURL = await getDownloadURL(uploadTask.ref);
@@ -61,12 +68,20 @@ export class StorageService {
     return downloadURL;
   }
 
-  deleteOldFile(fileURL: string) {
+  async deleteOldFile(fileURL: string) {
     const fileName = this.getFileNameFromURL(fileURL);
-    this.deleteImageUser(fileName);
+
+    if (fileName !== '') {
+      this.deleteImageUser(fileName);
+    }
   }
 
   getFileNameFromURL(fileURL: string): string {
+    try {
+      new URL(fileURL);
+    } catch {
+      return '';
+    }
     const pathParts = new URL(fileURL).pathname.split('/');
     for (const part of pathParts) {
       const match = part.match(/^imagesUsers%2F(.+)/);

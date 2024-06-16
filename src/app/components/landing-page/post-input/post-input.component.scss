@@ -38,7 +38,7 @@
     .icons {
       display: flex;
       height: 45px;
-      align-items: start;
+      align-items: center;
       justify-content: space-between;
       padding-left: 15px;
       padding-right: 15px;
@@ -47,9 +47,10 @@
         align-items: center;
         flex-direction: row;
       }
+
       .addIcon {
-        height: 30px;
-        width: 30px;
+        height: 45px;
+        width: 45px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -59,12 +60,78 @@
         cursor: pointer;
         background-color: none;
         margin-right: 5px;
+
+        img {
+          height: 45px;
+          width: 45px;
+        }
+
+        &:hover {
+          background-color: #eceefe;
+          border-radius: 100%;
+          object-fit: cover;
+
+          img {
+            content: url("./../../../../assets/images/icons/add_icon_blue.svg");
+          }
+        }
+      }
+    }
+  }
+
+  .smiley-icon-button {
+    height: 45px;
+    width: 45px;
+    background-color: transparent;
+    border-radius: 100%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      height: 45px;
+      width: 45px;
+    }
+
+    &:hover {
+      cursor: pointer;
+      background-color: #eceefe;
+      img {
+        content: url("./../../../../assets/images/icons/smiley-Icon_blue.svg");
+      }
+    }
+  }
+
+  .link-button {
+    height: 45px;
+    width: 45px;
+    background-color: transparent;
+    border-radius: 100%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      height: 45px;
+      width: 45px;
+    }
+
+    &:hover {
+      cursor: pointer;
+      background-color: #eceefe;
+      img {
+        content: url("./../../../../assets/images/icons/link_icon_blue.svg");
       }
     }
   }
 
   .link-emojis {
+    display: flex;
+    flex-direction: row;
     margin-top: 5px;
+    align-items: center;
   }
 
   .emoji-container {
@@ -129,5 +196,21 @@
   }
 
   .save-post {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 45px;
+    width: 45px;
     cursor: pointer;
+
+    &:hover {
+      img {
+        content: url("./../../../../assets/images/icons/send_icon_bright.svg");
+      }
+    }
+
+    img {
+      height: 45px;
+      width: 45px;
+    }
   }

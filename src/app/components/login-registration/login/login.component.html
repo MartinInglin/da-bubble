@@ -1,5 +1,9 @@
 <div class="card-container">
-  <app-start-animation></app-start-animation>
+  @if (!animationFinished) {
+  <app-start-animation
+    (animationFinished)="setAnimationFinishedTrue()"
+  ></app-start-animation>
+  } @if(animationFinished) {
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="card">
       <div class="title">
@@ -75,7 +79,7 @@
           Anmelden
         </button>
         <button
-          [routerLink]="['/landingPage']"
+          type="button"
           class="button-guest-login"
           (click)="authService.signInGuestUser()"
         >
@@ -84,8 +88,17 @@
       </div>
     </div>
     <div class="legal">
-      <button class="button-imprint" type="button" routerLink="/imprint">Impressum</button>
-      <button class="button-privacy-policy" type="button" routerLink="/privacyPolicy">Datenschutz</button>
+      <button class="button-imprint" type="button" routerLink="/imprint">
+        Impressum
+      </button>
+      <button
+        class="button-privacy-policy"
+        type="button"
+        routerLink="/privacyPolicy"
+      >
+        Datenschutz
+      </button>
     </div>
   </form>
+  }
 </div>

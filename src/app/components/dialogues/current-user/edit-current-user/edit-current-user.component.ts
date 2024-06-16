@@ -83,7 +83,7 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
         this.updatedName = user.name;
         this.updatedEmail = user.email;
         this.originalEmail = user.email;
-        this.selectedAvatar = user.avatar; // Set the default avatar to the current user's avatar
+        this.selectedAvatar = user.avatar;
       }
     });
   }
@@ -147,9 +147,9 @@ export class EditCurrentUserComponent implements OnInit, OnDestroy {
       if (this.wantChangeMail && !this.isPasswordVerified) {
         return;
       }
+      this.storageService.deleteOldFile(this.currentUser.avatar);
 
-      if (this.file.name !== '') {
-        this.storageService.deleteOldFile(this.currentUser.avatar)
+      if (this.file.type === 'image/jpeg' || this.file.type === 'image/png') {
         this.selectedAvatar = await this.storageService.saveImageUser(
           this.file
         );

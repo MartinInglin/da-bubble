@@ -9,6 +9,8 @@
   flex-direction: row;
   margin-bottom: 20px;
   gap: 20px;
+  padding: 10px;
+  box-sizing: border-box;
 
   span {
     font-size: 24px;
@@ -75,16 +77,20 @@
   width: fit-content;
   cursor: pointer;
 
+  .drop-down-img,
+  .arrow-drop-down {
+    height: 10px;
+    width: 10px;
+  }
+
   &:hover {
     .drop-down-img,
     .arrow-drop-down {
       content: url("./../../../../assets/images/icons/arrow_drop_down_blue.svg");
-      transform: scale(1.1);
     }
 
     .contact-list-account-img {
       content: url("./../../../../assets/images/icons/account_circle_blue.svg");
-      height: 27px;
     }
 
     .contacts-list {
@@ -120,8 +126,6 @@
       content: url("./../../../../assets/images/icons/workspace_blue.svg");
     }
 
-    padding-bottom: 2px;
-    margin-left: -2px;
     color: #535af1;
   }
 }
@@ -150,8 +154,6 @@
     img {
       content: url("./../../../../assets/images/icons/account_circle_blue.svg");
     }
-    padding-top: 2px;
-    padding-left: 2px;
     color: #535af1;
   }
 }
@@ -186,19 +188,14 @@
     gap: 10px;
     cursor: pointer;
     padding: 4px 20px 4px 20px;
-    transition: padding 100ms ease-in-out;
+    border-radius: 20px;
 
     /* Hover effect for table data in channels and contacts */
     &:hover {
-      border-radius: 20px;
       background-color: #eceefe;
 
       .span-hashtag {
         color: #535af1;
-      }
-
-      .current-user-name {
-        padding-bottom: 2px;
       }
     }
   }
@@ -264,7 +261,6 @@
     &:hover {
       border-radius: 30px;
       background-color: #eceefe;
-      padding-left: 28px;
     }
   }
 
@@ -375,6 +371,9 @@
 
 .channels-head {
   width: 400px;
+  .mat-drawer.mat-drawer-side {
+    width: 100% !important;
+  }
 }
 
 .head-side-menu {

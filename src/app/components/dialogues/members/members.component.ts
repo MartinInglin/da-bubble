@@ -75,7 +75,7 @@ export class MembersComponent implements OnInit, OnDestroy {
       width: '800px',
       height: '800px',
       position: {
-        top: '210px',
+        top: '200px',
         right: '-200px',
       },
       data: {

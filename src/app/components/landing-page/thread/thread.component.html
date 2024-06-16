@@ -1,63 +1,64 @@
 <!-- Aside element conditionally rendered based on 'comments' property -->
 <aside *ngIf="comments">
-      <!-- Header of the thread -->
-      <div class="head-thread">
-        <div class="head-thread-text">
-          <span>Thread</span>
-          <span class="thread-name"># {{ selectedThread.name }}</span>
-        </div>
+  <!-- Header of the thread -->
+  <div class="head-thread">
+    <div class="head-thread-text">
+      <span>Thread</span>
+      <span class="thread-name"># {{ selectedThread.name }}</span>
+    </div>
 
-        <button (click)="closeThread()">
-          <img src="assets/images/icons/close.svg" alt="" />
-        </button>
+    <button (click)="closeThread()">
+      <img src="assets/images/icons/close.svg" alt="" />
+    </button>
+  </div>
+
+  <!-- First post within the thread -->
+  <div class="message-content">
+    @for (post of selectedThread.posts | slice:0:1; track post) {
+    <app-post
+      [post]="selectedThread.posts[0]"
+      [currentUser]="currentUser"
+      [selectedChannel]="selectedChannel"
+      [selectedThreadId]="selectedThread.id"
+      [indexPost]="0"
+      [path]="'threads'"
+    ></app-post>
+
+    } @if (selectedThread.posts.length > 0) {
+
+    <!-- Details and actions for the message -->
+    <div class="message-details">
+      <!-- Link to reply to the message -->
+      <div class="number-answers">
+        {{ selectedThread.posts.length - 1 }} Antworten
       </div>
+      <div class="line-answer"></div>
+    </div>
 
-      <!-- First post within the thread -->
-      <div class="message-content">
-        @for (post of selectedThread.posts | slice:0:1; track post) {
-        <app-post
-          [post]="selectedThread.posts[0]"
-          [currentUser]="currentUser"
-          [selectedChannel]="selectedChannel"
-          [selectedThreadId]="selectedThread.id"
-          [indexPost]="0"
-          [path]="'threads'"
-        ></app-post>
-
-        } @if (selectedThread.posts.length > 0) {
-
-        <!-- Details and actions for the message -->
-        <div class="message-details">
-          <!-- Link to reply to the message -->
-          <div class="number-answers">
-            {{ selectedThread.posts.length - 1 }} Antworten
-          </div>
-          <div class="line-answer"></div>
-        </div>
-
-        @for (post of selectedThread.posts | slice:1; track post; let index =
-        $index) {
-            <div class="dateLine">
-              <div class="Line">
-                <span>{{ formatDate(post.timestamp) }}</span>
-              </div>
-            </div>
-        <app-post
-          [post]="post"
-          [currentUser]="currentUser"
-          [selectedChannel]="selectedChannel"
-          [selectedThreadId]="selectedThread.id"
-          [indexPost]="index + 1"
-          [path]="'threads'"
-        ></app-post>
-        } }
+    @for (post of selectedThread.posts | slice:1; track post; let index =
+    $index) { @if (isNewDate(index)) {
+    <div class="date-line">
+      <div class="Line">
+        <span>{{ formatDate(post.timestamp) }}</span>
       </div>
-      <app-post-input
-        class="post-input"
-        [selectedChannel]="selectedChannel"
-        [allUsers]="allUsers"
-        [currentUser]="currentUser"
-        [selectedThread]="selectedThread"
-        [path]="'threads'"
-      ></app-post-input>
+    </div>
+    }
+    <app-post
+      [post]="post"
+      [currentUser]="currentUser"
+      [selectedChannel]="selectedChannel"
+      [selectedThreadId]="selectedThread.id"
+      [indexPost]="index + 1"
+      [path]="'threads'"
+    ></app-post>
+    } }
+  </div>
+  <app-post-input
+    class="post-input"
+    [selectedChannel]="selectedChannel"
+    [allUsers]="allUsers"
+    [currentUser]="currentUser"
+    [selectedThread]="selectedThread"
+    [path]="'threads'"
+  ></app-post-input>
 </aside>

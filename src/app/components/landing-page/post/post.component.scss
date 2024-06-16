@@ -82,6 +82,7 @@
     padding: 8px 15px 8px 20px;
     background-color: white;
     gap: 5px;
+    z-index: 999;
 
     .users-emojis {
       font-size: 24px;
@@ -249,6 +250,7 @@
   align-items: center;
   gap: 12px;
   margin-top: 8px;
+  z-index: 1000;
 
   .reaction {
     display: flex;
@@ -287,7 +289,6 @@
 
       .name-reaction {
         font-weight: 700;
-        z-index: 999;
       }
     }
 

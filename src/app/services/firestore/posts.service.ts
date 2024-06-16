@@ -213,7 +213,6 @@ export class PostsService {
         posts[postIndex] = {
           ...currentPost,
           message: newMessage,
-          timestamp: this.getUTXTimestamp(),
           edited: true,
         };
 
