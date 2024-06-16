@@ -3,9 +3,7 @@
   <app-start-animation
     (animationFinished)="setAnimationFinishedTrue()"
   ></app-start-animation>
-  }
-
-  @if(animationFinished) {
+  } @if(animationFinished) {
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="card">
       <div class="title">
@@ -81,7 +79,7 @@
           Anmelden
         </button>
         <button
-          [routerLink]="['/landingPage']"
+          type="button"
           class="button-guest-login"
           (click)="authService.signInGuestUser()"
         >
@@ -102,5 +100,5 @@
       </button>
     </div>
   </form>
-}
+  }
 </div>
