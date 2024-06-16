@@ -7,6 +7,7 @@ import {
   OnDestroy,
   ViewChild,
   ElementRef,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { ChannelsService } from '../../../services/firestore/channels.service';
 import { RouterModule } from '@angular/router';
@@ -65,6 +66,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   @Output() toggleThread = new EventEmitter<void>();
 
   @ViewChild('fileInput') fileInput!: ElementRef;
+  @ViewChild('messageContent') messageContent!: ElementRef;
 
   channelsService = inject(ChannelsService);
   usersService = inject(UsersService);
@@ -95,7 +97,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   searchResults: (Channel | User)[] | undefined;
 
 
-  constructor(private dialog: MatDialog, private fb: FormBuilder) {
+  constructor(private dialog: MatDialog, private fb: FormBuilder,private cdref: ChangeDetectorRef) {
     this.form = this.fb.group({
       recipient: [''],
     });
@@ -127,6 +129,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
           if (this.channelSelected) {
             this.chatSelected = false;
             this.getUserCount();
+            this.scrollToBottomWithDelay();
           }
         }
       }
@@ -155,6 +158,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
           this.channelSelected = false;
         }
         this.getOtherUserDirectMessage();
+        this.scrollToBottomWithDelay();
       });
 
     this.stateService.showContacts$.subscribe((show) => {
@@ -182,6 +186,28 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.searchResults$.subscribe((results) => {
       this.searchResults = results;
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.scrollToBottomWithDelay();
+
+    // MutationObserver für Änderungen in den Nachrichten
+    const observer = new MutationObserver(() => {
+      this.scrollToBottomWithDelay();
+    });
+    observer.observe(this.messageContent.nativeElement, { childList: true });
+
+    this.cdref.detectChanges(); // Trigger change detection
+  }
+
+  scrollToBottomWithDelay(): void {
+    try {
+      setTimeout(() => {
+        this.messageContent.nativeElement.scrollTop = this.messageContent.nativeElement.scrollHeight;
+      }, 100); // Delay to ensure DOM is fully updated
+    } catch (err) {
+      console.error('Scroll to bottom error:', err);
+    }
   }
 /**
    * This function checks if the given result is a user.
@@ -464,4 +490,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
       console.error('Error fetching user count:', error);
     }
   }
+
+
+ 
 }

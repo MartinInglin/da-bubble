@@ -116,7 +116,7 @@ mat-drawer-container {
     width: 100%;
     justify-content: center;
     // flex-direction: column;
-    // gap: 0;
+    gap: 0;
   }
 
   .sidenav, .mainContent, .thread {
@@ -135,5 +135,20 @@ mat-drawer-container {
     opacity: 1;
     pointer-events: auto;
     transform: translateX(0);
+  }
+  .menu-btn-content {
+   span{
+    display: none;
+   }
+  }
+
+  .menuBtn {
+    left: 0px;
+    button{
+      width: 50px;
+    }
+    img{
+      margin-left: 0px!important;
+    }
   }
 }

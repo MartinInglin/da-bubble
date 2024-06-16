@@ -45,7 +45,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   openThreadEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   @ViewChild('drawerThread') drawerThread!: MatDrawer;
-  // @ViewChild('drawer') drawer!: MatDrawer;
+  @ViewChild('drawer') drawer!: MatDrawer;
 
   authService = inject(AuthService);
   usersService = inject(UsersService);
@@ -57,7 +57,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   i: any = ([] = '');
 
   isOpen: boolean = false;
-  drawer: any;
+  // drawer: any;
   loading: boolean = true;
   isThreadOpen: boolean = false;
 

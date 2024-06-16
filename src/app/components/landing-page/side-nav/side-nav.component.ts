@@ -34,6 +34,7 @@ export class SideNavComponent implements OnInit {
 
   @Input() currentUser: User = new User();
   @Output() contactClicked = new EventEmitter<void>();
+  @Output() toggleDrawer = new EventEmitter<any>();
 
   private allUsersSubscription: Subscription = new Subscription();
   private showContactsSubscription: Subscription = new Subscription();
@@ -46,10 +47,12 @@ export class SideNavComponent implements OnInit {
   allUsers: User[] = [];
   filteredUsers: User[] = [];
   filteredChannels: Channel[] = [];
+  drawer: any;
 
   showContacts: boolean = false;
   showChannels: boolean = false;
   isDialogOpen: boolean = false;
+  isSideNavOpen: boolean = true; 
 
   arrowOpen: any = '/assets/images/icons/arrow_drop_up.svg';
   arrowClosed: any = '/assets/images/icons/arrow_drop_right.svg';
@@ -153,14 +156,18 @@ export class SideNavComponent implements OnInit {
 openChannel(x: string) {
   this.channelsService.getDataChannel(x);
   this.form.get('recipient')?.setValue('');
-  this.contactClicked.emit(); // Emit event when contact is clicked
+  this.toggleDrawer.emit(this.drawer);
 }
 
 openDirectMessage(x: string, y: any) {
   this.directMessagesService.getDataDirectMessage(x, y);
   this.form.get('recipient')?.setValue('');
-  this.contactClicked.emit(); // Emit event when contact is clicked
+  this.toggleDrawer.emit(this.drawer);
 }
+
+// closeSideNav() {
+//   this.isSideNavOpen = false;
+// }
 
    // Funktion zum Schließen der Kanal- und Kontaktansicht
   closeChannelsAndContacts() {

@@ -1,3 +1,8 @@
+<section [ngClass]="{ 'side-nav-open': isSideNavOpen, 'side-nav-closed': !isSideNavOpen }">
+
+
+
+
 <!-- head of sidenav -->
 <div class="head-side-menu">
   <div class="head-side-menu-first">
@@ -72,8 +77,10 @@
     </td>
   </tr>
 </table>
+
 <!-- Strich -->
-<div class="channels-head">
+<div class="channels-head" id="contacts-head">
+
   <!-- Contacts-List -->
   <div class="channel-head-first" (click)="showContacts = !showContacts">
     <img
@@ -119,3 +126,6 @@
     } }
   </tr>
 </table>
+
+
+</section>
