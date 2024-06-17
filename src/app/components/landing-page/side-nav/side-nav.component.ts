@@ -156,6 +156,10 @@ export class SideNavComponent implements OnInit {
     this.isOpen = false;
   }
 
+  closeSidenavMobile() {
+    this.toggleDrawer.emit();
+  }
+
 // Funktion zum Öffnen eines Kanals
 openChannel(x: string) {
   this.channelsService.getDataChannel(x);
