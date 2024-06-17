@@ -121,10 +121,10 @@
   </div>
 
   <!-- Direct Message -->
-
-  <div class="header-post-input-container" *ngIf="chatSelected">
+  
+  <div *ngIf="chatSelected" class="header-post-input-container">
     <!-- Header section with channel name and contact information -->
-    <header *ngIf="chatSelected">
+    <header *ngIf="chatSelected && !selectedDirectMessage.isPrivateMessage">
       <div class="channelName" *ngIf="selectedDirectMessage.users.length > 0">
         <div class="avatarName">
           <img
@@ -135,7 +135,20 @@
           {{ otherUserDirectMessage.name }}
         </div>
       </div>
-    </header>
+    </header>    
+    <!-- Header section with channel name and contact information -->
+    <header *ngIf="chatSelected && selectedDirectMessage.isPrivateMessage">
+        <div class="channelName" *ngIf="selectedDirectMessage.users.length > 0">
+          <div class="avatarName">
+            <img
+              class="user-avatar-image"
+              src="{{ currentUser.avatar }}"
+              alt=""
+            />
+            {{ currentUser.name }}
+          </div>
+        </div>
+      </header>
 
     <!-- Message Content  -->
 
