@@ -101,9 +101,11 @@ export class MainContentComponent implements OnInit, OnDestroy {
   searchResults$: Observable<(Channel | User)[]> = of([]);
   searchResults: (Channel | User)[] | undefined;
 
-
-  constructor(private dialog: MatDialog, private fb: FormBuilder,private cdref: ChangeDetectorRef) {
-
+  constructor(
+    private dialog: MatDialog,
+    private fb: FormBuilder,
+    private cdref: ChangeDetectorRef
+  ) {
     this.form = this.fb.group({
       recipient: [''],
     });
@@ -187,7 +189,10 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
   @HostListener('document:click', ['$event'])
   handleClickOutside(event: MouseEvent): void {
-    if (this.searchResultsList && !this.searchResultsList.nativeElement.contains(event.target)) {
+    if (
+      this.searchResultsList &&
+      !this.searchResultsList.nativeElement.contains(event.target)
+    ) {
       this.closeSearchResults();
     }
   }
@@ -196,25 +201,29 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.searchResults = [];
     this.form.get('recipient')?.setValue(''); // Clear the input field
   }
-  
+
   ngAfterViewInit(): void {
     if (this.channelMessageContent) {
       const channelObserver = new MutationObserver(() => {
         this.scrollToBottom(this.channelMessageContent);
       });
-      channelObserver.observe(this.channelMessageContent.nativeElement, { childList: true });
+      channelObserver.observe(this.channelMessageContent.nativeElement, {
+        childList: true,
+      });
     }
-  
+
     if (this.directMessageContent) {
       const directMessageObserver = new MutationObserver(() => {
         this.scrollToBottom(this.directMessageContent);
       });
-      directMessageObserver.observe(this.directMessageContent.nativeElement, { childList: true });
+      directMessageObserver.observe(this.directMessageContent.nativeElement, {
+        childList: true,
+      });
     }
-  
+
     this.cdref.detectChanges(); // Trigger change detection
   }
-  
+
   scrollToBottomWithDelay(): void {
     if (this.channelMessageContent) {
       this.scrollToBottom(this.channelMessageContent);
@@ -223,19 +232,20 @@ export class MainContentComponent implements OnInit, OnDestroy {
       this.scrollToBottom(this.directMessageContent);
     }
   }
-  
+
   scrollToBottom(elementRef: ElementRef): void {
     if (elementRef) {
       try {
         setTimeout(() => {
-          elementRef.nativeElement.scrollTop = elementRef.nativeElement.scrollHeight;
+          elementRef.nativeElement.scrollTop =
+            elementRef.nativeElement.scrollHeight;
         }, 100); // Delay to ensure DOM is fully updated
       } catch (err) {
         console.error('Scroll to bottom error:', err);
       }
     }
   }
-  
+
   isUser(result: Channel | User): result is User {
     return (result as User).avatar !== undefined;
   }
@@ -415,7 +425,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
     });
   }
 
-
   /**
    * This function opens the members dialog for the given channel ID.
    * @param channelId - The ID of the channel.
@@ -433,17 +442,17 @@ export class MainContentComponent implements OnInit, OnDestroy {
           top: `${rect.bottom + window.scrollY + 10}px`,
           left: `${rect.left + window.scrollX - 475}px`,
         },
-        data: { channelId: channelId }
+        data: { channelId: channelId },
       });
     }
   }
 
-  openAddUserToChannelMobileDialog(channelId: string,): void {
+  openAddUserToChannelMobileDialog(channelId: string): void {
     if (this.currentUser) {
       const dialogRef = this.dialog.open(AddUserToChannelMobileComponent, {
         width: '514px',
         height: '514px',
-        data: { channelId: channelId }
+        data: { channelId: channelId },
       });
       this.isDialogOpen = true;
 
@@ -511,15 +520,24 @@ export class MainContentComponent implements OnInit, OnDestroy {
       return true;
     }
     if (path === 'channel') {
-      const currentPostDate = this.formatDate(this.selectedChannel.posts[index].timestamp);
-      const previousPostDate = this.formatDate(this.selectedChannel.posts[index - 1].timestamp);
+      const currentPostDate = this.formatDate(
+        this.selectedChannel.posts[index].timestamp
+      );
+      const previousPostDate = this.formatDate(
+        this.selectedChannel.posts[index - 1].timestamp
+      );
       return currentPostDate !== previousPostDate;
     }
     if (path === 'directMessage') {
-      const currentPostDate = this.formatDate(this.selectedDirectMessage.posts[index].timestamp);
-      const previousPostDate = this.formatDate(this.selectedDirectMessage.posts[index - 1].timestamp);
+      const currentPostDate = this.formatDate(
+        this.selectedDirectMessage.posts[index].timestamp
+      );
+      const previousPostDate = this.formatDate(
+        this.selectedDirectMessage.posts[index - 1].timestamp
+      );
       return currentPostDate !== previousPostDate;
-    } return false
+    }
+    return false;
   }
 
   /**
@@ -534,11 +552,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
    * This function gets the data of the thread from the service. The post needs to be transmitted if the thread is openend for the first time. Then a new document is created and the post is stored as the first post.
    */
   getDataThread(post: Post) {
-    this.threadsService.getDataThread(
-      this.selectedChannel.id,
-      this.selectedChannel.name,
-      post
-    );
+    this.threadsService.getDataThread(this.selectedChannel.name, post);
   }
 
   /**
@@ -555,7 +569,4 @@ export class MainContentComponent implements OnInit, OnDestroy {
       console.error('Error fetching user count:', error);
     }
   }
-
-
- 
 }

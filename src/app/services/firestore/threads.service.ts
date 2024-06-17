@@ -1,19 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import {
   Firestore,
-  arrayUnion,
   collection,
   doc,
-  getDoc,
   onSnapshot,
   setDoc,
-  updateDoc,
 } from '@angular/fire/firestore';
 import { Thread } from '../../models/thread.class';
 import { Post } from '../../models/post.class';
-import { v4 as uuidv4 } from 'uuid';
-import { User } from '../../models/user.class';
-import { Reaction } from '../../models/reaction.class';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
@@ -30,7 +24,13 @@ export class ThreadsService {
 
   constructor() {}
 
-  getDataThread(channelId: string, channelName: string, post: Post) {
+  /**
+   * This function gets the data of a selected thread.
+   * 
+   * @param channelName string
+   * @param post object of type post
+   */
+  getDataThread(channelName: string, post: Post) {
     const threadId = post.id;
 
     const unsub = onSnapshot(
