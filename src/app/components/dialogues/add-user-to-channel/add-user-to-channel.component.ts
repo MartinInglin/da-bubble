@@ -49,18 +49,13 @@ export class AddUserToChannelComponent implements OnInit, OnDestroy {
  * Loads channel members and name upon component initialization.
  */
   ngOnInit(): void {
-    // Subscribe to allUsersSubject$ to get all users data
     this.allUsersSubscription = this.userService.allUsersSubject$.subscribe(
       (allUsers) => {
-        // Update allUsers with received data or initialize as empty array
         this.allUsers = allUsers ?? [];
       }
     );
 
-    // Load users in the current channel
     this.loadChannelMembers();
-
-    // Load the name of the current channel
     this.loadChannelName();
   }
 
