@@ -86,6 +86,11 @@ export class RegistrationService {
     this.avatarFile = file;
   }
 
+  /**
+   * This function sets the avatar to the file the user uploaded. It is needed in case the user moves back and forth between registration and choos avatar page. 
+   *
+   * @returns avatar as a file
+   */
   getAvatarFile(): File {
     return this.avatarFile;
   }

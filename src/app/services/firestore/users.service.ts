@@ -9,12 +9,7 @@ import {
   updateDoc,
   query,
   arrayUnion,
-  where,
-  QuerySnapshot,
-  CollectionReference,
-  DocumentData,
   getDoc,
-  documentId,
 } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { RegistrationService } from '../registration.service';
@@ -23,8 +18,6 @@ import { UserCredential } from '@angular/fire/auth';
 import { StorageService } from '../storage.service';
 import { MinimalChannel } from '../../models/minimal_channel.class';
 import { Post } from '../../models/post.class';
-import { Reaction } from '../../models/reaction.class';
-import { Channel } from '../../models/channel.class';
 import { MinimalUser } from '../../models/minimal_user.class';
 
 @Injectable({
@@ -34,8 +27,6 @@ export class UsersService {
   storageService = inject(StorageService);
   firestore = inject(Firestore);
   registrationService = inject(RegistrationService);
-
-  user: User = new User();
 
   private unsubscribe: any;
 
@@ -151,7 +142,6 @@ export class UsersService {
       const data = snapshot.docs.map(
         (doc) => new User({ id: doc.id, ...doc.data() })
       );
-      // Sort the data alphabetically by name
       data.sort((a, b) => a.name.localeCompare(b.name));
       this.allUsersSubject.next(data);
     });
@@ -242,7 +232,7 @@ export class UsersService {
       }
 
       if (path === 'directMessages') {
-        const users = data['users']
+        const users = data['users'];
         this.updateNameAvatarChannelOrDirectMessage(
           users,
           currentUser,

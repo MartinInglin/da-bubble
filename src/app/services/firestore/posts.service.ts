@@ -277,29 +277,23 @@ export class PostsService {
       const docRef = doc(this.firestore, path, documentId);
       const docSnap = await getDoc(docRef);
 
-      if (!docSnap.exists()) {
-        console.error('Document does not exist');
-        return;
-      }
+      if (docSnap.exists()) {
+        const docData = docSnap.data();
+        const posts: Post[] = docData['posts'];
 
-      const docData = docSnap.data();
-      const posts: Post[] = docData['posts'];
+        if (postIndex >= posts.length || postIndex < 0) {
+          const currentPost = posts[postIndex];
 
-      if (postIndex >= posts.length || postIndex < 0) {
-        console.error('Invalid post index');
-        return;
-      }
+          if (currentPost.message !== newMessage) {
+            posts[postIndex] = {
+              ...currentPost,
+              message: newMessage,
+              edited: true,
+            };
 
-      const currentPost = posts[postIndex];
-
-      if (currentPost.message !== newMessage) {
-        posts[postIndex] = {
-          ...currentPost,
-          message: newMessage,
-          edited: true,
-        };
-
-        await updateDoc(docRef, { posts });
+            await updateDoc(docRef, { posts });
+          }
+        }
       }
     } catch (error) {
       console.error('Error updating post: ', error);
