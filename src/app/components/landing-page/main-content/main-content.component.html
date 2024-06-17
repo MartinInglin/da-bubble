@@ -99,7 +99,6 @@
       <!-- Placeholder if no post is in channel -->
       @if (selectedChannel.posts.length === 0) {
       <div class="placeholderContainer" *ngIf="channelSelected">
-        <img src="{{ selectedChannel.name }}" alt="" />
         <h3>{{ selectedChannel.description }}</h3>
         <div>
           <span
