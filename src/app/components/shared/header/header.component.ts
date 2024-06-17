@@ -5,7 +5,7 @@ import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { User } from '../../../models/user.class';
 import { Observable, Subscription, debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { UsersService } from '../../../services/firestore/users.service';
-import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule} from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { UserMenuComponent } from '../../dialogues/user-menu/user-menu.component';
@@ -131,7 +131,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   closeSearchResults(): void {
     this.searchResults = [];
-    this.form.get('recipient')?.setValue(''); // Clear the input field
+    this.form.get('recipient')?.setValue('');
   }
 
   // Get recipient form control
