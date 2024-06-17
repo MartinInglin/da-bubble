@@ -32,6 +32,7 @@ import { MinimalUser } from '../../../models/minimal_user.class';
 export class AddUserToNewChannelComponent implements OnDestroy, OnInit {
   peopleType: string = 'all';
   channelId: string = '';
+  channelName: string = '';
 
   currentUser: User | null = null;
   selectedUser: User | null = null;
@@ -50,9 +51,10 @@ export class AddUserToNewChannelComponent implements OnDestroy, OnInit {
     public dialogRef: MatDialogRef<AddUserToNewChannelComponent>,
     private usersService: UsersService,
     public channelsService: ChannelsService,
-    @Inject(MAT_DIALOG_DATA) public data: { channelId: string }
+    @Inject(MAT_DIALOG_DATA) public data: { channelId: string, channelName: string }
   ) {
     this.channelId = data.channelId;
+    this.channelName = data.channelName;
   }
 
   ngOnInit(): void {
@@ -74,7 +76,7 @@ export class AddUserToNewChannelComponent implements OnDestroy, OnInit {
         this.allUsers.forEach((user) => {
           const minimalChannel: MinimalChannel = {
             id: this.channelId,
-            name: '',
+            name: this.channelName,
           };
           this.usersService.addChannelToUsers(minimalChannel);
           this.channelsService.addAllUsersToChannel(this.channelId);

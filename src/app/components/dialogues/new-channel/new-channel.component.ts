@@ -1,11 +1,11 @@
-import { Component} from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { AddUserToNewChannelComponent } from '../add-user-to-new-channel/add-user-to-new-channel.component';
-import { MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ChannelsService } from '../../../services/firestore/channels.service';
 import { User } from '../../../models/user.class';
 
@@ -21,7 +21,7 @@ import { User } from '../../../models/user.class';
     MatDialogModule
   ],
   templateUrl: './new-channel.component.html',
-  styleUrl: './new-channel.component.scss'
+  styleUrls: ['./new-channel.component.scss']
 })
 export class NewChannelComponent {
   
@@ -41,19 +41,19 @@ export class NewChannelComponent {
       this.channelsService.createChannel(this.channelName, this.channelDescription, this.currentUser)
         .then((channel) => {
           this.dialogRef.close();
-          this.openAddUserDialog(channel.id);
+          this.openAddUserDialog(channel.id, this.channelName);
         })
         .catch(error => console.error('Error creating channel: ', error));
     }
   }
   
-  openAddUserDialog(channelId: string): void {
+  openAddUserDialog(channelId: string, channelName: string): void {
     const dialogRef = this.dialog.open(AddUserToNewChannelComponent, {
       width: '710px',
       position: {
         top: '20%'
       },
-      data: { channelId: channelId },
+      data: { channelId: channelId, channelName: channelName },
       panelClass: 'custom-dialog-container'
     });
   }
