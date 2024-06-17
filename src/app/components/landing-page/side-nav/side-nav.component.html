@@ -27,7 +27,7 @@
     placeholder="Code learning durchsuchen..."
   />
   <div *ngIf="searchResults && searchResults.length" class="list">
-    <ul>
+    <ul ul #searchResultsList *ngIf="searchResults && searchResults.length > 0">
       <li *ngFor="let result of searchResults">
         <div
           class="container-name-avatar"
