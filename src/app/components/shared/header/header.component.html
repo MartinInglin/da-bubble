@@ -11,7 +11,7 @@
     <input type="text" formControlName="recipient" placeholder="Code learning durchsuchen..." />
     <img class="searchImg" src="../../../../assets/images/icons/search.svg" alt="">
     <div *ngIf="searchResults && searchResults.length" class="list">
-      <ul>
+      <ul ul #searchResultsList *ngIf="searchResults && searchResults.length > 0">
         <li *ngFor="let result of searchResults">
           <div class="container-name-avatar" *ngIf="isUser(result)" (click)="openDirectMessage(result.id, currentUser)">
             <img src="{{result.avatar}}" alt="">

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
@@ -39,13 +39,11 @@ import { UserMenuMobileComponent } from '../../dialogues/mobile/user-menu-mobile
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-
- 
+  @ViewChild('searchResultsList') searchResultsList!: ElementRef;
 
   authService = inject(AuthService);
   usersService = inject(UsersService);
   channelsService = inject(ChannelsService);
-
 
   private userSubscription: Subscription = new Subscription();
   private routeSubscription: Subscription = new Subscription();
@@ -63,10 +61,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   currentUser: User = new User();
 
   constructor(private dialog: MatDialog,
-    private router: Router,
-    private fb: FormBuilder,
-    public directMessagesService: DirectMessagesService) 
-    {
+              private router: Router,
+              private fb: FormBuilder,
+              public directMessagesService: DirectMessagesService) {
     this.directMessagesService = directMessagesService;
     this.form = this.fb.group({
       recipient: [''],
@@ -108,43 +105,55 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
     );
 
- // Observe form value changes for search and update searchResults$
- this.searchResults$ = this.form.valueChanges.pipe(
-  debounceTime(300),
-  distinctUntilChanged(),
-  switchMap((formValue) => {
-    const term = formValue.recipient;
-    this.searchTerm = typeof term === 'string' ? term : '';
-    return this.searchTerm ? this.search(this.searchTerm) : of([]);
-  })
-);
+    // Observe form value changes for search and update searchResults$
+    this.searchResults$ = this.form.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((formValue) => {
+        const term = formValue.recipient;
+        this.searchTerm = typeof term === 'string' ? term : '';
+        return this.searchTerm ? this.search(this.searchTerm) : of([]);
+      })
+    );
 
-// Subscribe to searchResults$ and update searchResults
-this.searchResults$.subscribe((results) => {
-  this.searchResults = results;
-});
-}
+    // Subscribe to searchResults$ and update searchResults
+    this.searchResults$.subscribe((results) => {
+      this.searchResults = results;
+    });
+  }
 
-// Get recipient form control
-get recipient(): FormControl {
-return this.form.get('recipient') as FormControl;
-}
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: MouseEvent): void {
+    if (this.searchResultsList && !this.searchResultsList.nativeElement.contains(event.target)) {
+      this.closeSearchResults();
+    }
+  }
 
-// Type guard to check if result is a User
-isUser(result: Channel | User): result is User {
-return (result as User).avatar !== undefined;
-}
+  closeSearchResults(): void {
+    this.searchResults = [];
+    this.form.get('recipient')?.setValue(''); // Clear the input field
+  }
+
+  // Get recipient form control
+  get recipient(): FormControl {
+    return this.form.get('recipient') as FormControl;
+  }
+
+  // Type guard to check if result is a User
+  isUser(result: Channel | User): result is User {
+    return (result as User).avatar !== undefined;
+  }
 
   // Open channel based on recipient ID
   openChannel(id: string): void {
     this.channelsService.getDataChannel(id);
-    this.form.get('recipient')?.setValue(''); 
+    this.form.get('recipient')?.setValue('');
   }
 
   // Open direct message based on recipient ID and other parameters
   openDirectMessage(id: string, data: any): void {
     this.directMessagesService.getDataDirectMessage(id, data);
-    this.form.get('recipient')?.setValue(''); 
+    this.form.get('recipient')?.setValue('');
   }
 
   // Select recipient and set form value accordingly
@@ -178,7 +187,7 @@ return (result as User).avatar !== undefined;
       const filteredUsers = this.allUsers.filter((user) =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) && !user.isChannel
       );
-  
+
       // Merge search results
       const results = [...filteredChannels, ...filteredUsers];
       return of(this.filterCurrentUser(results));
