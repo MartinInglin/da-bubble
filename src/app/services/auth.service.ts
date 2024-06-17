@@ -171,6 +171,9 @@ export class AuthService {
       });
   }
 
+  /**
+   * This function signs in the guest user with set credentials.
+   */
   signInGuestUser() {
     const email: string = 'z6nyvjs7@ei17whwl.ch';
     const password: string = 'VFQqcJjvlOjr';
@@ -178,7 +181,6 @@ export class AuthService {
 
     this.signInWithEmail(email, password);
   }
-
 
   /**
    * This function signs in the user if the user is verified.
@@ -192,7 +194,7 @@ export class AuthService {
     this.setIsSignedInTrue(userId);
 
     //exchange after testing from here to line 117
-    await this.usersService.getCurrentUser(userId);
+    this.usersService.getCurrentUser(userId);
     this.router.navigate(['/landingPage']);
 
     // if (userSignedIn.emailVerified) {
@@ -207,6 +209,11 @@ export class AuthService {
     // }
   }
 
+  /**
+   * This function sets the boolean isSignedIn on the user to true.
+   *
+   * @param userId string
+   */
   async setIsSignedInTrue(userId: string) {
     const docRef = doc(this.firestore, 'users', userId);
     await updateDoc(docRef, {
@@ -229,12 +236,10 @@ export class AuthService {
       );
       return;
     }
-
     try {
       this.usersService.unsubscribeFromData();
       sessionStorage.removeItem('currentUser');
       this.usersService.setCurrentUserNull();
-
       await signOut(this.auth);
       this.router.navigate(['/login']);
     } catch (error) {
@@ -245,6 +250,11 @@ export class AuthService {
     }
   }
 
+  /**
+   * This function sets the flag isSignedIn to false if the user logs out.
+   *
+   * @param userId string
+   */
   async setIsSignedInFalse(userId: string) {
     try {
       const docRef = doc(this.firestore, 'users', userId);
@@ -300,6 +310,13 @@ export class AuthService {
     }
   }
 
+  /**
+   * This function verfies the passwort when the user signs in.
+   *
+   * @param email string
+   * @param password string
+   * @returns boolean
+   */
   async verifyPassword(email: string, password: string): Promise<boolean> {
     try {
       await signInWithEmailAndPassword(this.auth, email, password);
@@ -309,6 +326,12 @@ export class AuthService {
     }
   }
 
+  /**
+   * This function changes changes the email of the user. The user is then signed out because he needs to verfiy the new email address again.
+   *
+   * @param newEmail string
+   * @param password string
+   */
   async changeEmail(newEmail: string, password: string): Promise<void> {
     const currentUser = this.auth.currentUser;
 
@@ -319,11 +342,7 @@ export class AuthService {
           password
         );
         await reauthenticateWithCredential(currentUser, credential);
-
         await verifyBeforeUpdateEmail(currentUser, newEmail);
-
-        console.log('Email updated on fire auth.');
-
         this.signOut(currentUser.uid);
       } catch (error) {
         console.error('Email update failed:', error);
@@ -333,6 +352,11 @@ export class AuthService {
     }
   }
 
+  /**
+   * This function checks the authentication status of the user.
+   *
+   * @returns observable
+   */
   isAuthenticated(): Observable<boolean> {
     return new Observable((subscriber) => {
       onAuthStateChanged(this.auth, (user) => {
@@ -342,6 +366,9 @@ export class AuthService {
     });
   }
 
+  /**
+   * This function redircets the user to the landingpage if she is authenticated. Like this she cannot get to login or register page.
+   */
   redirectAuthorizedTo(): void {
     this.isAuthenticated()
       .pipe(
