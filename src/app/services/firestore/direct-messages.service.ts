@@ -1,6 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import {
+  DocumentReference,
+  DocumentSnapshot,
   Firestore,
+  QuerySnapshot,
   arrayUnion,
   collection,
   doc,
@@ -30,10 +33,10 @@ export class DirectMessagesService {
   constructor() {}
 
   /**
-   * This function gets the data of a direct message. If the user clicks on a user it first checks if a conversation already exists. If not it creates a document and then fetches the data.
+   *This function gets the data of a direct message
    *
    * @param userId string
-   * @param currentUser objecet User
+   * @param currentUser object of type user
    */
   async getDataDirectMessage(userId: string, currentUser: User) {
     const directMessageId = await this.getIdDirectMessage(userId, currentUser);
@@ -53,6 +56,11 @@ export class DirectMessagesService {
     }
   }
 
+  /**
+   * This function gets the data if the user wants to talk to himself.
+   *
+   * @param currentUser object of type user
+   */
   getDataPrivateDirectMessage(currentUser: User) {
     const directMessageId = currentUser.privateDirectMessageId;
 
@@ -72,12 +80,12 @@ export class DirectMessagesService {
   }
 
   /**
-   * This function gets the ID of the document of the direct message or null if the document does not exist yet.
+   * This function gets the ID of the direct message by comparing the two ID's of the users within the users array of a direct message.
    *
-   * @param userId string of user you want to chat with
-   * @returns string of document ID or null
+   * @param userId string
+   * @param currentUser object of type user
+   * @returns document ID as string or null
    */
-
   async getIdDirectMessage(
     userId: string,
     currentUser: User
@@ -85,28 +93,56 @@ export class DirectMessagesService {
     const currentUserId = currentUser.id;
 
     try {
-      const collectionRef = collection(this.firestore, 'directMessages');
-
-      const querySnapshot = await getDocs(collectionRef);
-      for (const doc of querySnapshot.docs) {
-        const users = doc.data()['users'];
-        const hasCurrentUserId = users.some(
-          (user: { id: string }) => user.id === currentUserId
-        );
-        const hasUserId = users.some(
-          (user: { id: string }) => user.id === userId
-        );
-
-        if (hasCurrentUserId && hasUserId) {
-          return doc.id;
-        }
-      }
-
-      return null;
+      const querySnapshot = await this.getDirectMessagesCollection();
+      return this.checkDirectMessage(querySnapshot, userId, currentUserId);
     } catch (error) {
       console.error('Error checking direct messages: ', error);
       return null;
     }
+  }
+
+  /**
+   * This function gets collection 'directMessages' from firebase.
+   *
+   * @returns collection of documents from direct messages
+   */
+  async getDirectMessagesCollection(): Promise<QuerySnapshot> {
+    try {
+      const collectionRef = collection(this.firestore, 'directMessages');
+      return await getDocs(collectionRef);
+    } catch (error) {
+      console.error('Error getting direct messages collection: ', error);
+      throw error;
+    }
+  }
+
+  /**
+   * This function checks if a direct message document already exists.
+   *
+   * @param querySnapshot snapshot of the collection directMessages
+   * @param userId string of the user who is not the current user
+   * @param currentUserId string
+   * @returns
+   */
+  checkDirectMessage(
+    querySnapshot: QuerySnapshot,
+    userId: string,
+    currentUserId: string
+  ): string | null {
+    for (const doc of querySnapshot.docs) {
+      const users = doc.data()['users'];
+      const hasCurrentUserId = users.some(
+        (user: { id: string }) => user.id === currentUserId
+      );
+      const hasUserId = users.some(
+        (user: { id: string }) => user.id === userId
+      );
+
+      if (hasCurrentUserId && hasUserId) {
+        return doc.id;
+      }
+    }
+    return null;
   }
 
   /**
@@ -126,10 +162,30 @@ export class DirectMessagesService {
       isPrivateMessage: false,
     };
 
+    this.createNewDocument(newDocRef, directMessageData);
+  }
+
+  /**
+   * This function creates the new document in firestore.
+   *
+   * @param newDocRef document reference of the new document
+   * @param directMessageData data of type direct message that needs to be stored on firebase
+   */
+  async createNewDocument(
+    newDocRef: DocumentReference,
+    directMessageData: DirectMessage
+  ) {
     await setDoc(newDocRef, directMessageData);
+    this.subscribeToNewDirectMessage(directMessageData);
+  }
 
+  /**
+   * This function creates a new subscription to the newly created direct message.
+   *
+   * @param directMessageId string
+   */
+  subscribeToNewDirectMessage(directMessageData: DirectMessage) {
     const directMessageId = directMessageData.id;
-
     if (directMessageId) {
       const unsub = onSnapshot(
         doc(this.firestore, 'directMessages', directMessageId),
@@ -141,6 +197,11 @@ export class DirectMessagesService {
     }
   }
 
+  /**
+   * This function creates a new private direct message where the user can talk to himself.
+   *
+   * @param currentUser object of type user
+   */
   async createPrivateDirectMessage(currentUser: User): Promise<void> {
     const directMessageRef = collection(this.firestore, 'directMessages');
     const newDocRef = doc(directMessageRef);
@@ -161,8 +222,35 @@ export class DirectMessagesService {
       isPrivateMessage: true,
     };
 
-    await setDoc(newDocRef, directMessageData);
+    this.createNewPrivateDocument(newDocRef, directMessageData, currentUser);
+  }
 
+  /**
+   * This function creates a new document for the private conversation.
+   *
+   * @param newDocRef document reference of the new document
+   * @param directMessageData data of type direct message
+   * @param currentUser user data of type user
+   */
+  async createNewPrivateDocument(
+    newDocRef: DocumentReference,
+    directMessageData: DirectMessage,
+    currentUser: User
+  ) {
+    await setDoc(newDocRef, directMessageData);
+    this.subscribeToNewPrivateDirectMessage(directMessageData, currentUser);
+  }
+
+  /**
+   * This fucntion creates a new subscription to the newly created data.
+   *
+   * @param directMessageData data of the direct message of type direct message
+   * @param currentUser object of type user
+   */
+  subscribeToNewPrivateDirectMessage(
+    directMessageData: DirectMessage,
+    currentUser: User
+  ) {
     const directMessageId = directMessageData.id;
 
     if (directMessageId) {
@@ -177,6 +265,12 @@ export class DirectMessagesService {
     this.writeDirectMessageIdOnUser(currentUser, directMessageId);
   }
 
+  /**
+   * This function writes the ID of the direct message on the user. This is needed to find the document quickly if the user opens this conversation.
+   *
+   * @param currentUser object of type user
+   * @param directMessageId string
+   */
   async writeDirectMessageIdOnUser(currentUser: User, directMessageId: string) {
     const docRef = doc(this.firestore, 'users', currentUser.id);
     await updateDoc(docRef, {
@@ -185,7 +279,7 @@ export class DirectMessagesService {
   }
 
   /**
-   * This function creates a minimal user. This is needed to store on the document of the channel. Minimal user contains the properties of the interface minimalUser
+   * This function creates an array of minimal users for the direct messages. This is needed to store on the document of the channel. Minimal user contains the properties of the interface minimalUser.
    *
    * @param userId string
    * @param currentUser objecet User
@@ -199,23 +293,7 @@ export class DirectMessagesService {
       const userDocRef = doc(this.firestore, 'users', userId);
       const userDoc = await getDoc(userDocRef);
       if (userDoc.exists()) {
-        const userData = userDoc.data();
-
-        const users: MinimalUser[] = [
-          {
-            id: userDoc.id,
-            avatar: userData['avatar'],
-            name: userData['name'],
-            email: userData['email'],
-          },
-          {
-            id: currentUser.id,
-            avatar: currentUser.avatar,
-            name: currentUser.name,
-            email: currentUser.email,
-          },
-        ];
-
+        const users = this.createMinimalUsersArray(userDoc, currentUser);
         return users;
       } else {
         console.error('User document does not exist');
@@ -228,6 +306,40 @@ export class DirectMessagesService {
   }
 
   /**
+   * This function creates the array of minimal users which contains the current user and the user selected.
+   *
+   * @param userDoc document of the user selected
+   * @param currentUser object of type user
+   * @returns
+   */
+  createMinimalUsersArray(
+    userDoc: DocumentSnapshot,
+    currentUser: User
+  ): MinimalUser[] {
+    const userData = userDoc.data();
+
+    if (userData) {
+      const users: MinimalUser[] = [
+        {
+          id: userDoc.id,
+          avatar: userData['avatar'],
+          name: userData['name'],
+          email: userData['email'],
+        },
+        {
+          id: currentUser.id,
+          avatar: currentUser.avatar,
+          name: currentUser.name,
+          email: currentUser.email,
+        },
+      ];
+
+      return users;
+    }
+    return [];
+  }
+
+  /**
    * This function saves a post in the document of the corresponding direct message.
    *
    * @param directMessageId string
@@ -235,25 +347,34 @@ export class DirectMessagesService {
    * @param currentUser object User
    */
   async savePost(directMessageId: string, message: string, currentUser: User) {
-    const directMessageRef = doc(
-      this.firestore,
-      'directMessages',
-      directMessageId
-    );
-
-    const post: Post = {
-      id: this.createId(),
+    const directMessageRef = doc(this.firestore, 'directMessages', directMessageId);
+  
+    const post = this.createPost(this.createId(), message, currentUser, this.getUTXTimestamp());
+  
+    await updateDoc(directMessageRef, { posts: arrayUnion(post) });
+  }
+  
+  /**
+   * This function writes the data of the post and returns an object.
+   * 
+   * @param id string, ID of the direct message
+   * @param message string, the message the user wrote
+   * @param currentUser object of type user
+   * @param timestamp number, UTX timestamp when the user stored the message
+   * @returns object of type post
+   */
+  createPost(id: string, message: string, currentUser: User, timestamp: number): Post {
+    return {
+      id: id,
       name: currentUser.name,
       avatar: currentUser.avatar,
       message: message,
-      timestamp: this.getUTXTimestamp(),
+      timestamp: timestamp,
       reactions: [],
       edited: false,
       files: [],
       userId: currentUser.id,
     };
-
-    await updateDoc(directMessageRef, { posts: arrayUnion(post) });
   }
 
   /**
@@ -307,18 +428,30 @@ export class DirectMessagesService {
         return;
       }
 
-      posts[postIndex] = {
-        ...posts[postIndex],
-        message: newMessage,
-        timestamp: this.getUTXTimestamp(),
-        edited: true,
-      };
+      const updatedPost = this.updatePost(posts[postIndex], newMessage, this.getUTXTimestamp());
+      posts[postIndex] = updatedPost;
 
       await updateDoc(directMessageRef, { posts });
 
-      console.log('Post successfully updated!');
     } catch (error) {
       console.error('Error updating post: ', error);
     }
+  }
+
+  /**
+   * This function returns the post as an object.
+   * 
+   * @param post of type post
+   * @param newMessage string
+   * @param timestamp number, UTX timestamp
+   * @returns uptdated post of type post
+   */
+  updatePost(post: Post, newMessage: string, timestamp: number): Post {
+    return {
+      ...post,
+      message: newMessage,
+      timestamp: timestamp,
+      edited: true,
+    };
   }
 }
