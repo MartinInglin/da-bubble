@@ -15,7 +15,7 @@
       placeholder="An: #channel oder @jemand"
     />
     <div *ngIf="searchResults && searchResults.length" class="list">
-      <ul>
+      <ul #searchResultsList *ngIf="searchResults && searchResults.length > 0">
         <li *ngFor="let result of searchResults">
           <div
             class="container-name-avatar"
@@ -99,7 +99,6 @@
       <!-- Placeholder if no post is in channel -->
       @if (selectedChannel.posts.length === 0) {
       <div class="placeholderContainer" *ngIf="channelSelected">
-        <img src="{{ selectedChannel.name }}" alt="" />
         <h3>{{ selectedChannel.description }}</h3>
         <div>
           <span

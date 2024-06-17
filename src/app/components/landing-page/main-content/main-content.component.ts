@@ -9,6 +9,7 @@ import {
   ElementRef,
   ChangeDetectorRef,
   AfterViewChecked,
+  HostListener,
 } from '@angular/core';
 import { ChannelsService } from '../../../services/firestore/channels.service';
 import { RouterModule } from '@angular/router';
@@ -62,7 +63,7 @@ declare const twemoji: any; // Deklariere Twemoji als Modul
     PostInputComponent,
   ],
   templateUrl: './main-content.component.html',
-  styleUrl: './main-content.component.scss',
+  styleUrls: ['./main-content.component.scss'],
 })
 export class MainContentComponent implements OnInit, OnDestroy {
   @Output() toggleThread = new EventEmitter<void>();
@@ -70,6 +71,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   @ViewChild('fileInput') fileInput!: ElementRef;
   @ViewChild('channelMessageContent') channelMessageContent!: ElementRef;
   @ViewChild('directMessageContent') directMessageContent!: ElementRef;
+  @ViewChild('searchResultsList') searchResultsList!: ElementRef;
 
   channelsService = inject(ChannelsService);
   usersService = inject(UsersService);
@@ -181,12 +183,19 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.searchResults$.subscribe((results) => {
       this.searchResults = results;
     });
-
-    this.searchResults$.subscribe((results) => {
-      this.searchResults = results;
-    });
   }
 
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: MouseEvent): void {
+    if (this.searchResultsList && !this.searchResultsList.nativeElement.contains(event.target)) {
+      this.closeSearchResults();
+    }
+  }
+
+  closeSearchResults(): void {
+    this.searchResults = [];
+    this.form.get('recipient')?.setValue(''); // Clear the input field
+  }
   
   ngAfterViewInit(): void {
     if (this.channelMessageContent) {
@@ -227,34 +236,17 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
   }
   
-  
-
-/**
-  /**
-   * This function checks if the given result is a user.
-   * @param result - The result to check.
-   * @returns True if the result is a user, false otherwise.
-   */
   isUser(result: Channel | User): result is User {
     return (result as User).avatar !== undefined;
   }
 
-  /**
-   * This function opens a channel based on the given ID.
-   * @param x - The ID of the channel to open.
-   */
-  openChannel(x: string) {
-    this.channelsService.getDataChannel(x);
+  openChannel(id: string) {
+    this.channelsService.getDataChannel(id);
     this.form.get('recipient')?.setValue('');
   }
 
-  /**
-   *This function opens a direct message based on the given ID and user.
-   * @param x - The ID of the direct message.
-   * @param y - The user associated with the direct message.
-   */
-  openDirectMessage(x: string, y: any) {
-    this.directMessagesService.getDataDirectMessage(x, y);
+  openDirectMessage(id: string, currentUser: User) {
+    this.directMessagesService.getDataDirectMessage(id, currentUser);
     this.form.get('recipient')?.setValue('');
   }
 

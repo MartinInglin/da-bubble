@@ -1,5 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
+import {
+  Component, EventEmitter, Input, OnInit, Output, inject, HostListener, ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { StateService } from '../../../services/stateservice.service';
 import { NewChannelComponent } from '../../dialogues/new-channel/new-channel.component';
 import { NewChannelMobileComponent } from '../../dialogues/mobile/new-channel-mobile/new-channel-mobile.component';
@@ -36,6 +39,8 @@ export class SideNavComponent implements OnInit {
   @Output() contactClicked = new EventEmitter<void>();
   @Output() toggleDrawer = new EventEmitter<void>();
 
+  @ViewChild('searchResultsList') searchResultsList!: ElementRef;
+
   private allUsersSubscription: Subscription = new Subscription();
   private showContactsSubscription: Subscription = new Subscription();
   private showChannelsSubscription: Subscription = new Subscription();
@@ -51,13 +56,13 @@ export class SideNavComponent implements OnInit {
   showContacts: boolean = false;
   showChannels: boolean = false;
   isDialogOpen: boolean = false;
-  isSideNavOpen: boolean = true; 
+  isSideNavOpen: boolean = true;
   isOpen: boolean = false;
 
   arrowOpen: any = '/assets/images/icons/arrow_drop_down.svg';
   arrowClosed: any = '/assets/images/icons/arrow_drop_right.svg';
 
-  constructor(private dialog: MatDialog,private fb: FormBuilder,) { 
+  constructor(private dialog: MatDialog, private fb: FormBuilder,) {
     // Erstellen des Formulars mit einem einzelnen Eingabefeld 'recipient'
     this.form = this.fb.group({
       recipient: [''],
@@ -65,7 +70,7 @@ export class SideNavComponent implements OnInit {
   }
 
   ngOnInit(): void {
-     // Abonnement zum Anzeigen der Kontakte
+    // Abonnement zum Anzeigen der Kontakte
     this.stateService.showContacts$.subscribe((show) => {
       this.showContacts = show;
     });
@@ -75,23 +80,23 @@ export class SideNavComponent implements OnInit {
       this.showChannels = show;
     });
 
-      // Abonnement zur Aktualisierung der Liste aller Benutzer
+    // Abonnement zur Aktualisierung der Liste aller Benutzer
     this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe(
       (users) => {
         if (users) {
           this.allUsers = users ?? [];
 
-        // Filtern der Benutzer basierend auf dem Suchbegriff
+          // Filtern der Benutzer basierend auf dem Suchbegriff
           this.filteredUsers = this.allUsers.filter((u) =>
             u.name.toLowerCase().includes(this.searchTerm.toLowerCase())
           );
 
-        
+
         }
       }
     );
 
-// Abonnement zur Verarbeitung von Formularänderungen
+    // Abonnement zur Verarbeitung von Formularänderungen
     this.searchResults$ = this.form.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -109,6 +114,18 @@ export class SideNavComponent implements OnInit {
     this.searchResults$.subscribe((results) => {
       this.searchResults = results;
     });
+  }
+
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: MouseEvent): void {
+    if (this.searchResultsList && !this.searchResultsList.nativeElement.contains(event.target)) {
+      this.closeSearchResults();
+    }
+  }
+
+  closeSearchResults(): void {
+    this.searchResults = [];
+    this.form.get('recipient')?.setValue(''); // Clear the input field
   }
 
   // Getter für das Eingabefeld 'recipient'
@@ -145,7 +162,7 @@ export class SideNavComponent implements OnInit {
       const filteredUsers = this.allUsers.filter((user) =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) && !user.isChannel
       );
-  
+
       // Zusammenführen der Suchergebnisse
       const results = [...filteredChannels, ...filteredUsers];
       return of(results);
@@ -160,24 +177,24 @@ export class SideNavComponent implements OnInit {
     this.toggleDrawer.emit();
   }
 
-// Funktion zum Öffnen eines Kanals
-openChannel(x: string) {
-  this.channelsService.getDataChannel(x);
-  this.form.get('recipient')?.setValue('');
-  if (this.isOpen) { // Check if sidenav is open
-    this.toggleDrawer.emit();
+  // Funktion zum Öffnen eines Kanals
+  openChannel(x: string) {
+    this.channelsService.getDataChannel(x);
+    this.form.get('recipient')?.setValue('');
+    if (this.isOpen) { // Check if sidenav is open
+      this.toggleDrawer.emit();
+    }
   }
-}
 
-openDirectMessage(x: string, y: any) {
-  this.directMessagesService.getDataDirectMessage(x, y);
-  this.form.get('recipient')?.setValue('');
-  if (this.isOpen) { // Check if sidenav is open
-    this.toggleDrawer.emit();
+  openDirectMessage(x: string, y: any) {
+    this.directMessagesService.getDataDirectMessage(x, y);
+    this.form.get('recipient')?.setValue('');
+    if (this.isOpen) { // Check if sidenav is open
+      this.toggleDrawer.emit();
+    }
   }
-}
 
-   // Funktion zum Schließen der Kanal- und Kontaktansicht
+  // Funktion zum Schließen der Kanal- und Kontaktansicht
   closeChannelsAndContacts() {
     this.stateService.setShowContacts(false);
     this.stateService.setShowChannels(false);
