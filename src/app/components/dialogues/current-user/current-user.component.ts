@@ -36,18 +36,29 @@ export class CurrentUserComponent implements OnInit {
     public dialogRef: MatDialogRef<CurrentUserComponent>
   ) { }
 
+  /**
+   * Lifecycle hook that is called after data-bound properties of a directive are initialized.
+   * Subscribes to the currentUser$ observable to get the current user.
+   */
   ngOnInit(): void {
     const userSubscription = this.usersService.currentUser$.subscribe(user => {
       this.currentUser = user;
     });
   }
 
+  /**
+   * Lifecycle hook that is called when the directive is destroyed.
+   * Unsubscribes from the user subscription if it exists.
+   */
   ngOnDestroy(): void {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
     }
   }
 
+  /**
+   * Opens a dialog to edit the current user's information.
+   */
   openDialog(): void {
     const dialogRef = this.dialog.open(EditCurrentUserComponent, {
       width: '500px',
@@ -58,6 +69,9 @@ export class CurrentUserComponent implements OnInit {
     });
   }
 
+  /**
+   * Closes the dialog.
+   */
   onNoClick(): void {
     this.dialogRef.close();
   }

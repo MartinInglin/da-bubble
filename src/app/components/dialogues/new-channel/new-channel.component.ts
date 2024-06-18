@@ -36,29 +36,41 @@ export class NewChannelComponent {
     public dialogRef: MatDialogRef<NewChannelComponent>
   ) {}
 
-  createChannelAndOpenDialog(): void {
-    if (this.channelName.trim()) {
-      this.channelsService.createChannel(this.channelName, this.channelDescription, this.currentUser)
-        .then((channel) => {
-          this.dialogRef.close();
-          this.openAddUserDialog(channel.id, this.channelName);
-        })
-        .catch(error => console.error('Error creating channel: ', error));
-    }
+/**
+ * Creates a new channel with the provided name and description, and opens a dialog
+ * to add users to the newly created channel.
+ */
+createChannelAndOpenDialog(): void {
+  if (this.channelName.trim()) {
+    this.channelsService.createChannel(this.channelName, this.channelDescription, this.currentUser)
+      .then((channel) => {
+        this.dialogRef.close();
+        this.openAddUserDialog(channel.id, this.channelName);
+      })
+      .catch(error => console.error('Error creating channel: ', error));
   }
-  
-  openAddUserDialog(channelId: string, channelName: string): void {
-    const dialogRef = this.dialog.open(AddUserToNewChannelComponent, {
-      width: '710px',
-      position: {
-        top: '20%'
-      },
-      data: { channelId: channelId, channelName: channelName },
-      panelClass: 'custom-dialog-container'
-    });
-  }
+}
 
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
+/**
+ * Opens a dialog to add users to a new channel.
+ * @param {string} channelId - The ID of the newly created channel.
+ * @param {string} channelName - The name of the newly created channel.
+ */
+openAddUserDialog(channelId: string, channelName: string): void {
+  const dialogRef = this.dialog.open(AddUserToNewChannelComponent, {
+    width: '710px',
+    position: {
+      top: '20%'
+    },
+    data: { channelId: channelId, channelName: channelName },
+    panelClass: 'custom-dialog-container'
+  });
+}
+
+/**
+ * Closes the current dialog.
+ */
+onNoClick(): void {
+  this.dialogRef.close();
+}
 }

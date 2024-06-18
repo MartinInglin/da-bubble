@@ -26,7 +26,7 @@ import { User } from '../../../models/user.class';
 export class UserMenuComponent {
 
   authService = inject(AuthService);
-  
+
   currentUser: User = new User();
 
   constructor(
@@ -34,10 +34,16 @@ export class UserMenuComponent {
     public dialogRef: MatDialogRef<UserMenuComponent>
   ) { }
 
+  /**
+ * Closes the current dialog.
+ */
   onNoClick(): void {
     this.dialogRef.close();
   }
 
+  /**
+ * Opens a dialog to display the current user's information.
+ */
   openDialog(): void {
     const dialogRef = this.dialog.open(CurrentUserComponent, {
       width: '500px',
@@ -48,6 +54,9 @@ export class UserMenuComponent {
     });
   }
 
+  /**
+ * Signs out the current user.
+ */
   signOUt() {
     this.authService.signOut(this.currentUser.id);
   }

@@ -50,6 +50,12 @@ export class ProfileDetailViewComponent implements OnInit {
     console.log('Received data:', data);
   }
 
+  /**
+   * Lifecycle hook that is called after data-bound properties of a directive are initialized.
+   * Subscribes to the currentUser$ observable to get the current user and fetches additional user details.
+   * Sets the isSignedIn flag based on the fetched user data.
+   * @returns {Promise<void>}
+   */
   async ngOnInit(): Promise<void> {
     try {
       const userSubscription = this.usersService.currentUser$.subscribe(user => {
@@ -62,16 +68,27 @@ export class ProfileDetailViewComponent implements OnInit {
     }
   }
 
+  /**
+   * Lifecycle hook that is called when the directive is destroyed.
+   * Unsubscribes from the userSubscription if it exists.
+   */
   ngOnDestroy(): void {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
     }
   }
 
+  /**
+   * Retrieves all users.
+   * @returns {Promise<void>}
+   */
   async getAllUsers() {
     this.usersService.getAllUsers();
   }
 
+  /**
+   * Sends a direct message to the user identified by userId using currentUser's information.
+   */
   async sendDirectMessage() {
     console.log('User ID:', this.userId);
     console.log('Current User:', this.currentUser);
@@ -87,6 +104,9 @@ export class ProfileDetailViewComponent implements OnInit {
     }
   }
 
+  /**
+   * Closes the current dialog.
+   */
   onNoClick(): void {
     this.dialogRef.close();
   }

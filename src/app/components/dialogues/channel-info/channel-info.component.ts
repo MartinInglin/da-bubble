@@ -45,67 +45,87 @@ export class ChannelInfoComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: { channelId: string }
   ) { }
 
-  ngOnInit(): void {
-    this.loadChannelData();
-    this.userSubscription = this.usersService.currentUser$.subscribe(user => {
-      this.currentUser = user;
-    });
-  }
-
-  loadChannelData(): void {
-    if (!this.data.channelId) return;
-    this.channelSubscription = this.channelsService.channelSubject$.subscribe(
-      (channel) => {
-        this.channel = channel;
-      },
-      (error) => {
-        console.error('Error loading channel data:', error);
-      }
-    );
-    this.channelsService.getDataChannel(this.data.channelId);
-  }
-
-  openDialog(): void {
-    if (!this.channel) return;
-    const dialogRef = this.dialog.open(ChannelInfoEditComponent, {
-      width: '872px',
-      position: {
-        top: '185px',
-        right: '180px',
-      },
-      data: {
-        channelId: this.channel.id,
-        name: this.channel.name,
-        description: this.channel.description
-      }
-    });
-  }
-
-  leaveChannel(): void {
-    if (!this.currentUser || !this.channel) return;
-
-    const channelId = this.channel.id;
-    const currentUserId = this.currentUser.id;
-
-    this.channelsService.removeUserFromChannel(channelId, currentUserId)
-      .then(() => {
-        this.dialogRef.close();
-      })
-      .catch(error => {
-        console.error('Error leaving channel:', error);
+    /**
+   * Initializes the component by loading channel data and subscribing to the current user.
+   */
+    ngOnInit(): void {
+      this.loadChannelData();
+      this.userSubscription = this.usersService.currentUser$.subscribe(user => {
+        this.currentUser = user;
       });
-
-    this.stateService.setShowContacts(false);
-    this.stateService.setShowChannels(false);
-  }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
-  ngOnDestroy(): void {
-    if (this.userSubscription) {
-      this.userSubscription.unsubscribe();
+    }
+  
+    /**
+     * Loads the data of the current channel.
+     * Subscribes to the channelSubject$ to receive updates about the channel.
+     */
+    loadChannelData(): void {
+      if (!this.data.channelId) return;
+      this.channelSubscription = this.channelsService.channelSubject$.subscribe(
+        (channel) => {
+          this.channel = channel;
+        },
+        (error) => {
+          console.error('Error loading channel data:', error);
+        }
+      );
+      this.channelsService.getDataChannel(this.data.channelId);
+    }
+  
+    /**
+     * Opens a dialog to edit channel information.
+     */
+    openDialog(): void {
+      if (!this.channel) return;
+      const dialogRef = this.dialog.open(ChannelInfoEditComponent, {
+        width: '872px',
+        position: {
+          top: '185px',
+          right: '180px',
+        },
+        data: {
+          channelId: this.channel.id,
+          name: this.channel.name,
+          description: this.channel.description
+        }
+      });
+    }
+  
+    /**
+     * Removes the current user from the channel and updates the state.
+     */
+    leaveChannel(): void {
+      if (!this.currentUser || !this.channel) return;
+      const channelId = this.channel.id;
+      const currentUserId = this.currentUser.id;
+      this.channelsService.removeUserFromChannel(channelId, currentUserId)
+        .then(() => {
+          this.dialogRef.close();
+        })
+        .catch(error => {
+          console.error('Error leaving channel:', error);
+        });
+  
+      this.stateService.setShowContacts(false);
+      this.stateService.setShowChannels(false);
+    }
+  
+    /**
+     * Closes the dialog without making any changes.
+     */
+    onNoClick(): void {
+      this.dialogRef.close();
+    }
+  
+    /**
+     * Cleans up subscriptions when the component is destroyed.
+     */
+    ngOnDestroy(): void {
+      if (this.userSubscription) {
+        this.userSubscription.unsubscribe();
+      }
+      if (this.channelSubscription) {
+        this.channelSubscription.unsubscribe();
+      }
     }
   }
-}
