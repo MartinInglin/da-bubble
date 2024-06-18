@@ -32,6 +32,7 @@ import { MinimalUser } from '../../../../models/minimal_user.class';
 export class AddUserToNewChannelMobileComponent {
   peopleType: string = 'all';
   channelId: string = '';
+  channelName: string = '';
 
   currentUser: User | null = null;
   selectedUser: User | null = null;
@@ -50,30 +51,40 @@ export class AddUserToNewChannelMobileComponent {
     public dialogRef: MatDialogRef<AddUserToNewChannelMobileComponent>,
     private usersService: UsersService,
     public channelsService: ChannelsService,
-    @Inject(MAT_DIALOG_DATA) public data: { channelId: string }
+    @Inject(MAT_DIALOG_DATA) public data: { channelId: string, channelName: string }
   ) {
     this.channelId = data.channelId;
+    this.channelName = data.channelName;
   }
 
+  /**
+   * Initializes the component and subscribes to user and all users data streams.
+   * Updates the filtered users list based on received data.
+   */
   ngOnInit(): void {
     this.userSubscription = this.usersService.currentUser$.subscribe(user => {
       this.currentUser = user;
     });
-    
+
     this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe(
       (allUsers) => {
         this.allUsers = allUsers ?? [];
+        this.updateFilteredUsers();
       }
     );
   }
 
+  /**
+   * Adds all users to a channel if the people type is 'all'.
+   * Closes the dialog after adding the users.
+   */
   addAllUsersToChannel(): void {
     if (this.peopleType === 'all') {
       if (this.allUsers) {
         this.allUsers.forEach((user) => {
           const minimalChannel: MinimalChannel = {
             id: this.channelId,
-            name: '',
+            name: this.channelName,
           };
           this.usersService.addChannelToUsers(minimalChannel);
           this.channelsService.addAllUsersToChannel(this.channelId);
@@ -83,6 +94,10 @@ export class AddUserToNewChannelMobileComponent {
     }
   }
 
+  /**
+   * Handles search input changes, filtering users based on the search value.
+   * @param {Event} event - The search input event.
+   */
   onSearchChange(event: Event): void {
     const searchValue = (event.target as HTMLInputElement).value;
     if (!searchValue) {
@@ -98,6 +113,10 @@ export class AddUserToNewChannelMobileComponent {
     }
   }
 
+  /**
+   * Toggles the selection of a user by their ID.
+   * @param {string} userId - The ID of the user to select or deselect.
+   */
   selectUser(userId: string): void {
     if (this.selectedUsers.includes(userId)) {
       this.selectedUsers = this.selectedUsers.filter(id => id !== userId);
@@ -107,10 +126,18 @@ export class AddUserToNewChannelMobileComponent {
     this.updateFilteredUsers();
   }
 
+  /**
+   * Checks if a user is selected by their ID.
+   * @param {string} userId - The ID of the user to check.
+   * @returns {boolean} - True if the user is selected, false otherwise.
+   */
   isSelected(userId: string): boolean {
     return this.selectedUsers.includes(userId);
   }
 
+  /**
+   * Updates the filtered users list based on the current search value and selections.
+   */
   updateFilteredUsers(): void {
     const searchValue = (document.querySelector('input[placeholder="Name eingeben"]') as HTMLInputElement)?.value;
     this.filteredUsers = this.allUsers.filter(user =>
@@ -120,38 +147,64 @@ export class AddUserToNewChannelMobileComponent {
     );
   }
 
+  /**
+   * Adds a single user to a channel and updates the user's channel list.
+   * @param {User} user - The user to add to the channel.
+   * @param {string} channelId - The ID of the channel.
+   * @param {string} channelName - The name of the channel.
+   * @returns {Promise<void>} - A promise that resolves when the user is added.
+   */
+  async addSingleUserToChannel(user: User, channelId: string, channelName: string): Promise<void> {
+    const minimalUser: MinimalUser = {
+      id: user.id,
+      name: user.name,
+      avatar: user.avatar,
+      email: user.email
+    };
+    try {
+      await this.channelsService.addSingleUserToChannel(channelId, minimalUser);
+      const channel = await this.channelsService.getChannelById(channelId);
+      if (channel) {
+        await this.usersService.addChannelToSingleUser(user.id, {
+          id: channel.id,
+          name: channel.name
+        });
+      }
+    } catch (error) {
+      console.error('Fehler beim Hinzufügen des Benutzers zum Kanal:', error);
+    }
+  }
+
+  /**
+   * Adds selected users to a channel if the people type is 'specific'.
+   * Closes the dialog after adding the users.
+   * @returns {Promise<void>} - A promise that resolves when the users are added.
+   */
   async addUsersToChannel(): Promise<void> {
     if (this.peopleType === 'specific') {
       for (const userId of this.selectedUsers) {
         const user = this.allUsers.find(u => u.id === userId);
         if (user) {
-          const minimalUser: MinimalUser = {
-            id: user.id,
-            name: user.name,
-            avatar: user.avatar,
-            email: user.email
-          };
-          await this.channelsService.addSingleUserToChannel(this.data.channelId, minimalUser);
-          
-          const channel = await this.channelsService.getChannelById(this.data.channelId);
-          if (channel) {
-            await this.usersService.addChannelToSingleUser(user.id, {
-              id: channel.id,
-              name: channel.name
-            });
-          }
+          await this.addSingleUserToChannel(user, this.data.channelId, this.data.channelName);
         }
       }
       this.dialogRef.close();
     }
   }
 
+  /**
+   * Gets the list of selected users.
+   * @returns {User[]} - The list of selected users.
+   */
   getSelectedUsers(): User[] {
     return this.selectedUsers.map(userId => {
       return this.allUsers.find(u => u.id === userId) as User;
     });
   }
 
+  /**
+   * Submits the selected users to the channel based on the people type.
+   */
   onSubmit(): void {
     if (this.peopleType === 'all') {
       this.addAllUsersToChannel();
@@ -160,15 +213,26 @@ export class AddUserToNewChannelMobileComponent {
     }
   }
 
+  /**
+   * Handles clicks outside the user list to hide search results.
+   * @param {Event} event - The click event.
+   */
   onOutsideClick(event: Event): void {
     if (!(event.target as HTMLElement).closest('.user-list')) {
       this.showResults = false;
     }
   }
 
+  /**
+   * Closes the dialog without making any changes.
+   */
   onNoClick(): void {
     this.dialogRef.close();
   }
+
+  /**
+   * Unsubscribes from user and all users data streams to prevent memory leaks.
+   */
 
   ngOnDestroy(): void {
     if (this.usersSubscription) {

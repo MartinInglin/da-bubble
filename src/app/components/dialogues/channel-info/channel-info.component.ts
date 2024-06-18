@@ -45,7 +45,7 @@ export class ChannelInfoComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: { channelId: string }
   ) { }
 
-    /**
+  /**
    * Initializes the component by loading channel data and subscribing to the current user.
    */
     ngOnInit(): void {

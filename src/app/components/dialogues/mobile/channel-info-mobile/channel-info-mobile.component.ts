@@ -30,7 +30,7 @@ import { UsersService } from '../../../../services/firestore/users.service';
 export class ChannelInfoMobileComponent {
   channel: Channel | null = null;
   currentUser: User | null = null;
-  
+
   channelSubscription: any;
 
   private userSubscription: Subscription = new Subscription();
@@ -41,9 +41,12 @@ export class ChannelInfoMobileComponent {
     private channelsService: ChannelsService,
     private usersService: UsersService,
     private stateService: StateService,
-    @Inject(MAT_DIALOG_DATA) public data: {channelId: string}
-  ) {}
+    @Inject(MAT_DIALOG_DATA) public data: { channelId: string }
+  ) { }
 
+  /**
+   * Initializes the component by loading channel data and subscribing to the current user.
+   */
   ngOnInit(): void {
     this.loadChannelData();
     this.userSubscription = this.usersService.currentUser$.subscribe(user => {
@@ -51,8 +54,12 @@ export class ChannelInfoMobileComponent {
     });
   }
 
+  /**
+   * Loads the data of the current channel.
+   * Subscribes to the channelSubject$ to receive updates about the channel.
+   */
   loadChannelData(): void {
-    if (!this.data.channelId) return; 
+    if (!this.data.channelId) return;
     this.channelSubscription = this.channelsService.channelSubject$.subscribe(
       (channel) => {
         this.channel = channel;
@@ -64,12 +71,15 @@ export class ChannelInfoMobileComponent {
     this.channelsService.getDataChannel(this.data.channelId);
   }
 
+  /**
+   * Opens a dialog to edit channel information.
+   */
   openDialog(): void {
     if (!this.channel) return;
     const dialogRef = this.dialog.open(ChannelInfoEditMobileComponent, {
       width: '100%',
       height: '100vh',
-      data: { 
+      data: {
         channelId: this.channel.id,
         name: this.channel.name,
         description: this.channel.description
@@ -77,6 +87,9 @@ export class ChannelInfoMobileComponent {
     });
   }
 
+  /**
+   * Removes the current user from the channel and updates the state.
+   */
   leaveChannel(): void {
     if (!this.currentUser || !this.channel) return;
 
@@ -95,13 +108,22 @@ export class ChannelInfoMobileComponent {
     this.stateService.setShowChannels(false);
   }
 
+  /**
+   * Closes the dialog without making any changes.
+   */
   onNoClick(): void {
     this.dialogRef.close();
   }
 
+  /**
+   * Cleans up subscriptions when the component is destroyed.
+   */
   ngOnDestroy(): void {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
+    }
+    if (this.channelSubscription) {
+      this.channelSubscription.unsubscribe();
     }
   }
 }
