@@ -14,8 +14,10 @@
   flex-direction: column;
   max-width: 1920px;
   min-width: 350px;
+
   a {
     cursor: pointer;
+
     &:hover {
       background-color: #0c0c0c0e;
       border-radius: 20px;
@@ -25,6 +27,7 @@
     }
   }
 }
+
 .header-post-input-container {
   height: 100%;
   display: flex;
@@ -51,7 +54,19 @@ header {
     margin-left: 50px;
     font-size: 24px;
     font-weight: 700;
+    padding: 4px 20px 4px 20px;
     cursor: pointer;
+  }
+
+  .channelNameNoPointer {
+    width: fit-content;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 50px;
+    font-size: 24px;
+    font-weight: 700;
   }
 
   /* Styling for the channel members */
@@ -110,6 +125,7 @@ header {
 
     img {
       transition: scale 100ms ease-in-out;
+
       &:hover {
         scale: 1.05;
         content: url("./../../../../assets/images/icons/add_member_blue.svg");
@@ -136,6 +152,7 @@ header {
   padding: 10px;
   display: flex;
   flex-direction: column;
+
   textarea {
     height: 80px;
     border: none;
@@ -148,6 +165,7 @@ header {
     padding-left: 10px;
     background: none;
     flex: 1;
+
     &:focus {
       border-color: transparent;
       outline: none;
@@ -162,11 +180,13 @@ header {
     justify-content: space-between;
     padding-left: 15px;
     padding-right: 15px;
+
     .buttons {
       display: flex;
       align-items: center;
       flex-direction: row;
     }
+
     .addIcon {
       height: 30px;
       width: 30px;
@@ -185,16 +205,19 @@ header {
 
 /* Styling for the message content */
 .message-content {
-  height: 53vh; /* Mindesthöhe auf 50% der Bildschirmhöhe setzen */
+  height: 53vh;
+  /* Mindesthöhe auf 50% der Bildschirmhöhe setzen */
   padding-top: 20px;
   width: 100%;
   overflow-y: scroll;
+
   /* Styling for the line separator */
   .date-line {
     width: 100%;
     display: flex;
     justify-content: center;
   }
+
   .Line {
     width: 95%;
     background-color: #eceefe;
@@ -202,6 +225,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
+
     span {
       z-index: 2;
       height: 25px;
@@ -262,6 +286,7 @@ header {
     &:hover {
       background-color: #eceefe;
       width: 100%;
+
       .message-text {
         background-color: white;
       }
@@ -275,10 +300,33 @@ header {
   flex-direction: row;
   gap: 10px;
   align-items: center;
+  padding: 4px 20px 4px 20px;
+
   img {
     max-height: 70px;
   }
+
+  &:hover {
+    background-color: $background;
+    cursor: pointer;
+    border-radius: 55px;
+  }
 }
+
+.avatarNameNoHover {
+  width: fit-content;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  padding: 4px 20px 4px 20px;
+
+  img {
+    max-height: 70px;
+  }
+
+}
+
 .placeholderContainer {
   margin-left: 50px;
   width: 80%;
@@ -286,21 +334,30 @@ header {
   flex-direction: column;
   justify-content: flex-end;
   height: 99%;
+
   img {
     height: 100px;
     width: 100px;
     object-fit: cover;
     margin-right: 5px;
   }
+
   span {
     font-weight: 700;
     font-size: 20px;
   }
+
   p {
     color: grey;
     font-size: 14px;
   }
+
   .messageAvatarName {
+    margin-bottom: 5px;
+    cursor: pointer;
+  }
+
+  .messageAvatarNameNoPointer {
     margin-bottom: 5px;
   }
 }
@@ -327,6 +384,7 @@ cdk-overlay-connected-position-bounding-box {
   border-radius: 30px;
   height: fit-content;
 }
+
 .link-container {
   display: flex;
   width: fit-content;
@@ -340,6 +398,7 @@ cdk-overlay-connected-position-bounding-box {
     width: 100%;
     padding: 10px;
     cursor: pointer;
+
     img {
       height: 40px;
     }
@@ -350,6 +409,7 @@ cdk-overlay-connected-position-bounding-box {
   min-width: 10px;
   width: 40px;
   height: 40px;
+
   &:hover {
     background-color: #0c0c0c02;
 
@@ -376,12 +436,14 @@ cdk-overlay-connected-position-bounding-box {
   align-items: start;
   height: 150px;
   position: relative;
+
   span {
     font-weight: bold;
     font-size: 24px;
     margin-left: 50px;
     margin-bottom: 20px;
   }
+
   input {
     width: 80%;
     margin-left: 50px;
@@ -416,22 +478,24 @@ cdk-overlay-connected-position-bounding-box {
 }
 
 .user-avatar-image {
-    height: 70px;
-    width: 70px;
-    border-radius: 100%;
-    object-fit: cover;
+  height: 70px;
+  width: 70px;
+  border-radius: 100%;
+  object-fit: cover;
 }
 
 @media (max-width: 580px) {
   .newMessage {
-    span{
+    span {
       margin-left: 30px;
     }
+
     input {
-    margin-left: 30px;
+      margin-left: 30px;
     }
+
     input::placeholder {
-font-size: 14px;
+      font-size: 14px;
     }
   }
 }
@@ -439,9 +503,9 @@ font-size: 14px;
 
 .list {
   position: absolute;
-  top: 100%; 
+  top: 100%;
   left: 15%;
-  z-index: 1000; 
+  z-index: 1000;
   z-index: 1000;
   background-color: white;
   border: 1px solid #ccc;
@@ -506,10 +570,12 @@ font-size: 14px;
   justify-content: center;
   flex-direction: row;
   height: 45px;
+
   span {
     font-size: 20px;
     font-weight: bold;
   }
+
   img {
     max-height: 30px;
     margin-right: 20px;

@@ -447,6 +447,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
   }
 
+
   openAddUserToChannelMobileDialog(channelId: string): void {
     if (this.currentUser) {
       const dialogRef = this.dialog.open(AddUserToChannelMobileComponent, {
@@ -462,14 +463,15 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * This function opens the add user to channel dialog for the given channel ID.
-   * @param channelId - The ID of the channel.
-   * @param addUserDialog - The HTML element for positioning the dialog.
-   */
-  openDetailViewDialog(): void {
+  openDetailViewDialog(user: MinimalUser): void {
     const dialogRef = this.dialog.open(ProfileDetailViewComponent, {
       width: '500px',
+      data: {
+        userId: user.id,
+        userName: user.name,
+        userEmail: user.email,
+        userAvatar: user.avatar
+      }
     });
   }
 

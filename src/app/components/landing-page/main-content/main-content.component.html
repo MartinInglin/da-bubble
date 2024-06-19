@@ -44,7 +44,7 @@
         (click)="openChannelInfoDialog(selectedChannel.id)"
         class="channelName"
       >
-        {{ selectedChannel.name }}
+        # {{ selectedChannel.name }}
       </div>
 
       <div class="members-and-button">
@@ -126,7 +126,7 @@
     <!-- Header section with channel name and contact information -->
     <header *ngIf="chatSelected && !selectedDirectMessage.isPrivateMessage">
       <div class="channelName" *ngIf="selectedDirectMessage.users.length > 0">
-        <div class="avatarName">
+        <div class="avatarName" (click)="openDetailViewDialog(otherUserDirectMessage)">
           <img
             class="user-avatar-image"
             src="{{ otherUserDirectMessage.avatar }}"
@@ -138,8 +138,8 @@
     </header>    
     <!-- Header section with channel name and contact information -->
     <header *ngIf="chatSelected && selectedDirectMessage.isPrivateMessage">
-        <div class="channelName" *ngIf="selectedDirectMessage.users.length > 0">
-          <div class="avatarName">
+        <div class="channelNameNoPointer" *ngIf="selectedDirectMessage.users.length > 0">
+          <div class="avatarNameNoHover">
             <img
               class="user-avatar-image"
               src="{{ currentUser.avatar }}"
@@ -191,7 +191,7 @@
         "
       >
         @if (!selectedDirectMessage.isPrivateMessage) {
-        <div class="messageAvatarName">
+        <div (click)="openDetailViewDialog(otherUserDirectMessage)" class="messageAvatarName">
           <img
             class="user-avatar-image"
             src="{{ otherUserDirectMessage.avatar }}"
@@ -207,7 +207,7 @@
           </p>
         </div>
         } @if (selectedDirectMessage.isPrivateMessage) {
-        <div class="messageAvatarName">
+        <div class="messageAvatarNameNoPointer">
           <img
             class="user-avatar-image"
             src="{{ currentUser.avatar }}"
