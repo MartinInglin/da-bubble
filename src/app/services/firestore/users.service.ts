@@ -66,11 +66,8 @@ export class UsersService {
    */
   async createUser(userId: string): Promise<void> {
     const userData = this.registrationService.getUserData();
-
     const avatar = await this.getUserAvatar(userData);
-
     const user = this.buildUser(userId, userData, avatar);
-
     await setDoc(doc(this.firestore, 'users', userId), user);
   }
 
@@ -244,7 +241,7 @@ export class UsersService {
    * @param currentUser object of type user
    */
   createPathToCollection(partialUser: Partial<User>, currentUser: User) {
-    let path: 'channels' | 'directMessages' | 'threads' | 'landingPage';
+    let path: 'channels' | 'directMessages' | 'threads';
 
     path = 'directMessages';
     this.getDataCollection(path, currentUser, partialUser);
