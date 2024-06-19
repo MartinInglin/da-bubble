@@ -14,6 +14,9 @@ export class ImprintComponent {
 
   constructor(private location: Location) {}
 
+  /**
+   * This function navigates back to the page the user previously was.
+   */
   back(): void {
     this.location.back()
   }
