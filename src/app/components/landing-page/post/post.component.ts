@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges, inject } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  SimpleChanges,
+  inject,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Post } from '../../../models/post.class';
 import { StorageService } from '../../../services/storage.service';
@@ -44,7 +51,7 @@ export class PostComponent {
     '⚡',
   ];
   reactionsToDislplay: SortedReaction[] = [];
-  editingPostIndex: number = -1; // Track the index of the post being edited
+  editingPostIndex: number = -1;
 
   @Input() post: Post = new Post();
   @Input() currentUser: User = new User();
@@ -56,47 +63,73 @@ export class PostComponent {
 
   @Output() openThread = new EventEmitter();
 
-  constructor(private editingStateService: EditingStateService) { } // Inject the EditingStateService
+  constructor(private editingStateService: EditingStateService) {}
 
   ngOnInit() {
     this.checkIfPostFromCurrentUser();
     this.sortReactions();
   }
 
-  // Sort reactions to display
+  /**
+   * This function creates a new array that contains all the reactions and sorts them so the can be displayed.
+   */
   sortReactions() {
     const reactions: Reaction[] = this.post.reactions;
 
-    for (let i = 0; i < reactions.length; i++) {
-      let reaction = reactions[i];
-
-      if (this.reactionsToDislplay.length == 0) {
-        let newReaction: SortedReaction = {
-          emoji: reaction.emoji,
-          userName: [reaction.userName],
-          userId: [reaction.userId]
-        }
-        this.reactionsToDislplay.push(newReaction);
+    reactions.forEach((reaction) => {
+      if (this.reactionsToDislplay.length === 0) {
+        this.addNewReaction(reaction);
       } else {
-        let indexReaction: number = this.checkIfReactionExists(reaction);
-        if (indexReaction != -1) {
-          let newUserName = reactions[i].userName;
-          let newUserId = reactions[i].userId;
-          this.reactionsToDislplay[indexReaction].userName.push(newUserName);
-          this.reactionsToDislplay[indexReaction].userId.push(newUserId);
-        } else {
-          let newReaction: SortedReaction = {
-            emoji: reaction.emoji,
-            userName: [reaction.userName],
-            userId: [reaction.userId]
-          }
-          this.reactionsToDislplay.push(newReaction);
-        }
+        this.processExistingReactions(reaction);
       }
+    });
+  }
+
+  /**
+   * If the reaction does not exist yet on a post a new reaction is created.
+   *
+   * @param reaction object of type reaction
+   */
+  addNewReaction(reaction: Reaction) {
+    const newReaction: SortedReaction = {
+      emoji: reaction.emoji,
+      userName: [reaction.userName],
+      userId: [reaction.userId],
+    };
+    this.reactionsToDislplay.push(newReaction);
+  }
+
+  /**
+   * This function adds a reaction if the same emoji already exists in the post.
+   *
+   * @param reaction object of type reaction
+   */
+  processExistingReactions(reaction: Reaction) {
+    const indexReaction = this.checkIfReactionExists(reaction);
+    if (indexReaction !== -1) {
+      this.addUserToExistingReaction(indexReaction, reaction);
+    } else {
+      this.addNewReaction(reaction);
     }
   }
 
-  // Check if reaction exists
+  /**
+   * If the reaction already exists on the post the user is added to this reaction.
+   *
+   * @param index number, index of the reaction in the reactions array
+   * @param reaction object of type reaction
+   */
+  addUserToExistingReaction(index: number, reaction: Reaction) {
+    this.reactionsToDislplay[index].userName.push(reaction.userName);
+    this.reactionsToDislplay[index].userId.push(reaction.userId);
+  }
+
+  /**
+   * This function checks if the emoji is already stored in the reactions array.
+   *
+   * @param reaction object of type reaction
+   * @returns index of reaction or -1
+   */
   checkIfReactionExists(reaction: Reaction) {
     for (let j = 0; j < this.reactionsToDislplay.length; j++) {
       if (reaction.emoji === this.reactionsToDislplay[j].emoji) {
@@ -106,14 +139,21 @@ export class PostComponent {
     return -1;
   }
 
-  // Check if post is from current user
+  /**
+   * This reaction checks if a post is from the current user. This is needed because then the post needs to be displayed differently.
+   */
   checkIfPostFromCurrentUser() {
     if (this.currentUser.id === this.post.userId) {
       this.postFromCurrentUser = true;
     }
   }
 
-  // Format timestamp to string
+  /**
+   * This function turns a UTX timestamp into a readable value (hours, minutes)
+   *
+   * @param timestamp number, UTX timestamp
+   * @returns string of hours and minutes
+   */
   formatDateTime(timestamp: number): string {
     const date = new Date(timestamp);
     const hours = date.getHours();
@@ -121,6 +161,12 @@ export class PostComponent {
     return `${hours}:${minutes} Uhr`;
   }
 
+  /**
+   * This function turns a UTX timestamp into a readable value (day, month, year, hours, minutes)
+   *
+   * @param timestamp number, UTX timestamp
+   * @returns string of day, month, year, hours, minutes
+   */
   formatDate(timestamp: number): string {
     const date = new Date(timestamp);
     const day = date.getDate();
@@ -131,13 +177,24 @@ export class PostComponent {
     return `${day}.${month}.${year} ${hours}:${minutes} Uhr`;
   }
 
-  // Download file
+  /**
+   * This function downloads a file attached to a post.
+   *
+   * @param downloadURL  string
+   * @param e event
+   */
   downloadFile(downloadURL: string, e: Event) {
     this.storageService.getFile(downloadURL);
     e.stopPropagation();
   }
 
-  // Delete file
+  /**
+   * This function deletes a file from a post. Only a signed in user can delete his own files.
+   * 
+   * @param fileName string
+   * @param e event
+   * @param indexFile number
+   */
   async deleteFile(fileName: string, e: Event, indexFile: number) {
     if (this.path === 'directMessages') {
       const documentId = this.selectedDirectMessageId;
@@ -158,7 +215,11 @@ export class PostComponent {
     e.stopPropagation();
   }
 
-  // Delete file on corresponding thread
+/**
+ * This function is needed to delete a file from a thread if it is deleted in a channel.
+ * 
+ * @param indexFile number
+ */
   async deleteFileOnCorrespondingThread(indexFile: number) {
     try {
       this.path = 'threads';
@@ -177,7 +238,12 @@ export class PostComponent {
     }
   }
 
-   // Delete file on corresponding channel
+/**
+ * This function is needed to delete a file from a channel if it is deleted in a thread.
+ * 
+ * @param documentId string
+ * @param indexFile number
+ */
   async deleteFileOnCorrespondingChannel(
     documentId: string,
     indexFile: number
@@ -195,22 +261,37 @@ export class PostComponent {
     }
   }
 
-   // Delete file on a collection
+/**
+ * This function deletes a file on a post in a given collection.
+ * 
+ * @param path string of 'channels', directMessages' or 'threads'
+ * @param documentId string
+ * @param indexFile number
+ */
   deleteFileOnCollection(path: string, documentId: string, indexFile: number) {
     const pathToDocument = `${path}/${documentId}`;
     this.postsService.deleteFile(this.indexPost, pathToDocument, indexFile);
   }
 
-  // Toggle edit message display
+/**
+ * This function restricts the user from editing multiple posts at the same time.
+ * 
+ * @returns 
+ */
   toggleShowEditMessage() {
     if (this.editingStateService.getEditingPostIndex() !== -1) {
-      this.snackbarService.openSnackBar('Du kannst nur eine Nachricht gleichzeitig bearbeiten.', 'Schließen');
+      this.snackbarService.openSnackBar(
+        'Du kannst nur eine Nachricht gleichzeitig bearbeiten.',
+        'Schließen'
+      );
       return;
     }
     this.showEditMessage = !this.showEditMessage;
   }
 
-   // Toggle want to edit message state
+/**
+ * This function lets a user editing her post.
+ */
   toggleWantToEditMessage() {
     if (this.editingStateService.getEditingPostIndex() === -1) {
       this.wantToEditMessage = true;
@@ -225,7 +306,11 @@ export class PostComponent {
     }
   }
 
-// Save edited message
+/**
+ * This function saves an edited message.
+ * 
+ * @returns 
+ */
   async saveEditedMessage() {
     try {
       if (this.isMessageEmpty()) {
@@ -236,13 +321,9 @@ export class PostComponent {
         return;
       }
       const { path, documentId } = this.getPathAndDocumentId();
-
       await this.updatePost(path, documentId);
-
       await this.updateCorrespondingEntries();
-
       this.wantToEditMessage = false;
-
     } catch (error) {
       console.error('Error saving message: ', error);
     } finally {
@@ -250,12 +331,20 @@ export class PostComponent {
     }
   }
 
-  // Check if message is empty
+/**
+ * This function checks if the user has entered an empty string when he edits a post.
+ * 
+ * @returns boolean
+ */
   isMessageEmpty(): boolean {
     return this.post.message.trim() === '';
   }
 
-  // Get path and document ID
+/**
+ * This function gets the document ID depending on the selected path.
+ * 
+ * @returns path and document ID.
+ */
   getPathAndDocumentId(): { path: string; documentId: string } {
     let path = '';
     let documentId = '';
@@ -293,7 +382,7 @@ export class PostComponent {
     }
   }
 
-   // Update corresponding thread
+  // Update corresponding thread
   async updateCorrespondingThread(): Promise<void> {
     const threadExists = await this.postsService.checkIfThreadExists(
       this.post.id
@@ -308,7 +397,7 @@ export class PostComponent {
     }
   }
 
-   // Update corresponding channel
+  // Update corresponding channel
   async updateCorrespondingChannel(): Promise<void> {
     const indexPostInChannel = await this.postsService.getIndexPostInChannel(
       this.post.id,
@@ -401,6 +490,6 @@ export class PostComponent {
   // Toggle tooltip display
   toggleTooltip(show: boolean, index: number) {
     this.showReaction = show;
-    this.reactionIndex = index
+    this.reactionIndex = index;
   }
 }
