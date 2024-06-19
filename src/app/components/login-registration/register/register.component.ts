@@ -63,6 +63,11 @@ export class RegisterComponent {
     return this.form.controls;
   }
 
+  /**
+   * This function saves the user credentials in the registration service. This is needed if the user navigates back and forth from the registration and choose avatar page.
+   * 
+   * @returns if the form is invalid
+   */
   onSubmit(): void {
     this.submitted = true;
 

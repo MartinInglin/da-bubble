@@ -53,6 +53,11 @@ export class LoginComponent {
     return this.form.controls;
   }
 
+  /**
+   * This function calls the sign in function from the authservice.
+   * 
+   * @returns is form is invalid
+   */
   onSubmit(): void {
     this.submitted = true;
 
@@ -66,19 +71,31 @@ export class LoginComponent {
     );
   }
 
+  /**
+   * This form starts the sign in process if the user signs in with his google account.
+   */
   signInByGoogle() {
     this.authService.signInByGoogle();
   }
 
+  /**
+   * This function sets the variable animation to true.
+   */
   setAnimationFinishedTrue(): void {
     this.animationFinished = true;
     this.setStatusStartAnimationToSessionStorage();
   }
 
+  /**
+   * This function stores the variable startAnimationHasPlayed in the session storage. It is needed so the animation only plays the first time the user arrives on the page.
+   */
   setStatusStartAnimationToSessionStorage() {
     sessionStorage.setItem('startAnimationHasPlayed', 'true');
   }
 
+  /**
+   * This function gets the variable startAnimationHasPlayed from the sesssion storage. It is needed so the animation only plays the first time the user arrives on the page. 
+   */
   getStatusStartAnimationFromSessionStorage() {
     const returnSessionStorage = sessionStorage.getItem(
       'startAnimationHasPlayed'

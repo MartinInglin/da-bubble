@@ -56,21 +56,36 @@ export class ChooseAvatarComponent {
     });
   }
   
-
+/**
+ * This function gets the user name from the registration service.
+ */
   getUserName() {
     this.userName = this.registrationService.getName();
   }
 
+  /**
+   * This function stores the avatar URL in the registration service if the user uploads an individual image.
+   * 
+   * @param imageURLAvatar string
+   */
   setAvatar(imageURLAvatar: string) {
     this.imagePreviewUrl = null;
     this.selectedAvatar = imageURLAvatar;
     this.registrationService.setAvatar(imageURLAvatar);
   }
 
+  /**
+   * This function opens the dialog to upload a file.
+   */
   openFileDialog() {
     this.fileInput.nativeElement.click();
   }
 
+  /**
+   * This function checks if an uploaded file fits the required format and file size. If so it stores the image in the registration service and displays the image.
+   * 
+   * @param event change event if a file is selected
+   */
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -82,7 +97,7 @@ export class ChooseAvatarComponent {
         } else {
           this.snackbarService.openSnackBar(
             'Die Datei ist zu groß. Bitte wähle eine Datei, die kleiner als 5 MB ist.',
-            'Schließen'
+            'Schliessen'
           );
         }
       } else {
@@ -94,6 +109,9 @@ export class ChooseAvatarComponent {
     }
   }
 
+  /**
+   * This function displays the image if the user uploads an individual image.
+   */
   displayImagePreview() {
     if (this.file) {
       const reader = new FileReader();
@@ -104,6 +122,9 @@ export class ChooseAvatarComponent {
     }
   }
 
+  /**
+   * This function starts the sign up process if the user hits the submit button.
+   */
   onSubmit(): void {
     this.submitted = true;
     this.authService.signUp();

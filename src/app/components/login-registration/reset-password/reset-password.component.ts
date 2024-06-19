@@ -38,6 +38,11 @@ export class ResetPasswordComponent {
     return this.form.controls;
   }
 
+  /**
+   * This function calls the reset forgotten password function in the auth service.
+   * 
+   * @returns if the form is invalid
+   */
   onSubmit(): void {
     this.submitted = true;
 
