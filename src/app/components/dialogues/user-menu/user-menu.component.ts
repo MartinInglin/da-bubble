@@ -35,15 +35,15 @@ export class UserMenuComponent {
   ) { }
 
   /**
- * Closes the current dialog.
- */
+   * Closes the current dialog.
+   */
   onNoClick(): void {
     this.dialogRef.close();
   }
 
   /**
- * Opens a dialog to display the current user's information.
- */
+   * Opens a dialog to display the current user's information.
+   */
   openDialog(): void {
     const dialogRef = this.dialog.open(CurrentUserComponent, {
       width: '500px',
@@ -55,8 +55,8 @@ export class UserMenuComponent {
   }
 
   /**
- * Signs out the current user.
- */
+   * Signs out the current user.
+   */
   signOUt() {
     this.authService.signOut(this.currentUser.id);
   }

@@ -25,7 +25,7 @@ import { EditCurrentUserMobileComponent } from './edit-current-user-mobile/edit-
   styleUrl: './current-user-mobile.component.scss'
 })
 export class CurrentUserMobileComponent {
-  
+
   private userSubscription: Subscription = new Subscription();
 
   currentUser: User | null = null;
@@ -36,24 +36,38 @@ export class CurrentUserMobileComponent {
     public dialogRef: MatDialogRef<CurrentUserMobileComponent>
   ) { }
 
+  /**
+   * Lifecycle hook that is called after data-bound properties of a directive are initialized.
+   * Subscribes to the currentUser$ observable to get the current user.
+   */
   ngOnInit(): void {
     const userSubscription = this.usersService.currentUser$.subscribe(user => {
       this.currentUser = user;
     });
   }
 
+  /**
+   * Lifecycle hook that is called when the directive is destroyed.
+   * Unsubscribes from the user subscription if it exists.
+   */
   ngOnDestroy(): void {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
     }
   }
 
+  /**
+   * Opens a dialog to edit the current user's information.
+   */
   openDialog(): void {
     const dialogRef = this.dialog.open(EditCurrentUserMobileComponent, {
       width: '500px',
     });
   }
 
+  /**
+   * Closes the dialog.
+   */
   onNoClick(): void {
     this.dialogRef.close();
   }

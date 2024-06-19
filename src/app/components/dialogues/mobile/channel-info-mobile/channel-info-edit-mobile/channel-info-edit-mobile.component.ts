@@ -45,6 +45,9 @@ export class ChannelInfoEditMobileComponent implements OnInit, OnDestroy {
     this.updatedDescription = data.channelDescription;
   }
 
+  /**
+  * Initializes the component by loading channel data and subscribing to the current user.
+  */
   ngOnInit(): void {
     this.loadChannelData();
     this.userSubscription = this.usersService.currentUser$.subscribe(user => {
@@ -52,6 +55,10 @@ export class ChannelInfoEditMobileComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Loads the data of the current channel.
+   * Subscribes to the channelSubject$ to receive updates about the channel.
+   */
   loadChannelData(): void {
     if (!this.data.channelId) return;
     this.channelSubscription = this.channelsService.channelSubject$.subscribe(
@@ -69,6 +76,10 @@ export class ChannelInfoEditMobileComponent implements OnInit, OnDestroy {
     this.channelsService.getDataChannel(this.data.channelId);
   }
 
+  /**
+   * Saves changes made to the channel.
+   * Updates the channel with the new name and description.
+   */
   saveChanges(): void {
     if (!this.channel) return;
 
@@ -81,6 +92,9 @@ export class ChannelInfoEditMobileComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Removes the current user from the channel.
+   */
   leaveChannel(): void {
     if (!this.currentUser || !this.channel) return;
     const channelId = this.channel.id;
@@ -95,12 +109,20 @@ export class ChannelInfoEditMobileComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Cleans up subscriptions when the component is destroyed.
+   */
   ngOnDestroy(): void {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
     }
+    if (this.channelSubscription) {
+      this.channelSubscription.unsubscribe();
+    }
   }
-
+  /**
+   * Closes the dialog without making any changes.
+   */
   onNoClick(): void {
     this.dialogRef.close();
   }

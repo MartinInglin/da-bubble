@@ -20,7 +20,7 @@ import { User } from '../../../../models/user.class';
 })
 export class UserMenuMobileComponent {
   authService = inject(AuthService);
-  
+
   currentUser: User = new User();
 
   constructor(
@@ -28,16 +28,25 @@ export class UserMenuMobileComponent {
     public dialogRef: MatDialogRef<UserMenuMobileComponent>
   ) { }
 
+  /**
+    * Closes the current dialog.
+    */
   onNoClick(): void {
     this.dialogRef.close();
   }
 
+  /**
+   * Opens a dialog to display the current user's information.
+   */
   openDialog(): void {
     const dialogRef = this.dialog.open(CurrentUserMobileComponent, {
       width: '500px',
     });
   }
 
+  /**
+   * Signs out the current user.
+   */
   signOUt() {
     this.authService.signOut(this.currentUser.id);
   }
