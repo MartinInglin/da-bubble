@@ -9,6 +9,24 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class StateService {
 
+  private sideNavOpen = new BehaviorSubject<boolean>(true);
+  sideNavOpen$ = this.sideNavOpen.asObservable();
+
+
+  toggleSideNav() {
+    this.sideNavOpen.next(!this.sideNavOpen.value);
+    console.log('hallo');
+    
+  }
+
+  closeSideNav() {
+    this.sideNavOpen.next(false);
+  }
+
+  openSideNav() {
+    this.sideNavOpen.next(true);
+  }
+
   /**
    * Internal BehaviorSubject to store the state of showing contacts.
    * - Initial value: `false` (contacts are not shown by default)

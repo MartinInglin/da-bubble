@@ -324,7 +324,6 @@ header {
   img {
     max-height: 70px;
   }
-
 }
 
 .placeholderContainer {
@@ -500,6 +499,17 @@ cdk-overlay-connected-position-bounding-box {
   }
 }
 
+@media (max-width: 580px) {
+  .channelNameNoPointer,
+  .channelName {
+    margin-left: 0 !important;
+  }
+}
+@media (max-height: 668px) {
+  .message-content {
+    height: 36vh;
+  }
+}
 
 .list {
   position: absolute;

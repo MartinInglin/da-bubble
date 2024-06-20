@@ -20,6 +20,7 @@ import { Channel } from '../../../models/channel.class';
 import { Thread } from '../../../models/thread.class';
 import { PostComponent } from '../post/post.component';
 import { PostInputComponent } from '../post-input/post-input.component';
+import { StateService } from '../../../services/stateservice.service';
 
 @Component({
   selector: 'app-thread',
@@ -47,6 +48,7 @@ export class ThreadComponent implements OnInit {
   channelsService = inject(ChannelsService);
   usersService = inject(UsersService);
   threadsService = inject(ThreadsService);
+  stateService = inject(StateService);
 
   private usersSubscription: Subscription = new Subscription();
   private userSubscription: Subscription = new Subscription();
@@ -55,6 +57,7 @@ export class ThreadComponent implements OnInit {
 
   @Output() commentsChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() toggleThread = new EventEmitter<void>();
+  @Output() closeSideNav = new EventEmitter<void>(); 
   @Input() channelId: string = ''; // Kanal-ID als Eingabe für die Thread-Komponente
   @Input() threadId: string = ''; // Thread-ID als Eingabe für die Thread-Komponente
 
@@ -79,11 +82,18 @@ export class ThreadComponent implements OnInit {
         this.selectedChannel = channel ?? new Channel();
       }
     );
+    
+    if (this.selectedThread) {
+      this.stateService.closeSideNav();
+    }
 
     // Subscribe to selectedThread observable from threadsService
     this.threadSubscription = this.threadsService.threadSubject$.subscribe(
       (thread) => {
         this.selectedThread = thread ?? new Thread();
+        if (thread) {
+          this.closeSideNav.emit(); // Emit the event to close the SideNav when a thread is opened
+        } // Close SideNav when thread is selected
       }
     );
   }

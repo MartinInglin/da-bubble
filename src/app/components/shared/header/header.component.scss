@@ -294,5 +294,15 @@ header {
     header {
       justify-content: center;
     }
+    .user {
+      margin-left: 60px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    
+    .user {
+      margin-left: 10px;
+    }
   }
 }

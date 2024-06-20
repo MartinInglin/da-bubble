@@ -44,6 +44,7 @@ export class SideNavComponent implements OnInit {
   private allUsersSubscription: Subscription = new Subscription();
   private showContactsSubscription: Subscription = new Subscription();
   private showChannelsSubscription: Subscription = new Subscription();
+  private sideNavSubscription: Subscription = new Subscription();
 
   form: FormGroup;
   searchTerm: string = '';
@@ -114,6 +115,10 @@ export class SideNavComponent implements OnInit {
     this.searchResults$.subscribe((results) => {
       this.searchResults = results;
     });
+
+    this.sideNavSubscription = this.stateService.sideNavOpen$.subscribe((isOpen) => {
+      this.isSideNavOpen = isOpen;
+    });
   }
 
   @HostListener('document:click', ['$event'])
@@ -174,6 +179,10 @@ export class SideNavComponent implements OnInit {
   }
 
   closeSidenavMobile() {
+    this.toggleDrawer.emit();
+  }
+
+  closeSidenavMobileAfterContacts() {
     this.toggleDrawer.emit();
   }
 
@@ -253,6 +262,9 @@ export class SideNavComponent implements OnInit {
     }
     if (this.showContactsSubscription) {
       this.showContactsSubscription.unsubscribe();
+    }
+    if (this.sideNavSubscription) {
+      this.sideNavSubscription.unsubscribe();
     }
   }
 }

@@ -112,7 +112,7 @@
 <table class="contacts" *ngIf="showContacts">
   <tr class="table-row">
     <td
-      (click)="directMessagesService.getDataPrivateDirectMessage(currentUser)"
+      (click)="directMessagesService.getDataPrivateDirectMessage(currentUser); closeSidenavMobileAfterContacts() "
       class="direct-message-users-container"
     >
       <img [src]="currentUser.avatar" alt="Profilbild" />
@@ -122,7 +122,7 @@
 
     @for (user of allUsers; track user) { @if (user.id != currentUser.id) {
     <td
-      (click)="directMessagesService.getDataDirectMessage(user.id, currentUser)"
+      (click)="directMessagesService.getDataDirectMessage(user.id, currentUser); closeSidenavMobileAfterContacts()"
       class="direct-message-users-container"
     >
       <img [src]="user.avatar" alt="Profilbild" />
