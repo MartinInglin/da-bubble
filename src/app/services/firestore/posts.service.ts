@@ -361,7 +361,7 @@ export class PostsService {
   }
 
   /**
-   * This functiokn checks if a thread already exists. It is needed because the document for a thread is just created when the thread is opened for the first time.
+   * This function checks if a thread already exists. It is needed because the document for a thread is just created when the thread is opened for the first time.
    *
    * @param documentId string
    * @returns boolean
@@ -419,7 +419,6 @@ export class PostsService {
         updatedPosts[indexPost]['reactions'] = reactions;
 
         await updateDoc(documentRef, { posts: updatedPosts });
-        
       } else {
         console.error('Document data is undefined.');
       }

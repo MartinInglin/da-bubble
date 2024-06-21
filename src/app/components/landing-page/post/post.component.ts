@@ -497,6 +497,31 @@ export class PostComponent {
   ) {
     await this.callSaveReactionInPostService(documentId, reaction, localPath);
 
+    const threadExists = this.postsService.checkIfThreadExists(this.post.id);
+    if (await threadExists) {
+      this.updateCorrespondingThreadReaction(
+        localPath,
+        documentId,
+        localIndexPost,
+        reaction
+      );
+    }
+  }
+
+  /**
+   * If a corresponding thread to a channel exists this function will update the reaction.
+   * 
+   * @param localPath string
+   * @param documentId string
+   * @param localIndexPost number
+   * @param reaction object of type reaction
+   */
+  async updateCorrespondingThreadReaction(
+    localPath: string,
+    documentId: string,
+    localIndexPost: number,
+    reaction: Reaction
+  ) {
     localPath = 'threads';
     documentId = this.post.id;
     localIndexPost = 0;
@@ -528,12 +553,15 @@ export class PostComponent {
       this.post.id,
       documentId
     );
-    await this.callSaveReactionInPostService(
-      documentId,
-      reaction,
-      localPath,
-      localIndexPost
-    );
+    if (localIndexPost >= 0) {
+      await this.callSaveReactionInPostService(
+        documentId,
+        reaction,
+        localPath,
+        localIndexPost
+      );
+    }
+
   }
 
   /**
