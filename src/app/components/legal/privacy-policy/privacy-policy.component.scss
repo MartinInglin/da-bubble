@@ -1,18 +1,32 @@
 .privacy-policy-container {
-    margin: 48px;
+  margin: 48px;
 
-    button {
-        margin-bottom: 36px;
-    }
+  button {
+    margin-bottom: 36px;
+  }
 
-    p {
-        margin-left: 36px;
-    }
+  p {
+    margin-left: 36px;
+  }
 }
 
-.privacy-text{
-    display: flex;
-    text-align: start;
-    flex-direction: column;
-    width: fit-content;
+.privacy-text {
+  display: flex;
+  text-align: start;
+  flex-direction: column;
+  width: fit-content;
+}
+
+.break-word {
+  word-wrap: break-word;
+}
+
+p {
+  word-wrap: break-word;
+}
+
+@media (max-width: 650px) {
+  .privacy-policy-container {
+    margin: 12px;
+  }
 }
