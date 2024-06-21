@@ -1,7 +1,6 @@
 import {
   Component,
   EventEmitter,
-  HostListener,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -54,20 +53,13 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   private userSubscription: Subscription = new Subscription();
 
   currentUser: User = new User();
-  i: any = ([] = '');
-
   isOpen: boolean = false;
-  // drawer: any;
-  loading: boolean = true;
   isThreadOpen: boolean = false;
 
-  users: any = [];
   menuOpen: string = 'Workspace-Menü öffnen';
   menuClosed: string = 'Workspace-Menü schliessen';
   menuUp: any = '/assets/images/icons/menu_up.svg';
   menuDown: any = '/assets/images/icons/menu_down.svg';
-
-  constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
@@ -77,43 +69,32 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  toggle(drawer: any): void {
+  /**
+   * This function opens and closes the side nav drawer.
+   *
+   * @param drawer sidenav
+   */
+  toggleSidenav(drawer: any): void {
     this.isOpen = !this.isOpen;
     if (drawer) {
       drawer.toggle();
     }
   }
 
+  /**
+   * This function opens a thread.
+   */
   openThread() {
     this.isThreadOpen = true;
     this.drawerThread.open();
   }
 
+  /**
+   * This function closes a thread.
+   */
   closeThread() {
     this.isThreadOpen = false;
     this.drawerThread.close();
-  }
-
-  showSidenav() {
-    this.isOpen = true;
-    this.isThreadOpen = false;
-  }
-
-  onToggleDrawer(): void {
-    this.isOpen = !this.isOpen; // Toggle the state of isOpen
-  }
-
-  showMainContent() {
-    this.isOpen = false;
-    this.isThreadOpen = false;
-  }
-
-  handleContactClick() {
-    console.log('hallo');
-    
-    this.isOpen = false;
-    this.isThreadOpen = false;
-    this.drawer.close();
   }
 
   // Unsubscribe from userSubscription if exists
