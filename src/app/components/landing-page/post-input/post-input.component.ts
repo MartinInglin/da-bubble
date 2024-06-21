@@ -11,6 +11,7 @@ import { StorageService } from '../../../services/storage.service';
 import { Thread } from '../../../models/thread.class';
 import { DirectMessage } from '../../../models/direct-message.class';
 import { PostsService } from '../../../services/firestore/posts.service';
+import { SnackbarService } from '../../../services/snackbar.service';
 
 @Component({
   selector: 'app-post-input',
@@ -24,6 +25,8 @@ export class PostInputComponent {
   storageService = inject(StorageService);
   firestore = inject(Firestore);
   postsService = inject(PostsService);
+  snackbarService = inject(SnackbarService);
+  readonly maxFileSize = 0.5 * 1024 * 1024;
 
   @Input() selectedChannel!: Channel;
   @Input() selectedDirectMessage!: DirectMessage;
@@ -74,19 +77,39 @@ export class PostInputComponent {
     this.fileInput.nativeElement.click();
   }
 
-/**
- * This file adds the file to the local file array.
- * 
- * @param event event
- */
+  /**
+   * This file adds the file to the local file array.
+   *
+   * @param event event
+   */
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      this.files.push(file);
-      input.value = '';
+  
+      if (
+        file.type === 'image/jpeg' ||
+        file.type === 'image/png' ||
+        file.type === 'application/pdf'
+      ) {
+        if (file.size <= this.maxFileSize) {
+          this.files.push(file);
+          input.value = '';
+        } else {
+          this.snackbarService.openSnackBar(
+            'Die Datei ist zu groß. Bitte wähle eine Datei, die kleiner als 500 kB ist.',
+            'Schliessen'
+          );
+        }
+      } else {
+        this.snackbarService.openSnackBar(
+          'Es können nur Bilder (jpg oder png) und PDFs gespeichert werden.',
+          'Schliessen'
+        );
+      }
     }
   }
+  
 
   /**
    * This function removes a file from the local file array.
@@ -96,20 +119,20 @@ export class PostInputComponent {
     console.log('File removed', this.files);
   }
 
-/**
- * This function adds an emoji to a message
- * 
- * @param emoji string
- */
+  /**
+   * This function adds an emoji to a message
+   *
+   * @param emoji string
+   */
   addEmojiToMessage(emoji: string): void {
     this.message += emoji;
   }
 
-/**
- * This function adds another user to the message and prints @ username into the message.
- * 
- * @param userName string of the user selected in the menu
- */
+  /**
+   * This function adds another user to the message and prints @ username into the message.
+   *
+   * @param userName string of the user selected in the menu
+   */
   linkContactInMessage(userName: string) {
     this.message += '@' + userName + ' ';
   }
