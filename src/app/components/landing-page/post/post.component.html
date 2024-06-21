@@ -5,6 +5,7 @@
     class="message-container-current-user"
     (mouseenter)="showMenu = true"
     (mouseleave)="showMenu = false; showEditMessage = false"
+    (click)="closeEditMessage()"
   >
     <img src="{{ post.avatar }}" alt="" />
 
@@ -25,7 +26,12 @@
           (keyup.enter)="saveEditedMessage()"
         ></textarea>
         <div class="edit-button-container">
-          <button><img src="./../../../../assets/images/icons/check_circle.svg" (click)="saveEditedMessage()"></button>
+          <button>
+            <img
+              src="assets/images/icons/check_circle.svg"
+              (click)="saveEditedMessage()"
+            />
+          </button>
           <!--<button><img class="close" src="./../../../../assets/images/icons/close_white.svg" (click)="toggleWantToEditMessage()"></button>-->
         </div>
       </div>
@@ -90,12 +96,12 @@
       <img
         src="assets/images/icons/edit_message.svg"
         alt=""
-        (click)="toggleShowEditMessage()"
+        (click)="toggleShowEditMessage($event)"
         class="edit-button"
       />
       <div
         class="edit-message"
-        (click)="toggleWantToEditMessage()"
+        (click)="toggleWantToEditMessage(); closeEditMessage()"
         [ngClass]="{ show: showEditMessage }"
       >
         <span>Nachricht bearbeiten</span>
@@ -219,7 +225,7 @@
   post.lastAnswer) {
   <div class="message-details" (click)="sendOpenThreadToParent(post)">
     <!-- Message actions and time details -->
-    <a >{{ post.amountAnswers }} Antworten</a>
+    <a>{{ post.amountAnswers }} Antworten</a>
     <span>Letzte Antwort:{{ formatDate(post.lastAnswer) }} </span>
   </div>
   }
