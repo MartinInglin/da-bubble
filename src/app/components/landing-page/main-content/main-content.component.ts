@@ -379,8 +379,10 @@ export class MainContentComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * This function opens the channel info mobile dialog.
-   */
+* This function opens the channel info mobile dialog
+ * 
+ * @param channelId string
+ */
   openChannelInfoMobileDialog(channelId: string): void {
     if (this.currentUser) {
       const dialogRef = this.dialog.open(ChannelInfoMobileComponent, {
@@ -415,7 +417,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
       leftPosition = rect.left + window.scrollX - 400;
     }
 
-    const dialogRef = this.dialog.open(MembersComponent, {
+    this.dialog.open(MembersComponent, {
       width: `${dialogWidth}px`,
       position: {
         top: `${rect.bottom + window.scrollY + 10}px`,
@@ -435,7 +437,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     if (window.innerWidth <= 750) {
       this.openAddUserToChannelMobileDialog(channelId);
     } else {
-      const dialogRef = this.dialog.open(AddUserToChannelComponent, {
+      this.dialog.open(AddUserToChannelComponent, {
         width: '800px',
         height: '800px',
         position: {
@@ -447,7 +449,11 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
   }
 
-
+  /**
+   * This function opens the dialog to add a user to a channel.
+   * 
+   * @param channelId string
+   */
   openAddUserToChannelMobileDialog(channelId: string): void {
     if (this.currentUser) {
       const dialogRef = this.dialog.open(AddUserToChannelMobileComponent, {
@@ -463,20 +469,29 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * This function opens the dialog for the detail view of a user in a direct message.
+   * 
+   * @param user object of type minimal user
+   */
   openDetailViewDialog(user: MinimalUser): void {
-    const dialogRef = this.dialog.open(ProfileDetailViewComponent, {
+    debugger;
+    this.dialog.open(ProfileDetailViewComponent, {
       width: '500px',
       data: {
         userId: user.id,
         userName: user.name,
         userEmail: user.email,
-        userAvatar: user.avatar
-      }
+        userAvatar: user.avatar,
+      },
     });
   }
 
   /**
-   * This function opens the profile detail view dialog.
+   * This function turns a UTX timestamp into "heute" if it is today or the day of the week plus date.
+   *
+   * @param timestamp number, UTX
+   * @returns string, "heute" or weekday plus date
    */
   formatDate(timestamp: number): string {
     const daysOfWeek = [
@@ -517,29 +532,47 @@ export class MainContentComponent implements OnInit, OnDestroy {
     return `${hours}:${minutes} Uhr`;
   }
 
-  isNewDate(index: number, path: string) {
+  /**
+   * This function is needed for the date line. It checks if the date of the new post is the same as the the date of the previous one.
+   *
+   * @param index number, index of the post
+   * @param path string, channel or directMessage
+   * @returns boolean
+   */
+  isNewDate(index: number, path: string): boolean {
     if (index === 0) {
       return true;
     }
-    if (path === 'channel') {
-      const currentPostDate = this.formatDate(
-        this.selectedChannel.posts[index].timestamp
-      );
-      const previousPostDate = this.formatDate(
-        this.selectedChannel.posts[index - 1].timestamp
-      );
-      return currentPostDate !== previousPostDate;
+    switch (path) {
+      case 'channel':
+        return this.isDifferentDate(
+          this.selectedChannel.posts[index].timestamp,
+          this.selectedChannel.posts[index - 1].timestamp
+        );
+      case 'directMessage':
+        return this.isDifferentDate(
+          this.selectedDirectMessage.posts[index].timestamp,
+          this.selectedDirectMessage.posts[index - 1].timestamp
+        );
+      default:
+        return false;
     }
-    if (path === 'directMessage') {
-      const currentPostDate = this.formatDate(
-        this.selectedDirectMessage.posts[index].timestamp
-      );
-      const previousPostDate = this.formatDate(
-        this.selectedDirectMessage.posts[index - 1].timestamp
-      );
-      return currentPostDate !== previousPostDate;
-    }
-    return false;
+  }
+
+  /**
+   * This function compares the current and the previous timestamp. It formats them an returns false if they are not the same.
+   *
+   * @param currentTimestamp number, UTX
+   * @param previousTimestamp number, UTX
+   * @returns boolean
+   */
+  isDifferentDate(
+    currentTimestamp: number,
+    previousTimestamp: number
+  ): boolean {
+    const currentPostDate = this.formatDate(currentTimestamp);
+    const previousPostDate = this.formatDate(previousTimestamp);
+    return currentPostDate !== previousPostDate;
   }
 
   /**

@@ -141,6 +141,12 @@ export class ThreadComponent implements OnInit {
     }
   }
 
+  /**
+   * This function is needed for the date line. It checks if the date of the new post is the same as the the date of the previous one.
+   * 
+   * @param index number, index of the post
+   * @returns boolean
+   */
   isNewDate(index: number) {
     if (index === 0) {
       return true;
