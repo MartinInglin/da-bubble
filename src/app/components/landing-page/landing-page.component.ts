@@ -16,7 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { User } from '../../models/user.class';
 import { Subscription } from 'rxjs';
 import { UsersService } from '../../services/firestore/users.service';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { StateService } from '../../services/stateservice.service';
 import { SideNavComponent } from './side-nav/side-nav.component';
 import { AuthService } from '../../services/auth.service';
@@ -45,6 +45,8 @@ export class LandingPageComponent implements OnInit, OnDestroy {
 
   @ViewChild('drawerThread') drawerThread!: MatDrawer;
   @ViewChild('drawer') drawer!: MatDrawer;
+  @ViewChild(MainContentComponent) mainContentComponent!: MainContentComponent;
+  @ViewChild(ThreadComponent) threadComponent!: ThreadComponent;
 
   authService = inject(AuthService);
   usersService = inject(UsersService);
@@ -87,6 +89,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   openThread() {
     this.isThreadOpen = true;
     this.drawerThread.open();
+    this.threadComponent.callSetFocus();
   }
 
   /**
@@ -95,6 +98,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   closeThread() {
     this.isThreadOpen = false;
     this.drawerThread.close();
+    this.mainContentComponent.callSetFocus();
   }
 
   // Unsubscribe from userSubscription if exists

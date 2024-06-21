@@ -128,6 +128,10 @@ export class SideNavComponent implements OnInit {
     }
   }
 
+  getDataChannel(channelId: string) {
+    this.channelsService.getDataChannel(channelId);
+  }
+
   closeSearchResults(): void {
     this.searchResults = [];
     this.form.get('recipient')?.setValue(''); // Clear the input field

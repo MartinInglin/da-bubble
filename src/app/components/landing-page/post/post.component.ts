@@ -60,7 +60,7 @@ export class PostComponent {
 
   ngOnInit() {
     this.checkIfPostFromCurrentUser();
-    this.sortReactions();
+    this.sortReactions();    
   }
 
   /**

@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, ViewChild, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  SimpleChanges,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -37,6 +45,7 @@ export class PostInputComponent {
   @Input() path!: 'directMessages' | 'threads' | 'channels';
 
   @ViewChild('fileInput') fileInput!: ElementRef;
+  @ViewChild('messageTextarea') messageTextarea!: ElementRef;
 
   files: File[] = [];
   emojis: string[] = [
@@ -52,6 +61,47 @@ export class PostInputComponent {
     '⚡',
   ];
   message: string = '';
+
+  ngAfterViewInit(): void {
+    this.setFocus();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.idChanges(changes)) {
+      this.setFocus();
+    }
+  }
+
+  /**
+   * This function checks if ID's changed. Only if so the focus should be set.
+   *
+   * @param changes changes
+   * @returns boolean
+   */
+  idChanges(changes: SimpleChanges): boolean {
+    return (
+      (changes['selectedChannel'] &&
+        changes['selectedChannel'].currentValue.id !==
+          changes['selectedChannel'].previousValue?.id) ||
+      (changes['selectedDirectMessage'] &&
+        changes['selectedDirectMessage'].currentValue.id !==
+          changes['selectedDirectMessage'].previousValue?.id) ||
+      (changes['selectedThread'] &&
+        changes['selectedThread'].currentValue.id !==
+          changes['selectedThread'].previousValue?.id)
+    );
+  }
+
+  /**
+   * This function sets the focus to the text area. The timeout is needed to make sure that the DOM is fully created before setting the focus.
+   */
+  setFocus() {
+    setTimeout(() => {
+      if (this.messageTextarea) {
+        this.messageTextarea.nativeElement.focus();
+      }
+    }, 0);
+  }
 
   /**
    * This function saves a post by calling the savePost function in the posts service.
@@ -86,7 +136,7 @@ export class PostInputComponent {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-  
+
       if (
         file.type === 'image/jpeg' ||
         file.type === 'image/png' ||
@@ -109,7 +159,6 @@ export class PostInputComponent {
       }
     }
   }
-  
 
   /**
    * This function removes a file from the local file array.
