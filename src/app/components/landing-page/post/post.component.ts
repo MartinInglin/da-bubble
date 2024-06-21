@@ -190,7 +190,7 @@ export class PostComponent {
 
   /**
    * This function deletes a file from a post. Only a signed in user can delete his own files.
-   * 
+   *
    * @param fileName string
    * @param e event
    * @param indexFile number
@@ -215,11 +215,11 @@ export class PostComponent {
     e.stopPropagation();
   }
 
-/**
- * This function is needed to delete a file from a thread if it is deleted in a channel.
- * 
- * @param indexFile number
- */
+  /**
+   * This function is needed to delete a file from a thread if it is deleted in a channel.
+   *
+   * @param indexFile number
+   */
   async deleteFileOnCorrespondingThread(indexFile: number) {
     try {
       this.path = 'threads';
@@ -238,12 +238,12 @@ export class PostComponent {
     }
   }
 
-/**
- * This function is needed to delete a file from a channel if it is deleted in a thread.
- * 
- * @param documentId string
- * @param indexFile number
- */
+  /**
+   * This function is needed to delete a file from a channel if it is deleted in a thread.
+   *
+   * @param documentId string
+   * @param indexFile number
+   */
   async deleteFileOnCorrespondingChannel(
     documentId: string,
     indexFile: number
@@ -261,23 +261,23 @@ export class PostComponent {
     }
   }
 
-/**
- * This function deletes a file on a post in a given collection.
- * 
- * @param path string of 'channels', directMessages' or 'threads'
- * @param documentId string
- * @param indexFile number
- */
+  /**
+   * This function deletes a file on a post in a given collection.
+   *
+   * @param path string of 'channels', directMessages' or 'threads'
+   * @param documentId string
+   * @param indexFile number
+   */
   deleteFileOnCollection(path: string, documentId: string, indexFile: number) {
     const pathToDocument = `${path}/${documentId}`;
     this.postsService.deleteFile(this.indexPost, pathToDocument, indexFile);
   }
 
-/**
- * This function restricts the user from editing multiple posts at the same time.
- * 
- * @returns 
- */
+  /**
+   * This function restricts the user from editing multiple posts at the same time.
+   *
+   * @returns
+   */
   toggleShowEditMessage() {
     if (this.editingStateService.getEditingPostIndex() !== -1) {
       this.snackbarService.openSnackBar(
@@ -289,9 +289,9 @@ export class PostComponent {
     this.showEditMessage = !this.showEditMessage;
   }
 
-/**
- * This function lets a user editing her post.
- */
+  /**
+   * This function lets a user editing her post.
+   */
   toggleWantToEditMessage() {
     if (this.editingStateService.getEditingPostIndex() === -1) {
       this.wantToEditMessage = true;
@@ -306,11 +306,11 @@ export class PostComponent {
     }
   }
 
-/**
- * This function saves an edited message.
- * 
- * @returns 
- */
+  /**
+   * This function saves an edited message.
+   *
+   * @returns
+   */
   async saveEditedMessage() {
     try {
       if (this.isMessageEmpty()) {
@@ -320,8 +320,8 @@ export class PostComponent {
         );
         return;
       }
-      const { path, documentId } = this.getPathAndDocumentId();
-      await this.updatePost(path, documentId);
+      const documentId = this.getDocumentId();
+      await this.updatePost(this.path, documentId);
       await this.updateCorrespondingEntries();
       this.wantToEditMessage = false;
     } catch (error) {
@@ -331,39 +331,39 @@ export class PostComponent {
     }
   }
 
-/**
- * This function checks if the user has entered an empty string when he edits a post.
- * 
- * @returns boolean
- */
+  /**
+   * This function checks if the user has entered an empty string when he edits a post.
+   *
+   * @returns boolean
+   */
   isMessageEmpty(): boolean {
     return this.post.message.trim() === '';
   }
 
-/**
- * This function gets the document ID depending on the selected path.
- * 
- * @returns path and document ID.
- */
-  getPathAndDocumentId(): { path: string; documentId: string } {
-    let path = '';
-    let documentId = '';
-
+  /**
+   * This function gets the document ID depending on the selected path.
+   *
+   * @returns document ID.
+   */
+  getDocumentId(): string {
+    let documentId: string = '';
     if (this.path === 'channels') {
-      path = 'channels';
       documentId = this.selectedChannel.id;
     } else if (this.path === 'directMessages') {
-      path = 'directMessages';
       documentId = this.selectedDirectMessageId;
     } else if (this.path === 'threads') {
-      path = 'threads';
       documentId = this.selectedThreadId;
     }
 
-    return { path, documentId };
+    return documentId;
   }
 
-  // Update post
+  /**
+   * This function saves the edits a user does to a post.
+   *
+   * @param path string of channels, directMessages or threads
+   * @param documentId string
+   */
   async updatePost(path: string, documentId: string): Promise<void> {
     await this.postsService.editPost(
       path,
@@ -373,7 +373,9 @@ export class PostComponent {
     );
   }
 
-  // Update corresponding entries
+  /**
+   * This function updates a corresponding thread or channel if the user edits a post.
+   */
   async updateCorrespondingEntries(): Promise<void> {
     if (this.path === 'channels') {
       await this.updateCorrespondingThread();
@@ -382,7 +384,9 @@ export class PostComponent {
     }
   }
 
-  // Update corresponding thread
+  /**
+   * This function updates a thread if a user edits a corresponding post in a channel.
+   */
   async updateCorrespondingThread(): Promise<void> {
     const threadExists = await this.postsService.checkIfThreadExists(
       this.post.id
@@ -397,7 +401,9 @@ export class PostComponent {
     }
   }
 
-  // Update corresponding channel
+  /**
+   * This function updates a channel if a user edits a corresponding post in a thread.
+   */
   async updateCorrespondingChannel(): Promise<void> {
     const indexPostInChannel = await this.postsService.getIndexPostInChannel(
       this.post.id,
@@ -413,60 +419,131 @@ export class PostComponent {
     }
   }
 
-  // Send open thread event to parent
+  /**
+   * This function emits an event to its parent to open the thread on the right side.
+   *
+   * @param post object of type post
+   */
   sendOpenThreadToParent(post: Post) {
     this.openThread.emit(post);
   }
 
-  // Save reaction
+  /**
+   * This function starts the saving process if a user reacts with an emoji to a post.
+   *
+   * @param emoji string
+   */
   async saveReaction(emoji: string) {
-    const reaction: Reaction = {
+    const reaction: Reaction = this.createReaction(emoji);
+    let documentId = '';
+    let localPath = this.path;
+    let localIndexPost = this.indexPost;
+
+    switch (localPath) {
+      case 'channels':
+        documentId = this.selectedChannel.id;
+        await this.handleChannelReactions(
+          documentId,
+          reaction,
+          localPath,
+          localIndexPost
+        );
+        break;
+      case 'directMessages':
+        documentId = this.selectedDirectMessageId;
+        await this.callSaveReactionInPostService(
+          documentId,
+          reaction,
+          localPath,
+          localIndexPost
+        );
+        break;
+      case 'threads':
+        documentId = this.selectedThreadId;
+        await this.handleThreadReactions(documentId, reaction, localPath);
+        break;
+      default:
+        console.log('Document Id not found.');
+    }
+  }
+
+  /**
+   * This function creates a new reaction object.
+   *
+   * @param emoji string
+   * @returns object of type reaction
+   */
+  createReaction(emoji: string): Reaction {
+    return {
       userName: this.currentUser.name,
       userId: this.currentUser.id,
       emoji: emoji,
     };
-
-    let documentId;
-    let localPath = this.path;
-    let localIndexPost = this.indexPost;
-
-    if (localPath === 'channels') {
-      documentId = this.selectedChannel.id;
-      this.callSaveReactionInPostService(documentId, reaction, localPath);
-
-      localPath = 'threads';
-      documentId = this.post.id;
-      localIndexPost = 0;
-      this.callSaveReactionInPostService(
-        documentId,
-        reaction,
-        localPath,
-        localIndexPost
-      );
-    } else if (localPath === 'directMessages') {
-      documentId = this.selectedDirectMessageId;
-    } else if (localPath === 'threads') {
-      documentId = this.selectedThreadId;
-      this.callSaveReactionInPostService(documentId, reaction, localPath);
-
-      localPath = 'channels';
-      documentId = this.selectedChannel.id;
-      const localIndexPost = await this.postsService.getIndexPostInChannel(
-        this.post.id,
-        documentId
-      );
-      this.callSaveReactionInPostService(
-        documentId,
-        reaction,
-        localPath,
-        localIndexPost
-      );
-    } else {
-      console.log('Document Id not found.');
-    }
   }
 
-  // Call save reaction in post service
+  /**
+   * This function saves a reaction on a post in case it is done in a channel. The callSaveReactionInPostService function is called twice because a corresponding thread might be updated as well.
+   *
+   * @param documentId string
+   * @param reaction object of type reaction
+   * @param localPath string
+   * @param localIndexPost number
+   */
+  async handleChannelReactions(
+    documentId: string,
+    reaction: Reaction,
+    localPath: string,
+    localIndexPost: number
+  ) {
+    await this.callSaveReactionInPostService(documentId, reaction, localPath);
+
+    localPath = 'threads';
+    documentId = this.post.id;
+    localIndexPost = 0;
+    await this.callSaveReactionInPostService(
+      documentId,
+      reaction,
+      localPath,
+      localIndexPost
+    );
+  }
+
+  /**
+   * This function saves a reaction on a post in case it is done in a thread. The callSaveReactionInPostService function is called twice because a corresponding channel might be updated as well.
+   *
+   * @param documentId string
+   * @param reaction object of type reaction
+   * @param localPath string
+   */
+  async handleThreadReactions(
+    documentId: string,
+    reaction: Reaction,
+    localPath: string
+  ) {
+    await this.callSaveReactionInPostService(documentId, reaction, localPath);
+
+    localPath = 'channels';
+    documentId = this.selectedChannel.id;
+    const localIndexPost = await this.postsService.getIndexPostInChannel(
+      this.post.id,
+      documentId
+    );
+    await this.callSaveReactionInPostService(
+      documentId,
+      reaction,
+      localPath,
+      localIndexPost
+    );
+  }
+
+  /**
+   * This function calls the save reaction function in the posts service which stores it in firebase.
+   *
+   * @param documentId string
+   * @param reaction object of type reaction
+   * @param localPath string
+   * @param localIndexPost number
+   */
   async callSaveReactionInPostService(
     documentId: string,
     reaction: Reaction,
@@ -487,7 +564,12 @@ export class PostComponent {
     }
   }
 
-  // Toggle tooltip display
+  /**
+   * This function toggles the tooltip that displays who reacted on a post.
+   *
+   * @param show boolean
+   * @param index number
+   */
   toggleTooltip(show: boolean, index: number) {
     this.showReaction = show;
     this.reactionIndex = index;

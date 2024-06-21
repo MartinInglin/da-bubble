@@ -419,8 +419,7 @@ export class PostsService {
         updatedPosts[indexPost]['reactions'] = reactions;
 
         await updateDoc(documentRef, { posts: updatedPosts });
-
-        console.log('Reaction successfully saved!');
+        
       } else {
         console.error('Document data is undefined.');
       }

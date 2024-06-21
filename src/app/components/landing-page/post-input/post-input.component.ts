@@ -51,7 +51,7 @@ export class PostInputComponent {
   message: string = '';
 
   /**
-   * saves the post
+   * This function saves a post by calling the savePost function in the posts service.
    */
   savePost() {
     this.postsService.savePost(
@@ -68,43 +68,48 @@ export class PostInputComponent {
   }
 
   /**
-   * opens the file dialog
+   * This function opens the file dialog which allows the user to upload files.
    */
   openFileDialog() {
     this.fileInput.nativeElement.click();
   }
 
-  /**
-   * selects a file
-   */
+/**
+ * This file adds the file to the local file array.
+ * 
+ * @param event event
+ */
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       this.files.push(file);
-      console.log('File added', this.files);
       input.value = '';
     }
   }
 
   /**
-   * rewmoves file
+   * This function removes a file from the local file array.
    */
   removeFile(index: number) {
     this.files.splice(index, 1);
     console.log('File removed', this.files);
   }
 
-  /**
-   * adds emoji to message
-   */
+/**
+ * This function adds an emoji to a message
+ * 
+ * @param emoji string
+ */
   addEmojiToMessage(emoji: string): void {
     this.message += emoji;
   }
 
-  /**
-   *links contacts name in message
-   */
+/**
+ * This function adds another user to the message and prints @ username into the message.
+ * 
+ * @param userName string of the user selected in the menu
+ */
   linkContactInMessage(userName: string) {
     this.message += '@' + userName + ' ';
   }
