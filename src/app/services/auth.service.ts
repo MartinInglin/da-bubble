@@ -36,6 +36,8 @@ import { Firestore, doc, getDoc, updateDoc } from '@angular/fire/firestore';
 export class AuthService {
   private auth: Auth;
 
+  private authSubscription: Subscription | null = null;
+
   private router = inject(Router);
   firestore = inject(Firestore);
   usersService = inject(UsersService);
@@ -370,7 +372,7 @@ export class AuthService {
    * This function redircets the user to the landingpage if she is authenticated. Like this she cannot get to login or register page.
    */
   redirectAuthorizedTo(): void {
-    this.isAuthenticated()
+    this.authSubscription = this.isAuthenticated()
       .pipe(
         map((isAuthenticated) => {
           if (isAuthenticated) {
@@ -379,5 +381,14 @@ export class AuthService {
         })
       )
       .subscribe();
+  }
+
+  /**
+   * This function cleans up after the service is destroyed.
+   */
+  ngOnDestroy(): void {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
   }
 }

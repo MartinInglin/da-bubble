@@ -4,7 +4,6 @@ import {
   DocumentSnapshot,
   Firestore,
   QuerySnapshot,
-  arrayUnion,
   collection,
   doc,
   getDoc,
@@ -17,8 +16,6 @@ import { BehaviorSubject } from 'rxjs';
 import { DirectMessage } from '../../models/direct-message.class';
 import { MinimalUser } from '../../models/minimal_user.class';
 import { User } from '../../models/user.class';
-import { Post } from '../../models/post.class';
-import { v4 as uuidv4 } from 'uuid';
 
 @Injectable({
   providedIn: 'root',
@@ -30,7 +27,7 @@ export class DirectMessagesService {
     new BehaviorSubject<DirectMessage | null>(null);
   public directMessage$ = this.directMessageSubject.asObservable();
 
-  constructor() {}
+  private unsubDirectMessage: () => void = () => {};
 
   /**
    *This function gets the data of a direct message
@@ -42,15 +39,7 @@ export class DirectMessagesService {
     const directMessageId = await this.getIdDirectMessage(userId, currentUser);
 
     if (directMessageId) {
-      const unsub = onSnapshot(
-        doc(this.firestore, 'directMessages', directMessageId),
-        (doc) => {
-          const directMessageData = doc.data() as DirectMessage;
-          console.log(directMessageData);
-
-          this.directMessageSubject.next(directMessageData);
-        }
-      );
+      this.createSubscription(directMessageId);
     } else {
       this.createDirectMessage(userId, currentUser);
     }
@@ -65,15 +54,7 @@ export class DirectMessagesService {
     const directMessageId = currentUser.privateDirectMessageId;
 
     if (directMessageId) {
-      const unsub = onSnapshot(
-        doc(this.firestore, 'directMessages', directMessageId),
-        (doc) => {
-          const directMessageData = doc.data() as DirectMessage;
-          console.log(directMessageData);
-
-          this.directMessageSubject.next(directMessageData);
-        }
-      );
+      this.createSubscription(directMessageId);
     } else {
       this.createPrivateDirectMessage(currentUser);
     }
@@ -186,15 +167,7 @@ export class DirectMessagesService {
    */
   subscribeToNewDirectMessage(directMessageData: DirectMessage) {
     const directMessageId = directMessageData.id;
-    if (directMessageId) {
-      const unsub = onSnapshot(
-        doc(this.firestore, 'directMessages', directMessageId),
-        (doc) => {
-          const directMessageData = doc.data() as DirectMessage;
-          this.directMessageSubject.next(directMessageData);
-        }
-      );
-    }
+    this.createSubscription(directMessageId);
   }
 
   /**
@@ -252,9 +225,18 @@ export class DirectMessagesService {
     currentUser: User
   ) {
     const directMessageId = directMessageData.id;
+    this.createSubscription(directMessageId);
+    this.writeDirectMessageIdOnUser(currentUser, directMessageId);
+  }
 
+  /**
+   * This funciton creates a subscription for the direct message with the given ID.
+   * 
+   * @param directMessageId string
+   */
+  createSubscription(directMessageId: string) {
     if (directMessageId) {
-      const unsub = onSnapshot(
+      this.unsubDirectMessage = onSnapshot(
         doc(this.firestore, 'directMessages', directMessageId),
         (doc) => {
           const directMessageData = doc.data() as DirectMessage;
@@ -262,7 +244,6 @@ export class DirectMessagesService {
         }
       );
     }
-    this.writeDirectMessageIdOnUser(currentUser, directMessageId);
   }
 
   /**
@@ -338,4 +319,13 @@ export class DirectMessagesService {
     }
     return [];
   }
+
+    /**
+   * This function unsubscribes from the direct message data subscription.
+   */
+    public unsubscribeFromData() {
+      if (this.unsubDirectMessage) {
+        this.unsubDirectMessage();
+      }
+    }
 }
