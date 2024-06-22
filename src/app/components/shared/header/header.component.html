@@ -31,8 +31,10 @@
 
 
   <!-- Name and Avatar if signed in -->
-  <div *ngIf="currentUser?.isSignedIn" class="user" (click)="openDialog()" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()">
-    <span class="name">{{ currentUser.name}}</span>
+  <div *ngIf="currentUser?.isSignedIn" class="user" #userDiv (click)="openDialog()" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()">
+    <div class="name-container">
+      <span class="name">{{ currentUser.name }}</span>
+    </div>
     <div class="name-avatar">
       <div class="image-container">
         <img [src]="currentUser.avatar" alt="USER" />
@@ -42,6 +44,7 @@
     <!-- menu for logOut -->
     <img class="menuDropDown" [src]="menuDown" alt="MENU" #userDiv />
   </div>
+  
 
   <!-- If not registered -->
   <div *ngIf="showRegisterElement" class="register">

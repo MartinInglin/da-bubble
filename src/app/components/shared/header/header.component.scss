@@ -19,22 +19,32 @@ header {
   justify-content: center;
   gap: 10px;
   padding: 10px;
-  width: 340px;
+  width: 400px;
   color: black;
   cursor: pointer;
+  overflow: hidden;
 
-  div {
+  .name-avatar {
     display: flex;
     align-items: center;
     justify-content: center;
     margin-right: -5px !important;
   }
 
-  span {
+  .name-container {
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .name {
     font-size: 32px;
+    line-height: 36px;
     white-space: nowrap;
     font-weight: 700;
     flex-grow: 1;
+    overflow: hidden;
+    display: inline-block;
+    transition: transform 0.3s linear;
   }
 
   .image-container {
@@ -56,6 +66,19 @@ header {
 
   &:hover {
     color: $purple2;
+  }
+
+  &.scroll .name {
+    animation: scrollName 10s linear infinite;
+  }
+}
+
+@keyframes scrollName {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
   }
 }
 
@@ -258,7 +281,7 @@ header {
 }
 
 @media (max-width: 1020px) {
-  .name {
+  .name-container {
     display: none;
   }
 

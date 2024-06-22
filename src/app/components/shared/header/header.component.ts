@@ -37,6 +37,7 @@ import { PostsService } from '../../../services/firestore/posts.service';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild('searchResultsList') searchResultsList!: ElementRef;
+  @ViewChild('userDiv') userDiv!: ElementRef;
 
   authService = inject(AuthService);
   usersService = inject(UsersService);
@@ -261,4 +262,34 @@ export class HeaderComponent implements OnInit, OnDestroy {
   onMouseOut(): void {
     this.menuDown = './../../../../assets/images/icons/keyboard_arrow_down.svg';
   }
+
+  ngAfterViewInit(): void {
+    this.checkNameWidth(); // Check the width of the name after view initialization
+  }
+
+  ngAfterViewChecked(): void {
+    this.checkNameWidth(); // Check the width of the name after each view check
+  }
+
+  /**
+   * Checks the width of the name element within the user container.
+   * If the width of the name element is greater than 340 pixels,
+   * it adds the 'scroll' class to the user container to trigger a scroll animation.
+   * If the width is 340 pixels or less, it removes the 'scroll' class.
+   *
+   * @returns {void}
+   */
+  checkNameWidth(): void {
+    if (this.userDiv && this.userDiv.nativeElement) {
+      const nameElement = this.userDiv.nativeElement.querySelector('.name');
+      if (nameElement) {
+        if (nameElement.scrollWidth > 400) {
+          this.userDiv.nativeElement.classList.add('scroll');
+        } else {
+          this.userDiv.nativeElement.classList.remove('scroll');
+        }
+      }
+    }
+  }
+
 }
