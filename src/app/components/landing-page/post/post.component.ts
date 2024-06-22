@@ -1,11 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  SimpleChanges,
-  inject,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Post } from '../../../models/post.class';
 import { StorageService } from '../../../services/storage.service';
@@ -67,7 +60,7 @@ export class PostComponent {
 
   ngOnInit() {
     this.checkIfPostFromCurrentUser();
-    this.sortReactions();
+    this.sortReactions();    
   }
 
   /**
@@ -278,7 +271,7 @@ export class PostComponent {
    *
    * @returns
    */
-  toggleShowEditMessage() {
+  toggleShowEditMessage(event: MouseEvent) {
     if (this.editingStateService.getEditingPostIndex() !== -1) {
       this.snackbarService.openSnackBar(
         'Du kannst nur eine Nachricht gleichzeitig bearbeiten.',
@@ -287,6 +280,11 @@ export class PostComponent {
       return;
     }
     this.showEditMessage = !this.showEditMessage;
+    event?.stopPropagation();
+  }
+
+  closeEditMessage() {
+    this.showEditMessage = false;
   }
 
   /**
@@ -510,7 +508,7 @@ export class PostComponent {
 
   /**
    * If a corresponding thread to a channel exists this function will update the reaction.
-   * 
+   *
    * @param localPath string
    * @param documentId string
    * @param localIndexPost number
@@ -561,7 +559,6 @@ export class PostComponent {
         localIndexPost
       );
     }
-
   }
 
   /**

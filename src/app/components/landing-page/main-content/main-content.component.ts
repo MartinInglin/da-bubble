@@ -8,7 +8,6 @@ import {
   ViewChild,
   ElementRef,
   ChangeDetectorRef,
-  AfterViewChecked,
   HostListener,
 } from '@angular/core';
 import { ChannelsService } from '../../../services/firestore/channels.service';
@@ -44,9 +43,6 @@ import { Observable } from 'rxjs';
 import { PostComponent } from '../post/post.component';
 import { MinimalUser } from '../../../models/minimal_user.class';
 import { PostInputComponent } from '../post-input/post-input.component';
-import { user } from '@angular/fire/auth';
-
-declare const twemoji: any; // Deklariere Twemoji als Modul
 
 @Component({
   selector: 'app-main-content',
@@ -72,6 +68,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   @ViewChild('channelMessageContent') channelMessageContent!: ElementRef;
   @ViewChild('directMessageContent') directMessageContent!: ElementRef;
   @ViewChild('searchResultsList') searchResultsList!: ElementRef;
+  @ViewChild(PostInputComponent) postInputComponent!: PostInputComponent;
 
   channelsService = inject(ChannelsService);
   usersService = inject(UsersService);
@@ -199,7 +196,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
   closeSearchResults(): void {
     this.searchResults = [];
-    this.form.get('recipient')?.setValue(''); // Clear the input field
+    this.form.get('recipient')?.setValue('');
   }
 
   ngAfterViewInit(): void {
@@ -379,10 +376,10 @@ export class MainContentComponent implements OnInit, OnDestroy {
   }
 
   /**
-* This function opens the channel info mobile dialog
- * 
- * @param channelId string
- */
+   * This function opens the channel info mobile dialog
+   *
+   * @param channelId string
+   */
   openChannelInfoMobileDialog(channelId: string): void {
     if (this.currentUser) {
       const dialogRef = this.dialog.open(ChannelInfoMobileComponent, {
@@ -451,7 +448,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
   /**
    * This function opens the dialog to add a user to a channel.
-   * 
+   *
    * @param channelId string
    */
   openAddUserToChannelMobileDialog(channelId: string): void {
@@ -471,7 +468,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
   /**
    * This function opens the dialog for the detail view of a user in a direct message.
-   * 
+   *
    * @param user object of type minimal user
    */
   openDetailViewDialog(user: MinimalUser): void {
@@ -603,5 +600,12 @@ export class MainContentComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.error('Error fetching user count:', error);
     }
+  }
+
+  /**
+   * This function sets the focus on the input field of the main content component if a thread is closed.
+   */
+  callSetFocus() {
+    this.postInputComponent.setFocus();
   }
 }

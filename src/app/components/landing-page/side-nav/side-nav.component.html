@@ -75,7 +75,7 @@
 <!-- Channels -->
 <table class="channels" *ngIf="showChannels">
   <tr *ngFor="let channel of currentUser.channels; let i = index">
-    <td (click)="channelsService.getDataChannel(channel.id); closeSidenavMobile()">
+    <td (click)="getDataChannel(channel.id); closeSidenavMobile()">
       <span class="span-hashtag">#</span>
       <span class="current-user-name">{{ currentUser.channels[i].name }}</span>
     </td>

@@ -28,7 +28,8 @@ export class UsersService {
   firestore = inject(Firestore);
   registrationService = inject(RegistrationService);
 
-  private unsubscribe: any;
+  private unsubCurrentUser: () => void = () => {};
+  private unsubAllUsers: () => void = () => {};
 
   private currentUserSubject: BehaviorSubject<User | null> =
     new BehaviorSubject<User | null>(null);
@@ -143,7 +144,7 @@ export class UsersService {
    * @param userId string
    */
   getCurrentUser(userId: string): void {
-    this.unsubscribe = onSnapshot(
+    this.unsubCurrentUser = onSnapshot(
       doc(this.firestore, 'users', userId),
       (doc) => {
         const userData = doc.data() as User;
@@ -159,7 +160,7 @@ export class UsersService {
   getAllUsers(): void {
     const collectionRef = collection(this.firestore, 'users');
 
-    this.unsubscribe = onSnapshot(collectionRef, (snapshot) => {
+    this.unsubAllUsers = onSnapshot(collectionRef, (snapshot) => {
       const data = snapshot.docs.map(
         (doc) => new User({ id: doc.id, ...doc.data() })
       );
@@ -306,7 +307,7 @@ export class UsersService {
 
   /**
    * This function updates the name and the avatar of the user. It then stores them on firebase.
-   * 
+   *
    * @param users array of minimal users
    * @param currentUser object of type user
    * @param partialUser part of the user object
@@ -337,7 +338,7 @@ export class UsersService {
 
   /**
    * This function updates all posts of a collection in firestore if the user-ID in the post and the ID of the current user are identical.
-   * 
+   *
    * @param path string of type path
    * @param documentId string
    * @param posts array of partial posts
@@ -369,7 +370,7 @@ export class UsersService {
 
   /**
    * This function updates all reactions of a collection in firestore if the user-ID in the post and the ID of the current user are identical.
-   * 
+   *
    * @param path string of type path
    * @param documentId string
    * @param posts array of partial posts
@@ -403,30 +404,30 @@ export class UsersService {
     }
   }
 
-    /**
+  /**
    * This function saves the last two used emojis on the user.
-   * 
+   *
    * @param currentUserId string
    * @param emoji string
    * @returns if emojis are the same
    */
-    async saveUsedEmoji(currentUserId: string, emoji: string) {
-      const docRef = doc(this.firestore, 'users', currentUserId);
-      const document = await getDoc(docRef);
-      const docData = document.data();
-  
-      if (docData) {
-        const savedEmojis = docData['savedEmojis'];
-        if (savedEmojis[1] === emoji) {
-          return;
-        } else if (savedEmojis.length == 2) {
-          savedEmojis.splice(0, 1);
-        }
-        savedEmojis.push(emoji);
-  
-        await updateDoc(docRef, { savedEmojis: savedEmojis });
+  async saveUsedEmoji(currentUserId: string, emoji: string) {
+    const docRef = doc(this.firestore, 'users', currentUserId);
+    const document = await getDoc(docRef);
+    const docData = document.data();
+
+    if (docData) {
+      const savedEmojis = docData['savedEmojis'];
+      if (savedEmojis[1] === emoji) {
+        return;
+      } else if (savedEmojis.length == 2) {
+        savedEmojis.splice(0, 1);
       }
+      savedEmojis.push(emoji);
+
+      await updateDoc(docRef, { savedEmojis: savedEmojis });
     }
+  }
 
   /**
    * This function sets the current user to null. It is needed to avoid data leaks after the user signed out.
@@ -439,6 +440,11 @@ export class UsersService {
    * This function unsubscribes from the user data subscription.
    */
   public unsubscribeFromData() {
-    this.unsubscribe();
+    if (this.unsubCurrentUser) {
+      this.unsubCurrentUser();
+    }
+    if (this.unsubAllUsers) {
+      this.unsubAllUsers();
+    }
   }
 }

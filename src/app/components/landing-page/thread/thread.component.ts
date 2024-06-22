@@ -6,6 +6,7 @@ import {
   OnInit,
   inject,
   Output,
+  ViewChild,
 } from '@angular/core';
 import { User } from '../../../models/user.class';
 import { ThreadsService } from '../../../services/firestore/threads.service';
@@ -60,6 +61,8 @@ export class ThreadComponent implements OnInit {
   @Output() closeSideNav = new EventEmitter<void>(); 
   @Input() channelId: string = ''; // Kanal-ID als Eingabe für die Thread-Komponente
   @Input() threadId: string = ''; // Thread-ID als Eingabe für die Thread-Komponente
+
+  @ViewChild(PostInputComponent) postInputComponent!: PostInputComponent;
 
   constructor() { }
 
@@ -154,6 +157,9 @@ export class ThreadComponent implements OnInit {
       const currentPostDate = this.formatDate(this.selectedThread.posts[index + 1].timestamp);
       const previousPostDate = this.formatDate(this.selectedThread.posts[index].timestamp);
       return currentPostDate !== previousPostDate;
+  }
 
+  callSetFocus() {
+    this.postInputComponent.setFocus();
   }
 }

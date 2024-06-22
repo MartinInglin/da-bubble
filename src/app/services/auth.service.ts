@@ -1,4 +1,4 @@
-import { HostListener, Injectable, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import {
   Auth,
@@ -13,28 +13,26 @@ import {
   reauthenticateWithCredential,
   sendEmailVerification,
   sendPasswordResetEmail,
-  setPersistence,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
-  updateEmail,
   updatePassword,
-  user,
   verifyBeforeUpdateEmail,
 } from '@angular/fire/auth';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { RegistrationService } from './registration.service';
 import { SnackbarService } from './snackbar.service';
 import { UsersService } from './firestore/users.service';
-import { User } from '../models/user.class';
-import { Observable, Subscription, map, timeout } from 'rxjs';
-import { Firestore, doc, getDoc, updateDoc } from '@angular/fire/firestore';
+import { Observable, Subscription, map } from 'rxjs';
+import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private auth: Auth;
+
+  private authSubscription: Subscription | null = null;
 
   private router = inject(Router);
   firestore = inject(Firestore);
@@ -47,82 +45,81 @@ export class AuthService {
   }
 
   /**
-   * This function is for the registration process of the user. It firstly creates a user in firebase auth and then calls for creating a user in the firestore. If successful it navigates the user to the login page.
+   * This function is for the registration process of the user. It firstly creates a user on firebase authentication with email and password.
    *
-   * @returns Starts creating a user in firestore.
+   * @returns Starts creating a user on firebase.
    */
   signUp(): Promise<void> {
     const userData = this.registrationService.getUserData();
 
-    return (
-      createUserWithEmailAndPassword(
-        this.auth,
-        userData.email,
-        userData.password
-      )
-        //exchange after testing from here to Line 70
-        .then(async (userCredential) => {
-          if (userCredential.user) {
-            const id = userCredential.user.uid;
-            await this.usersService.createUser(id);
-            this.signOut(userCredential.user.uid);
-            this.router.navigate(['/login']);
-            this.snackbarService.openSnackBar(
-              'Benutzer erfolreich erstellt. Bitte melde dich an.',
-              'Schliessen'
-            );
-          } else {
-            throw new Error('No user credential found');
-          }
-        })
-        .catch((error) => {
-          console.error('Error during sign up:', error);
-          if (error.code === 'auth/email-already-in-use') {
-            this.snackbarService.openSnackBar(
-              'Ein Konto mit dieser E-Mail-Adresse besteht bereits. Bitte melde dich an.',
-              'Schliessen'
-            );
-          } else {
-            this.snackbarService.openSnackBar(
-              'Error during sign up: ' + error.message,
-              'Close'
-            );
-          }
-        })
-    );
+    return createUserWithEmailAndPassword(
+      this.auth,
+      userData.email,
+      userData.password
+    )
+      .then((userCredential) => this.handleUserCredential(userCredential))
+      .catch((error) => this.handleSignUpError(error));
+  }
 
-    // .then((userCredential) => {
-    //   if (userCredential.user) {
-    //     return sendEmailVerification(userCredential.user)
-    //       .then(() => {
-    //         const id = userCredential.user.uid;
-    //         return this.usersService.createUser(id);
-    //       })
-    //       .then(() => {
-    //         this.router.navigate(['/login']);
-    //         this.snackbarService.openSnackBar(
-    //           'Bestätigungs-E-Mail gesendet. Bitte überprüfe deine Mailbox.',
-    //           'Schliessen'
-    //         );
-    //       });
-    //   } else {
-    //     throw new Error('No user credential found');
-    //   }
-    // })
-    // .catch((error) => {
-    //   console.error('Error during sign up:', error);
-    //   if (error.code === 'auth/email-already-in-use') {
-    //     this.snackbarService.openSnackBar(
-    //       'Diese Mailadresse besteht bereits. Bitte melde dich an.',
-    //       'Schliessen'
-    //     );
-    //   } else {
-    //     this.snackbarService.openSnackBar(
-    //       'Error during sign up: ' + error.message,
-    //       'Close'
-    //     );
-    //   }
-    // });
+  /**
+   * This function starts a couple of functions for the registration process.
+   *
+   * @param userCredential object of type user credential (firebase)
+   * @returns email verifiecation
+   */
+  private handleUserCredential(userCredential: UserCredential): Promise<void> {
+    if (userCredential.user) {
+      return sendEmailVerification(userCredential.user)
+        .then(() => this.createUser(userCredential.user.uid))
+        .then(() => this.postSignUpActions(userCredential.user.uid))
+        .catch((error) => this.handleSignUpError(error));
+    } else {
+      return Promise.reject(new Error('No user credential found'));
+    }
+  }
+
+  /**
+   * This function calls the createUser function in the users service, where a new user is created on firestore.
+   *
+   * @param userId string
+   * @returns
+   */
+  private createUser(userId: string): Promise<void> {
+    return this.usersService.createUser(userId);
+  }
+
+  /**
+   * This function makes sure that the user is not signed in after registration. Then it navigates her to the login page.
+   *
+   * @param userId
+   */
+  private postSignUpActions(userId: string): void {
+    this.signOut(userId);
+    this.router.navigate(['/login']);
+    this.snackbarService.openSnackBar(
+      'Bestätigungs-E-Mail gesendet. Bitte überprüfe deine Mailbox.',
+      'Schliessen'
+    );
+  }
+
+  /**
+   * This function handles all sign up errors.
+   *
+   * @param error type any
+   */
+  private handleSignUpError(error: any): void {
+    console.error('Error during sign up:', error);
+    if (error.code === 'auth/email-already-in-use') {
+      this.snackbarService.openSnackBar(
+        'Diese Mailadresse besteht bereits. Bitte melde dich an.',
+        'Schliessen'
+      );
+    } else {
+      this.snackbarService.openSnackBar(
+        'Error during sign up: ' + error.message,
+        'Close'
+      );
+    }
   }
 
   /**
@@ -191,22 +188,17 @@ export class AuthService {
     const userSignedIn = userCredential.user;
     const userId = userCredential.user.uid;
 
-    this.setIsSignedInTrue(userId);
-
-    //exchange after testing from here to line 117
-    this.usersService.getCurrentUser(userId);
-    this.router.navigate(['/landingPage']);
-
-    // if (userSignedIn.emailVerified) {
-    //   this.usersService.getCurrentUser(userId);
-    //   this.router.navigate(['landingPage']);
-    // } else {
-    //   this.snackbarService.openSnackBar(
-    //     'Bitte verifiziere deine E-Mail-Adresse, bevor du dich anmeldest.',
-    //     'Schliessen'
-    //   );
-    //   this.auth.signOut();
-    // }
+    if (userSignedIn.emailVerified) {
+      this.setIsSignedInTrue(userId);
+      this.usersService.getCurrentUser(userId);
+      this.router.navigate(['landingPage']);
+    } else {
+      this.snackbarService.openSnackBar(
+        'Bitte verifiziere deine E-Mail-Adresse, bevor du dich anmeldest.',
+        'Schliessen'
+      );
+      this.auth.signOut();
+    }
   }
 
   /**
@@ -370,7 +362,7 @@ export class AuthService {
    * This function redircets the user to the landingpage if she is authenticated. Like this she cannot get to login or register page.
    */
   redirectAuthorizedTo(): void {
-    this.isAuthenticated()
+    this.authSubscription = this.isAuthenticated()
       .pipe(
         map((isAuthenticated) => {
           if (isAuthenticated) {
@@ -379,5 +371,14 @@ export class AuthService {
         })
       )
       .subscribe();
+  }
+
+  /**
+   * This function cleans up after the service is destroyed.
+   */
+  ngOnDestroy(): void {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
   }
 }
