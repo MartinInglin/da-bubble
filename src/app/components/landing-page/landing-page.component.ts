@@ -60,8 +60,8 @@ export class LandingPageComponent implements OnInit, OnDestroy {
 
   menuOpen: string = 'Workspace-Menü öffnen';
   menuClosed: string = 'Workspace-Menü schliessen';
-  menuUp: any = '/assets/images/icons/menu_up.svg';
-  menuDown: any = '/assets/images/icons/menu_down.svg';
+  menuUp: any = 'assets/images/icons/menu_up.svg';
+  menuDown: any = 'assets/images/icons/menu_down.svg';
 
   ngOnInit(): void {
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {

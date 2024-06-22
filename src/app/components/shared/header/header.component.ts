@@ -52,7 +52,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   filteredPosts: Post[] = [];
   isDialogOpen = false;
   showRegisterElement = true;
-  menuDown = './../../../../assets/images/icons/keyboard_arrow_down.svg';
+  menuDown = 'assets/images/icons/keyboard_arrow_down.svg';
   form: FormGroup;
   searchTerm: string = '';
   searchResults$: Observable<(Channel | User | Post)[]> = of([]);
@@ -61,15 +61,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
   currentUser: User = new User();
 
   constructor(private dialog: MatDialog,
-              private router: Router,
-              private fb: FormBuilder,
-              private postsService: PostsService) {
+    private router: Router,
+    private fb: FormBuilder,
+    private postsService: PostsService) {
     this.form = this.fb.group({
       recipient: [''],
     });
   }
 
+  /**
+  * Initializes the component by setting up subscriptions and form controls.
+  * 
+  * @returns {void}
+  */
   ngOnInit(): void {
+    // Subscribe to currentUser and filter channels based on search term
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       this.currentUser = user ?? new User();
       const channels: Channel[] = this.currentUser.channels.map(
@@ -80,12 +86,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
       );
     });
 
+    // Subscribe to router events to show or hide register element based on the URL
     this.routeSubscription = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.showRegisterElement = event.url === '/' || event.url === '/login';
       }
     });
 
+    // Subscribe to allUsers and filter users based on search term
     this.userSubscription = this.usersService.allUsersSubject$.subscribe(
       (users) => {
         if (users) {
@@ -97,10 +105,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
     );
 
-    this.postsService.getPosts('channels', 'documentId').subscribe((posts) => {
-      this.filteredPosts = posts;
+    // Fetch posts for a specific document in channels collection
+    this.postsService.getPosts('channels', 'channel-id')
+    .subscribe((posts) => {
+      // Handle the fetched posts here (might be empty)
+      console.log('Fetched posts:', posts);
     });
   
+
+    // Listen for form value changes and update search results
     this.searchResults$ = this.form.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -111,11 +124,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
       })
     );
 
+    // Subscribe to search results and update the component's state
     this.searchResults$.subscribe((results) => {
       this.searchResults = results;
     });
   }
 
+  /**
+  * Handles click events outside the search results list to close the results.
+  * 
+  * @param {MouseEvent} event - The mouse event object.
+  * @returns {void}
+  */
   @HostListener('document:click', ['$event'])
   handleClickOutside(event: MouseEvent): void {
     if (this.searchResultsList && !this.searchResultsList.nativeElement.contains(event.target)) {
@@ -123,48 +143,106 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+  * Closes the search results by clearing the search results array and resetting the form control.
+  * 
+  * @returns {void}
+  */
   closeSearchResults(): void {
     this.searchResults = [];
     this.form.get('recipient')?.setValue('');
   }
 
+  /**
+  * Gets the form control for the recipient input field.
+  * 
+  * @returns {FormControl} The form control for the recipient input field.
+  */
   get recipient(): FormControl {
     return this.form.get('recipient') as FormControl;
   }
 
+  /**
+  * Determines if the result is a User object.
+  * 
+  * @param {Channel | User | Post} result - The search result to check.
+  * @returns {boolean} True if the result is a User, false otherwise.
+  */
   isUser(result: Channel | User | Post): result is User {
     return (result as User).avatar !== undefined;
   }
 
+  /**
+  * Determines if the result is a Channel object.
+  * 
+  * @param {Channel | User | Post} result - The search result to check.
+  * @returns {boolean} True if the result is a Channel, false otherwise.
+  */
   isChannel(result: Channel | User | Post): result is Channel {
     return (result as Channel).name !== undefined;
   }
 
+  /**
+  * Determines if the result is a Post object.
+  * 
+  * @param {Channel | User | Post} result - The search result to check.
+  * @returns {boolean} True if the result is a Post, false otherwise.
+  */
   isPost(result: Channel | User | Post): result is Post {
     return (result as Post).message !== undefined;
   }
 
+  /**
+  * Opens a channel based on the provided ID and resets the recipient form control.
+  * 
+  * @param {string} id - The ID of the channel to open.
+  * @returns {void}
+  */
   openChannel(id: string): void {
     this.channelsService.getDataChannel(id);
     this.form.get('recipient')?.setValue('');
   }
 
+  /**
+  * Opens a direct message based on the provided ID and data, and resets the recipient form control.
+  * 
+  * @param {string} id - The ID of the direct message to open.
+  * @param {any} data - Additional data for the direct message.
+  * @returns {void}
+  */
   openDirectMessage(id: string, data: any): void {
     this.directMessagesService.getDataDirectMessage(id, data);
     this.form.get('recipient')?.setValue('');
   }
 
+  /**
+  * Opens a post based on the provided ID and resets the recipient form control.
+  * 
+  * @param {string} id - The ID of the post to open.
+  * @returns {void}
+  */
   openPost(id: string): void {
     console.log('Opening post with ID:', id);
     this.form.get('recipient')?.setValue('');
   }
-
+  /**
+     * Selects a recipient (channel, user, or post) and updates the form control value.
+     * 
+     * @param {Channel | User | Post} recipient - The selected recipient.
+     * @returns {void}
+     */
   selectRecipient(recipient: Channel | User | Post) {
     const recipientString: any =
       recipient instanceof Channel ? `#${recipient.name}` : `@${recipient.id}`;
     this.form.setValue({ recipient: recipientString });
   }
 
+  /**
+   * Searches for channels, users, or posts based on the provided search term.
+   * 
+   * @param {string} searchTerm - The search term to use.
+   * @returns {Observable<(Channel | User | Post)[]>} An observable of the search results.
+   */
   search(searchTerm: string): Observable<(Channel | User | Post)[]> {
     if (searchTerm.startsWith('#')) {
       const filteredChannels = this.filteredChannels.filter((channel) =>
@@ -192,6 +270,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Filters out the current user from the search results.
+   * 
+   * @param {(Channel | User | Post)[]} results - The search results to filter.
+   * @returns {(Channel | User | Post)[]} The filtered search results.
+   */
   private filterCurrentUser(results: (Channel | User | Post)[]): (Channel | User | Post)[] {
     return results.filter(result => {
       if (this.isUser(result)) {
@@ -201,6 +285,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Unsubscribes from all subscriptions to prevent memory leaks.
+   * 
+   * @returns {void}
+   */
   ngOnDestroy(): void {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
@@ -210,6 +299,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Opens the user menu dialog based on the screen width.
+   * 
+   * @returns {void}
+   */
   openDialog(): void {
     if (this.currentUser) {
       if (window.innerWidth <= 750) {
@@ -234,6 +328,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Opens the mobile user menu dialog.
+   * 
+   * @returns {void}
+   */
   openMobileDialog(): void {
     if (this.currentUser) {
       const dialogRef = this.dialog.open(UserMenuMobileComponent, {
@@ -254,19 +353,38 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-
+  /**
+   * Changes the menu icon when the mouse hovers over it.
+   * 
+   * @returns {void}
+   */
   onMouseOver(): void {
-    this.menuDown = './../../../../assets/images/icons/keyboard_arrow_down_blue.svg';
+    this.menuDown = 'assets/images/icons/keyboard_arrow_down_blue.svg';
   }
 
+  /**
+   * Resets the menu icon when the mouse leaves it.
+   * 
+   * @returns {void}
+   */
   onMouseOut(): void {
-    this.menuDown = './../../../../assets/images/icons/keyboard_arrow_down.svg';
+    this.menuDown = 'assets/images/icons/keyboard_arrow_down.svg';
   }
 
+  /**
+   * Lifecycle hook called after Angular has fully initialized the component's view.
+   * 
+   * @returns {void}
+   */
   ngAfterViewInit(): void {
     this.checkNameWidth(); // Check the width of the name after view initialization
   }
 
+  /**
+   * Lifecycle hook called after Angular has checked the component's view.
+   * 
+   * @returns {void}
+   */
   ngAfterViewChecked(): void {
     this.checkNameWidth(); // Check the width of the name after each view check
   }

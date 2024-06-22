@@ -6,14 +6,14 @@
 <!-- head of sidenav -->
 <div class="head-side-menu">
   <div class="head-side-menu-first">
-    <img src="/assets/images/icons/workspace_logo.png" alt="" />
+    <img src="assets/images/icons/workspace_logo.png" alt="" />
     <span>DevSpace</span>
   </div>
   <div class="head-side-menu-link">
     <img
       (click)="closeChannelsAndContacts()"
       class="edit-square-button"
-      src="/assets/images/icons/16. edit_square.svg"
+      src="assets/images/icons/16. edit_square.svg"
       alt=""
     />
   </div>
@@ -59,7 +59,7 @@
       alt="Toggle Contacts"
     />
     <div class="channels-list">
-      <img src="/assets/images/icons/workspaces.svg" alt="" />
+      <img src="assets/images/icons/workspaces.svg" alt="" />
       <span>Channels</span>
     </div>
   </div>
@@ -67,7 +67,7 @@
     <img
       (click)="openNewChannelDialog()"
       class="add-channel-button"
-      src="/assets/images/icons/add_icon.svg"
+      src="assets/images/icons/add_icon.svg"
       alt=""
     />
   </div>
@@ -117,7 +117,6 @@
     >
       <img [src]="currentUser.avatar" alt="Profilbild" />
       <div class="online"></div>
-      <span>{{ getFirstAndLastName(currentUser.name) }} (Du)</span>
     </td>
 
     @for (user of allUsers; track user) { @if (user.id != currentUser.id) {
@@ -128,7 +127,6 @@
       <img [src]="user.avatar" alt="Profilbild" />
       <div *ngIf="user.isSignedIn" class="online"></div>
       <div *ngIf="!user.isSignedIn" class="offline"></div>
-      <span>{{ getFirstAndLastName(user.name) }}</span>
     </td>
     } }
   </tr>

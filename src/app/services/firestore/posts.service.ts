@@ -19,7 +19,7 @@ import { ThreadsService } from './threads.service';
 import { Reaction } from '../../models/reaction.class';
 import { UsersService } from './users.service';
 import { ChannelsService } from './channels.service';
-import { Observable, from} from 'rxjs';
+import { Observable, catchError, from, of} from 'rxjs';
 
 
 @Injectable({
@@ -465,37 +465,47 @@ export class PostsService {
   }
 
   /**
-   * Retrieves posts based on the provided path and document ID.
-   *
-   * @param path - Path to the document ('channels', 'directMessages', or 'threads')
-   * @param documentId - ID of the document to retrieve posts from
-   * @returns Array of posts or an empty array if not found
-   */
-  getPosts(
-    path: 'channels' | 'directMessages' | 'threads',
-    documentId: string
-  ): Observable<Post[]> {
-    return from(this.getPostsPromise(path, documentId));
-  }
-  
-  private async getPostsPromise(
-    path: 'channels' | 'directMessages' | 'threads',
-    documentId: string
-  ): Promise<Post[]> {
-    try {
-      const docRef = doc(this.firestore, path, documentId);
-      const docSnap = await getDoc(docRef);
-  
-      if (docSnap.exists()) {
-        const docData = docSnap.data();
-        return docData['posts'] || [];
-      } else {
-        console.error('No such document!');
-        return [];
-      }
-    } catch (error) {
-      console.error('Error getting posts: ', error);
+/**
+ * Retrieves posts based on the provided path and document ID.
+ *
+ * @param path - Path to the document ('channels', 'directMessages', or 'threads')
+ * @param documentId - ID of the document to retrieve posts from
+ * @returns Array of posts or an empty array if not found
+ */
+getPosts(
+  path: 'channels' | 'directMessages' | 'threads',
+  documentId: string
+): Observable<Post[]> {
+  return from(this.getPostsPromise(path, documentId))
+    .pipe(
+      catchError((error) => {
+        console.error('Error getting posts: ', error);
+        return of([]); // Return an empty observable on error
+      })
+    );
+}
+
+private async getPostsPromise(
+  path: 'channels' | 'directMessages' | 'threads',
+  documentId: string
+): Promise<Post[]> {
+  try {
+    console.log(`Fetching posts from path: ${path}, documentId: ${documentId}`);
+
+    const docRef = doc(this.firestore, path, documentId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const docData = docSnap.data();
+      console.log(`Document data: `, docData);
+      return docData['posts'] || [];
+    } else {
+      console.log('No such document!');
       return [];
     }
+  } catch (error) {
+    console.error('Error getting posts: ', error);
+    return [];
   }
+}
 }
