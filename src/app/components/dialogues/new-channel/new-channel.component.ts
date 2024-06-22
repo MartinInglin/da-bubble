@@ -51,12 +51,20 @@ createChannelAndOpenDialog(): void {
       );
       return;
     }
-    this.channelsService.createChannel(this.channelName, this.channelDescription, this.currentUser)
-      .then((channel) => {
-        this.dialogRef.close();
-        this.openAddUserDialog(channel.id, this.channelName);
-      })
-      .catch(error => console.error('Error creating channel: ', error));
+
+    this.channelsService.getAllChannels().subscribe(channels => {
+      const channelExists = channels.some(channel => channel.name === this.channelName);
+      if (channelExists) {
+        this.snackbarService.openSnackBar('Der Channelname existiert bereits.', 'Schließen');
+      } else {
+        this.channelsService.createChannel(this.channelName, this.channelDescription, this.currentUser)
+          .then((channel) => {
+            this.dialogRef.close();
+            this.openAddUserDialog(channel.id, this.channelName);
+          })
+          .catch(error => console.error('Error creating channel: ', error));
+      }
+    });
   }
 }
 
