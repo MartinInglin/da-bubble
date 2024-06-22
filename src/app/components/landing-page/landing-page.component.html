@@ -2,7 +2,7 @@
   <!-- MainContent -->
   <div class="Content">
     <div class="menuBtn">
-      <button type="button" (click)="toggleSidenav(drawer)">
+      <button *ngIf="!isThreadOpen" type="button" (click)="toggleSidenav(drawer)">
         <div class="menu-btn-content">
           <span>{{ isOpen ? menuClosed : menuOpen }}</span>
           <img [src]="isOpen ? menuUp : menuDown" alt="Toggle Contacts" />
