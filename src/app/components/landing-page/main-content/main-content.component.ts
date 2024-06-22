@@ -189,15 +189,21 @@ export class MainContentComponent implements OnInit, OnDestroy, AfterViewInit, A
     });
   }
 
-  @HostListener('document:click', ['$event'])
-  handleClickOutside(event: MouseEvent): void {
-    if (
-      this.searchResultsList &&
-      !this.searchResultsList.nativeElement.contains(event.target)
-    ) {
-      this.closeSearchResults();
-    }
+/**
+ * Handles click events on the document to close the search results list if the click is outside of it.
+ * 
+ * @param {MouseEvent} event - The mouse event that triggered the click.
+ * @returns {void}
+ */
+@HostListener('document:click', ['$event'])
+handleClickOutside(event: MouseEvent): void {
+  if (
+    this.searchResultsList &&
+    !this.searchResultsList.nativeElement.contains(event.target)
+  ) {
+    this.closeSearchResults();
   }
+}
 
   closeSearchResults(): void {
     this.searchResults = [];
