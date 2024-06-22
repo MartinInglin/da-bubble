@@ -74,6 +74,9 @@ mat-card-content {
     position: absolute;
     background-color: white;
     width: 300px;
+    height: fit-content;
+    max-height: 400px;
+    overflow-x: auto;    
     z-index: 1;
     top: 200px;
     left: 90px;

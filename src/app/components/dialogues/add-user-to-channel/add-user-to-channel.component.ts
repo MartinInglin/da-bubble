@@ -59,6 +59,18 @@ export class AddUserToChannelComponent implements OnInit, OnDestroy {
     this.loadChannelName();
   }
 
+/**
+ * Handles the focus event on the input field to display all users 
+ * that are not currently in the channel and not already selected.
+ * Sets the filteredUsers array to contain these users and shows the results.
+ */
+onFocus(): void {
+  this.filteredUsers = this.allUsers.filter(user =>
+    !this.usersInChannel.some(u => u.id === user.id) &&
+    !this.selectedUsers.includes(user.id)
+  );
+  this.showResults = true;
+}
   /**
    * Asynchronously loads users currently in the channel.
    * Handles errors encountered during the loading process.
