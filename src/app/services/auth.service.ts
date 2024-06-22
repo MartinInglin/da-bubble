@@ -33,6 +33,7 @@ export class AuthService {
   private auth: Auth;
 
   private authSubscription: Subscription | null = null;
+  private userCredential: UserCredential | null = null;
 
   private router = inject(Router);
   firestore = inject(Firestore);
@@ -154,7 +155,6 @@ export class AuthService {
       .then((result: UserCredential) => {
         const user = result.user;
         if (user) {
-          const userId = user.uid;
           const additionalUserInfo = getAdditionalUserInfo(result);
 
           if (additionalUserInfo?.isNewUser) {
@@ -185,6 +185,7 @@ export class AuthService {
    * @param userCredential object from firebase authentication
    */
   async signIn(userCredential: UserCredential) {
+    this.userCredential = userCredential;
     const userSignedIn = userCredential.user;
     const userId = userCredential.user.uid;
 
@@ -193,12 +194,21 @@ export class AuthService {
       this.usersService.getCurrentUser(userId);
       this.router.navigate(['landingPage']);
     } else {
-      this.snackbarService.openSnackBar(
+      this.snackbarService.openSnackBarVerifyEmail(
         'Bitte verifiziere deine E-Mail-Adresse, bevor du dich anmeldest.',
-        'Schliessen'
+        'Verfizierungslink erneut senden.',
+        this.resendVerificationEmail.bind(this)
       );
       this.auth.signOut();
     }
+  }
+
+  resendVerificationEmail() {
+    sendEmailVerification(this.userCredential!.user);
+    this.snackbarService.openSnackBar(
+      `Wir haben die Email zur Verfizierung an ${this.userCredential?.user.email} geschickt.`,
+      'Schliessen'
+    );
   }
 
   /**
@@ -222,10 +232,7 @@ export class AuthService {
     try {
       await this.setIsSignedInFalse(currentUserId);
     } catch (error) {
-      this.snackbarService.openSnackBar(
-        'Failed to update sign-in status. Please try again.',
-        'Close'
-      );
+      console.log('Set is signed in failed', error);
       return;
     }
     try {
@@ -236,7 +243,7 @@ export class AuthService {
       this.router.navigate(['/login']);
     } catch (error) {
       this.snackbarService.openSnackBar(
-        'Logout failed. Please try again.',
+        'Logout ist fehlgeschlagen. Bitte versuche es erneut.',
         'Close'
       );
     }
@@ -270,9 +277,8 @@ export class AuthService {
         );
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // ..
+        console.log("Send email reset password failed", error);
+        
       });
   }
 

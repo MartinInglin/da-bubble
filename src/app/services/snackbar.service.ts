@@ -20,4 +20,17 @@ export class SnackbarService {
       panelClass: ['error-snackbar']
     });
   }
+
+  openSnackBarVerifyEmail(message: string, action: string, callback?: () => void): void {
+    const snackBarRef = this.snackBar.open(message, action, {
+      duration: 5000,
+      panelClass: ['error-snackbar'],
+    });
+
+    if (callback) {
+      snackBarRef.onAction().subscribe(() => {
+        callback();
+      });
+    }
+  }
 }
