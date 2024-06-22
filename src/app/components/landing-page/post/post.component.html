@@ -11,7 +11,7 @@
 
     <div class="message-box-current-user">
       <div class="message-name-current-user">
-        <span>{{ post.name }}</span>
+        <span>{{ getFirstAndLastName(post.name) }}</span>
         <span class="timestamp">{{ formatDateTime(post.timestamp) }}</span>
         @if (post.edited) {
         <span class="edited">(bearbeitet)</span>
@@ -142,7 +142,7 @@
 
     <div class="message-box">
       <div class="message-name">
-        <span>{{ post.name }}</span>
+        <span>{{ getFirstAndLastName(post.name) }}</span>
         <span class="timestamp">{{ formatDateTime(post.timestamp) }}</span>
         @if (post.edited) {
         <span class="edited">(bearbeitet)</span>
