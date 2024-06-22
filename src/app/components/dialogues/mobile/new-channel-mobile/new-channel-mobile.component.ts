@@ -8,6 +8,7 @@ import { AddUserToNewChannelMobileComponent } from '../add-user-to-new-channel-m
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ChannelsService } from '../../../../services/firestore/channels.service';
 import { User } from '../../../../models/user.class';
+import { SnackbarService } from '../../../../services/snackbar.service';
 
 @Component({
   selector: 'app-new-channel-mobile',
@@ -32,6 +33,7 @@ export class NewChannelMobileComponent {
   constructor(
     private dialog: MatDialog,
     private channelsService: ChannelsService,
+    private snackbarService: SnackbarService,
     public dialogRef: MatDialogRef<NewChannelMobileComponent>
   ) { }
 
@@ -41,10 +43,17 @@ export class NewChannelMobileComponent {
    */
   createChannelAndOpenDialog(): void {
     if (this.channelName.trim()) {
+      if (this.channelName.length > 20) {
+        this.snackbarService.openSnackBar(
+          'Der Channelname darf maximal 20 Zeichen lang sein.',
+          'Schließen'
+        );
+        return;
+      }
       this.channelsService.createChannel(this.channelName, this.channelDescription, this.currentUser)
         .then((channel) => {
           this.dialogRef.close();
-          this.openAddUserDialog(channel.id);
+          this.openAddUserDialog(channel.id, this.channelName);
         })
         .catch(error => console.error('Error creating channel: ', error));
     }
@@ -55,13 +64,13 @@ export class NewChannelMobileComponent {
    * @param {string} channelId - The ID of the newly created channel.
    * @param {string} channelName - The name of the newly created channel.
    */
-  openAddUserDialog(channelId: string): void {
+  openAddUserDialog(channelId: string, channelName: string): void {
     const dialogRef = this.dialog.open(AddUserToNewChannelMobileComponent, {
       width: '100%',
       position: {
         bottom: '0%'
       },
-      data: { channelId: channelId },
+      data: { channelId: channelId, channelName: channelName  },
     });
   }
 

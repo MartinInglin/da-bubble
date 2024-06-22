@@ -8,6 +8,7 @@ import { AddUserToNewChannelComponent } from '../add-user-to-new-channel/add-use
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ChannelsService } from '../../../services/firestore/channels.service';
 import { User } from '../../../models/user.class';
+import { SnackbarService } from '../../../services/snackbar.service';
 
 @Component({
   selector: 'app-new-channel',
@@ -33,6 +34,7 @@ export class NewChannelComponent {
   constructor(
     private dialog: MatDialog,
     private channelsService: ChannelsService,
+    private snackbarService: SnackbarService,
     public dialogRef: MatDialogRef<NewChannelComponent>
   ) {}
 
@@ -42,6 +44,13 @@ export class NewChannelComponent {
  */
 createChannelAndOpenDialog(): void {
   if (this.channelName.trim()) {
+    if (this.channelName.length > 20) {
+      this.snackbarService.openSnackBar(
+        'Der Channelname darf maximal 20 Zeichen lang sein.',
+        'Schließen'
+      );
+      return;
+    }
     this.channelsService.createChannel(this.channelName, this.channelDescription, this.currentUser)
       .then((channel) => {
         this.dialogRef.close();
