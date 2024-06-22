@@ -11,19 +11,23 @@
     <input type="text" formControlName="recipient" placeholder="Code learning durchsuchen..." />
     <img class="searchImg" src="../../../../assets/images/icons/search.svg" alt="">
     <div *ngIf="searchResults && searchResults.length" class="list">
-      <ul ul #searchResultsList *ngIf="searchResults && searchResults.length > 0">
+      <ul #searchResultsList *ngIf="searchResults && searchResults.length > 0">
         <li *ngFor="let result of searchResults">
           <div class="container-name-avatar" *ngIf="isUser(result)" (click)="openDirectMessage(result.id, currentUser)">
             <img src="{{result.avatar}}" alt="">
             <span>{{ result.name }}</span>
           </div>
-          <div class="container-name-avatar" *ngIf="!isUser(result)" (click)="openChannel(result.id)">
-            <span>{{ result.name }}</span>
+          <div class="container-name-avatar" *ngIf="isChannel(result)" (click)="openChannel(result.id)">
+            <span># {{ result.name }}</span>
+          </div>
+          <div class="container-name-avatar" *ngIf="isPost(result)" (click)="openPost(result.id)">
+            <span> {{ result.message }}</span>
           </div>
         </li>
       </ul>
     </div>
   </div>
+  
 
 
   <!-- Name and Avatar if signed in -->

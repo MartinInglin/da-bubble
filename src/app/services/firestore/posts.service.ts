@@ -19,12 +19,14 @@ import { ThreadsService } from './threads.service';
 import { Reaction } from '../../models/reaction.class';
 import { UsersService } from './users.service';
 import { ChannelsService } from './channels.service';
+import { Observable, from} from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class PostsService {
-  firestore = inject(Firestore);
+  firestore = inject(Firestore); 
   storageService = inject(StorageService);
   usersService = inject(UsersService);
   threadsService = inject(ThreadsService);
@@ -460,5 +462,40 @@ export class PostsService {
       return true;
     }
     return false;
+  }
+
+  /**
+   * Retrieves posts based on the provided path and document ID.
+   *
+   * @param path - Path to the document ('channels', 'directMessages', or 'threads')
+   * @param documentId - ID of the document to retrieve posts from
+   * @returns Array of posts or an empty array if not found
+   */
+  getPosts(
+    path: 'channels' | 'directMessages' | 'threads',
+    documentId: string
+  ): Observable<Post[]> {
+    return from(this.getPostsPromise(path, documentId));
+  }
+  
+  private async getPostsPromise(
+    path: 'channels' | 'directMessages' | 'threads',
+    documentId: string
+  ): Promise<Post[]> {
+    try {
+      const docRef = doc(this.firestore, path, documentId);
+      const docSnap = await getDoc(docRef);
+  
+      if (docSnap.exists()) {
+        const docData = docSnap.data();
+        return docData['posts'] || [];
+      } else {
+        console.error('No such document!');
+        return [];
+      }
+    } catch (error) {
+      console.error('Error getting posts: ', error);
+      return [];
+    }
   }
 }
