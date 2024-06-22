@@ -281,7 +281,7 @@ export class PostsService {
         const docData = docSnap.data();
         const posts: Post[] = docData['posts'];
 
-        if (postIndex >= posts.length || postIndex >= 0) {
+        if (postIndex >= 0) {
           const currentPost = posts[postIndex];
 
           if (currentPost.message !== newMessage) {
