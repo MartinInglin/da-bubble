@@ -41,37 +41,51 @@ export class ChooseAvatarComponent {
 
   ngOnInit(): void {
     this.getUserName();
-  
-    let storedAvatar = this.registrationService.getAvatar();
-  
+    this.initializeAvatar();
+  }
+
+  /**
+   * This function initializes the avatar if the user moves back and forth between the registration and choose avatar pages.
+   */
+  initializeAvatar(): void {
+    const userData = this.registrationService.getUserData();
+    let storedAvatar;
+    if (userData.isIndividualFile) {
+      const storedAvatarFile = this.registrationService.getAvatarFile();
+      this.file = storedAvatarFile;
+      this.displayImagePreview();
+    } else {
+      storedAvatar = this.registrationService.getAvatar();
+    }
     if (!storedAvatar) {
       storedAvatar = 'assets/images/avatars/profile.svg';
       this.registrationService.setAvatar(storedAvatar);
     }
-  
+
     this.selectedAvatar = storedAvatar;
-  
+
     this.form = this.formBuilder.group({
       avatar: [storedAvatar],
     });
   }
-  
-/**
- * This function gets the user name from the registration service.
- */
+
+  /**
+   * This function gets the user name from the registration service.
+   */
   getUserName() {
     this.userName = this.registrationService.getName();
   }
 
   /**
-   * This function stores the avatar URL in the registration service if the user uploads an individual image.
-   * 
+   * This function stores the avatar URL in the registration service if the user picks an image from the list.
+   *
    * @param imageURLAvatar string
    */
   setAvatar(imageURLAvatar: string) {
     this.imagePreviewUrl = null;
     this.selectedAvatar = imageURLAvatar;
     this.registrationService.setAvatar(imageURLAvatar);
+    this.registrationService.individualProfileImage(false);
   }
 
   /**
@@ -83,7 +97,7 @@ export class ChooseAvatarComponent {
 
   /**
    * This function checks if an uploaded file fits the required format and file size. If so it stores the image in the registration service and displays the image.
-   * 
+   *
    * @param event change event if a file is selected
    */
   onFileSelected(event: Event) {
@@ -94,6 +108,7 @@ export class ChooseAvatarComponent {
         if (this.file.size <= this.maxFileSize) {
           this.registrationService.setAvatarFile(this.file);
           this.displayImagePreview();
+          this.registrationService.individualProfileImage(true);
         } else {
           this.snackbarService.openSnackBar(
             'Die Datei ist zu groß. Bitte wähle eine Datei, die kleiner als 5 MB ist.',

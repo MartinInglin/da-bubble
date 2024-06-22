@@ -50,6 +50,24 @@
   }
 }
 
+@media (max-width: 768px) {
+  .background-text {
+    img {
+      width: 50%;
+      left: -24%;
+    }
+  }
+
+  .background-half {
+    width: 30%;
+  }
+
+  .background-logo {
+    img {
+      width: 50%;
+    }
+  }
+}
 
 
 

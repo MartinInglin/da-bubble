@@ -60,6 +60,18 @@ export class AddUserToChannelComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Handles the focus event on the input field to display all users 
+   * that are not currently in the channel and not already selected.
+   * Sets the filteredUsers array to contain these users and shows the results.
+   */
+  onFocus(): void {
+    this.filteredUsers = this.allUsers.filter(user =>
+      !this.usersInChannel.some(u => u.id === user.id) &&
+      !this.selectedUsers.includes(user.id)
+    );
+    this.showResults = true;
+  }
+  /**
    * Asynchronously loads users currently in the channel.
    * Handles errors encountered during the loading process.
    * @returns Promise<void>
@@ -202,6 +214,19 @@ export class AddUserToChannelComponent implements OnInit, OnDestroy {
         name: channel.name
       });
     }
+  }
+
+  /**
+ * Extracts the first and last word of a given name.
+ * @param {string} name - The full name of the user.
+ * @returns {string} - The processed name containing only the first and last word.
+ */
+  getFirstAndLastName(name: string): string {
+    const words = name.split(' ');
+    if (words.length > 1) {
+      return `${words[0]} ${words[words.length - 1]}`;
+    }
+    return name;
   }
 
   /**

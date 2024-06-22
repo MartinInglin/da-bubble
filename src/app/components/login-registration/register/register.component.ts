@@ -40,7 +40,6 @@ export class RegisterComponent {
         [
           Validators.required,
           Validators.minLength(3),
-          Validators.maxLength(20),
         ],
       ],
       email: [

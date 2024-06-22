@@ -11,7 +11,7 @@
         <img [src]="userAvatar" alt="Profilbild">
       </div>
       <div class="name-container">
-        <p>{{ userName }}</p>
+        <p>{{ getFirstAndLastName(userName) }}</p>
         <span class="online" *ngIf="isSignedIn">
           <div></div>Aktiv
         </span>

@@ -5,10 +5,11 @@ import {
   inject,
   OnInit,
   OnDestroy,
+  AfterViewInit,
+  AfterViewChecked,
   ViewChild,
   ElementRef,
   ChangeDetectorRef,
-  AfterViewChecked,
   HostListener,
 } from '@angular/core';
 import { ChannelsService } from '../../../services/firestore/channels.service';
@@ -44,9 +45,6 @@ import { Observable } from 'rxjs';
 import { PostComponent } from '../post/post.component';
 import { MinimalUser } from '../../../models/minimal_user.class';
 import { PostInputComponent } from '../post-input/post-input.component';
-import { user } from '@angular/fire/auth';
-
-declare const twemoji: any; // Deklariere Twemoji als Modul
 
 @Component({
   selector: 'app-main-content',
@@ -65,13 +63,15 @@ declare const twemoji: any; // Deklariere Twemoji als Modul
   templateUrl: './main-content.component.html',
   styleUrls: ['./main-content.component.scss'],
 })
-export class MainContentComponent implements OnInit, OnDestroy {
+export class MainContentComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
   @Output() toggleThread = new EventEmitter<void>();
 
   @ViewChild('fileInput') fileInput!: ElementRef;
   @ViewChild('channelMessageContent') channelMessageContent!: ElementRef;
   @ViewChild('directMessageContent') directMessageContent!: ElementRef;
   @ViewChild('searchResultsList') searchResultsList!: ElementRef;
+  @ViewChild('avatarName') avatarName!: ElementRef;
+  @ViewChild(PostInputComponent) postInputComponent!: PostInputComponent;
 
   channelsService = inject(ChannelsService);
   usersService = inject(UsersService);
@@ -137,6 +137,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
             this.scrollToBottomWithDelay();
           }
         }
+        this.checkNameWidth();
       }
     );
 
@@ -162,6 +163,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
         }
         this.getOtherUserDirectMessage();
         this.scrollToBottomWithDelay();
+        this.checkNameWidth();
       });
 
     this.stateService.showContacts$.subscribe((show) => {
@@ -187,19 +189,25 @@ export class MainContentComponent implements OnInit, OnDestroy {
     });
   }
 
-  @HostListener('document:click', ['$event'])
-  handleClickOutside(event: MouseEvent): void {
-    if (
-      this.searchResultsList &&
-      !this.searchResultsList.nativeElement.contains(event.target)
-    ) {
-      this.closeSearchResults();
-    }
+/**
+ * Handles click events on the document to close the search results list if the click is outside of it.
+ * 
+ * @param {MouseEvent} event - The mouse event that triggered the click.
+ * @returns {void}
+ */
+@HostListener('document:click', ['$event'])
+handleClickOutside(event: MouseEvent): void {
+  if (
+    this.searchResultsList &&
+    !this.searchResultsList.nativeElement.contains(event.target)
+  ) {
+    this.closeSearchResults();
   }
+}
 
   closeSearchResults(): void {
     this.searchResults = [];
-    this.form.get('recipient')?.setValue(''); // Clear the input field
+    this.form.get('recipient')?.setValue('');
   }
 
   ngAfterViewInit(): void {
@@ -222,6 +230,52 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
 
     this.cdref.detectChanges(); // Trigger change detection
+    this.checkNameWidth();
+  }
+
+  /**
+   * Checks the width of the name element within the avatarName container.
+   * If the width of the name element is greater than 300 pixels,
+   * it adds the 'scroll' class to the avatarName container to trigger a scroll animation.
+   * If the width is 300 pixels or less, it removes the 'scroll' class.
+   *
+   * @returns {void}
+   */
+  checkNameWidth(): void {
+    if (this.avatarName && this.avatarName.nativeElement) {
+      const nameElement = this.avatarName.nativeElement.querySelector('.header-name');
+      if (nameElement) {
+        if (nameElement.scrollWidth > 300) {
+          this.avatarName.nativeElement.classList.add('scroll');
+        } else {
+          this.avatarName.nativeElement.classList.remove('scroll');
+        }
+      }
+    }
+  }
+
+  /**
+   * Lifecycle hook that is called after the component's view has been checked.
+   * This method calls `checkNameWidth` to ensure that the width of the name element
+   * is checked and the appropriate class is added or removed based on its width.
+   *
+   * @returns {void}
+   */
+  ngAfterViewChecked(): void {
+    this.checkNameWidth();
+  }
+
+  /**
+  * Extracts the first and last word of a given name.
+  * @param {string} name - The full name of the user.
+  * @returns {string} - The processed name containing only the first and last word.
+  */
+  getFirstAndLastName(name: string): string {
+    const words = name.split(' ');
+    if (words.length > 1) {
+      return `${words[0]} ${words[words.length - 1]}`;
+    }
+    return name;
   }
 
   scrollToBottomWithDelay(): void {
@@ -292,7 +346,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   /**
    * This function searches for channels or users based on the search term.
    * @param searchTerm - The term to search for.
-   * @returns An observable of the search results (channels or users).
+   * @returns An observable of the search results (channels oder users).
    */
   search(searchTerm: string): Observable<(Channel | User)[]> {
     if (searchTerm.startsWith('#')) {
@@ -379,10 +433,10 @@ export class MainContentComponent implements OnInit, OnDestroy {
   }
 
   /**
-* This function opens the channel info mobile dialog
- * 
- * @param channelId string
- */
+   * This function opens the channel info mobile dialog
+   *
+   * @param channelId string
+   */
   openChannelInfoMobileDialog(channelId: string): void {
     if (this.currentUser) {
       const dialogRef = this.dialog.open(ChannelInfoMobileComponent, {
@@ -451,7 +505,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
   /**
    * This function opens the dialog to add a user to a channel.
-   * 
+   *
    * @param channelId string
    */
   openAddUserToChannelMobileDialog(channelId: string): void {
@@ -471,7 +525,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
   /**
    * This function opens the dialog for the detail view of a user in a direct message.
-   * 
+   *
    * @param user object of type minimal user
    */
   openDetailViewDialog(user: MinimalUser): void {
@@ -536,7 +590,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
    * This function is needed for the date line. It checks if the date of the new post is the same as the the date of the previous one.
    *
    * @param index number, index of the post
-   * @param path string, channel or directMessage
+   * @param path string, channel oder directMessage
    * @returns boolean
    */
   isNewDate(index: number, path: string): boolean {
@@ -603,5 +657,12 @@ export class MainContentComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.error('Error fetching user count:', error);
     }
+  }
+
+  /**
+   * This function sets the focus on the input field of the main content component if a thread is closed.
+   */
+  callSetFocus() {
+    this.postInputComponent.setFocus();
   }
 }

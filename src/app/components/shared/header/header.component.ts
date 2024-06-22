@@ -5,21 +5,18 @@ import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { User } from '../../../models/user.class';
 import { Observable, Subscription, debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { UsersService } from '../../../services/firestore/users.service';
-import { MatDialog, MatDialogModule} from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { UserMenuComponent } from '../../dialogues/user-menu/user-menu.component';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { DirectMessagesService } from '../../../services/firestore/direct-messages.service';
 import { Channel } from '../../../models/channel.class';
 import { ChannelsService } from '../../../services/firestore/channels.service';
 import { UserMenuMobileComponent } from '../../dialogues/mobile/user-menu-mobile/user-menu-mobile.component';
+import { Post } from '../../../models/post.class';
+import { PostsService } from '../../../services/firestore/posts.service';
 
 @Component({
   selector: 'app-header',
@@ -40,42 +37,41 @@ import { UserMenuMobileComponent } from '../../dialogues/mobile/user-menu-mobile
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild('searchResultsList') searchResultsList!: ElementRef;
+  @ViewChild('userDiv') userDiv!: ElementRef;
 
   authService = inject(AuthService);
   usersService = inject(UsersService);
   channelsService = inject(ChannelsService);
+  directMessagesService = inject(DirectMessagesService);
 
   private userSubscription: Subscription = new Subscription();
   private routeSubscription: Subscription = new Subscription();
 
   filteredUsers: User[] = [];
   filteredChannels: Channel[] = [];
+  filteredPosts: Post[] = [];
   isDialogOpen = false;
   showRegisterElement = true;
   menuDown = './../../../../assets/images/icons/keyboard_arrow_down.svg';
   form: FormGroup;
   searchTerm: string = '';
-  searchResults$: Observable<(Channel | User)[]> = of([]);
-  searchResults: (Channel | User)[] | undefined;
+  searchResults$: Observable<(Channel | User | Post)[]> = of([]);
+  searchResults: (Channel | User | Post)[] | undefined;
   allUsers: User[] = [];
   currentUser: User = new User();
 
   constructor(private dialog: MatDialog,
               private router: Router,
               private fb: FormBuilder,
-              public directMessagesService: DirectMessagesService) {
-    this.directMessagesService = directMessagesService;
+              private postsService: PostsService) {
     this.form = this.fb.group({
       recipient: [''],
     });
   }
 
   ngOnInit(): void {
-    // Subscribe to currentUser$ observable to update currentUser
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       this.currentUser = user ?? new User();
-
-      // Map minimalChannel data to Channel objects and filter by searchTerm
       const channels: Channel[] = this.currentUser.channels.map(
         (minimalChannel) => new Channel(minimalChannel)
       );
@@ -84,20 +80,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
       );
     });
 
-    // Subscribe to router events to toggle register element visibility
     this.routeSubscription = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.showRegisterElement = event.url === '/' || event.url === '/login';
       }
     });
 
-    // Subscribe to allUsersSubject$ observable to update allUsers
     this.userSubscription = this.usersService.allUsersSubject$.subscribe(
       (users) => {
         if (users) {
           this.allUsers = users ?? [];
-
-          // Filter allUsers by searchTerm
           this.filteredUsers = this.allUsers.filter((u) =>
             u.name.toLowerCase().includes(this.searchTerm.toLowerCase())
           );
@@ -105,7 +97,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
     );
 
-    // Observe form value changes for search and update searchResults$
+    this.postsService.getPosts('channels', 'documentId').subscribe((posts) => {
+      this.filteredPosts = posts;
+    });
+  
     this.searchResults$ = this.form.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -116,7 +111,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       })
     );
 
-    // Subscribe to searchResults$ and update searchResults
     this.searchResults$.subscribe((results) => {
       this.searchResults = results;
     });
@@ -134,68 +128,71 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.form.get('recipient')?.setValue('');
   }
 
-  // Get recipient form control
   get recipient(): FormControl {
     return this.form.get('recipient') as FormControl;
   }
 
-  // Type guard to check if result is a User
-  isUser(result: Channel | User): result is User {
+  isUser(result: Channel | User | Post): result is User {
     return (result as User).avatar !== undefined;
   }
 
-  // Open channel based on recipient ID
+  isChannel(result: Channel | User | Post): result is Channel {
+    return (result as Channel).name !== undefined;
+  }
+
+  isPost(result: Channel | User | Post): result is Post {
+    return (result as Post).message !== undefined;
+  }
+
   openChannel(id: string): void {
     this.channelsService.getDataChannel(id);
     this.form.get('recipient')?.setValue('');
   }
 
-  // Open direct message based on recipient ID and other parameters
   openDirectMessage(id: string, data: any): void {
     this.directMessagesService.getDataDirectMessage(id, data);
     this.form.get('recipient')?.setValue('');
   }
 
-  // Select recipient and set form value accordingly
-  selectRecipient(recipient: Channel | User) {
+  openPost(id: string): void {
+    console.log('Opening post with ID:', id);
+    this.form.get('recipient')?.setValue('');
+  }
+
+  selectRecipient(recipient: Channel | User | Post) {
     const recipientString: any =
       recipient instanceof Channel ? `#${recipient.name}` : `@${recipient.id}`;
     this.form.setValue({ recipient: recipientString });
   }
 
-  // Perform search based on searchTerm and return Observable of results
-  search(searchTerm: string): Observable<(Channel | User)[]> {
-    // Search for channels if searchTerm starts with '#'
+  search(searchTerm: string): Observable<(Channel | User | Post)[]> {
     if (searchTerm.startsWith('#')) {
       const filteredChannels = this.filteredChannels.filter((channel) =>
-        channel.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase()) && !channel.isDirectMessage
+        channel.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase())
       );
       return of(filteredChannels);
-    }
-    // Search for users if searchTerm starts with '@'
-    else if (searchTerm.startsWith('@')) {
+    } else if (searchTerm.startsWith('@')) {
       const filteredUsers = this.allUsers.filter((user) =>
-        user.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase()) && !user.isChannel
+        user.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase())
       );
       return of(this.filterCurrentUser(filteredUsers));
-    }
-    // General search (no prefix)
-    else {
+    } else {
       const filteredChannels = this.filteredChannels.filter((channel) =>
-        channel.name.toLowerCase().includes(searchTerm.toLowerCase()) && !channel.isDirectMessage
+        channel.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
       const filteredUsers = this.allUsers.filter((user) =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) && !user.isChannel
+        user.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      const filteredPosts = this.filteredPosts.filter((post) =>
+        post.message.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
-      // Merge search results
-      const results = [...filteredChannels, ...filteredUsers];
+      const results = [...filteredChannels, ...filteredUsers, ...filteredPosts];
       return of(this.filterCurrentUser(results));
     }
   }
 
-  // Filter out currentUser from search results
-  private filterCurrentUser(results: (Channel | User)[]): (Channel | User)[] {
+  private filterCurrentUser(results: (Channel | User | Post)[]): (Channel | User | Post)[] {
     return results.filter(result => {
       if (this.isUser(result)) {
         return result.id !== this.currentUser.id;
@@ -205,7 +202,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Unsubscribe from all subscriptions
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
     }
@@ -214,13 +210,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Open user menu dialog based on window width
   openDialog(): void {
     if (this.currentUser) {
       if (window.innerWidth <= 750) {
         this.openMobileDialog();
       } else {
-        // Open desktop user menu dialog
         const dialogRef = this.dialog.open(UserMenuComponent, {
           width: '282px',
           position: {
@@ -233,7 +227,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
         this.isDialogOpen = true;
 
-        // Close dialog handler
         dialogRef.afterClosed().subscribe(() => {
           this.isDialogOpen = false;
         });
@@ -241,7 +234,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Open mobile user menu dialog
   openMobileDialog(): void {
     if (this.currentUser) {
       const dialogRef = this.dialog.open(UserMenuMobileComponent, {
@@ -256,20 +248,48 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
       this.isDialogOpen = true;
 
-      // Close dialog handler
       dialogRef.afterClosed().subscribe(() => {
         this.isDialogOpen = false;
       });
     }
   }
 
-  // Handle mouse over event for menu arrow icon
+
   onMouseOver(): void {
     this.menuDown = './../../../../assets/images/icons/keyboard_arrow_down_blue.svg';
   }
 
-  // Handle mouse out event for menu arrow icon
   onMouseOut(): void {
     this.menuDown = './../../../../assets/images/icons/keyboard_arrow_down.svg';
   }
+
+  ngAfterViewInit(): void {
+    this.checkNameWidth(); // Check the width of the name after view initialization
+  }
+
+  ngAfterViewChecked(): void {
+    this.checkNameWidth(); // Check the width of the name after each view check
+  }
+
+  /**
+   * Checks the width of the name element within the user container.
+   * If the width of the name element is greater than 340 pixels,
+   * it adds the 'scroll' class to the user container to trigger a scroll animation.
+   * If the width is 340 pixels or less, it removes the 'scroll' class.
+   *
+   * @returns {void}
+   */
+  checkNameWidth(): void {
+    if (this.userDiv && this.userDiv.nativeElement) {
+      const nameElement = this.userDiv.nativeElement.querySelector('.name');
+      if (nameElement) {
+        if (nameElement.scrollWidth > 400) {
+          this.userDiv.nativeElement.classList.add('scroll');
+        } else {
+          this.userDiv.nativeElement.classList.remove('scroll');
+        }
+      }
+    }
+  }
+
 }

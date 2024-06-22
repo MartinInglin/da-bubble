@@ -5,12 +5,13 @@
     class="message-container-current-user"
     (mouseenter)="showMenu = true"
     (mouseleave)="showMenu = false; showEditMessage = false"
+    (click)="closeEditMessage()"
   >
     <img src="{{ post.avatar }}" alt="" />
 
     <div class="message-box-current-user">
       <div class="message-name-current-user">
-        <span>{{ post.name }}</span>
+        <span>{{ getFirstAndLastName(post.name) }}</span>
         <span class="timestamp">{{ formatDateTime(post.timestamp) }}</span>
         @if (post.edited) {
         <span class="edited">(bearbeitet)</span>
@@ -25,8 +26,8 @@
           (keyup.enter)="saveEditedMessage()"
         ></textarea>
         <div class="edit-button-container">
-          <button><img src="./../../../../assets/images/icons/check_circle.svg" (click)="saveEditedMessage()"></button>
-          <!--<button><img class="close" src="./../../../../assets/images/icons/close_white.svg" (click)="toggleWantToEditMessage()"></button>-->
+          <button><img src="assets/images/icons/check_circle.svg" (click)="saveEditedMessage()"></button>
+          <button><img class="close" src="assets/images/icons/close_white.svg"></button>
         </div>
       </div>
       @if (reactionsToDislplay.length > 0) {
@@ -90,12 +91,12 @@
       <img
         src="assets/images/icons/edit_message.svg"
         alt=""
-        (click)="toggleShowEditMessage()"
+        (click)="toggleShowEditMessage($event)"
         class="edit-button"
       />
       <div
         class="edit-message"
-        (click)="toggleWantToEditMessage()"
+        (click)="toggleWantToEditMessage(); closeEditMessage()"
         [ngClass]="{ show: showEditMessage }"
       >
         <span>Nachricht bearbeiten</span>
@@ -141,7 +142,7 @@
 
     <div class="message-box">
       <div class="message-name">
-        <span>{{ post.name }}</span>
+        <span>{{ getFirstAndLastName(post.name) }}</span>
         <span class="timestamp">{{ formatDateTime(post.timestamp) }}</span>
         @if (post.edited) {
         <span class="edited">(bearbeitet)</span>

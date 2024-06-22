@@ -8,6 +8,7 @@ import { AddUserToNewChannelMobileComponent } from '../add-user-to-new-channel-m
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ChannelsService } from '../../../../services/firestore/channels.service';
 import { User } from '../../../../models/user.class';
+import { SnackbarService } from '../../../../services/snackbar.service';
 
 @Component({
   selector: 'app-new-channel-mobile',
@@ -32,22 +33,61 @@ export class NewChannelMobileComponent {
   constructor(
     private dialog: MatDialog,
     private channelsService: ChannelsService,
+    private snackbarService: SnackbarService,
     public dialogRef: MatDialogRef<NewChannelMobileComponent>
   ) { }
+
+  /**
+   * Validates the channel name length and checks if it is not empty.
+   */
+  validateChannelName(): boolean {
+    if (this.channelName.trim()) {
+      if (this.channelName.length > 20) {
+        this.snackbarService.openSnackBar(
+          'Der Channelname darf maximal 20 Zeichen lang sein.',
+          'Schließen'
+        );
+        return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Checks if the channel name already exists.
+   */
+  checkChannelExists(): void {
+    this.channelsService.getAllChannels().subscribe(channels => {
+      const channelExists = channels.some(channel => channel.name === this.channelName);
+      if (channelExists) {
+        this.snackbarService.openSnackBar('Der Channelname existiert bereits.', 'Schließen');
+      } else {
+        this.createChannelAndOpenDialog();
+      }
+    });
+  }
+
+  /**
+   * Checks the channel name validation and existence, then creates a new channel if valid.
+   */
+  checkChannelName(): void {
+    if (this.validateChannelName()) {
+      this.checkChannelExists();
+    }
+  }
 
   /**
    * Creates a new channel with the provided name and description, and opens a dialog
    * to add users to the newly created channel.
    */
   createChannelAndOpenDialog(): void {
-    if (this.channelName.trim()) {
-      this.channelsService.createChannel(this.channelName, this.channelDescription, this.currentUser)
-        .then((channel) => {
-          this.dialogRef.close();
-          this.openAddUserDialog(channel.id);
-        })
-        .catch(error => console.error('Error creating channel: ', error));
-    }
+    this.channelsService.createChannel(this.channelName, this.channelDescription, this.currentUser)
+      .then((channel) => {
+        this.dialogRef.close();
+        this.openAddUserDialog(channel.id, this.channelName);
+      })
+      .catch(error => console.error('Error creating channel: ', error));
   }
 
   /**
@@ -55,13 +95,13 @@ export class NewChannelMobileComponent {
    * @param {string} channelId - The ID of the newly created channel.
    * @param {string} channelName - The name of the newly created channel.
    */
-  openAddUserDialog(channelId: string): void {
+  openAddUserDialog(channelId: string, channelName: string): void {
     const dialogRef = this.dialog.open(AddUserToNewChannelMobileComponent, {
       width: '100%',
       position: {
         bottom: '0%'
       },
-      data: { channelId: channelId },
+      data: { channelId: channelId, channelName: channelName  },
     });
   }
 

@@ -22,18 +22,20 @@ export class ThreadsService {
   public threadSubject$: Observable<Thread | null> =
     this.threadSubject.asObservable();
 
+  private unsubThread: () => void = () => {};
+
   constructor() {}
 
   /**
    * This function gets the data of a selected thread.
-   * 
+   *
    * @param channelName string
    * @param post object of type post
    */
   getDataThread(channelName: string, post: Post) {
     const threadId = post.id;
 
-    const unsub = onSnapshot(
+    this.unsubThread = onSnapshot(
       doc(this.firestore, 'threads', threadId),
       (doc) => {
         const threadData = doc.data() as Thread;
@@ -67,6 +69,15 @@ export class ThreadsService {
       await setDoc(threadDocRef, threadData);
     } catch (error) {
       console.error('Error creating thread: ', error);
+    }
+  }
+
+  /**
+   * This function unsubscribes from the thread data subscription.
+   */
+  public unsubscribeFromData() {
+    if (this.unsubThread) {
+      this.unsubThread();
     }
   }
 }

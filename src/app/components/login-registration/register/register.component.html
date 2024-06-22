@@ -27,6 +27,8 @@
           <div class="invalid-feedback">
             @if (f['name'].errors['required']) {
             <div>Bitte Namen eingeben.</div>
+            } @if (f['name'].errors['minlength']) {
+            <div>Name muss mindestens 3 Zeichen lang sein.</div>
             }
           </div>
           }
@@ -43,7 +45,7 @@
           @if (submitted && f['email'].errors) {
           <div class="invalid-feedback">
             @if (f['email'].errors['required']) {
-            <div>Email-Adresse wird benötigt.</div>
+            <div>Bitte Email-Adresse eingeben.</div>
             } @if (f['email'].errors['email']) {
             <div>Email-Adresse ist ungültig.</div>
             }
@@ -62,7 +64,7 @@
           @if (submitted && f['password'].errors) {
           <div class="invalid-feedback">
             @if (f['password'].errors['required']) {
-            <div>Bitte gib ein Passwort ein.</div>
+            <div>Bitte Passwort eingeben.</div>
             } @if (f['password'].errors['minlength']) {
             <div>Passwort muss mindestens 6 Zeichen lang sein.</div>
             } @if (f['password'].errors['maxlength']) {
@@ -104,8 +106,16 @@
       </div>
     </div>
     <div class="legal">
-      <button class="button-imprint" type="button" routerLink="/imprint">Impressum</button>
-      <button class="button-privacy-policy" type="button" routerLink="/privacyPolicy">Datenschutz</button>
+      <button class="button-imprint" type="button" routerLink="/imprint">
+        Impressum
+      </button>
+      <button
+        class="button-privacy-policy"
+        type="button"
+        routerLink="/privacyPolicy"
+      >
+        Datenschutz
+      </button>
     </div>
   </form>
 </div>

@@ -56,15 +56,19 @@ export class ChannelsService {
   }
 
   /**
-   * This function gets the data of all channels and creates a snapshot.
+   * This function gets the data of all channels and returns an observable.
    */
-  getAllChannels() {
-    const collectionRef = collection(this.firestore, 'channels');
-    onSnapshot(collectionRef, (snapshot) => {
-      const channel = snapshot.docs.map(
-        (doc) => new Channel({ id: doc.id, ...doc.data() })
-      )[5];
-      this.channelSubject.next(channel);
+  getAllChannels(): Observable<Channel[]> {
+    return new Observable<Channel[]>((observer) => {
+      const collectionRef = collection(this.firestore, 'channels');
+      const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
+        const channels = snapshot.docs.map(
+          (doc) => new Channel({ id: doc.id, ...doc.data() })
+        );
+        observer.next(channels);
+      }, (error) => observer.error(error));
+
+      return () => unsubscribe();
     });
   }
 

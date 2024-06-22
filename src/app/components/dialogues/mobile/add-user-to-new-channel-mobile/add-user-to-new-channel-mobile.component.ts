@@ -40,7 +40,7 @@ export class AddUserToNewChannelMobileComponent {
   allUsers: User[] = [];
   filteredUsers: User[] = [];
   selectedUsers: string[] = [];
-  
+
   showResults: boolean = false;
 
   private usersSubscription: Subscription | undefined;
@@ -72,6 +72,18 @@ export class AddUserToNewChannelMobileComponent {
         this.updateFilteredUsers();
       }
     );
+  }
+
+  /**
+ * Handles the focus event on the input field to display all users 
+ * that are not currently in the channel and not already selected.
+ * Sets the filteredUsers array to contain these users and shows the results.
+ */
+  onFocus(): void {
+    this.filteredUsers = this.allUsers.filter(user =>
+      !this.selectedUsers.includes(user.id)
+    );
+    this.showResults = true;
   }
 
   /**
@@ -218,7 +230,7 @@ export class AddUserToNewChannelMobileComponent {
    * @param {Event} event - The click event.
    */
   onOutsideClick(event: Event): void {
-    if (!(event.target as HTMLElement).closest('.user-list')) {
+    if (!(event.target as HTMLElement).closest('.user-list') && !(event.target as HTMLElement).closest('input[placeholder="Name eingeben"]')) {
       this.showResults = false;
     }
   }
@@ -228,6 +240,19 @@ export class AddUserToNewChannelMobileComponent {
    */
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  /**
+* Extracts the first and last word of a given name.
+* @param {string} name - The full name of the user.
+* @returns {string} - The processed name containing only the first and last word.
+*/
+  getFirstAndLastName(name: string): string {
+    const words = name.split(' ');
+    if (words.length > 1) {
+      return `${words[0]} ${words[words.length - 1]}`;
+    }
+    return name;
   }
 
   /**

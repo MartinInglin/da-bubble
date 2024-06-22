@@ -75,7 +75,7 @@
 <!-- Channels -->
 <table class="channels" *ngIf="showChannels">
   <tr *ngFor="let channel of currentUser.channels; let i = index">
-    <td (click)="channelsService.getDataChannel(channel.id); closeSidenavMobile()">
+    <td (click)="getDataChannel(channel.id); closeSidenavMobile()">
       <span class="span-hashtag">#</span>
       <span class="current-user-name">{{ currentUser.channels[i].name }}</span>
     </td>
@@ -117,7 +117,7 @@
     >
       <img [src]="currentUser.avatar" alt="Profilbild" />
       <div class="online"></div>
-      <span>{{ currentUser.name }} (Du)</span>
+      <span>{{ getFirstAndLastName(currentUser.name) }} (Du)</span>
     </td>
 
     @for (user of allUsers; track user) { @if (user.id != currentUser.id) {
@@ -128,7 +128,7 @@
       <img [src]="user.avatar" alt="Profilbild" />
       <div *ngIf="user.isSignedIn" class="online"></div>
       <div *ngIf="!user.isSignedIn" class="offline"></div>
-      <span>{{ user.name }}</span>
+      <span>{{ getFirstAndLastName(user.name) }}</span>
     </td>
     } }
   </tr>

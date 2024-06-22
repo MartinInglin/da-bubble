@@ -9,6 +9,7 @@ export class RegistrationService {
   private password: string = '';
   private avatar: string = '';
   private avatarFile: File = new File([], "empty.txt");
+  private isIndividualFile: boolean = false;
 
   /**
    * This function sets the name of the user. It is needed to store the name in case the user moves back and forward between registration and choose avatar page.
@@ -82,6 +83,11 @@ export class RegistrationService {
     return this.avatar;
   }
 
+  /**
+   * This function temporarily stores the profile avatar image as a file.
+   * 
+   * @param file file of avatar image
+   */
   setAvatarFile(file: File) {
     this.avatarFile = file;
   }
@@ -93,6 +99,10 @@ export class RegistrationService {
    */
   getAvatarFile(): File {
     return this.avatarFile;
+  }
+
+  individualProfileImage(isSeleceted: boolean) {
+    this.isIndividualFile = isSeleceted;
   }
 
     /**
@@ -107,6 +117,7 @@ export class RegistrationService {
       password: this.password,
       avatar: this.avatar,
       avatarFile: this.avatarFile,
+      isIndividualFile: this.isIndividualFile,
     };
   }
 }

@@ -1,11 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  SimpleChanges,
-  inject,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Post } from '../../../models/post.class';
 import { StorageService } from '../../../services/storage.service';
@@ -63,7 +56,7 @@ export class PostComponent {
 
   @Output() openThread = new EventEmitter();
 
-  constructor(private editingStateService: EditingStateService) {}
+  constructor(private editingStateService: EditingStateService) { }
 
   ngOnInit() {
     this.checkIfPostFromCurrentUser();
@@ -230,8 +223,6 @@ export class PostComponent {
       );
       if (threadExists) {
         this.deleteFileOnCollection(this.path, documentId, indexFile);
-      } else {
-        console.log('Thread does not exist');
       }
     } catch (error) {
       console.log('Failed to delete file on corresponding thread', error);
@@ -278,7 +269,7 @@ export class PostComponent {
    *
    * @returns
    */
-  toggleShowEditMessage() {
+  toggleShowEditMessage(event: MouseEvent) {
     if (this.editingStateService.getEditingPostIndex() !== -1) {
       this.snackbarService.openSnackBar(
         'Du kannst nur eine Nachricht gleichzeitig bearbeiten.',
@@ -287,6 +278,11 @@ export class PostComponent {
       return;
     }
     this.showEditMessage = !this.showEditMessage;
+    event?.stopPropagation();
+  }
+
+  closeEditMessage() {
+    this.showEditMessage = false;
   }
 
   /**
@@ -510,7 +506,7 @@ export class PostComponent {
 
   /**
    * If a corresponding thread to a channel exists this function will update the reaction.
-   * 
+   *
    * @param localPath string
    * @param documentId string
    * @param localIndexPost number
@@ -561,7 +557,6 @@ export class PostComponent {
         localIndexPost
       );
     }
-
   }
 
   /**
@@ -590,6 +585,19 @@ export class PostComponent {
       );
       this.sortReactions();
     }
+  }
+
+  /**
+  * Extracts the first and last word of a given name.
+  * @param {string} name - The full name of the user.
+  * @returns {string} - The processed name containing only the first and last word.
+  */
+  getFirstAndLastName(name: string): string {
+    const words = name.split(' ');
+    if (words.length > 1) {
+      return `${words[0]} ${words[words.length - 1]}`;
+    }
+    return name;
   }
 
   /**

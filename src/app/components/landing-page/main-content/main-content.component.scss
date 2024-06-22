@@ -295,21 +295,49 @@ header {
 }
 
 .avatarName {
-  width: fit-content;
+  width: 320px;
   display: flex;
   flex-direction: row;
   gap: 10px;
   align-items: center;
-  padding: 4px 20px 4px 20px;
+  padding: 4px 20px;
+  overflow: hidden;
+  position: relative; /* Füge position relative hinzu */
 
   img {
     max-height: 70px;
+    z-index: 2;
   }
 
   &:hover {
     background-color: $background;
     cursor: pointer;
     border-radius: 55px;
+  }
+
+  .name-container {
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .header-name {
+    display: inline-block;
+    transition: transform 0.3s linear;
+    z-index: 1;
+    line-height: 30px;
+  }
+
+  &.scroll .header-name {
+    animation: scrollName 10s linear infinite;
+  }
+}
+
+@keyframes scrollName {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
   }
 }
 
@@ -500,11 +528,13 @@ cdk-overlay-connected-position-bounding-box {
 }
 
 @media (max-width: 580px) {
+
   .channelNameNoPointer,
   .channelName {
     margin-left: 0 !important;
   }
 }
+
 @media (max-height: 668px) {
   .message-content {
     height: 36vh;
@@ -515,7 +545,6 @@ cdk-overlay-connected-position-bounding-box {
   position: absolute;
   top: 100%;
   left: 15%;
-  z-index: 1000;
   z-index: 1000;
   background-color: white;
   border: 1px solid #ccc;

@@ -132,6 +132,10 @@ export class SideNavComponent implements OnInit {
     }
   }
 
+  getDataChannel(channelId: string) {
+    this.channelsService.getDataChannel(channelId);
+  }
+
   closeSearchResults(): void {
     this.searchResults = [];
     this.form.get('recipient')?.setValue(''); // Clear the input field
@@ -222,6 +226,19 @@ export class SideNavComponent implements OnInit {
   // Funktion zum Abrufen aller Benutzer
   async getAllUsers() {
     this.usersService.getAllUsers();
+  }
+
+  /**
+* Extracts the first and last word of a given name.
+* @param {string} name - The full name of the user.
+* @returns {string} - The processed name containing only the first and last word.
+*/
+  getFirstAndLastName(name: string): string {
+    const words = name.split(' ');
+    if (words.length > 1) {
+      return `${words[0]} ${words[words.length - 1]}`;
+    }
+    return name;
   }
 
   // Funktion zum Öffnen des Dialogs für einen neuen Kanal
