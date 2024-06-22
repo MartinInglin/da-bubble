@@ -195,7 +195,7 @@
             src="{{ otherUserDirectMessage.avatar }}"
             alt=""
           />
-          <span>{{ otherUserDirectMessage.name }}</span>
+          <span>{{ getFirstAndLastName(otherUserDirectMessage.name) }}</span>
         </div>
 
         <div>
@@ -211,7 +211,7 @@
             src="{{ currentUser.avatar }}"
             alt=""
           />
-          <span>{{ currentUser.name }} (Du)</span>
+          <span>{{ getFirstAndLastName(currentUser.name) }} (Du)</span>
         </div>
 
         <div>
