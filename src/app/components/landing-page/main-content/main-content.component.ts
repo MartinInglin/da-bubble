@@ -5,6 +5,8 @@ import {
   inject,
   OnInit,
   OnDestroy,
+  AfterViewInit,
+  AfterViewChecked,
   ViewChild,
   ElementRef,
   ChangeDetectorRef,
@@ -61,13 +63,14 @@ import { PostInputComponent } from '../post-input/post-input.component';
   templateUrl: './main-content.component.html',
   styleUrls: ['./main-content.component.scss'],
 })
-export class MainContentComponent implements OnInit, OnDestroy {
+export class MainContentComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
   @Output() toggleThread = new EventEmitter<void>();
 
   @ViewChild('fileInput') fileInput!: ElementRef;
   @ViewChild('channelMessageContent') channelMessageContent!: ElementRef;
   @ViewChild('directMessageContent') directMessageContent!: ElementRef;
   @ViewChild('searchResultsList') searchResultsList!: ElementRef;
+  @ViewChild('avatarName') avatarName!: ElementRef;
   @ViewChild(PostInputComponent) postInputComponent!: PostInputComponent;
 
   channelsService = inject(ChannelsService);
@@ -134,6 +137,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
             this.scrollToBottomWithDelay();
           }
         }
+        this.checkNameWidth();
       }
     );
 
@@ -159,6 +163,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
         }
         this.getOtherUserDirectMessage();
         this.scrollToBottomWithDelay();
+        this.checkNameWidth();
       });
 
     this.stateService.showContacts$.subscribe((show) => {
@@ -219,6 +224,25 @@ export class MainContentComponent implements OnInit, OnDestroy {
     }
 
     this.cdref.detectChanges(); // Trigger change detection
+    this.checkNameWidth();
+  }
+
+  checkNameWidth(): void {
+    if (this.avatarName && this.avatarName.nativeElement) {
+      const nameElement = this.avatarName.nativeElement.querySelector('.header-name');
+      if (nameElement) {
+        if (nameElement.scrollWidth > 300) {
+          this.avatarName.nativeElement.classList.add('scroll');
+        } else {
+          this.avatarName.nativeElement.classList.remove('scroll');
+        }
+      }
+    }
+  }
+
+
+  ngAfterViewChecked(): void {
+    this.checkNameWidth();
   }
 
   scrollToBottomWithDelay(): void {
@@ -289,7 +313,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
   /**
    * This function searches for channels or users based on the search term.
    * @param searchTerm - The term to search for.
-   * @returns An observable of the search results (channels or users).
+   * @returns An observable of the search results (channels oder users).
    */
   search(searchTerm: string): Observable<(Channel | User)[]> {
     if (searchTerm.startsWith('#')) {
@@ -533,7 +557,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
    * This function is needed for the date line. It checks if the date of the new post is the same as the the date of the previous one.
    *
    * @param index number, index of the post
-   * @param path string, channel or directMessage
+   * @param path string, channel oder directMessage
    * @returns boolean
    */
   isNewDate(index: number, path: string): boolean {

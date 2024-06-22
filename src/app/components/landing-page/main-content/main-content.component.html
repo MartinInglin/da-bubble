@@ -126,13 +126,11 @@
     <!-- Header section with channel name and contact information -->
     <header *ngIf="chatSelected && !selectedDirectMessage.isPrivateMessage">
       <div class="channelName" *ngIf="selectedDirectMessage.users.length > 0">
-        <div class="avatarName" (click)="openDetailViewDialog(otherUserDirectMessage)">
-          <img
-            class="user-avatar-image"
-            src="{{ otherUserDirectMessage.avatar }}"
-            alt=""
-          />
-          {{ otherUserDirectMessage.name }}
+        <div class="avatarName" #avatarName (click)="openDetailViewDialog(otherUserDirectMessage)">
+          <img class="user-avatar-image" src="{{ otherUserDirectMessage.avatar }}" alt="" />
+          <div class="name-container">
+            <span class="header-name">{{ otherUserDirectMessage.name }}</span>
+          </div>
         </div>
       </div>
     </header>    
