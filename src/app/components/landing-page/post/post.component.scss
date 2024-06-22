@@ -250,6 +250,7 @@
   align-items: center;
   gap: 12px;
   margin-top: 8px;
+  position: relative;
   z-index: 1000;
 
   .reaction {
@@ -289,6 +290,7 @@
 
       .name-reaction {
         font-weight: 700;
+        z-index: 999;
       }
     }
 

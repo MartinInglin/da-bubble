@@ -165,7 +165,6 @@ export class PostInputComponent {
    */
   removeFile(index: number) {
     this.files.splice(index, 1);
-    console.log('File removed', this.files);
   }
 
   /**
