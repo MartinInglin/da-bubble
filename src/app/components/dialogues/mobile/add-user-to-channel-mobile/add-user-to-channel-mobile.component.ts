@@ -155,6 +155,19 @@ export class AddUserToChannelMobileComponent implements OnInit, OnDestroy {
   }
 
   /**
+ * Handles the focus event on the input field to display all users 
+ * that are not currently in the channel and not already selected.
+ * Sets the filteredUsers array to contain these users and shows the results.
+ */
+onFocus(): void {
+  this.filteredUsers = this.allUsers.filter(user =>
+    !this.usersInChannel.some(u => u.id === user.id) &&
+    !this.selectedUsers.includes(user.id)
+  );
+  this.showResults = true;
+}
+
+  /**
    * Finds a user object by ID from the list of all users.
    * @param userId - ID of the user to find
    * @returns User object if found, otherwise undefined

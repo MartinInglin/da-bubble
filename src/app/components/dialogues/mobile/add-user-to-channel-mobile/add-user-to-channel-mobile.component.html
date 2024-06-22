@@ -14,7 +14,7 @@
         </div>
         <form>
             <div class="input-container">
-                <input id="userInput" placeholder="Name eingeben" (input)="onSearchChange($event)">
+                <input id="userInput" placeholder="Name eingeben" (input)="onSearchChange($event)" (focus)="onFocus()">
                 <div class="selected-user">
                     <div *ngFor="let user of getSelectedUsers()" class="selected-single-user">
                         <img [src]="user.avatar" alt="User Avatar">
