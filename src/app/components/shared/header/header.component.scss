@@ -68,7 +68,7 @@ header {
     color: $purple2;
   }
 
-  &.scroll .name {
+  &:hover .scroll .name {
     animation: scrollName 10s linear infinite;
   }
 }
