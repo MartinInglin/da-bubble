@@ -1,25 +1,26 @@
 <section>
     <mat-card>
-        <mat-card-content>
-            <div class="header">
-                <div>
-                    <p>Mitglieder</p>
-                    <button (click)="onNoClick()">
-                        <img src="assets/images/icons/close.svg">
-                    </button>
-                </div>
-            </div>
-            <div class="members">
-                <div class="single-member" *ngFor="let user of users" (click)="openDetailViewDialog(user); onNoClick()">
-                 <div  class="image-container"><img [src]="user.avatar"></div>
-                  <div *ngIf="user.isSignedIn" class="online"></div>
-                  <div *ngIf="!user.isSignedIn" class="offline"></div>
-                  {{ user.name }}
-                </div>
-              </div>
-            <button class="add-member" (click)="openAddUserToChannelDialog()">
-                <div><img src="assets/images/icons/add_member.svg"></div>Mitglieder hinzufügen
+      <mat-card-content>
+        <div class="header">
+          <div>
+            <p>Mitglieder</p>
+            <button (click)="onNoClick()">
+              <img src="assets/images/icons/close.svg">
             </button>
-        </mat-card-content>
+          </div>
+        </div>
+        <div class="members">
+          <div class="single-member" *ngFor="let user of users" (click)="openDetailViewDialog(user); onNoClick()">
+            <div class="image-container"><img [src]="user.avatar"></div>
+            <div *ngIf="user.isSignedIn" class="online"></div>
+            <div *ngIf="!user.isSignedIn" class="offline"></div>
+            {{ getFirstAndLastName(user.name) }}
+          </div>
+        </div>
+        <button class="add-member" (click)="openAddUserToChannelDialog()">
+          <div><img src="assets/images/icons/add_member.svg"></div>Mitglieder hinzufügen
+        </button>
+      </mat-card-content>
     </mat-card>
-</section>
+  </section>
+  

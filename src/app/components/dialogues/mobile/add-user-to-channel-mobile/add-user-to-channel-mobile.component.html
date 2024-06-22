@@ -18,7 +18,7 @@
                 <div class="selected-user">
                     <div *ngFor="let user of getSelectedUsers()" class="selected-single-user">
                         <img [src]="user.avatar" alt="User Avatar">
-                        <p>{{ user.name }}</p>
+                        <p>{{ getFirstAndLastName(user.name) }}</p>
                         <button (click)="selectUser(user.id)">
                             <img src="assets/images/icons/close.svg">
                         </button>
@@ -29,7 +29,7 @@
                 <div *ngFor="let user of filteredUsers" class="single-users">
                     <img [src]="user.avatar">
                     <p (click)="selectUser(user.id)">
-                        {{ user.name }}
+                        {{ getFirstAndLastName(user.name) }}
                     </p>
                 </div>
                 <div *ngIf="filteredUsers.length === 0">

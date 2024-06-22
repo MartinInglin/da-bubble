@@ -243,6 +243,19 @@ export class AddUserToNewChannelMobileComponent {
   }
 
   /**
+* Extracts the first and last word of a given name.
+* @param {string} name - The full name of the user.
+* @returns {string} - The processed name containing only the first and last word.
+*/
+  getFirstAndLastName(name: string): string {
+    const words = name.split(' ');
+    if (words.length > 1) {
+      return `${words[0]} ${words[words.length - 1]}`;
+    }
+    return name;
+  }
+
+  /**
    * Unsubscribes from user and all users data streams to prevent memory leaks.
    */
 

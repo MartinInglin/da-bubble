@@ -38,82 +38,95 @@ export class MembersComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: { channelId: string }
   ) { }
 
-/**
+  /**
  * Lifecycle hook that is called after data-bound properties of a directive are initialized.
  * Loads the channel members.
  */
-ngOnInit(): void {
-  this.loadChannelMembers();
-}
-
-/**
- * Loads the members of the channel by fetching minimal user information and then
- * retrieving full user details for each member.
- * @returns {Promise<void>}
- */
-async loadChannelMembers(): Promise<void> {
-  try {
-    const minimalUsers: MinimalUser[] = await this.channelsService.getUsersInChannel(this.data.channelId);
-    this.users = await Promise.all(minimalUsers.map(async (minimalUser) => {
-      const user = await this.channelsService.getUserById(minimalUser.id);
-      return new User(user);
-    }));
-  } catch (error) {
-    console.error('Error fetching users:', error);
+  ngOnInit(): void {
+    this.loadChannelMembers();
   }
-}
 
-/**
- * Opens a dialog to view the details of a user.
- * @param {MinimalUser} user - The minimal user information.
- */
-openDetailViewDialog(user: MinimalUser): void {
-  const dialogRef = this.dialog.open(ProfileDetailViewComponent, {
-    width: '500px',
-    data: {
-      userId: user.id,
-      userName: user.name,
-      userEmail: user.email,
-      userAvatar: user.avatar
+  /**
+  * Asynchronously loads the members of the channel by fetching minimal user information and then
+  * retrieving full user details for each member.
+  * @returns {Promise<void>}
+  */
+  async loadChannelMembers(): Promise<void> {
+    try {
+      const minimalUsers: MinimalUser[] = await this.channelsService.getUsersInChannel(this.data.channelId);
+      this.users = await Promise.all(minimalUsers.map(async (minimalUser) => {
+        const user = await this.channelsService.getUserById(minimalUser.id);
+        return new User(user);
+      }));
+    } catch (error) {
+      console.error('Error fetching users:', error);
     }
-  });
-
-  this.dialogRefSubscription = dialogRef.afterClosed().subscribe(() => {});
-}
-
-/**
- * Opens a dialog to add a user to the channel.
- */
-openAddUserToChannelDialog(): void {
-  this.dialogRef.close();
-
-  const dialogRef = this.dialog.open(AddUserToChannelComponent, {
-    width: '800px',
-    height: '800px',
-    position: {
-      top: '200px',
-      right: '-200px',
-    },
-    data: {
-      channelId: this.data.channelId
-    }
-  });
-}
-
-/**
- * Closes the current dialog.
- */
-onNoClick(): void {
-  this.dialogRef.close();
-}
-
-/**
- * Lifecycle hook that is called when the directive is destroyed.
- * Unsubscribes from the dialogRef subscription if it exists.
- */
-ngOnDestroy(): void {
-  if (this.dialogRefSubscription) {
-    this.dialogRefSubscription.unsubscribe();
   }
-}
+
+  /**
+  * Opens a dialog to view the details of a user.
+  * @param {MinimalUser} user - The minimal user information.
+  */
+  openDetailViewDialog(user: MinimalUser): void {
+    const dialogRef = this.dialog.open(ProfileDetailViewComponent, {
+      width: '500px',
+      data: {
+        userId: user.id,
+        userName: user.name,
+        userEmail: user.email,
+        userAvatar: user.avatar
+      }
+    });
+
+    this.dialogRefSubscription = dialogRef.afterClosed().subscribe(() => { });
+  }
+
+  /**
+   * Opens a dialog to add a user to the channel.
+   */
+  openAddUserToChannelDialog(): void {
+    this.dialogRef.close();
+
+    const dialogRef = this.dialog.open(AddUserToChannelComponent, {
+      width: '800px',
+      height: '800px',
+      position: {
+        top: '200px',
+        right: '-200px',
+      },
+      data: {
+        channelId: this.data.channelId
+      }
+    });
+  }
+
+  /**
+  * Closes the current dialog.
+  */
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  /**
+   * Lifecycle hook that is called when the directive is destroyed.
+   * Unsubscribes from the dialogRef subscription if it exists.
+   */
+  ngOnDestroy(): void {
+    if (this.dialogRefSubscription) {
+      this.dialogRefSubscription.unsubscribe();
+    }
+  }
+
+  /**
+  * Extracts the first and last word of a given name.
+  * @param {string} name - The full name of the user.
+  * @returns {string} - The processed name containing only the first and last word.
+  */
+  getFirstAndLastName(name: string): string {
+    const words = name.split(' ');
+    if (words.length > 1) {
+      return `${words[0]} ${words[words.length - 1]}`;
+    }
+    return name;
+  }
 }
