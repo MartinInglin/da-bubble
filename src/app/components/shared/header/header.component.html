@@ -9,7 +9,7 @@
   <!-- searchBar -->
   <div class="searchBar" *ngIf="currentUser?.isSignedIn" [formGroup]="form">
     <input type="text" formControlName="recipient" placeholder="Code learning durchsuchen..." />
-    <img class="searchImg" src="../../../../assets/images/icons/search.svg" alt="">
+    <img class="searchImg" src="assets/images/icons/search.svg" alt="">
     <div *ngIf="searchResults && searchResults.length" class="list">
       <ul #searchResultsList *ngIf="searchResults && searchResults.length > 0">
         <li *ngFor="let result of searchResults">
