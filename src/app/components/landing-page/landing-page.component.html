@@ -2,7 +2,7 @@
   <!-- MainContent -->
   <div class="Content">
     <div class="menuBtn">
-      <button type="button" (click)="toggleSidenav(drawer)">
+      <button *ngIf="!isThreadOpen" type="button" (click)="toggleSidenav(drawer)">
         <div class="menu-btn-content">
           <span>{{ isOpen ? menuClosed : menuOpen }}</span>
           <img [src]="isOpen ? menuUp : menuDown" alt="Toggle Contacts" />
@@ -11,7 +11,7 @@
     </div>
 
     <!-- SideNav -->
-    <nav class="sidenav" [ngClass]="{'hidden': !isOpen, 'visible': isOpen}">
+    <nav class="sidenav" *ngIf="!isThreadOpen" [ngClass]="{'hidden': !isOpen, 'visible': isOpen}">
       <mat-drawer-container class="example-container" autosize>
         <mat-drawer #drawer class="example-sidenav" mode="side">
           <app-side-nav [currentUser]="currentUser" (toggleDrawer)="toggleSidenav(drawer)"></app-side-nav>

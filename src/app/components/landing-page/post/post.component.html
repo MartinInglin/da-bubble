@@ -26,8 +26,15 @@
           (keyup.enter)="saveEditedMessage()"
         ></textarea>
         <div class="edit-button-container">
-          <button><img src="assets/images/icons/check_circle.svg" (click)="saveEditedMessage()"></button>
-          <button><img class="close" src="assets/images/icons/close_white.svg"></button>
+          <button>
+            <img
+              src="assets/images/icons/check_circle.svg"
+              (click)="saveEditedMessage()"
+            />
+          </button>
+          <button (click)="discardChanges()">
+            <img class="close" src="assets/images/icons/close_white.svg" />
+          </button>
         </div>
       </div>
       @if (reactionsToDislplay.length > 0) {
@@ -49,11 +56,13 @@
             class="tooltip-reaction-left"
             [ngClass]="{ show: showReaction && reactionIndex === index }"
           >
-            <div>{{ reaction.emoji }}</div>
-            @for (name of reaction.userName; track name) {
-            <div class="name-reaction">{{ name }}</div>
-            }
-            <div>hat reagiert</div>
+            <div class="scroll-container">
+              <div>{{ reaction.emoji }}</div>
+              @for (name of reaction.userName; track name) {
+              <div class="name-reaction">{{ name }}</div>
+              }
+              <div>hat reagiert</div>
+            </div>
           </div>
         </div>
         }
@@ -170,11 +179,13 @@
             class="tooltip-reaction"
             [ngClass]="{ show: showReaction && reactionIndex === index }"
           >
-            <div>{{ reaction.emoji }}</div>
-            @for (name of reaction.userName; track name) {
-            <div class="name-reaction">{{ name }}</div>
-            }
-            <div>hat reagiert</div>
+            <div class="scroll-container">
+              <div>{{ reaction.emoji }}</div>
+              @for (name of reaction.userName; track name) {
+              <div class="name-reaction">{{ name }}</div>
+              }
+              <div>hat reagiert</div>
+            </div>
           </div>
         </div>
         }
@@ -220,7 +231,7 @@
   post.lastAnswer) {
   <div class="message-details" (click)="sendOpenThreadToParent(post)">
     <!-- Message actions and time details -->
-    <a >{{ post.amountAnswers }} Antworten</a>
+    <a>{{ post.amountAnswers }} Antworten</a>
     <span>Letzte Antwort:{{ formatDate(post.lastAnswer) }} </span>
   </div>
   }

@@ -31,6 +31,7 @@ export class PostComponent {
   showEditMessage: boolean = false;
   postFromCurrentUser: boolean = false;
   wantToEditMessage: boolean = false;
+  originalMessage: string = ''; // Add this line
   emojis: string[] = [
     '😊',
     '❤️',
@@ -64,7 +65,7 @@ export class PostComponent {
   }
 
   /**
-   * This function creates a new array that contains all the reactions and sorts them so the can be displayed.
+   * This function creates a new array that contains all the reactions and sorts them so they can be displayed.
    */
   sortReactions() {
     const reactions: Reaction[] = this.post.reactions;
@@ -286,12 +287,13 @@ export class PostComponent {
   }
 
   /**
-   * This function lets a user editing her post.
+   * This function lets a user start editing their post.
    */
   toggleWantToEditMessage() {
     if (this.editingStateService.getEditingPostIndex() === -1) {
       this.wantToEditMessage = true;
       this.editingStateService.setEditingPostIndex(this.indexPost);
+      this.originalMessage = this.post.message; // Save the original message
 
       setTimeout(() => {
         const textarea = document.querySelector('textarea');
@@ -609,5 +611,14 @@ export class PostComponent {
   toggleTooltip(show: boolean, index: number) {
     this.showReaction = show;
     this.reactionIndex = index;
+  }
+
+  /**
+   * This function discards the changes made to the post and restores the original message.
+   */
+  discardChanges() {
+    this.post.message = this.originalMessage; // Restore the original message
+    this.wantToEditMessage = false;
+    this.editingStateService.clearEditingPostIndex();
   }
 }
