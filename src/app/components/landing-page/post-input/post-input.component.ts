@@ -100,7 +100,7 @@ export class PostInputComponent {
       if (this.messageTextarea) {
         this.messageTextarea.nativeElement.focus();
       }
-    }, 0);
+    }, 10);
   }
 
   /**
