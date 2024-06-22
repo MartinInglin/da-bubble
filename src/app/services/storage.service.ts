@@ -60,8 +60,6 @@ export class StorageService {
    * @returns minimal file with name and download URL
    */
   async uploadFile(postId: string, file: File): Promise<MinimalFile> {
-    this.checkFileType(file);
-
     const fileRef = ref(this.storage, `posts/${postId}/${file.name}`);
     const uploadTask = await uploadBytes(fileRef, file);
     const downloadURL = await getDownloadURL(uploadTask.ref);
@@ -70,22 +68,6 @@ export class StorageService {
       name: file.name,
       url: downloadURL,
     } as MinimalFile;
-  }
-
-  /**
-   * This function checks if the type of the uploaded files are jpep or png.
-   *
-   * @param file object of type file
-   */
-  checkFileType(file: File): void {
-    const allowedTypes = ['image/jpeg', 'image/png'];
-    if (!allowedTypes.includes(file.type)) {
-      this.snackbarService.openSnackBar(
-        'Bitte wähle eine Datei im Format jpg oder png.',
-        'Schliessen'
-      );
-      throw new Error('Invalid file type. Only jpg and png are allowed.');
-    }
   }
 
   /**

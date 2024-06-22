@@ -60,7 +60,7 @@ export class PostComponent {
 
   ngOnInit() {
     this.checkIfPostFromCurrentUser();
-    this.sortReactions();    
+    this.sortReactions();
   }
 
   /**
@@ -223,8 +223,6 @@ export class PostComponent {
       );
       if (threadExists) {
         this.deleteFileOnCollection(this.path, documentId, indexFile);
-      } else {
-        console.log('Thread does not exist');
       }
     } catch (error) {
       console.log('Failed to delete file on corresponding thread', error);
