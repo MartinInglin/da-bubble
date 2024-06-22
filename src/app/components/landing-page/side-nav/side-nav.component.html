@@ -117,7 +117,7 @@
     >
       <img [src]="currentUser.avatar" alt="Profilbild" />
       <div class="online"></div>
-      <span>{{ currentUser.name }} (Du)</span>
+      <span>{{ getFirstAndLastName(currentUser.name) }} (Du)</span>
     </td>
 
     @for (user of allUsers; track user) { @if (user.id != currentUser.id) {
