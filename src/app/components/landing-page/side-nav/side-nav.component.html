@@ -128,7 +128,7 @@
       <img [src]="user.avatar" alt="Profilbild" />
       <div *ngIf="user.isSignedIn" class="online"></div>
       <div *ngIf="!user.isSignedIn" class="offline"></div>
-      <span>{{ user.name }}</span>
+      <span>{{ getFirstAndLastName(user.name) }}</span>
     </td>
     } }
   </tr>
