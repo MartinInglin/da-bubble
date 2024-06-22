@@ -21,25 +21,6 @@ aside {
   }
 }
 
-/* Styling for the thread container */
-#thread {
-  height: 100%;
-  background-color: white;
-  width: 435px;
-  border-radius: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-direction: column;
-}
-
-/* height thread container */
-.thread-content {
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 
 /* Header styling for the thread */
 .head-thread {

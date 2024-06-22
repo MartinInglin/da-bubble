@@ -31,7 +31,7 @@
       <mat-drawer #drawerThread="matDrawer" mode="side" position="end">
         <app-thread 
           class="thread" 
-          [ngClass]="{'hidden': !isThreadOpen}" 
+          [ngClass]="{'hidden': !isThreadOpen,  'visible': !isOpen && isThreadOpen}" 
           (toggleThread)="closeThread()">
         </app-thread>
       </mat-drawer>

@@ -38,6 +38,7 @@ export class SideNavComponent implements OnInit {
   @Input() currentUser: User = new User();
   @Output() contactClicked = new EventEmitter<void>();
   @Output() toggleDrawer = new EventEmitter<void>();
+  @Output() closeThread = new EventEmitter<void>();
 
   @ViewChild('searchResultsList') searchResultsList!: ElementRef;
 
@@ -118,6 +119,9 @@ export class SideNavComponent implements OnInit {
 
     this.sideNavSubscription = this.stateService.sideNavOpen$.subscribe((isOpen) => {
       this.isSideNavOpen = isOpen;
+      if (isOpen) {
+        this.stateService.closeThread();
+      }
     });
   }
 
@@ -141,6 +145,22 @@ export class SideNavComponent implements OnInit {
   // Funktion zur Überprüfung, ob ein Ergebnis ein Benutzer ist
   isUser(result: Channel | User): result is User {
     return (result as User).avatar !== undefined;
+  }
+
+
+
+  closeSideNav() {
+    this.isOpen = false;
+  }
+
+  closeSidenavMobile() {
+    this.toggleDrawer.emit();
+    this.stateService.closeThread();
+  }
+
+  closeSidenavMobileAfterContacts() {
+    this.toggleDrawer.emit();
+    this.stateService.closeThread();
   }
 
   // Funktion zur Suche nach Kanälen oder Benutzern basierend auf dem Suchbegriff
@@ -174,24 +194,13 @@ export class SideNavComponent implements OnInit {
     }
   }
 
-  closeSideNav() {
-    this.isOpen = false;
-  }
-
-  closeSidenavMobile() {
-    this.toggleDrawer.emit();
-  }
-
-  closeSidenavMobileAfterContacts() {
-    this.toggleDrawer.emit();
-  }
-
   // Funktion zum Öffnen eines Kanals
   openChannel(x: string) {
     this.channelsService.getDataChannel(x);
     this.form.get('recipient')?.setValue('');
     if (this.isOpen) { // Check if sidenav is open
       this.toggleDrawer.emit();
+      this.stateService.closeThread();
     }
   }
 
@@ -200,6 +209,7 @@ export class SideNavComponent implements OnInit {
     this.form.get('recipient')?.setValue('');
     if (this.isOpen) { // Check if sidenav is open
       this.toggleDrawer.emit();
+      this.stateService.closeThread();
     }
   }
 

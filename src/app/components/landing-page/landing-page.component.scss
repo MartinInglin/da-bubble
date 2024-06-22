@@ -86,16 +86,16 @@ mat-drawer-container {
 
 /* Main content */
 .mainContent {
-  flex: 1;
+  flex: 2;
   height: 100%;
-  width: 1920px;
+  width: 1920px; /* Changed to 0 for responsive design */
 }
 
 .thread{
-  width: 435px;
+ width: 435px;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1000px) {
 
   .hidden {
     display: none !important;
@@ -154,5 +154,9 @@ mat-drawer-container {
     img{
       margin-left: 0px!important;
     }
+  }
+
+  .mainContent {
+    min-width: 0; /* Allow it to shrink to fit */
   }
 }

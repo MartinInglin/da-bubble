@@ -60,6 +60,8 @@ export class ThreadComponent implements OnInit {
   @Output() closeSideNav = new EventEmitter<void>(); 
   @Input() channelId: string = ''; // Kanal-ID als Eingabe für die Thread-Komponente
   @Input() threadId: string = ''; // Thread-ID als Eingabe für die Thread-Komponente
+  @Input() isOpen: boolean = false;
+  closeThreadSubscription: Subscription = new Subscription();
 
   constructor() { }
 
@@ -96,6 +98,10 @@ export class ThreadComponent implements OnInit {
         } // Close SideNav when thread is selected
       }
     );
+
+    this.closeThreadSubscription = this.stateService.closeThread$.subscribe(() => {
+      this.closeThread();
+    });
   }
 
   // Unsubscribe from all observables
@@ -104,10 +110,14 @@ export class ThreadComponent implements OnInit {
     this.usersSubscription.unsubscribe();
     this.channelSubscription.unsubscribe();
     this.threadSubscription.unsubscribe();
+    if (this.closeThreadSubscription) {
+      this.closeThreadSubscription.unsubscribe();
+    }
   }
 
   // Emit toggleThread event
   closeThread(): void {
+    this.isOpen = false;
     this.toggleThread.emit();
   }
 

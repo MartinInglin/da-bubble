@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 /**
  * This service manages the application's state related to showing contacts and channels.
@@ -9,22 +9,31 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class StateService {
 
+  private sideNavOpenSubject = new BehaviorSubject<boolean>(false);
+  private closeThreadSubject = new Subject<void>();
+
   private sideNavOpen = new BehaviorSubject<boolean>(true);
   sideNavOpen$ = this.sideNavOpen.asObservable();
+  closeThread$ = this.closeThreadSubject.asObservable();
 
 
   toggleSideNav() {
-    this.sideNavOpen.next(!this.sideNavOpen.value);
-    console.log('hallo');
-    
+    this.sideNavOpenSubject.next(!this.sideNavOpenSubject.value);
+    if (this.sideNavOpenSubject.value) {
+      this.closeThread();
+    }
   }
 
   closeSideNav() {
-    this.sideNavOpen.next(false);
+    this.sideNavOpenSubject.next(false);
   }
 
   openSideNav() {
-    this.sideNavOpen.next(true);
+    this.sideNavOpenSubject.next(true);
+    this.closeThread();
+  }
+  closeThread() {
+    this.closeThreadSubject.next();
   }
 
   /**
