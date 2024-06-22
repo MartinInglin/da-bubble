@@ -203,6 +203,9 @@ export class AuthService {
     }
   }
 
+  /**
+   * This function resends the verification email if the user asks for it via the snackbar.
+   */
   resendVerificationEmail() {
     sendEmailVerification(this.userCredential!.user);
     this.snackbarService.openSnackBar(
@@ -272,13 +275,13 @@ export class AuthService {
     sendPasswordResetEmail(this.auth, email)
       .then(() => {
         this.snackbarService.openSnackBar(
-          'Wir haben dir eine Email zum Zurücksetzen des Passwortes gesendet. Bitte überprüfe auch deinen Spam-Ordner.',
+          `Wir haben dir eine Email zum Zurücksetzen des Passwortes an ${email} gesendet. Bitte überprüfe auch deinen Spam-Ordner.`,
           'Schliessen'
         );
+        this.router.navigate(['login']);
       })
       .catch((error) => {
-        console.log("Send email reset password failed", error);
-        
+        console.log('Send email reset password failed', error);
       });
   }
 
