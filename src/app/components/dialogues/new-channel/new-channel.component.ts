@@ -25,10 +25,10 @@ import { SnackbarService } from '../../../services/snackbar.service';
   styleUrls: ['./new-channel.component.scss']
 })
 export class NewChannelComponent {
-  
+
   channelName: string = '';
   channelDescription: string = '';
-  
+
   public currentUser: User = new User();
 
   constructor(
@@ -36,58 +36,81 @@ export class NewChannelComponent {
     private channelsService: ChannelsService,
     private snackbarService: SnackbarService,
     public dialogRef: MatDialogRef<NewChannelComponent>
-  ) {}
+  ) { }
 
-/**
- * Creates a new channel with the provided name and description, and opens a dialog
- * to add users to the newly created channel.
- */
-createChannelAndOpenDialog(): void {
-  if (this.channelName.trim()) {
-    if (this.channelName.length > 20) {
-      this.snackbarService.openSnackBar(
-        'Der Channelname darf maximal 20 Zeichen lang sein.',
-        'Schließen'
-      );
-      return;
+  /**
+   * Validates the channel name length and checks if it is not empty.
+   */
+  validateChannelName(): boolean {
+    if (this.channelName.trim()) {
+      if (this.channelName.length > 20) {
+        this.snackbarService.openSnackBar(
+          'Der Channelname darf maximal 20 Zeichen lang sein.',
+          'Schließen'
+        );
+        return false;
+      }
+      return true;
     }
+    return false;
+  }
 
+  /**
+   * Checks if the channel name already exists.
+   */
+  checkChannelExists(): void {
     this.channelsService.getAllChannels().subscribe(channels => {
       const channelExists = channels.some(channel => channel.name === this.channelName);
       if (channelExists) {
         this.snackbarService.openSnackBar('Der Channelname existiert bereits.', 'Schließen');
       } else {
-        this.channelsService.createChannel(this.channelName, this.channelDescription, this.currentUser)
-          .then((channel) => {
-            this.dialogRef.close();
-            this.openAddUserDialog(channel.id, this.channelName);
-          })
-          .catch(error => console.error('Error creating channel: ', error));
+        this.createChannelAndOpenDialog();
       }
     });
   }
-}
 
-/**
- * Opens a dialog to add users to a new channel.
- * @param {string} channelId - The ID of the newly created channel.
- * @param {string} channelName - The name of the newly created channel.
- */
-openAddUserDialog(channelId: string, channelName: string): void {
-  const dialogRef = this.dialog.open(AddUserToNewChannelComponent, {
-    width: '710px',
-    position: {
-      top: '20%'
-    },
-    data: { channelId: channelId, channelName: channelName },
-    panelClass: 'custom-dialog-container'
-  });
-}
+  /**
+   * Checks the channel name validation and existence, then creates a new channel if valid.
+   */
+  checkChannelName(): void {
+    if (this.validateChannelName()) {
+      this.checkChannelExists();
+    }
+  }
 
-/**
- * Closes the current dialog.
- */
-onNoClick(): void {
-  this.dialogRef.close();
-}
+  /**
+   * Creates a new channel with the provided name and description, and opens a dialog
+   * to add users to the newly created channel.
+   */
+  createChannelAndOpenDialog(): void {
+    this.channelsService.createChannel(this.channelName, this.channelDescription, this.currentUser)
+      .then((channel) => {
+        this.dialogRef.close();
+        this.openAddUserDialog(channel.id, this.channelName);
+      })
+      .catch(error => console.error('Error creating channel: ', error));
+  }
+
+  /**
+   * Opens a dialog to add users to a new channel.
+   * @param {string} channelId - The ID of the newly created channel.
+   * @param {string} channelName - The name of the newly created channel.
+   */
+  openAddUserDialog(channelId: string, channelName: string): void {
+    const dialogRef = this.dialog.open(AddUserToNewChannelComponent, {
+      width: '710px',
+      position: {
+        top: '20%'
+      },
+      data: { channelId: channelId, channelName: channelName },
+      panelClass: 'custom-dialog-container'
+    });
+  }
+
+  /**
+   * Closes the current dialog.
+   */
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 }

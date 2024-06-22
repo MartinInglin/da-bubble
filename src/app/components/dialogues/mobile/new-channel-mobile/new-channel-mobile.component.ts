@@ -38,25 +38,56 @@ export class NewChannelMobileComponent {
   ) { }
 
   /**
-   * Creates a new channel with the provided name and description, and opens a dialog
-   * to add users to the newly created channel.
+   * Validates the channel name length and checks if it is not empty.
    */
-  createChannelAndOpenDialog(): void {
+  validateChannelName(): boolean {
     if (this.channelName.trim()) {
       if (this.channelName.length > 20) {
         this.snackbarService.openSnackBar(
           'Der Channelname darf maximal 20 Zeichen lang sein.',
           'Schließen'
         );
-        return;
+        return false;
       }
-      this.channelsService.createChannel(this.channelName, this.channelDescription, this.currentUser)
-        .then((channel) => {
-          this.dialogRef.close();
-          this.openAddUserDialog(channel.id, this.channelName);
-        })
-        .catch(error => console.error('Error creating channel: ', error));
+      return true;
     }
+    return false;
+  }
+
+  /**
+   * Checks if the channel name already exists.
+   */
+  checkChannelExists(): void {
+    this.channelsService.getAllChannels().subscribe(channels => {
+      const channelExists = channels.some(channel => channel.name === this.channelName);
+      if (channelExists) {
+        this.snackbarService.openSnackBar('Der Channelname existiert bereits.', 'Schließen');
+      } else {
+        this.createChannelAndOpenDialog();
+      }
+    });
+  }
+
+  /**
+   * Checks the channel name validation and existence, then creates a new channel if valid.
+   */
+  checkChannelName(): void {
+    if (this.validateChannelName()) {
+      this.checkChannelExists();
+    }
+  }
+
+  /**
+   * Creates a new channel with the provided name and description, and opens a dialog
+   * to add users to the newly created channel.
+   */
+  createChannelAndOpenDialog(): void {
+    this.channelsService.createChannel(this.channelName, this.channelDescription, this.currentUser)
+      .then((channel) => {
+        this.dialogRef.close();
+        this.openAddUserDialog(channel.id, this.channelName);
+      })
+      .catch(error => console.error('Error creating channel: ', error));
   }
 
   /**
