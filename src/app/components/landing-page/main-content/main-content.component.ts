@@ -227,6 +227,14 @@ export class MainContentComponent implements OnInit, OnDestroy, AfterViewInit, A
     this.checkNameWidth();
   }
 
+  /**
+   * Checks the width of the name element within the avatarName container.
+   * If the width of the name element is greater than 300 pixels,
+   * it adds the 'scroll' class to the avatarName container to trigger a scroll animation.
+   * If the width is 300 pixels or less, it removes the 'scroll' class.
+   *
+   * @returns {void}
+   */
   checkNameWidth(): void {
     if (this.avatarName && this.avatarName.nativeElement) {
       const nameElement = this.avatarName.nativeElement.querySelector('.header-name');
@@ -240,7 +248,13 @@ export class MainContentComponent implements OnInit, OnDestroy, AfterViewInit, A
     }
   }
 
-
+  /**
+   * Lifecycle hook that is called after the component's view has been checked.
+   * This method calls `checkNameWidth` to ensure that the width of the name element
+   * is checked and the appropriate class is added or removed based on its width.
+   *
+   * @returns {void}
+   */
   ngAfterViewChecked(): void {
     this.checkNameWidth();
   }
