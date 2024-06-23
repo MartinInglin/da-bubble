@@ -45,6 +45,10 @@ header {
     overflow: hidden;
     display: inline-block;
     transition: transform 0.3s linear;
+
+    &:hover {
+      animation: scrollName 10s linear infinite;
+    }
   }
 
   .image-container {
@@ -66,10 +70,6 @@ header {
 
   &:hover {
     color: $purple2;
-  }
-
-  &:hover .scroll .name {
-    animation: scrollName 10s linear infinite;
   }
 }
 
@@ -323,6 +323,13 @@ header {
   }
 
   @media (max-width: 400px) {
+    .logo {
+      width: 200px;
+    }
+
+    .logo-name {
+      display: none;
+    }
     
     .user {
       margin-left: 10px;

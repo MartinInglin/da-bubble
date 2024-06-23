@@ -205,8 +205,9 @@ async saveChanges(): Promise<void> {
   if (this.wantChangeMail && !this.isPasswordVerified) {
     return;
   }
-  await this.deleteOldAvatar();
+  // Lösche den alten Avatar nur, wenn eine neue Datei ausgewählt wurde.
   if (this.isImageFile()) {
+    await this.deleteOldAvatar();
     await this.saveNewAvatar();
   }
   await this.updateUserData();
