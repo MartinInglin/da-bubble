@@ -325,10 +325,10 @@ header {
     transition: transform 0.3s linear;
     z-index: 1;
     line-height: 30px;
-  }
 
-  &.scroll .header-name {
-    animation: scrollName 10s linear infinite;
+    &:hover {
+      animation: scrollName 5s linear infinite;
+    }
   }
 }
 
