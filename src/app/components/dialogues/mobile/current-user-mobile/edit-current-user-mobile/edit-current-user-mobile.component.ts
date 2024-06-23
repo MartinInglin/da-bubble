@@ -74,7 +74,7 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
  * Initializes the user subscription to get the current user and update user details.
  */
   ngOnInit(): void {
-    this.userSubscription = this.usersService.currentUser$.subscribe(user => {
+    this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       this.currentUser = user;
       if (user) {
         this.updatedName = user.name;
@@ -84,29 +84,30 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
       }
     });
   }
+  
   /**
    * Toggles the wantChangePassword flag to show/hide password change options.
    */
   wantToChangePassword(): void {
     this.wantChangePassword = !this.wantChangePassword;
   }
-
+  
   /**
- * Selects a new avatar by setting the selectedAvatar and resetting the image preview URL.
- * @param {string} imageURLAvatar - The URL of the selected avatar image.
- */
-  selectAvatar(avatar: string): void {
+   * Selects a new avatar by setting the selectedAvatar and resetting the image preview URL.
+   * @param {string} imageURLAvatar - The URL of the selected avatar image.
+   */
+  selectAvatar(imageURLAvatar: string): void {
     this.imagePreviewUrl = null;
-    this.selectedAvatar = avatar;
+    this.selectedAvatar = imageURLAvatar;
   }
-
+  
   /**
- * Opens the file dialog for selecting an avatar image.
- */
-  openFileDialog() {
+   * Opens the file dialog for selecting an avatar image.
+   */
+  openFileDialog(): void {
     this.fileInput.nativeElement.click();
   }
-
+  
   /**
    * Handles the file selection event and processes the selected file.
    * @param {Event} event - The file selection event.
@@ -118,7 +119,7 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
       this.handleFileSelection();
     }
   }
-
+  
   /**
    * Handles the file selection by validating the file type and size, then displaying the image preview.
    */
@@ -133,7 +134,7 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
       this.showFileTypeError();
     }
   }
-
+  
   /**
    * Validates if the selected file is of a valid image type.
    * @returns {boolean} True if the file is a valid image type, otherwise false.
@@ -141,7 +142,7 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
   isValidFileType(): boolean {
     return this.file.type === 'image/jpeg' || this.file.type === 'image/png';
   }
-
+  
   /**
    * Validates if the selected file size is within the allowed limit.
    * @returns {boolean} True if the file size is valid, otherwise false.
@@ -149,7 +150,7 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
   isFileSizeValid(): boolean {
     return this.file.size <= this.maxFileSize;
   }
-
+  
   /**
    * Displays an error message when the selected file size exceeds the allowed limit.
    */
@@ -159,7 +160,7 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
       'Schließen'
     );
   }
-
+  
   /**
    * Displays an error message when the selected file type is invalid.
    */
@@ -169,21 +170,21 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
       'Schliessen'
     );
   }
-
+  
   /**
- * Displays a preview of the selected image file.
- */
-  displayImagePreview() {
+   * Displays a preview of the selected image file.
+   */
+  displayImagePreview(): void {
     if (this.file) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.imagePreviewUrl = e.target.result;
-        this.selectedAvatar = e.target.result; // Use the uploaded image as the selected avatar
+        this.selectedAvatar = e.target.result;
       };
       reader.readAsDataURL(this.file);
     }
   }
-
+  
   /**
    * Saves the changes made to the user profile including name, email, and avatar.
    * @returns {Promise<void>}
@@ -197,14 +198,15 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
     if (this.wantChangeMail && !this.isPasswordVerified) {
       return;
     }
-    await this.deleteOldAvatar();
+    // Lösche den alten Avatar nur, wenn eine neue Datei ausgewählt wurde.
     if (this.isImageFile()) {
+      await this.deleteOldAvatar();
       await this.saveNewAvatar();
     }
     await this.updateUserData();
     this.dialogRef.close();
   }
-
+  
   /**
    * Checks if the email has been changed and sets the wantChangeMail flag accordingly.
    */
@@ -213,12 +215,12 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
       console.error('Current user is not defined');
       return;
     }
-
+  
     if (this.currentUser.email !== this.updatedEmail) {
       this.wantChangeMail = true;
     }
   }
-
+  
   /**
    * Deletes the old avatar from storage.
    * @returns {Promise<void>}
@@ -228,10 +230,10 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
       console.error('Current user or avatar is not defined');
       return;
     }
-
+  
     await this.storageService.deleteOldFile(this.currentUser.avatar);
   }
-
+  
   /**
    * Checks if the selected file is a valid image type.
    * @returns {boolean} True if the file is a valid image type, otherwise false.
@@ -239,7 +241,7 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
   isImageFile(): boolean {
     return this.file && (this.file.type === 'image/jpeg' || this.file.type === 'image/png');
   }
-
+  
   /**
    * Saves the new avatar image to storage.
    * @returns {Promise<void>}
@@ -249,10 +251,10 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
       console.error('File is not defined');
       return;
     }
-
+  
     this.selectedAvatar = await this.storageService.saveImageUser(this.file);
   }
-
+  
   /**
    * Updates the user data with the new profile information.
    * @returns {Promise<void>}
@@ -262,16 +264,16 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
       console.error('Current user is not defined');
       return;
     }
-
+  
     const updatedData = {
       name: this.updatedName,
       email: this.wantChangeMail ? this.updatedEmail : this.currentUser.email,
       avatar: this.selectedAvatar,
     };
-
+  
     await this.usersService.updateUser(this.currentUser, updatedData);
   }
-
+  
   /**
    * Changes the email address of the current user after verifying the password.
    * @returns {Promise<void>}
@@ -291,7 +293,7 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
       }
     }
   }
-
+  
   /**
    * Changes the password of the current user after verifying the current password.
    * @returns {Promise<void>}
@@ -307,7 +309,7 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
       }
     }
   }
-
+  
   /**
    * Checks if the current user, password, and new password are defined.
    * @returns {boolean} True if all required fields are defined, otherwise false.
@@ -315,7 +317,7 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
   canChangePassword(): boolean {
     return !!this.currentUser && !!this.password && !!this.newPassword;
   }
-
+  
   /**
    * Verifies the current password of the user.
    * @returns {Promise<boolean>} True if the password is valid, otherwise false.
@@ -326,7 +328,7 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
     }
     return await this.authService.verifyPassword(this.currentUser.email, this.password);
   }
-
+  
   /**
    * Updates the password of the current user.
    * @returns {Promise<void>}
@@ -338,7 +340,7 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
     await this.authService.changePassword(this.newPassword);
     this.snackbarService.openSnackBar('Passwort erfolgreich geändert.', 'Schließen');
   }
-
+  
   /**
    * Resets the password fields and toggles the wantChangePassword flag.
    */
@@ -347,7 +349,7 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
     this.password = '';
     this.newPassword = '';
   }
-
+  
   /**
    * Handles the scenario when the current password verification fails.
    */
@@ -355,7 +357,7 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
     this.passwordIsFalse = true;
     this.snackbarService.openSnackBar('Das alte Passwort ist falsch.', 'Schließen');
   }
-
+  
   /**
    * Validates the updated email address format.
    * @returns {boolean} True if the email format is valid, otherwise false.
@@ -364,7 +366,7 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailPattern.test(this.updatedEmail);
   }
-
+  
   /**
    * Cancels the email change process and resets the email to the original value.
    */
@@ -372,7 +374,7 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
     this.wantChangeMail = false;
     this.updatedEmail = this.originalEmail;
   }
-
+  
   /**
    * Lifecycle hook that is called when the directive is destroyed.
    * Unsubscribes from the user subscription.
@@ -382,7 +384,7 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
       this.userSubscription.unsubscribe();
     }
   }
-
+  
   /**
    * Closes the dialog if the email change process is not ongoing.
    */
@@ -391,4 +393,4 @@ export class EditCurrentUserMobileComponent implements OnInit, OnDestroy {
       this.dialogRef.close();
     }
   }
-}
+  }
