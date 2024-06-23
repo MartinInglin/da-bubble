@@ -4,6 +4,7 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
+  HostListener,
   inject,
 } from '@angular/core';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
@@ -38,7 +39,7 @@ import { AuthService } from '../../services/auth.service';
   ],
 
   templateUrl: './landing-page.component.html',
-  styleUrl: './landing-page.component.scss',
+  styleUrls: ['./landing-page.component.scss'],
 })
 export class LandingPageComponent implements OnInit, OnDestroy {
   openThreadEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -57,6 +58,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   currentUser: User = new User();
   isOpen: boolean = false;
   isThreadOpen: boolean = false;
+  isUnderWidth: boolean = false;
 
   menuOpen: string = 'Workspace-Menü öffnen';
   menuClosed: string = 'Workspace-Menü schliessen';
@@ -69,6 +71,17 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         this.currentUser = user ?? new User();
       }
     });
+
+    this.checkWidth();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    this.checkWidth();
+  }
+
+  checkWidth(): void {
+    this.isUnderWidth = window.innerWidth <= 1360;
   }
 
   /**
