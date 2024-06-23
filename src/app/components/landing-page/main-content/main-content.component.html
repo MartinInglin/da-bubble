@@ -88,9 +88,10 @@
           [post]="post"
           [currentUser]="currentUser"
           [selectedChannel]="selectedChannel"
+          [selectedDirectMessage]="selectedDirectMessage"
           [indexPost]="index"
           [path]="'channels'"
-          (openThread)="openThread(post)"
+          (openThread)="openThread(post, 'channels')"
         >
         </app-post>
       </div>
@@ -114,6 +115,7 @@
     <app-post-input
       class="post-input"
       [selectedChannel]="selectedChannel"
+      [selectedDirectMessage]="selectedDirectMessage"
       [allUsers]="allUsers"
       [currentUser]="currentUser"
       [path]="'channels'"
@@ -169,9 +171,10 @@
           [post]="post"
           [currentUser]="currentUser"
           [selectedChannel]="selectedChannel"
-          [selectedDirectMessageId]="selectedDirectMessage.id"
+          [selectedDirectMessage]="selectedDirectMessage"
           [indexPost]="index"
           [path]="'directMessages'"
+          (openThread)="openThread(post, 'directMessages')"
         >
         </app-post>
       </div>

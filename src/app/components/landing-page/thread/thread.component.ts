@@ -22,6 +22,8 @@ import { Thread } from '../../../models/thread.class';
 import { PostComponent } from '../post/post.component';
 import { PostInputComponent } from '../post-input/post-input.component';
 import { StateService } from '../../../services/stateservice.service';
+import { DirectMessage } from '../../../models/direct-message.class';
+import { DirectMessagesService } from '../../../services/firestore/direct-messages.service';
 
 @Component({
   selector: 'app-thread',
@@ -44,17 +46,20 @@ export class ThreadComponent implements OnInit {
   comments: boolean = true;
   currentUser: User = new User();
   selectedChannel: Channel = new Channel();
+  selectedDirectMessage: DirectMessage = new DirectMessage();
   selectedThread: Thread = new Thread();
 
   channelsService = inject(ChannelsService);
   usersService = inject(UsersService);
   threadsService = inject(ThreadsService);
+  directMessagesService = inject(DirectMessagesService)
   stateService = inject(StateService);
 
   private usersSubscription: Subscription = new Subscription();
   private userSubscription: Subscription = new Subscription();
   private channelSubscription: Subscription = new Subscription();
   private threadSubscription: Subscription = new Subscription();
+  private directMessageSubscription: Subscription = new Subscription();
 
   @Output() commentsChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() toggleThread = new EventEmitter<void>();
@@ -105,6 +110,11 @@ export class ThreadComponent implements OnInit {
     this.closeThreadSubscription = this.stateService.closeThread$.subscribe(() => {
       this.closeThread();
     });
+
+    this.directMessageSubscription =
+    this.directMessagesService.directMessage$.subscribe((directMessage) => {
+      this.selectedDirectMessage = directMessage ?? new DirectMessage();
+    });
   }
 
   // Unsubscribe from all observables
@@ -113,6 +123,7 @@ export class ThreadComponent implements OnInit {
     this.usersSubscription.unsubscribe();
     this.channelSubscription.unsubscribe();
     this.threadSubscription.unsubscribe();
+    this.directMessageSubscription.unsubscribe();
     if (this.closeThreadSubscription) {
       this.closeThreadSubscription.unsubscribe();
     }
