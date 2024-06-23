@@ -89,14 +89,12 @@
         </div>
       </mat-menu>
 
-      @if (path === 'channels') {
       <img
         src="assets/images/icons/comment.svg"
         alt=""
         (click)="sendOpenThreadToParent(post)"
         class="comment-button"
       />
-      }
       <img
         src="assets/images/icons/edit_message.svg"
         alt=""
@@ -128,8 +126,8 @@
     </div>
     }
   </div>
-  } @if (path === 'channels' && post.amountAnswers && post.amountAnswers > 0 &&
-  post.lastAnswer) {
+  } @if ((path === 'channels' || path === 'directMessages') && post.amountAnswers &&
+  post.amountAnswers > 0 && post.lastAnswer) {
   <div class="message-details" (click)="sendOpenThreadToParent(post)">
     <!-- Message actions and time details -->
     <a>{{ post.amountAnswers }} Antworten</a>
@@ -210,13 +208,11 @@
           }
         </div>
       </mat-menu>
-      @if (path === 'channels') {
       <img
         src="assets/images/icons/comment.svg"
         alt=""
         (click)="sendOpenThreadToParent(post)"
       />
-      }
     </div>
   </div>
   @if (post.files.length > 0) {
@@ -227,8 +223,8 @@
     </div>
     }
   </div>
-  } @if (path === 'channels' && post.amountAnswers && post.amountAnswers > 0 &&
-  post.lastAnswer) {
+  } @if ((path === 'channels' || path === 'directMessages') && post.amountAnswers &&
+  post.amountAnswers > 0 && post.lastAnswer) {
   <div class="message-details" (click)="sendOpenThreadToParent(post)">
     <!-- Message actions and time details -->
     <a>{{ post.amountAnswers }} Antworten</a>

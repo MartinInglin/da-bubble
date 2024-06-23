@@ -63,7 +63,9 @@ import { PostInputComponent } from '../post-input/post-input.component';
   templateUrl: './main-content.component.html',
   styleUrls: ['./main-content.component.scss'],
 })
-export class MainContentComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
+export class MainContentComponent
+  implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked
+{
   @Output() toggleThread = new EventEmitter<void>();
 
   @ViewChild('fileInput') fileInput!: ElementRef;
@@ -186,24 +188,24 @@ export class MainContentComponent implements OnInit, OnDestroy, AfterViewInit, A
 
     this.searchResults$.subscribe((results) => {
       this.searchResults = results;
-    });
+    });    
   }
 
-/**
- * Handles click events on the document to close the search results list if the click is outside of it.
- * 
- * @param {MouseEvent} event - The mouse event that triggered the click.
- * @returns {void}
- */
-@HostListener('document:click', ['$event'])
-handleClickOutside(event: MouseEvent): void {
-  if (
-    this.searchResultsList &&
-    !this.searchResultsList.nativeElement.contains(event.target)
-  ) {
-    this.closeSearchResults();
+  /**
+   * Handles click events on the document to close the search results list if the click is outside of it.
+   *
+   * @param {MouseEvent} event - The mouse event that triggered the click.
+   * @returns {void}
+   */
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: MouseEvent): void {
+    if (
+      this.searchResultsList &&
+      !this.searchResultsList.nativeElement.contains(event.target)
+    ) {
+      this.closeSearchResults();
+    }
   }
-}
 
   closeSearchResults(): void {
     this.searchResults = [];
@@ -243,7 +245,8 @@ handleClickOutside(event: MouseEvent): void {
    */
   checkNameWidth(): void {
     if (this.avatarName && this.avatarName.nativeElement) {
-      const nameElement = this.avatarName.nativeElement.querySelector('.header-name');
+      const nameElement =
+        this.avatarName.nativeElement.querySelector('.header-name');
       if (nameElement) {
         if (nameElement.scrollWidth > 300) {
           this.avatarName.nativeElement.classList.add('scroll');
@@ -266,10 +269,10 @@ handleClickOutside(event: MouseEvent): void {
   }
 
   /**
-  * Extracts the first and last word of a given name.
-  * @param {string} name - The full name of the user.
-  * @returns {string} - The processed name containing only the first and last word.
-  */
+   * Extracts the first and last word of a given name.
+   * @param {string} name - The full name of the user.
+   * @returns {string} - The processed name containing only the first and last word.
+   */
   getFirstAndLastName(name: string): string {
     const words = name.split(' ');
     if (words.length > 1) {
@@ -529,7 +532,6 @@ handleClickOutside(event: MouseEvent): void {
    * @param user object of type minimal user
    */
   openDetailViewDialog(user: MinimalUser): void {
-    debugger;
     this.dialog.open(ProfileDetailViewComponent, {
       width: '500px',
       data: {
@@ -632,16 +634,24 @@ handleClickOutside(event: MouseEvent): void {
   /**
    * This function gets the data of a thread if the user clicks on a post in a channel. Then it opens the thread.
    */
-  openThread(post: Post) {
-    this.getDataThread(post);
+  openThread(post: Post, channelOrDirectMessage: string) {
+    this.getDataThread(post, channelOrDirectMessage);    
     this.toggleThread.emit();
   }
 
   /**
    * This function gets the data of the thread from the service. The post needs to be transmitted if the thread is openend for the first time. Then a new document is created and the post is stored as the first post.
    */
-  getDataThread(post: Post) {
-    this.threadsService.getDataThread(this.selectedChannel.name, post);
+  getDataThread(post: Post, channelOrDirectMessage: string) {
+    if (channelOrDirectMessage === 'channels') {
+      this.threadsService.getDataThread(this.selectedChannel.name, post);
+    } else if (channelOrDirectMessage === 'directMessages') {
+      let titleThread = this.otherUserDirectMessage.name
+      if (titleThread === '') {
+        titleThread = '(Du)'
+      }
+      this.threadsService.getDataThread(titleThread, post);
+    }
   }
 
   /**

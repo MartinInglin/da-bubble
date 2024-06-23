@@ -19,6 +19,7 @@
       [post]="selectedThread.posts[0]"
       [currentUser]="currentUser"
       [selectedChannel]="selectedChannel"
+      [selectedDirectMessage]="selectedDirectMessage"
       [selectedThreadId]="selectedThread.id"
       [indexPost]="0"
       [path]="'threads'"
@@ -47,6 +48,7 @@
       [post]="post"
       [currentUser]="currentUser"
       [selectedChannel]="selectedChannel"
+      [selectedDirectMessage]="selectedDirectMessage"
       [selectedThreadId]="selectedThread.id"
       [indexPost]="index + 1"
       [path]="'threads'"
@@ -56,6 +58,7 @@
   <app-post-input
     class="post-input"
     [selectedChannel]="selectedChannel"
+    [selectedDirectMessage]="selectedDirectMessage"
     [allUsers]="allUsers"
     [currentUser]="currentUser"
     [selectedThread]="selectedThread"
