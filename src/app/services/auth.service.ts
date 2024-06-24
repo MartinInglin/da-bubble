@@ -192,6 +192,10 @@ export class AuthService {
     if (userSignedIn.emailVerified) {
       this.setIsSignedInTrue(userId);
       this.usersService.getCurrentUser(userId);
+      this.usersService.updateCurrentUserEmail(
+        userCredential.user.email,
+        userId
+      );
       this.router.navigate(['landingPage']);
     } else {
       this.snackbarService.openSnackBarVerifyEmail(
@@ -335,17 +339,14 @@ export class AuthService {
    */
   async changeEmail(newEmail: string, password: string): Promise<void> {
     const currentUser = this.auth.currentUser;
-    debugger;
     if (currentUser) {
       try {
         const credential = EmailAuthProvider.credential(
           currentUser.email!,
           password
         );
-        debugger;
         await reauthenticateWithCredential(currentUser, credential);
         await verifyBeforeUpdateEmail(currentUser, newEmail);
-        this.signOut(currentUser.uid);
       } catch (error) {
         console.error('Email update failed:', error);
       }

@@ -154,6 +154,18 @@ export class UsersService {
     );
   }
 
+  async updateCurrentUserEmail(
+    credentialEmail: string | null,
+    userId: string
+  ): Promise<void> {
+    try {
+      const docRef = doc(this.firestore, 'users', userId);
+      await updateDoc(docRef, { email: credentialEmail });
+    } catch (error) {
+      console.error('Error updating email: ', error);
+    }
+  }
+
   /**
    * This function creates a snapshot of all users
    */
