@@ -9,6 +9,7 @@ aside {
   border-radius: 30px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   a {
     cursor: pointer;
     &:hover {
@@ -263,4 +264,21 @@ cdk-overlay-connected-position-bounding-box {
       margin-left: 150px !important;
     }
   }
+
+  .message-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .message-details {
+    gap: 5px;
+    width: 250px;
+    padding-left: 40px;
+}
+
+.post-input {
+  width: 70%;
+  margin-left: 100px;
+}
 }

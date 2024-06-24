@@ -502,3 +502,33 @@
     }
   }
 }
+
+@media (max-width: 440px) {
+  .message {
+    padding: 0;
+  }
+
+  .message-container-current-user{
+    padding: 5px;
+    gap: 5px;
+    max-width: 90% !important;
+  }
+
+  .message-container {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    gap: 5px !important;
+    padding: 5px !important;
+    max-width: 90% !important;
+  }
+
+  .message-name-current-user {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .message-name {
+    display: flex;
+    flex-direction: column !important;
+  }
+}
