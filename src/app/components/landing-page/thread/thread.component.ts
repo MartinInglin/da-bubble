@@ -35,7 +35,7 @@ import { DirectMessagesService } from '../../../services/firestore/direct-messag
     MatButtonModule,
     MatMenuModule,
     PostComponent,
-    PostInputComponent
+    PostInputComponent,
   ],
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss',
@@ -52,7 +52,7 @@ export class ThreadComponent implements OnInit {
   channelsService = inject(ChannelsService);
   usersService = inject(UsersService);
   threadsService = inject(ThreadsService);
-  directMessagesService = inject(DirectMessagesService)
+  directMessagesService = inject(DirectMessagesService);
   stateService = inject(StateService);
 
   private usersSubscription: Subscription = new Subscription();
@@ -61,7 +61,8 @@ export class ThreadComponent implements OnInit {
   private threadSubscription: Subscription = new Subscription();
   private directMessageSubscription: Subscription = new Subscription();
 
-  @Output() commentsChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() commentsChanged: EventEmitter<boolean> =
+    new EventEmitter<boolean>();
   @Output() toggleThread = new EventEmitter<void>();
   @Output() closeSideNav = new EventEmitter<void>();
   @Input() channelId: string = ''; // Kanal-ID als Eingabe für die Thread-Komponente
@@ -71,7 +72,7 @@ export class ThreadComponent implements OnInit {
 
   @ViewChild(PostInputComponent) postInputComponent!: PostInputComponent;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
     // Subscribe to currentUser observable from usersService
@@ -106,10 +107,6 @@ export class ThreadComponent implements OnInit {
         } // Close SideNav when thread is selected
       }
     );
-
-    this.closeThreadSubscription = this.stateService.closeThread$.subscribe(() => {
-      this.closeThread();
-    });
 
     this.directMessageSubscription =
       this.directMessagesService.directMessage$.subscribe((directMessage) => {
@@ -167,7 +164,7 @@ export class ThreadComponent implements OnInit {
 
   /**
    * This function is needed for the date line. It checks if the date of the new post is the same as the the date of the previous one.
-   * 
+   *
    * @param index number, index of the post
    * @returns boolean
    */
@@ -175,23 +172,13 @@ export class ThreadComponent implements OnInit {
     if (index === 0) {
       return true;
     }
-    const currentPostDate = this.formatDate(this.selectedThread.posts[index + 1].timestamp);
-    const previousPostDate = this.formatDate(this.selectedThread.posts[index].timestamp);
+    const currentPostDate = this.formatDate(
+      this.selectedThread.posts[index + 1].timestamp
+    );
+    const previousPostDate = this.formatDate(
+      this.selectedThread.posts[index].timestamp
+    );
     return currentPostDate !== previousPostDate;
-  }
-
-  /**
- * Extracts the first and last word of a given name.
- * 
- * @param {string} name - The full name of the user.
- * @returns {string} - The processed name containing only the first and last word.
- */
-  getFirstAndLastName(name: string): string {
-    const words = name.split(' ');
-    if (words.length > 1) {
-      return `${words[0]} ${words[words.length - 1]}`;
-    }
-    return name;
   }
 
   callSetFocus() {

@@ -286,6 +286,7 @@ async updateUserData(): Promise<void> {
  * @returns {Promise<void>}
  */
 async changeMailAdress(): Promise<void> {
+  debugger;
   if (this.currentUser && this.password) {
     const isValid = await this.authService.verifyPassword(
       this.currentUser.email,
