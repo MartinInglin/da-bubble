@@ -16,6 +16,7 @@ export class Post {
   channelName?: string;
   userName?: string;
   channelId?: string;
+  path?: string;
 
   constructor(obj?: any) {
     this.id = obj?.id || '';

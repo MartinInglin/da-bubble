@@ -252,3 +252,15 @@ cdk-overlay-connected-position-bounding-box {
 .post-input {
   width: 100%;
 }
+
+@media (max-width: 440px) {
+  .thread-name {
+    display: none;
+  }
+
+  .head-thread {
+    span {
+      margin-left: 150px !important;
+    }
+  }
+}

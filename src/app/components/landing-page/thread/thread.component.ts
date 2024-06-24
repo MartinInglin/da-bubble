@@ -63,7 +63,7 @@ export class ThreadComponent implements OnInit {
 
   @Output() commentsChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() toggleThread = new EventEmitter<void>();
-  @Output() closeSideNav = new EventEmitter<void>(); 
+  @Output() closeSideNav = new EventEmitter<void>();
   @Input() channelId: string = ''; // Kanal-ID als Eingabe für die Thread-Komponente
   @Input() threadId: string = ''; // Thread-ID als Eingabe für die Thread-Komponente
   @Input() isOpen: boolean = false;
@@ -79,7 +79,7 @@ export class ThreadComponent implements OnInit {
       this.currentUser = user ?? new User();
     });
 
-     // Subscribe to allUsers observable from usersService
+    // Subscribe to allUsers observable from usersService
     this.usersSubscription = this.usersService.allUsersSubject$.subscribe(
       (users) => {
         this.allUsers = users ?? []; // Benutzerdaten aktualisieren
@@ -92,7 +92,7 @@ export class ThreadComponent implements OnInit {
         this.selectedChannel = channel ?? new Channel();
       }
     );
-    
+
     if (this.selectedThread) {
       this.stateService.closeSideNav();
     }
@@ -112,9 +112,9 @@ export class ThreadComponent implements OnInit {
     });
 
     this.directMessageSubscription =
-    this.directMessagesService.directMessage$.subscribe((directMessage) => {
-      this.selectedDirectMessage = directMessage ?? new DirectMessage();
-    });
+      this.directMessagesService.directMessage$.subscribe((directMessage) => {
+        this.selectedDirectMessage = directMessage ?? new DirectMessage();
+      });
   }
 
   // Unsubscribe from all observables
@@ -175,9 +175,23 @@ export class ThreadComponent implements OnInit {
     if (index === 0) {
       return true;
     }
-      const currentPostDate = this.formatDate(this.selectedThread.posts[index + 1].timestamp);
-      const previousPostDate = this.formatDate(this.selectedThread.posts[index].timestamp);
-      return currentPostDate !== previousPostDate;
+    const currentPostDate = this.formatDate(this.selectedThread.posts[index + 1].timestamp);
+    const previousPostDate = this.formatDate(this.selectedThread.posts[index].timestamp);
+    return currentPostDate !== previousPostDate;
+  }
+
+  /**
+ * Extracts the first and last word of a given name.
+ * 
+ * @param {string} name - The full name of the user.
+ * @returns {string} - The processed name containing only the first and last word.
+ */
+  getFirstAndLastName(name: string): string {
+    const words = name.split(' ');
+    if (words.length > 1) {
+      return `${words[0]} ${words[words.length - 1]}`;
+    }
+    return name;
   }
 
   callSetFocus() {
