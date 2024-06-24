@@ -1,5 +1,6 @@
 @import "./../../../../styles.scss";
 
+// Header content
 header {
   width: 100%;
   display: flex;
@@ -11,6 +12,7 @@ header {
   height: 90px;
 }
 
+// User
 .user {
   height: 70px;
   padding-right: 10px;
@@ -73,6 +75,7 @@ header {
   }
 }
 
+// Animation for longer names
 @keyframes scrollName {
   0% {
     transform: translateX(0);
@@ -82,6 +85,7 @@ header {
   }
 }
 
+// Menu hover effect
 .menuDropDown {
   img {
     height: 30px !important;
@@ -104,6 +108,7 @@ header {
   cursor: pointer;
 }
 
+// SeachrBar
 .searchBar {
   width: 55%;
   max-width: 969px;
@@ -117,7 +122,7 @@ header {
     height: 70px;
     border-radius: 42px;
     padding-left: 20px;
-    font-size: 28px;
+    font-size: 22px;
     border: none;
   }
 
@@ -131,6 +136,7 @@ header {
   }
 }
 
+// Register button
 .register {
   display: flex;
   flex-direction: column;
@@ -262,15 +268,16 @@ header {
   color: white;
 }
 
+// Media querries from 1180px
 @media (max-width: 1180px) {
   .searchBar input::placeholder {
-    font-size: 24px;
+    font-size: 18px;
   }
 }
 
 @media (max-width: 1060px) {
   .searchBar input::placeholder {
-    font-size: 18px;
+    font-size: 16px;
   }
 }
 
@@ -289,11 +296,9 @@ header {
     justify-content: end;
     width: fit-content;
   }
-
 }
 
 @media (max-width: 750px) {
-
   .searchBar,
   .menuDropDown {
     display: none;
@@ -330,7 +335,7 @@ header {
     .logo-name {
       display: none;
     }
-    
+
     .user {
       margin-left: 10px;
     }

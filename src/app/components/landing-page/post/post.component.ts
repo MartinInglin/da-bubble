@@ -12,6 +12,7 @@ import { Reaction } from '../../../models/reaction.class';
 import { User } from '../../../models/user.class';
 import { SortedReaction } from '../../../models/sorted-reaction.class';
 import { EditingStateService } from '../../../services/editing-post.service';
+import { DirectMessage } from '../../../models/direct-message.class';
 
 @Component({
   selector: 'app-post',
@@ -31,7 +32,7 @@ export class PostComponent {
   showEditMessage: boolean = false;
   postFromCurrentUser: boolean = false;
   wantToEditMessage: boolean = false;
-  originalMessage: string = ''; // Add this line
+  originalMessage: string = '';
   emojis: string[] = [
     '😊',
     '❤️',
@@ -50,7 +51,7 @@ export class PostComponent {
   @Input() post: Post = new Post();
   @Input() currentUser: User = new User();
   @Input() selectedChannel!: Channel;
-  @Input() selectedDirectMessageId: string = '';
+  @Input() selectedDirectMessage!: DirectMessage;
   @Input() selectedThreadId: string = '';
   @Input() indexPost!: number;
   @Input() path!: 'directMessages' | 'threads' | 'channels';
@@ -58,7 +59,7 @@ export class PostComponent {
   @Output() openThread = new EventEmitter();
   @Output() reactionSaved = new EventEmitter<void>();
 
-  constructor(private editingStateService: EditingStateService) { }
+  constructor(private editingStateService: EditingStateService) {}
 
   ngOnInit() {
     this.checkIfPostFromCurrentUser();
@@ -192,18 +193,34 @@ export class PostComponent {
    */
   async deleteFile(fileName: string, e: Event, indexFile: number) {
     if (this.path === 'directMessages') {
-      const documentId = this.selectedDirectMessageId;
-      this.deleteFileOnCollection(this.path, documentId, indexFile);
+      const documentId = this.selectedDirectMessage.id;
+      this.deleteFileOnCollection(
+        this.path,
+        documentId,
+        indexFile,
+        this.indexPost
+      );
+      this.deleteFileOnCorrespondingThread(indexFile);
       e.stopPropagation();
     } else if (this.path === 'channels') {
       const documentId = this.selectedChannel.id;
-      this.deleteFileOnCollection(this.path, documentId, indexFile);
+      this.deleteFileOnCollection(
+        this.path,
+        documentId,
+        indexFile,
+        this.indexPost
+      );
       this.deleteFileOnCorrespondingThread(indexFile);
       e.stopPropagation();
     } else if (this.path === 'threads') {
       const documentId = this.selectedThreadId;
-      this.deleteFileOnCollection(this.path, documentId, indexFile);
-      this.deleteFileOnCorrespondingChannel(documentId, indexFile);
+      this.deleteFileOnCollection(
+        this.path,
+        documentId,
+        indexFile,
+        this.indexPost
+      );
+      this.deleteFileCorrespondingChannelOrDirectMessage(documentId, indexFile);
     }
 
     this.storageService.deleteFile(this.post.id, fileName);
@@ -224,33 +241,45 @@ export class PostComponent {
         documentId
       );
       if (threadExists) {
-        this.deleteFileOnCollection(this.path, documentId, indexFile);
+        this.deleteFileOnCollection(
+          this.path,
+          documentId,
+          indexFile,
+          this.indexPost
+        );
       }
     } catch (error) {
       console.log('Failed to delete file on corresponding thread', error);
     }
   }
 
-  /**
-   * This function is needed to delete a file from a channel if it is deleted in a thread.
-   *
-   * @param documentId string
-   * @param indexFile number
-   */
-  async deleteFileOnCorrespondingChannel(
+  async deleteFileCorrespondingChannelOrDirectMessage(
     documentId: string,
     indexFile: number
   ) {
-    try {
-      this.path = 'channels';
+    let localPath: string = '';
+    let localIndexPost: number = -1;
+    const postsChannel: Post[] = this.selectedChannel.posts;
+    localIndexPost = this.getIndexPost(postsChannel, documentId);
+    if (localIndexPost >= 0) {
+      localPath = 'channels';
       documentId = this.selectedChannel.id;
-      this.indexPost = await this.postsService.getIndexPostInChannel(
-        this.post.id,
-        documentId
+    } else {
+      const postsDirectMessage: Post[] = this.selectedDirectMessage.posts;
+      localIndexPost = this.getIndexPost(postsDirectMessage, documentId);
+
+      if (localIndexPost >= 0) {
+        localPath = 'directMessages';
+        documentId = this.selectedDirectMessage.id;
+      }
+    }
+    if (this.indexPost === 0) {
+      this.deleteFileOnCollection(
+        localPath,
+        documentId,
+        indexFile,
+        localIndexPost
       );
-      this.deleteFileOnCollection(this.path, documentId, indexFile);
-    } catch (error) {
-      console.log('Failed to delete file on corresponding channel', error);
     }
   }
 
@@ -261,9 +290,14 @@ export class PostComponent {
    * @param documentId string
    * @param indexFile number
    */
-  deleteFileOnCollection(path: string, documentId: string, indexFile: number) {
+  deleteFileOnCollection(
+    path: string,
+    documentId: string,
+    indexFile: number,
+    localIndexPost: number
+  ) {
     const pathToDocument = `${path}/${documentId}`;
-    this.postsService.deleteFile(this.indexPost, pathToDocument, indexFile);
+    this.postsService.deleteFile(localIndexPost, pathToDocument, indexFile);
   }
 
   /**
@@ -349,7 +383,7 @@ export class PostComponent {
     if (this.path === 'channels') {
       documentId = this.selectedChannel.id;
     } else if (this.path === 'directMessages') {
-      documentId = this.selectedDirectMessageId;
+      documentId = this.selectedDirectMessage.id;
     } else if (this.path === 'threads') {
       documentId = this.selectedThreadId;
     }
@@ -406,7 +440,8 @@ export class PostComponent {
   async updateCorrespondingChannel(): Promise<void> {
     const indexPostInChannel = await this.postsService.getIndexPostInChannel(
       this.post.id,
-      this.selectedChannel.id
+      this.selectedChannel.id,
+      'channels'
     );
     if (indexPostInChannel !== -1) {
       await this.postsService.editPost(
@@ -437,30 +472,32 @@ export class PostComponent {
     let documentId = '';
     let localPath = this.path;
     let localIndexPost = this.indexPost;
-  
-    try {
-      switch (localPath) {
-        case 'channels':
-          documentId = this.selectedChannel.id;
-          await this.handleChannelReactions(documentId, reaction, localPath, localIndexPost);
-          break;
-        case 'directMessages':
-          documentId = this.selectedDirectMessageId;
-          await this.callSaveReactionInPostService(documentId, reaction, localPath, localIndexPost);
-          break;
-        case 'threads':
-          documentId = this.selectedThreadId;
-          await this.handleThreadReactions(documentId, reaction, localPath);
-          break;
-        default:
-          console.log('Document Id not found.');
-      }
-    } catch (error) {
-      console.error('Error saving reaction:', error);
-      // Handle errors appropriately, e.g., show a snackbar to the user
-    } finally {
-      // Prevent default behavior here to avoid unnecessary reloads
-      event?.preventDefault(); // Assuming you have an event object passed to the function
+
+    switch (localPath) {
+      case 'channels':
+        documentId = this.selectedChannel.id;
+        await this.handleChannelOrDirectMessageReactions(
+          documentId,
+          reaction,
+          localPath,
+          localIndexPost
+        );
+        break;
+      case 'directMessages':
+        documentId = this.selectedDirectMessage.id;
+        await this.handleChannelOrDirectMessageReactions(
+          documentId,
+          reaction,
+          localPath,
+          localIndexPost
+        );
+        break;
+      case 'threads':
+        documentId = this.selectedThreadId;
+        await this.handleThreadReactions(documentId, reaction, localPath);
+        break;
+      default:
+        console.log('Document Id not found.');
     }
   }
 
@@ -486,7 +523,7 @@ export class PostComponent {
    * @param localPath string
    * @param localIndexPost number
    */
-  async handleChannelReactions(
+  async handleChannelOrDirectMessageReactions(
     documentId: string,
     reaction: Reaction,
     localPath: string,
@@ -544,13 +581,36 @@ export class PostComponent {
   ) {
     await this.callSaveReactionInPostService(documentId, reaction, localPath);
 
-    localPath = 'channels';
-    documentId = this.selectedChannel.id;
-    const localIndexPost = await this.postsService.getIndexPostInChannel(
-      this.post.id,
-      documentId
-    );
+    if (this.indexPost === 0) {
+      this.saveReactionCorrespondingChannelOrDirectMessage(
+        documentId,
+        localPath,
+        reaction
+      );
+    }
+  }
+
+  async saveReactionCorrespondingChannelOrDirectMessage(
+    documentId: string,
+    localPath: string,
+    reaction: Reaction
+  ) {
+    const postsChannel: Post[] = this.selectedChannel.posts;
+    let localIndexPost: number = this.getIndexPost(postsChannel, documentId);
     if (localIndexPost >= 0) {
+      localPath = 'channels';
+      documentId = this.selectedChannel.id;
+    } else {
+      const postsDirectMessage: Post[] = this.selectedDirectMessage.posts;
+      localIndexPost = this.getIndexPost(postsDirectMessage, documentId);
+
+      if (localIndexPost >= 0) {
+        localPath = 'directMessages';
+        documentId = this.selectedDirectMessage.id;
+      }
+    }
+
+    if (this.indexPost === 0) {
       await this.callSaveReactionInPostService(
         documentId,
         reaction,
@@ -558,6 +618,15 @@ export class PostComponent {
         localIndexPost
       );
     }
+  }
+
+  getIndexPost(posts: Post[], documentId: string): number {
+    for (let i = 0; i < posts.length; i++) {
+      if (posts[i].id === documentId) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   /**
@@ -589,10 +658,10 @@ export class PostComponent {
   }
 
   /**
-  * Extracts the first and last word of a given name.
-  * @param {string} name - The full name of the user.
-  * @returns {string} - The processed name containing only the first and last word.
-  */
+   * Extracts the first and last word of a given name.
+   * @param {string} name - The full name of the user.
+   * @returns {string} - The processed name containing only the first and last word.
+   */
   getFirstAndLastName(name: string): string {
     const words = name.split(' ');
     if (words.length > 1) {

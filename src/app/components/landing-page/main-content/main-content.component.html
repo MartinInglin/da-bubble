@@ -3,68 +3,44 @@
   <!-- Channel -->
 
   <!-- Header section with channel name and contact information -->
-  <header
-    *ngIf="!channelSelected && !chatSelected"
-    class="newMessage"
-    [formGroup]="form"
-  >
+  <header *ngIf="!channelSelected && !chatSelected" class="newMessage" [formGroup]="form">
+    <!-- new Message -->
     <span>Neue Nachricht</span>
-    <input
-      type="text"
-      formControlName="recipient"
-      placeholder="An: #channel oder @jemand"
-    />
+    <input type="text" formControlName="recipient" placeholder="An: #channel oder @jemand" />
+
     <div *ngIf="searchResults && searchResults.length" class="list">
       <ul #searchResultsList *ngIf="searchResults && searchResults.length > 0">
         <li *ngFor="let result of searchResults">
-          <div
-            class="container-name-avatar"
-            *ngIf="isUser(result)"
-            (click)="openDirectMessage(result.id, currentUser)"
-          >
+          <div class="container-name-avatar" *ngIf="isUser(result)" (click)="openDirectMessage(result.id, currentUser)">
             <img src="{{ result.avatar }}" alt="" />
             <p>{{ result.name }}</p>
           </div>
-
-          <div
-            class="container-name-avatar"
-            *ngIf="!isUser(result)"
-            (click)="openChannel(result.id)"
-          >
+          <!-- Name and Avatar -->
+          <div class="container-name-avatar" *ngIf="!isUser(result)" (click)="openChannel(result.id)">
             <p>{{ result.name }}</p>
           </div>
         </li>
       </ul>
     </div>
   </header>
-
+  <!-- header post input container -->
   <div class="header-post-input-container" *ngIf="channelSelected">
     <header>
-      <div
-        (click)="openChannelInfoDialog(selectedChannel.id)"
-        class="channelName"
-      >
+      <div (click)="openChannelInfoDialog(selectedChannel.id)" class="channelName">
         # {{ selectedChannel.name }}
       </div>
 
       <div class="members-and-button">
-        <div
-          class="channelMembers"
-          *ngIf="channelSelected"
-          (click)="openMembersDialog(selectedChannel.id, membersDialog)"
-        >
+        <div class="channelMembers" *ngIf="channelSelected" (click)="openMembersDialog(selectedChannel.id, membersDialog)">
           <!-- Profile pictures of channel members which are part of the group -->
           <ng-container *ngFor="let user of selectedChannel.users">
             <img src="{{ user.avatar }}" alt="" />
           </ng-container>
           <p #membersDialog>{{ userCount }}</p>
         </div>
-        <button
-          #addUserDialog
-          (click)="
+        <button #addUserDialog (click)="
             openAddUserToChannelDialog(selectedChannel.id, addUserDialog)
-          "
-        >
+          ">
           <img src="assets/images/icons/add_member.svg" />
         </button>
       </div>
@@ -84,14 +60,7 @@
         }
 
         <!-- Post -->
-        <app-post
-          [post]="post"
-          [currentUser]="currentUser"
-          [selectedChannel]="selectedChannel"
-          [indexPost]="index"
-          [path]="'channels'"
-          (openThread)="openThread(post)"
-        >
+        <app-post [post]="post" [currentUser]="currentUser" [selectedChannel]="selectedChannel" [selectedDirectMessage]="selectedDirectMessage" [indexPost]="index" [path]="'channels'" (openThread)="openThread(post, 'channels')">
         </app-post>
       </div>
       }
@@ -101,27 +70,19 @@
       <div class="placeholderContainer" *ngIf="channelSelected">
         <h3>{{ selectedChannel.description }}</h3>
         <div>
-          <span
-            >Schreib etwas in die Gruppe {{ selectedChannel.name }} damit andere
-            darauf reagieren.</span
-          >
+          <span>Schreib etwas in die Gruppe {{ selectedChannel.name }} damit andere
+            darauf reagieren.</span>
         </div>
       </div>
       }
     </div>
 
     <!-- Input Feld am unteren Rand des Containers -->
-    <app-post-input
-      class="post-input"
-      [selectedChannel]="selectedChannel"
-      [allUsers]="allUsers"
-      [currentUser]="currentUser"
-      [path]="'channels'"
-    ></app-post-input>
+    <app-post-input class="post-input" [selectedChannel]="selectedChannel" [selectedDirectMessage]="selectedDirectMessage" [allUsers]="allUsers" [currentUser]="currentUser" [path]="'channels'"></app-post-input>
   </div>
 
   <!-- Direct Message -->
-  
+
   <div *ngIf="chatSelected" class="header-post-input-container">
     <!-- Header section with channel name and contact information -->
     <header *ngIf="chatSelected && !selectedDirectMessage.isPrivateMessage">
@@ -133,24 +94,20 @@
           </div>
         </div>
       </div>
-    </header>    
+    </header>
     <!-- Header section with channel name and contact information -->
     <header *ngIf="chatSelected && selectedDirectMessage.isPrivateMessage">
-        <div class="channelNameNoPointer" *ngIf="selectedDirectMessage.users.length > 0">
-          <div class="avatarNameNoHover">
-            <img
-              class="user-avatar-image"
-              src="{{ currentUser.avatar }}"
-              alt=""
-            />
-            {{ currentUser.name }} (Du)
-          </div>
+      <div class="channelNameNoPointer" *ngIf="selectedDirectMessage.users.length > 0">
+        <div class="avatarNameNoHover">
+          <img class="user-avatar-image" src="{{ currentUser.avatar }}" alt="" />
+          {{ currentUser.name }} (Du)
         </div>
-      </header>
+      </div>
+    </header>
 
     <!-- Message Content  -->
 
-    <div class="message-content"  id="direct-message-content" #directMessageContent>
+    <div class="message-content" id="direct-message-content" #directMessageContent>
       <!-- Date line for messages -->
       @if (selectedDirectMessage.posts.length > 0 &&
       selectedDirectMessage.users.length > 0) {
@@ -165,15 +122,7 @@
         }
 
         <!-- Post -->
-        <app-post
-          [post]="post"
-          [currentUser]="currentUser"
-          [selectedChannel]="selectedChannel"
-          [selectedDirectMessageId]="selectedDirectMessage.id"
-          [indexPost]="index"
-          [path]="'directMessages'"
-          (reactionSaved)="onReactionSaved()"
-        >
+        <app-post [post]="post" [currentUser]="currentUser" [selectedChannel]="selectedChannel" [selectedDirectMessage]="selectedDirectMessage" [indexPost]="index" [path]="'directMessages'" (reactionSaved)="onReactionSaved()" (openThread)="openThread(post, 'directMessages')">
         </app-post>
       </div>
 
@@ -181,21 +130,14 @@
 
       <!-- Placeholder if no message is in channel -->
 
-      <div
-        class="placeholderContainer"
-        *ngIf="
+      <div class="placeholderContainer" *ngIf="
           chatSelected &&
           selectedDirectMessage &&
           selectedDirectMessage.posts.length === 0
-        "
-      >
+        ">
         @if (!selectedDirectMessage.isPrivateMessage) {
         <div (click)="openDetailViewDialog(otherUserDirectMessage)" class="messageAvatarName">
-          <img
-            class="user-avatar-image"
-            src="{{ otherUserDirectMessage.avatar }}"
-            alt=""
-          />
+          <img class="user-avatar-image" src="{{ otherUserDirectMessage.avatar }}" alt="" />
           <span>{{ getFirstAndLastName(otherUserDirectMessage.name) }}</span>
         </div>
 
@@ -207,11 +149,7 @@
         </div>
         } @if (selectedDirectMessage.isPrivateMessage) {
         <div class="messageAvatarNameNoPointer">
-          <img
-            class="user-avatar-image"
-            src="{{ currentUser.avatar }}"
-            alt=""
-          />
+          <img class="user-avatar-image" src="{{ currentUser.avatar }}" alt="" />
           <span>{{ getFirstAndLastName(currentUser.name) }} (Du)</span>
         </div>
 
@@ -227,14 +165,7 @@
     </div>
     <!-- Input Feld am unteren Rand des Containers -->
     @if (chatSelected) {
-    <app-post-input
-      class="post-input"
-      [selectedChannel]="selectedChannel"
-      [selectedDirectMessage]="selectedDirectMessage"
-      [allUsers]="allUsers"
-      [currentUser]="currentUser"
-      [path]="'directMessages'"
-    ></app-post-input>
+    <app-post-input class="post-input" [selectedChannel]="selectedChannel" [selectedDirectMessage]="selectedDirectMessage" [allUsers]="allUsers" [currentUser]="currentUser" [path]="'directMessages'"></app-post-input>
     }
   </div>
 </main>

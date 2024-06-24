@@ -13,7 +13,7 @@
   display: flex;
   flex-direction: column;
   max-width: 1920px;
-  min-width: 350px;
+  min-width: 320px;
 
   a {
     cursor: pointer;
@@ -325,8 +325,10 @@ header {
     transition: transform 0.3s linear;
     z-index: 1;
     line-height: 30px;
+  }
 
-    &:hover {
+  &:hover {
+    .header-name {
       animation: scrollName 5s linear infinite;
     }
   }

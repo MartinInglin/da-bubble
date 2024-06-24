@@ -413,21 +413,25 @@ section{
   .contacts,
   .channels{
     td{
-      width: 250px;
+      width: 240px;
     }
   }
 
   .channels-head {
-    width: 300px;
+    width: 275px;
   }
 
   .head-side-menu {
-    width: 300px;
+    width: 290px;
   }
 
   .d-none {
     display: flex;
     width: 300px;
+  }
+
+  .searchBar {
+    width: 290px;
   }
 }
 

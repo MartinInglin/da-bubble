@@ -66,6 +66,11 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   menuDown: any = 'assets/images/icons/menu_down.svg';
 
   ngOnInit(): void {
+
+      /**
+   * Initializes the component by subscribing to the currentUser$ observable 
+   * to get the current user data and checking the window width.
+   */
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       if (user) {
         this.currentUser = user ?? new User();
@@ -75,11 +80,20 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     this.checkWidth();
   }
 
+  /**
+   * Handles the window resize event.
+   * 
+   * @param event - The resize event triggered when the window is resized.
+   */
   @HostListener('window:resize', ['$event'])
   onResize(event: Event): void {
     this.checkWidth();
   }
 
+  /**
+   * Checks the current window width and sets the isUnderWidth property 
+   * based on whether the width is less than or equal to 1360 pixels.
+   */
   checkWidth(): void {
     this.isUnderWidth = window.innerWidth <= 1360;
   }
@@ -110,7 +124,6 @@ export class LandingPageComponent implements OnInit, OnDestroy {
    */
   closeThread() {
     this.isThreadOpen = false;
-    this.drawerThread.close();
     this.mainContentComponent.callSetFocus();
   }
 

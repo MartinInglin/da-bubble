@@ -107,19 +107,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
     );
 
-    // // Fetch posts for a specific document in channels collection
-    // this.postsService.getPosts('channels', 'channel-id')
-    // .subscribe((posts) => {
-    //   // Handle the fetched posts here (might be empty)
-    //   console.log('Fetched posts:', posts);
-    // });
-
-
-    // this.postsService.getPosts('channels', 'channel-id').subscribe((posts) => {
-    //   console.log('Fetched posts:', posts); // Ensure this logs correctly
-    //   this.filteredPosts = posts; // Update the component state with fetched posts
-    // });
-
     const path = 'channels'; // Replace with appropriate path
   const documentId = 'channel-id'; // Replace with actual document ID
 

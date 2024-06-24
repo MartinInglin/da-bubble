@@ -19,20 +19,19 @@ import { ThreadsService } from './threads.service';
 import { Reaction } from '../../models/reaction.class';
 import { UsersService } from './users.service';
 import { ChannelsService } from './channels.service';
-import { Observable, catchError, from, of, throwError} from 'rxjs';
-
+import { Observable, catchError, from, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PostsService {
-  firestore = inject(Firestore); 
+  firestore = inject(Firestore);
   storageService = inject(StorageService);
   usersService = inject(UsersService);
   threadsService = inject(ThreadsService);
   channelsService = inject(ChannelsService);
 
-  constructor() {}
+  constructor() { }
 
   /**
    * This function saves a post if the user sends it.
@@ -82,6 +81,7 @@ export class PostsService {
           this.updateTimeAndAmountAnswersInChannel(
             docRef,
             selectedChannel,
+            selectedDirectMessage,
             selectedThread
           );
         }
@@ -131,6 +131,7 @@ export class PostsService {
   async updateTimeAndAmountAnswersInChannel(
     docRef: DocumentReference,
     selectedChannel: Channel,
+    selectedDirectMessage: DirectMessage,
     selectedThread: Thread
   ) {
     const document = await getDoc(docRef);
@@ -142,11 +143,22 @@ export class PostsService {
       threadData,
       amountPosts
     );
+
+    let documentID: string = '';
+    let path: string = '';
+    if (selectedChannel.id) {
+      documentID = selectedChannel.id;
+      path = 'channels';
+    } else if (selectedDirectMessage.id) {
+      documentID = selectedDirectMessage.id;
+      path = 'directMessages';
+    }
     this.updateAmountAnswersAndTime(
-      selectedChannel.id,
+      documentID,
       amountPosts,
       timestampLastPost,
-      selectedThread.posts[0].id
+      selectedThread.posts[0].id,
+      path
     );
   }
 
@@ -189,16 +201,18 @@ export class PostsService {
    * @param postId string
    */
   async updateAmountAnswersAndTime(
-    channelId: string,
+    documentId: string,
     amountPosts: number,
     timestampLastPost: number,
-    postId: string
+    postId: string,
+    path: string
   ) {
     const indexPost: number = await this.getIndexPostInChannel(
       postId,
-      channelId
+      documentId,
+      path
     );
-    const documentRef = doc(this.firestore, 'channels', channelId);
+    const documentRef = doc(this.firestore, path, documentId);
     const document = await getDoc(documentRef);
     const data = document.data();
 
@@ -341,10 +355,11 @@ export class PostsService {
    */
   async getIndexPostInChannel(
     postId: string,
-    documentId: string
+    documentId: string,
+    localPath: string
   ): Promise<number> {
     try {
-      const docRef = doc(this.firestore, 'channels', documentId);
+      const docRef = doc(this.firestore, localPath, documentId);
       const document = await getDoc(docRef);
       const documentData = document.data();
 
@@ -472,45 +487,39 @@ export class PostsService {
  * @param documentId - ID of the document to retrieve posts from
  * @returns Array of posts or an empty array if not found
  */
-getPosts(
-  path: 'channels' | 'directMessages' | 'threads',
-  documentId: string
-): Observable<Post[]> {
-  return from(this.getPostsPromise(path, documentId)).pipe(
-    catchError((error) => {
-      console.error('Error getting posts: ', error);
-      return throwError(error);
-    })
-  );
-}
 
-public async getPostsPromise(
-  path: 'channels' | 'directMessages' | 'threads',
-  documentId: string
-): Promise<Post[]> {
-  try {
-    console.log(`Fetching posts from path: ${path}, documentId: ${documentId}`);
+  getPosts(
+    path: 'channels' | 'directMessages' | 'threads',
+    documentId: string
+  ): Observable<Post[]> {
+    return from(this.getPostsPromise(path, documentId)).pipe(
+      catchError((error) => {
+        console.error('Error getting posts: ', error);
+        return of([]); // Return an empty observable on error
+      })
+    );
+  }
 
-    const docRef = doc(this.firestore, path, documentId);
-    const docSnap = await getDoc(docRef);
+  private async getPostsPromise(
+    path: 'channels' | 'directMessages' | 'threads',
+    documentId: string
+  ): Promise<Post[]> {
+    try {
+      const docRef = doc(this.firestore, path, documentId);
+      const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const docData = docSnap.data();
-      if (docData && Array.isArray(docData['posts'])) {
-        console.log('Posts found: ', docData['posts']);
-        return docData['posts'];
+      if (docSnap.exists()) {
+        const docData = docSnap.data();
+        return docData['posts'] || [];
       } else {
-        console.log('No posts field or not an array');
+        console.log('No such document!');
         return [];
       }
-    } else {
-      console.log('No such document!');
+    } catch (error) {
+      console.error('Error getting posts: ', error);
       return [];
     }
-  } catch (error) {
-    console.error('Error getting posts: ', error);
-    return [];
   }
 }
 
-}
+

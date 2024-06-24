@@ -63,7 +63,9 @@ import { PostInputComponent } from '../post-input/post-input.component';
   templateUrl: './main-content.component.html',
   styleUrls: ['./main-content.component.scss'],
 })
-export class MainContentComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
+export class MainContentComponent
+  implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked
+{
   @Output() toggleThread = new EventEmitter<void>();
 
   @ViewChild('fileInput') fileInput!: ElementRef;
@@ -102,26 +104,25 @@ export class MainContentComponent implements OnInit, OnDestroy, AfterViewInit, A
   searchResults$: Observable<(Channel | User)[]> = of([]);
   searchResults: (Channel | User)[] | undefined;
 
-  constructor(
-    private dialog: MatDialog,
-    private fb: FormBuilder,
-    private cdref: ChangeDetectorRef
-  ) {
+  constructor( private dialog: MatDialog, private fb: FormBuilder, private cdref: ChangeDetectorRef) {
     this.form = this.fb.group({
       recipient: [''],
     });
   }
 
   ngOnInit(): void {
+
+    /**
+   * Initializes the component by subscribing to various observables 
+   * and setting up initial data and behaviors.
+   */
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       this.currentUser = user ?? new User();
-
       this.scrollToBottomWithDelay();
 
       const channels: Channel[] = this.currentUser.channels.map(
         (minimalChannel) => new Channel(minimalChannel)
       );
-
       this.filteredChannels = channels.filter((c) =>
         c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
@@ -189,30 +190,38 @@ export class MainContentComponent implements OnInit, OnDestroy, AfterViewInit, A
 
     this.searchResults$.subscribe((results) => {
       this.searchResults = results;
-    });
+    });    
   }
 
-/**
- * Handles click events on the document to close the search results list if the click is outside of it.
- * 
- * @param {MouseEvent} event - The mouse event that triggered the click.
- * @returns {void}
- */
-@HostListener('document:click', ['$event'])
-handleClickOutside(event: MouseEvent): void {
-  if (
-    this.searchResultsList &&
-    !this.searchResultsList.nativeElement.contains(event.target)
-  ) {
-    this.closeSearchResults();
+  /**
+   * Handles click events on the document to close the search results list if the click is outside of it.
+   *
+   * @param {MouseEvent} event - The mouse event that triggered the click.
+   * @returns {void}
+   */
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: MouseEvent): void {
+    if (
+      this.searchResultsList &&
+      !this.searchResultsList.nativeElement.contains(event.target)
+    ) {
+      this.closeSearchResults();
+    }
   }
-}
 
+  /**
+   * Closes the search results list and clears the recipient input field.
+   */
   closeSearchResults(): void {
     this.searchResults = [];
     this.form.get('recipient')?.setValue('');
   }
 
+   /**
+   * Lifecycle hook that is called after Angular has fully initialized a component's view.
+   * Sets up mutation observers for the channel and direct message content areas to 
+   * automatically scroll to the bottom when new content is added.
+   */
   ngAfterViewInit(): void {
     if (this.channelMessageContent) {
       const channelObserver = new MutationObserver(() => {
@@ -238,15 +247,14 @@ handleClickOutside(event: MouseEvent): void {
 
   /**
    * Checks the width of the name element within the avatarName container.
-   * If the width of the name element is greater than 300 pixels,
-   * it adds the 'scroll' class to the avatarName container to trigger a scroll animation.
    * If the width is 300 pixels or less, it removes the 'scroll' class.
    *
    * @returns {void}
    */
   checkNameWidth(): void {
     if (this.avatarName && this.avatarName.nativeElement) {
-      const nameElement = this.avatarName.nativeElement.querySelector('.header-name');
+      const nameElement =
+        this.avatarName.nativeElement.querySelector('.header-name');
       if (nameElement) {
         if (nameElement.scrollWidth > 300) {
           this.avatarName.nativeElement.classList.add('scroll');
@@ -259,7 +267,6 @@ handleClickOutside(event: MouseEvent): void {
 
   /**
    * Lifecycle hook that is called after the component's view has been checked.
-   * This method calls `checkNameWidth` to ensure that the width of the name element
    * is checked and the appropriate class is added or removed based on its width.
    *
    * @returns {void}
@@ -269,10 +276,10 @@ handleClickOutside(event: MouseEvent): void {
   }
 
   /**
-  * Extracts the first and last word of a given name.
-  * @param {string} name - The full name of the user.
-  * @returns {string} - The processed name containing only the first and last word.
-  */
+   * Extracts the first and last word of a given name.
+   * @param {string} name - The full name of the user.
+   * @returns {string} - The processed name containing only the first and last word.
+   */
   getFirstAndLastName(name: string): string {
     const words = name.split(' ');
     if (words.length > 1) {
@@ -281,6 +288,10 @@ handleClickOutside(event: MouseEvent): void {
     return name;
   }
 
+   /**
+   * Scrolls to the bottom of the message content areas (channel and direct message) 
+   * after a short delay to ensure the DOM has been updated.
+   */
   scrollToBottomWithDelay(): void {
     setTimeout(() => {
       if (this.channelMessageContent) {
@@ -292,6 +303,11 @@ handleClickOutside(event: MouseEvent): void {
     }, 100); // Beispiel für eine Verzögerung von 500ms
   }
 
+   /**
+   * Scrolls the given element reference to the bottom of its content.
+   *
+   * @param elementRef - The reference to the DOM element to scroll.
+   */
   scrollToBottom(elementRef: ElementRef): void {
     if (elementRef) {
       try {
@@ -306,6 +322,10 @@ handleClickOutside(event: MouseEvent): void {
     }
   }
 
+    /**
+   * Temporarily disables automatic scrolling to the bottom when a reaction is saved,
+   * then re-enables it after a short delay.
+   */
   onReactionSaved(): void {
     this.shouldScrollToBottom = false; // Disable scrolling when reaction is saved
     setTimeout(() => {
@@ -313,15 +333,32 @@ handleClickOutside(event: MouseEvent): void {
     }, 500); // Adjust the delay as needed
   }
 
+   /**
+   * Type guard to check if the given result is a User.
+   *
+   * @param result - The object to check, which can be a Channel or a User.
+   * @returns True if the result is a User, false otherwise.
+   */
   isUser(result: Channel | User): result is User {
     return (result as User).avatar !== undefined;
   }
 
+    /**
+   * Opens a channel by fetching its data and clears the recipient form field.
+   *
+   * @param id - The ID of the channel to open.
+   */
   openChannel(id: string) {
     this.channelsService.getDataChannel(id);
     this.form.get('recipient')?.setValue('');
   }
 
+    /**
+   * Opens a direct message by fetching its data and clears the recipient form field.
+   *
+   * @param id - The ID of the direct message to open.
+   * @param currentUser - The current user who is opening the direct message.
+   */
   openDirectMessage(id: string, currentUser: User) {
     this.directMessagesService.getDataDirectMessage(id, currentUser);
     this.form.get('recipient')?.setValue('');
@@ -542,7 +579,6 @@ handleClickOutside(event: MouseEvent): void {
    * @param user object of type minimal user
    */
   openDetailViewDialog(user: MinimalUser): void {
-    debugger;
     this.dialog.open(ProfileDetailViewComponent, {
       width: '500px',
       data: {
@@ -645,17 +681,25 @@ handleClickOutside(event: MouseEvent): void {
   /**
    * This function gets the data of a thread if the user clicks on a post in a channel. Then it opens the thread.
    */
-  openThread(post: Post) {
-    this.getDataThread(post);
-    this.scrollToBottomWithDelay();
+
+  openThread(post: Post, channelOrDirectMessage: string) {
+    this.getDataThread(post, channelOrDirectMessage);    
     this.toggleThread.emit();
   }
 
   /**
    * This function gets the data of the thread from the service. The post needs to be transmitted if the thread is openend for the first time. Then a new document is created and the post is stored as the first post.
    */
-  getDataThread(post: Post) {
-    this.threadsService.getDataThread(this.selectedChannel.name, post);
+  getDataThread(post: Post, channelOrDirectMessage: string) {
+    if (channelOrDirectMessage === 'channels') {
+      this.threadsService.getDataThread(this.selectedChannel.name, post);
+    } else if (channelOrDirectMessage === 'directMessages') {
+      let titleThread = this.otherUserDirectMessage.name
+      if (titleThread === '') {
+        titleThread = '(Du)'
+      }
+      this.threadsService.getDataThread(titleThread, post);
+    }
   }
 
   /**
