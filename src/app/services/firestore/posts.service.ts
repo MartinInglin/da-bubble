@@ -149,10 +149,10 @@ export class PostsService {
 
     let documentID: string = '';
     let path: string = '';
-    if (selectedChannel.id) {
+    if (this.containsThreadId(selectedChannel, selectedThread.id)) {
       documentID = selectedChannel.id;
       path = 'channels';
-    } else if (selectedDirectMessage.id) {
+    } else if (this.containsThreadId(selectedDirectMessage, selectedThread.id)) {
       documentID = selectedDirectMessage.id;
       path = 'directMessages';
     }
@@ -163,6 +163,15 @@ export class PostsService {
       selectedThread.posts[0].id,
       path
     );
+  }
+
+  containsThreadId(selectedChannelOrDirectMessage: Channel | DirectMessage, selectedThreadId: string): boolean {
+    for (let i = 0; i < selectedChannelOrDirectMessage.posts.length; i++) {
+      let postId = selectedChannelOrDirectMessage.posts[i].id;
+      if (postId === selectedThreadId) {
+        return true
+      }
+    } return false
   }
 
   /**

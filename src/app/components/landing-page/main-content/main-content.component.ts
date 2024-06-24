@@ -163,6 +163,9 @@ export class MainContentComponent
     this.directMessageSubscription =
       this.directMessagesService.directMessage$.subscribe((directMessage) => {
         this.selectedDirectMessage = directMessage ?? new DirectMessage();
+        // delete console log after testing
+        console.log(this.selectedDirectMessage);
+        
 
         this.chatSelected = !!directMessage;
         if (this.chatSelected) {
