@@ -104,18 +104,21 @@ export class MainContentComponent
   searchResults$: Observable<(Channel | User)[]> = of([]);
   searchResults: (Channel | User)[] | undefined;
 
-  constructor( private dialog: MatDialog, private fb: FormBuilder, private cdref: ChangeDetectorRef) {
+  constructor(
+    private dialog: MatDialog,
+    private fb: FormBuilder,
+    private cdref: ChangeDetectorRef
+  ) {
     this.form = this.fb.group({
       recipient: [''],
     });
   }
 
   ngOnInit(): void {
-
     /**
-   * Initializes the component by subscribing to various observables 
-   * and setting up initial data and behaviors.
-   */
+     * Initializes the component by subscribing to various observables
+     * and setting up initial data and behaviors.
+     */
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       this.currentUser = user ?? new User();
       this.scrollToBottomWithDelay();
@@ -190,7 +193,7 @@ export class MainContentComponent
 
     this.searchResults$.subscribe((results) => {
       this.searchResults = results;
-    });    
+    });
   }
 
   /**
@@ -217,9 +220,9 @@ export class MainContentComponent
     this.form.get('recipient')?.setValue('');
   }
 
-   /**
+  /**
    * Lifecycle hook that is called after Angular has fully initialized a component's view.
-   * Sets up mutation observers for the channel and direct message content areas to 
+   * Sets up mutation observers for the channel and direct message content areas to
    * automatically scroll to the bottom when new content is added.
    */
   ngAfterViewInit(): void {
@@ -288,8 +291,8 @@ export class MainContentComponent
     return name;
   }
 
-   /**
-   * Scrolls to the bottom of the message content areas (channel and direct message) 
+  /**
+   * Scrolls to the bottom of the message content areas (channel and direct message)
    * after a short delay to ensure the DOM has been updated.
    */
   scrollToBottomWithDelay(): void {
@@ -303,7 +306,7 @@ export class MainContentComponent
     }, 100); // Beispiel für eine Verzögerung von 500ms
   }
 
-   /**
+  /**
    * Scrolls the given element reference to the bottom of its content.
    *
    * @param elementRef - The reference to the DOM element to scroll.
@@ -322,7 +325,7 @@ export class MainContentComponent
     }
   }
 
-    /**
+  /**
    * Temporarily disables automatic scrolling to the bottom when a reaction is saved,
    * then re-enables it after a short delay.
    */
@@ -333,7 +336,7 @@ export class MainContentComponent
     }, 500); // Adjust the delay as needed
   }
 
-   /**
+  /**
    * Type guard to check if the given result is a User.
    *
    * @param result - The object to check, which can be a Channel or a User.
@@ -343,7 +346,7 @@ export class MainContentComponent
     return (result as User).avatar !== undefined;
   }
 
-    /**
+  /**
    * Opens a channel by fetching its data and clears the recipient form field.
    *
    * @param id - The ID of the channel to open.
@@ -353,7 +356,7 @@ export class MainContentComponent
     this.form.get('recipient')?.setValue('');
   }
 
-    /**
+  /**
    * Opens a direct message by fetching its data and clears the recipient form field.
    *
    * @param id - The ID of the direct message to open.
@@ -683,7 +686,7 @@ export class MainContentComponent
    */
 
   openThread(post: Post, channelOrDirectMessage: string) {
-    this.getDataThread(post, channelOrDirectMessage);    
+    this.getDataThread(post, channelOrDirectMessage);
     this.toggleThread.emit();
   }
 
@@ -694,9 +697,9 @@ export class MainContentComponent
     if (channelOrDirectMessage === 'channels') {
       this.threadsService.getDataThread(this.selectedChannel.name, post);
     } else if (channelOrDirectMessage === 'directMessages') {
-      let titleThread = this.otherUserDirectMessage.name
+      let titleThread = this.otherUserDirectMessage.name;
       if (titleThread === '') {
-        titleThread = '(Du)'
+        titleThread = '(Du)';
       }
       this.threadsService.getDataThread(titleThread, post);
     }
