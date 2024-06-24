@@ -3,6 +3,8 @@ import {
   DocumentReference,
   Firestore,
   arrayUnion,
+  collection,
+  getDocs,
   doc,
   getDoc,
   updateDoc,
@@ -19,7 +21,8 @@ import { ThreadsService } from './threads.service';
 import { Reaction } from '../../models/reaction.class';
 import { UsersService } from './users.service';
 import { ChannelsService } from './channels.service';
-import { Observable, catchError, from, of } from 'rxjs';
+import { Observable, catchError, from, of, combineLatest } from 'rxjs';
+import { map, mergeMap, toArray } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -480,6 +483,7 @@ export class PostsService {
   }
 
   /**
+<<<<<<< Updated upstream
 /**
  * Retrieves posts based on the provided path and document ID.
  *
@@ -492,6 +496,35 @@ export class PostsService {
     path: 'channels' | 'directMessages' | 'threads',
     documentId: string
   ): Observable<Post[]> {
+=======
+   * Retrieves all posts from channels and direct messages that the current user is part of.
+   *
+   * @param userChannels - Array of channel IDs the user is part of
+   * @param userDirectMessages - Array of direct message IDs the user is part of
+   * @returns Observable with an array of all posts
+   */
+  getAllPostsForUser(userChannels: string[], userDirectMessages: string[]): Observable<Post[]> {
+    const pathsAndIds: Array<{ path: 'channels' | 'directMessages'; id: string }> = [
+      ...userChannels.map(id => ({ path: 'channels' as const, id })),
+      ...userDirectMessages.map(id => ({ path: 'directMessages' as const, id }))
+    ];
+
+    return from(pathsAndIds).pipe(
+      mergeMap(({ path, id }) => this.getPosts(path, id)),
+      toArray(),
+      map(postsArrays => postsArrays.flat())
+    );
+  }
+
+  /**
+   * Retrieves posts based on the provided path and document ID.
+   *
+   * @param path - Path to the document ('channels' or 'directMessages')
+   * @param documentId - ID of the document to retrieve posts from
+   * @returns Array of posts or an empty array if not found
+   */
+  getPosts(path: 'channels' | 'directMessages', documentId: string): Observable<Post[]> {
+>>>>>>> Stashed changes
     return from(this.getPostsPromise(path, documentId)).pipe(
       catchError((error) => {
         console.error('Error getting posts: ', error);
@@ -500,10 +533,7 @@ export class PostsService {
     );
   }
 
-  private async getPostsPromise(
-    path: 'channels' | 'directMessages' | 'threads',
-    documentId: string
-  ): Promise<Post[]> {
+  private async getPostsPromise(path: 'channels' | 'directMessages', documentId: string): Promise<Post[]> {
     try {
       const docRef = doc(this.firestore, path, documentId);
       const docSnap = await getDoc(docRef);
