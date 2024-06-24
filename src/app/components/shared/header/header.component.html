@@ -13,18 +13,27 @@
     <div *ngIf="searchResults && searchResults.length" class="list">
       <ul #searchResultsList *ngIf="searchResults && searchResults.length > 0">
         <li *ngFor="let result of searchResults">
-          <div class="container-name-avatar" *ngIf="isUser(result)" (click)="openDirectMessage(result.id, currentUser)">
-            <img src="{{result.avatar}}" alt="">
-            <span>{{ result.name }}</span>
-          </div>
-          <div class="container-name-avatar" *ngIf="isChannel(result)" (click)="openChannel(result.id)">
-            <span># {{ result.name }}</span>
-          </div>
-          <div class="container-name-avatar" *ngIf="isPost(result)" (click)="openPost(result.id)">
-            <span> {{ result.message }}</span>
-          </div>
+            <ng-container *ngIf="isUser(result)">
+                <div class="container-name-avatar" *ngIf="!isPost(result)" (click)="openDirectMessage(result.id, currentUser)">
+                    <img src="{{result.avatar}}" alt="">
+                    <span>{{ result.name }}</span>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="!isUser(result)">
+                <div class="container-name-avatar" (click)="openChannel(result.id)">
+                    <span># {{ result.name }}</span>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="isPost(result)">
+              <div class="container-name-avatar" (click)="openPost(result.id)">
+                <div class=post-result>
+                  <span class="result-chanel">{{ result.channelName }}</span>
+                  <div class="result-name-post"><span>{{ result.userName }}:</span><span>{{ result.message }}</span></div>
+                </div>
+              </div>
+            </ng-container>
         </li>
-      </ul>
+    </ul>
     </div>
   </div>
   

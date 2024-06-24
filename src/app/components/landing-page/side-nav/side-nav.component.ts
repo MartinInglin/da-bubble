@@ -151,8 +151,6 @@ export class SideNavComponent implements OnInit {
     return (result as User).avatar !== undefined;
   }
 
-
-
   closeSideNav() {
     this.isOpen = false;
   }

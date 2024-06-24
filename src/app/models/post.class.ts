@@ -13,6 +13,9 @@ export class Post {
   userId: string;
   amountAnswers?: number;
   lastAnswer?: number;
+  channelName?: string;
+  userName?: string;
+  channelId?: string;
 
   constructor(obj?: any) {
     this.id = obj?.id || '';
@@ -35,5 +38,7 @@ export class Post {
     this.userId = obj?.userId || '';
     this.amountAnswers = obj?.amountAnswers || 0;
     this.lastAnswer = obj?.lastAnswer || 0;
+    this.channelName = obj?.channelName || '';
+    this.userName = obj?.userName || '';   
   }
 }

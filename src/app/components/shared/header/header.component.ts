@@ -17,6 +17,7 @@ import { ChannelsService } from '../../../services/firestore/channels.service';
 import { UserMenuMobileComponent } from '../../dialogues/mobile/user-menu-mobile/user-menu-mobile.component';
 import { Post } from '../../../models/post.class';
 import { PostsService } from '../../../services/firestore/posts.service';
+import { DirectMessage } from '../../../models/direct-message.class';
 
 @Component({
   selector: 'app-header',
@@ -60,6 +61,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   allUsers: User[] = [];
   currentUser: User = new User();
 
+
   constructor(private dialog: MatDialog,
     private router: Router,
     private fb: FormBuilder,
@@ -84,24 +86,45 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.filteredChannels = channels.filter((c) =>
         c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
-  
+
       // Fetch posts for the channels and direct messages the user is part of
       const userChannelIds = this.currentUser.channels.map(channel => channel.id);
-      const userDirectMessageIds = [this.currentUser.privateDirectMessageId].filter(id => id);
-  
-      this.postsService.getAllPostsForUser(userChannelIds, userDirectMessageIds)
-        .subscribe((posts) => {
-          this.filteredPosts = posts;
+      const userDirectMessageIds = [this.currentUser.privateDirectMessageId];
+
+      // Fetch all direct messages the user is part of
+      this.directMessagesService.getDirectMessagesCollection().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const directMessage = doc.data() as DirectMessage;
+          if (directMessage.users.some(user => user.id === this.currentUser.id)) {
+            userDirectMessageIds.push(doc.id);
+          }
         });
+
+        this.postsService.getAllPostsForUser(userChannelIds, userDirectMessageIds)
+          .subscribe((posts) => {
+            this.filteredPosts = posts;
+
+            this.filteredPosts.forEach(post => {
+              const channel = this.filteredChannels.find(c => c.id === post.channelId);
+              if (channel) {
+                post.channelName = channel.name;
+              }
+              const user = this.allUsers.find(u => u.id === post.userId);
+              if (user) {
+                post.userName = user.name;
+              }
+            });
+          });
+      });
     });
-  
+
     // Subscribe to router events to show or hide register element based on the URL
     this.routeSubscription = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.showRegisterElement = event.url === '/' || event.url === '/login';
       }
     });
-  
+
     // Subscribe to allUsers and filter users based on search term
     this.userSubscription = this.usersService.allUsersSubject$.subscribe(
       (users) => {
@@ -113,7 +136,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         }
       }
     );
-  
+
     // Listen for form value changes and update search results
     this.searchResults$ = this.form.valueChanges.pipe(
       debounceTime(300),
@@ -124,12 +147,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
         return this.searchTerm ? this.search(this.searchTerm) : of([]);
       })
     );
-  
+
     // Subscribe to search results and update the component's state
     this.searchResults$.subscribe((results) => {
       this.searchResults = results;
     });
   }
+
 
   /**
   * Handles click events outside the search results list to close the results.
@@ -171,16 +195,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   */
   isUser(result: Channel | User | Post): result is User {
     return (result as User).avatar !== undefined;
-  }
-
-  /**
-  * Determines if the result is a Channel object.
-  * 
-  * @param {Channel | User | Post} result - The search result to check.
-  * @returns {boolean} True if the result is a Channel, false otherwise.
-  */
-  isChannel(result: Channel | User | Post): result is Channel {
-    return (result as Channel).name !== undefined;
   }
 
   /**
@@ -245,30 +259,35 @@ export class HeaderComponent implements OnInit, OnDestroy {
    * @returns {Observable<(Channel | User | Post)[]>} An observable of the search results.
    */
   search(searchTerm: string): Observable<(Channel | User | Post)[]> {
+    // Separate Suchanfragen basierend auf dem Präfix im Suchbegriff
     if (searchTerm.startsWith('#')) {
-      const filteredChannels = this.filteredChannels.filter((channel) =>
-        channel.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase())
-      );
-      return of(filteredChannels);
+      return this.searchChannels(searchTerm.slice(1));
     } else if (searchTerm.startsWith('@')) {
-      const filteredUsers = this.allUsers.filter((user) =>
-        user.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase())
-      );
-      return of(this.filterCurrentUser(filteredUsers));
+      return this.searchUsers(searchTerm.slice(1));
     } else {
-      const filteredChannels = this.filteredChannels.filter((channel) =>
-        channel.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      const filteredUsers = this.allUsers.filter((user) =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      const filteredPosts = this.filteredPosts.filter((post) =>
-        post.message.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-
-      const results = [...filteredChannels, ...filteredUsers, ...filteredPosts];
-      return of(this.filterCurrentUser(results));
+      return this.searchAll(searchTerm);
     }
+  }
+
+  private searchChannels(term: string): Observable<Channel[]> {
+    return of(this.filteredChannels.filter(channel =>
+      channel.name.toLowerCase().includes(term.toLowerCase())));
+  }
+
+  private searchUsers(term: string): Observable<User[]> {
+    return of(this.allUsers.filter(user =>
+      user.name.toLowerCase().includes(term.toLowerCase())));
+  }
+
+  private searchAll(term: string): Observable<(Channel | User | Post)[]> {
+    const filteredChannels = this.filteredChannels.filter(channel =>
+      channel.name.toLowerCase().includes(term.toLowerCase()));
+    const filteredUsers = this.allUsers.filter(user =>
+      user.name.toLowerCase().includes(term.toLowerCase()));
+    const filteredPosts = this.filteredPosts.filter(post =>
+      post.message.toLowerCase().includes(term.toLowerCase()));
+
+    return of([...filteredChannels, ...filteredUsers, ...filteredPosts]);
   }
 
   /**

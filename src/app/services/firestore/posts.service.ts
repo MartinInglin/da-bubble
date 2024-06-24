@@ -482,59 +482,66 @@ export class PostsService {
     return false;
   }
 
- /**
+  /**
    * Retrieves all posts from channels and direct messages that the current user is part of.
    *
    * @param userChannels - Array of channel IDs the user is part of
    * @param userDirectMessages - Array of direct message IDs the user is part of
    * @returns Observable with an array of all posts
    */
- getAllPostsForUser(userChannels: string[], userDirectMessages: string[]): Observable<Post[]> {
-  const pathsAndIds: Array<{ path: 'channels' | 'directMessages'; id: string }> = [
-    ...userChannels.map(id => ({ path: 'channels' as const, id })),
-    ...userDirectMessages.map(id => ({ path: 'directMessages' as const, id }))
-  ];
+  getAllPostsForUser(userChannels: string[], userDirectMessages: string[]): Observable<Post[]> {
+    const pathsAndIds: Array<{ path: 'channels' | 'directMessages'; id: string }> = [
+      ...userChannels.map(id => ({ path: 'channels' as const, id })),
+      ...userDirectMessages.map(id => ({ path: 'directMessages' as const, id }))
+    ];
 
-  return from(pathsAndIds).pipe(
-    mergeMap(({ path, id }) => this.getPosts(path, id)),
-    toArray(),
-    map(postsArrays => postsArrays.flat())
-  );
-}
+    return from(pathsAndIds).pipe(
+      mergeMap(({ path, id }) => this.getPosts(path, id).pipe(
+        map(posts => posts.map(post => ({ ...post, channelId: id, path }))) // Channel ID und Path hinzufügen
+      )),
+      toArray(),
+      map(postsArrays => postsArrays.flat())
+    );
+  }
 
-/**
- * Retrieves posts based on the provided path and document ID.
- *
- * @param path - Path to the document ('channels' or 'directMessages')
- * @param documentId - ID of the document to retrieve posts from
- * @returns Array of posts or an empty array if not found
- */
-getPosts(path: 'channels' | 'directMessages', documentId: string): Observable<Post[]> {
-  return from(this.getPostsPromise(path, documentId)).pipe(
-    catchError((error) => {
+  /**
+   * Retrieves posts based on the provided path and document ID.
+   *
+   * @param path - Path to the document ('channels' or 'directMessages')
+   * @param documentId - ID of the document to retrieve posts from
+   * @returns Array of posts or an empty array if not found
+   */
+  getPosts(path: 'channels' | 'directMessages', documentId: string): Observable<Post[]> {
+    return from(this.getPostsPromise(path, documentId)).pipe(
+      catchError((error) => {
+        console.error('Error getting posts: ', error);
+        return of([]); // Return an empty observable on error
+      })
+    );
+  }
+
+  private async getPostsPromise(path: 'channels' | 'directMessages', documentId: string): Promise<Post[]> {
+    try {
+      const docRef = doc(this.firestore, path, documentId);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const docData = docSnap.data();
+        const posts = docData['posts'] || [];
+        return posts.map((post: Post) => ({
+          ...post,
+          channelId: documentId,
+          path,
+        }));
+      } else {
+        console.log('No such document!');
+        return [];
+      }
+    } catch (error) {
       console.error('Error getting posts: ', error);
-      return of([]); // Return an empty observable on error
-    })
-  );
-}
-
-private async getPostsPromise(path: 'channels' | 'directMessages', documentId: string): Promise<Post[]> {
-  try {
-    const docRef = doc(this.firestore, path, documentId);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      const docData = docSnap.data();
-      return docData['posts'] || [];
-    } else {
-      console.log('No such document!');
       return [];
     }
-  } catch (error) {
-    console.error('Error getting posts: ', error);
-    return [];
   }
-}
 }
 
 
