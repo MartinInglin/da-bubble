@@ -6,6 +6,7 @@ import {
   ViewChild,
   HostListener,
   inject,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
@@ -65,6 +66,10 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   menuUp: any = 'assets/images/icons/menu_up.svg';
   menuDown: any = 'assets/images/icons/menu_down.svg';
 
+  constructor(private cdref: ChangeDetectorRef){
+
+  }
+
   ngOnInit(): void {
 
       /**
@@ -76,7 +81,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         this.currentUser = user ?? new User();
       }
     });
-
+    this.cdref.detectChanges();
     this.checkWidth();
   }
 
@@ -124,7 +129,9 @@ export class LandingPageComponent implements OnInit, OnDestroy {
    */
   closeThread() {
     this.isThreadOpen = false;
-    this.mainContentComponent.callSetFocus();
+    if (this.drawerThread) {
+      this.drawerThread.close();
+    } 
   }
 
   // Unsubscribe from userSubscription if exists
