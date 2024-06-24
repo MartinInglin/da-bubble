@@ -84,15 +84,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.filteredChannels = channels.filter((c) =>
         c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
+  
+      // Fetch posts for the channels and direct messages the user is part of
+      const userChannelIds = this.currentUser.channels.map(channel => channel.id);
+      const userDirectMessageIds = [this.currentUser.privateDirectMessageId].filter(id => id);
+  
+      this.postsService.getAllPostsForUser(userChannelIds, userDirectMessageIds)
+        .subscribe((posts) => {
+          this.filteredPosts = posts;
+        });
     });
-
+  
     // Subscribe to router events to show or hide register element based on the URL
     this.routeSubscription = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.showRegisterElement = event.url === '/' || event.url === '/login';
       }
     });
-
+  
     // Subscribe to allUsers and filter users based on search term
     this.userSubscription = this.usersService.allUsersSubject$.subscribe(
       (users) => {
@@ -104,15 +113,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         }
       }
     );
-
-    // Fetch posts for a specific document in channels collection
-    this.postsService.getPosts('channels', 'channel-id')
-    .subscribe((posts) => {
-      // Handle the fetched posts here (might be empty)
-      console.log('Fetched posts:', posts);
-    });
   
-
     // Listen for form value changes and update search results
     this.searchResults$ = this.form.valueChanges.pipe(
       debounceTime(300),
@@ -123,7 +124,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         return this.searchTerm ? this.search(this.searchTerm) : of([]);
       })
     );
-
+  
     // Subscribe to search results and update the component's state
     this.searchResults$.subscribe((results) => {
       this.searchResults = results;
