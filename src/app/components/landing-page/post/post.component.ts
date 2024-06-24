@@ -64,6 +64,8 @@ export class PostComponent {
   ngOnInit() {
     this.checkIfPostFromCurrentUser();
     this.sortReactions();
+    console.log(this.selectedThreadId);
+    
   }
 
   /**
