@@ -165,6 +165,13 @@ export class PostsService {
     );
   }
 
+  /**
+   * This function checks if the thread Id exists in a channel or a direct message post. If so it returns true.
+   * 
+   * @param selectedChannelOrDirectMessage object of type channel or direct message
+   * @param selectedThreadId string
+   * @returns boolean
+   */
   containsThreadId(selectedChannelOrDirectMessage: Channel | DirectMessage, selectedThreadId: string): boolean {
     for (let i = 0; i < selectedChannelOrDirectMessage.posts.length; i++) {
       let postId = selectedChannelOrDirectMessage.posts[i].id;
