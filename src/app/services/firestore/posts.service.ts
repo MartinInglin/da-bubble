@@ -19,7 +19,7 @@ import { ThreadsService } from './threads.service';
 import { Reaction } from '../../models/reaction.class';
 import { UsersService } from './users.service';
 import { ChannelsService } from './channels.service';
-import { Observable, catchError, from, of} from 'rxjs';
+import { Observable, catchError, from, of, throwError} from 'rxjs';
 
 
 @Injectable({
@@ -476,16 +476,15 @@ getPosts(
   path: 'channels' | 'directMessages' | 'threads',
   documentId: string
 ): Observable<Post[]> {
-  return from(this.getPostsPromise(path, documentId))
-    .pipe(
-      catchError((error) => {
-        console.error('Error getting posts: ', error);
-        return of([]); // Return an empty observable on error
-      })
-    );
+  return from(this.getPostsPromise(path, documentId)).pipe(
+    catchError((error) => {
+      console.error('Error getting posts: ', error);
+      return throwError(error);
+    })
+  );
 }
 
-private async getPostsPromise(
+public async getPostsPromise(
   path: 'channels' | 'directMessages' | 'threads',
   documentId: string
 ): Promise<Post[]> {
@@ -497,8 +496,13 @@ private async getPostsPromise(
 
     if (docSnap.exists()) {
       const docData = docSnap.data();
-      console.log(`Document data: `, docData);
-      return docData['posts'] || [];
+      if (docData && Array.isArray(docData['posts'])) {
+        console.log('Posts found: ', docData['posts']);
+        return docData['posts'];
+      } else {
+        console.log('No posts field or not an array');
+        return [];
+      }
     } else {
       console.log('No such document!');
       return [];
@@ -508,4 +512,5 @@ private async getPostsPromise(
     return [];
   }
 }
+
 }

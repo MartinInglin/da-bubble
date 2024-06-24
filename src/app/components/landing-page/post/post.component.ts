@@ -56,6 +56,7 @@ export class PostComponent {
   @Input() path!: 'directMessages' | 'threads' | 'channels';
 
   @Output() openThread = new EventEmitter();
+  @Output() reactionSaved = new EventEmitter<void>();
 
   constructor(private editingStateService: EditingStateService) { }
 
@@ -436,32 +437,30 @@ export class PostComponent {
     let documentId = '';
     let localPath = this.path;
     let localIndexPost = this.indexPost;
-
-    switch (localPath) {
-      case 'channels':
-        documentId = this.selectedChannel.id;
-        await this.handleChannelReactions(
-          documentId,
-          reaction,
-          localPath,
-          localIndexPost
-        );
-        break;
-      case 'directMessages':
-        documentId = this.selectedDirectMessageId;
-        await this.callSaveReactionInPostService(
-          documentId,
-          reaction,
-          localPath,
-          localIndexPost
-        );
-        break;
-      case 'threads':
-        documentId = this.selectedThreadId;
-        await this.handleThreadReactions(documentId, reaction, localPath);
-        break;
-      default:
-        console.log('Document Id not found.');
+  
+    try {
+      switch (localPath) {
+        case 'channels':
+          documentId = this.selectedChannel.id;
+          await this.handleChannelReactions(documentId, reaction, localPath, localIndexPost);
+          break;
+        case 'directMessages':
+          documentId = this.selectedDirectMessageId;
+          await this.callSaveReactionInPostService(documentId, reaction, localPath, localIndexPost);
+          break;
+        case 'threads':
+          documentId = this.selectedThreadId;
+          await this.handleThreadReactions(documentId, reaction, localPath);
+          break;
+        default:
+          console.log('Document Id not found.');
+      }
+    } catch (error) {
+      console.error('Error saving reaction:', error);
+      // Handle errors appropriately, e.g., show a snackbar to the user
+    } finally {
+      // Prevent default behavior here to avoid unnecessary reloads
+      event?.preventDefault(); // Assuming you have an event object passed to the function
     }
   }
 

@@ -46,6 +46,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private userSubscription: Subscription = new Subscription();
   private routeSubscription: Subscription = new Subscription();
+  private postsSubscription: Subscription = new Subscription(); 
 
   filteredUsers: User[] = [];
   filteredChannels: Channel[] = [];
@@ -59,11 +60,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   searchResults: (Channel | User | Post)[] | undefined;
   allUsers: User[] = [];
   currentUser: User = new User();
+  posts: Post[] = []; 
 
   constructor(private dialog: MatDialog,
     private router: Router,
     private fb: FormBuilder,
-    private postsService: PostsService) {
+    public postsService: PostsService) {
     this.form = this.fb.group({
       recipient: [''],
     });
@@ -105,12 +107,32 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
     );
 
-    // Fetch posts for a specific document in channels collection
-    this.postsService.getPosts('channels', 'channel-id')
-    .subscribe((posts) => {
-      // Handle the fetched posts here (might be empty)
+    // // Fetch posts for a specific document in channels collection
+    // this.postsService.getPosts('channels', 'channel-id')
+    // .subscribe((posts) => {
+    //   // Handle the fetched posts here (might be empty)
+    //   console.log('Fetched posts:', posts);
+    // });
+
+
+    // this.postsService.getPosts('channels', 'channel-id').subscribe((posts) => {
+    //   console.log('Fetched posts:', posts); // Ensure this logs correctly
+    //   this.filteredPosts = posts; // Update the component state with fetched posts
+    // });
+
+    const path = 'channels'; // Replace with appropriate path
+  const documentId = 'channel-id'; // Replace with actual document ID
+
+  this.postsSubscription = this.postsService.getPosts(path, documentId).subscribe(
+    (posts) => {
+      this.posts = posts;
       console.log('Fetched posts:', posts);
-    });
+    },
+    (error) => {
+      console.error('Error getting posts:', error);
+      // Handle the error (e.g., display a message to the user)
+    }
+  );
   
 
     // Listen for form value changes and update search results
@@ -296,6 +318,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     if (this.routeSubscription) {
       this.routeSubscription.unsubscribe();
+    }
+    if (this.postsSubscription) {
+      this.postsSubscription.unsubscribe();
     }
   }
 

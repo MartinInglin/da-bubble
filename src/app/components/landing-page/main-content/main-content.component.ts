@@ -83,6 +83,7 @@ export class MainContentComponent implements OnInit, OnDestroy, AfterViewInit, A
   private channelSubscription: Subscription = new Subscription();
   private usersSubscription: Subscription = new Subscription();
   private directMessageSubscription: Subscription = new Subscription();
+  private shouldScrollToBottom = true; // Add this flag
 
   filteredChannels: Channel[] = [];
   currentUser: User = new User();
@@ -114,6 +115,8 @@ export class MainContentComponent implements OnInit, OnDestroy, AfterViewInit, A
   ngOnInit(): void {
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       this.currentUser = user ?? new User();
+
+      this.scrollToBottomWithDelay();
 
       const channels: Channel[] = this.currentUser.channels.map(
         (minimalChannel) => new Channel(minimalChannel)
@@ -279,18 +282,21 @@ handleClickOutside(event: MouseEvent): void {
   }
 
   scrollToBottomWithDelay(): void {
-    if (this.channelMessageContent) {
-      this.scrollToBottom(this.channelMessageContent);
-    }
-    if (this.directMessageContent) {
-      this.scrollToBottom(this.directMessageContent);
-    }
+    setTimeout(() => {
+      if (this.channelMessageContent) {
+        this.scrollToBottom(this.channelMessageContent);
+      }
+      if (this.directMessageContent) {
+        this.scrollToBottom(this.directMessageContent);
+      }
+    }, 100); // Beispiel für eine Verzögerung von 500ms
   }
 
   scrollToBottom(elementRef: ElementRef): void {
     if (elementRef) {
       try {
         setTimeout(() => {
+          this.cdref.detectChanges();
           elementRef.nativeElement.scrollTop =
             elementRef.nativeElement.scrollHeight;
         }, 100); // Delay to ensure DOM is fully updated
@@ -298,6 +304,13 @@ handleClickOutside(event: MouseEvent): void {
         console.error('Scroll to bottom error:', err);
       }
     }
+  }
+
+  onReactionSaved(): void {
+    this.shouldScrollToBottom = false; // Disable scrolling when reaction is saved
+    setTimeout(() => {
+      this.shouldScrollToBottom = true; // Re-enable scrolling after a short delay
+    }, 500); // Adjust the delay as needed
   }
 
   isUser(result: Channel | User): result is User {
@@ -634,6 +647,7 @@ handleClickOutside(event: MouseEvent): void {
    */
   openThread(post: Post) {
     this.getDataThread(post);
+    this.scrollToBottomWithDelay();
     this.toggleThread.emit();
   }
 
