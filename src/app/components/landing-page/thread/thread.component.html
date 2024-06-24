@@ -4,7 +4,12 @@
   <div class="head-thread">
     <div class="head-thread-text">
       <span>Thread</span>
+      @if (selectedChannel.name === selectedThread.name) {
       <span class="thread-name"># {{ selectedThread.name }}</span>
+      }
+      @else {
+        <span class="thread-name">&#64; {{ selectedThread.name }}</span>
+      }
     </div>
 
     <button (click)="closeThread()">
