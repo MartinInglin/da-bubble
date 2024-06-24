@@ -1,8 +1,5 @@
+import { Component, EventEmitter, Input, OnInit, Output, inject, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  Component, EventEmitter, Input, OnInit, Output, inject, HostListener, ViewChild,
-  ElementRef,
-} from '@angular/core';
 import { StateService } from '../../../services/stateservice.service';
 import { NewChannelComponent } from '../../dialogues/new-channel/new-channel.component';
 import { NewChannelMobileComponent } from '../../dialogues/mobile/new-channel-mobile/new-channel-mobile.component';
@@ -12,28 +9,25 @@ import { ChannelsService } from '../../../services/firestore/channels.service';
 import { DirectMessagesService } from '../../../services/firestore/direct-messages.service';
 import { UsersService } from '../../../services/firestore/users.service';
 import { Observable, Subscription, debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Channel } from '../../../models/channel.class';
+import { PostsService } from '../../../services/firestore/posts.service';
+import { Post } from '../../../models/post.class';
+import { DirectMessage } from '../../../models/direct-message.class';
 
 @Component({
   selector: 'app-side-nav',
   standalone: true,
-  imports: [CommonModule, NewChannelComponent, MatDialogModule, FormsModule,
-    ReactiveFormsModule],
+  imports: [CommonModule, NewChannelComponent, MatDialogModule, FormsModule, ReactiveFormsModule],
   templateUrl: './side-nav.component.html',
-  styleUrl: './side-nav.component.scss',
+  styleUrls: ['./side-nav.component.scss'],
 })
 export class SideNavComponent implements OnInit {
   usersService = inject(UsersService);
   stateService = inject(StateService);
   channelsService = inject(ChannelsService);
   directMessagesService = inject(DirectMessagesService);
+  postsService = inject(PostsService);
 
   @Input() currentUser: User = new User();
   @Output() contactClicked = new EventEmitter<void>();
@@ -49,11 +43,12 @@ export class SideNavComponent implements OnInit {
 
   form: FormGroup;
   searchTerm: string = '';
-  searchResults$: Observable<(Channel | User)[]> = of([]);
-  searchResults: (Channel | User)[] | undefined;
+  searchResults$: Observable<(Channel | User | Post)[]> = of([]);
+  searchResults: (Channel | User | Post)[] | undefined;
   allUsers: User[] = [];
   filteredUsers: User[] = [];
   filteredChannels: Channel[] = [];
+  filteredPosts: Post[] = [];
 
   showContacts: boolean = false;
   showChannels: boolean = false;
@@ -65,40 +60,70 @@ export class SideNavComponent implements OnInit {
   arrowClosed: any = 'assets/images/icons/arrow_drop_right.svg';
 
   constructor(private dialog: MatDialog, private fb: FormBuilder,) {
-    // Erstellen des Formulars mit einem einzelnen Eingabefeld 'recipient'
     this.form = this.fb.group({
       recipient: [''],
     });
   }
-
+  
+  /**
+   * Initializes the component, subscribes to relevant data sources, and sets up the search logic.
+   * 
+   * @returns {void}
+   */
   ngOnInit(): void {
-    // Abonnement zum Anzeigen der Kontakte
+    // Subscribe to show contacts
     this.stateService.showContacts$.subscribe((show) => {
       this.showContacts = show;
     });
 
-    // Abonnement zum Anzeigen der Kanäle
+    // Subscribe to show channels
     this.stateService.showChannels$.subscribe((show) => {
       this.showChannels = show;
     });
 
-    // Abonnement zur Aktualisierung der Liste aller Benutzer
+    // Subscribe to the list of all users and filter based on the search term
     this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe(
       (users) => {
         if (users) {
           this.allUsers = users ?? [];
-
-          // Filtern der Benutzer basierend auf dem Suchbegriff
           this.filteredUsers = this.allUsers.filter((u) =>
             u.name.toLowerCase().includes(this.searchTerm.toLowerCase())
           );
-
-
         }
       }
     );
 
-    // Abonnement zur Verarbeitung von Formularänderungen
+    // Get user channel IDs and direct message IDs
+    const userChannelIds = this.currentUser.channels.map(channel => channel.id);
+    const userDirectMessageIds = [this.currentUser.privateDirectMessageId];
+
+    // Fetch all direct messages the user is part of and their posts
+    this.directMessagesService.getDirectMessagesCollection().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const directMessage = doc.data() as DirectMessage;
+        if (directMessage.users.some(user => user.id === this.currentUser.id)) {
+          userDirectMessageIds.push(doc.id);
+        }
+      });
+
+      this.postsService.getAllPostsForUser(userChannelIds, userDirectMessageIds)
+        .subscribe((posts) => {
+          this.filteredPosts = posts;
+
+          this.filteredPosts.forEach(post => {
+            const channel = this.filteredChannels.find(c => c.id === post.channelId);
+            if (channel) {
+              post.channelName = channel.name;
+            }
+            const user = this.allUsers.find(u => u.id === post.userId);
+            if (user) {
+              post.userName = user.name;
+            }
+          });
+        });
+    });
+
+    // Subscribe to form value changes and update search results
     this.searchResults$ = this.form.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -113,10 +138,7 @@ export class SideNavComponent implements OnInit {
       this.searchResults = results;
     });
 
-    this.searchResults$.subscribe((results) => {
-      this.searchResults = results;
-    });
-
+    // Subscribe to side navigation open state
     this.sideNavSubscription = this.stateService.sideNavOpen$.subscribe((isOpen) => {
       this.isSideNavOpen = isOpen;
       if (isOpen) {
@@ -125,6 +147,12 @@ export class SideNavComponent implements OnInit {
     });
   }
 
+  /**
+   * Handles click events outside the search results list to close the results.
+   * 
+   * @param {MouseEvent} event - The mouse event object.
+   * @returns {void}
+   */
   @HostListener('document:click', ['$event'])
   handleClickOutside(event: MouseEvent): void {
     if (this.searchResultsList && !this.searchResultsList.nativeElement.contains(event.target)) {
@@ -132,105 +160,199 @@ export class SideNavComponent implements OnInit {
     }
   }
 
+  /**
+   * Retrieves data for the specified channel.
+   * 
+   * @param {string} channelId - The ID of the channel to retrieve data for.
+   * @returns {void}
+   */
   getDataChannel(channelId: string) {
     this.channelsService.getDataChannel(channelId);
   }
 
+  /**
+   * Closes the search results by clearing the search results array and resetting the form control.
+   * 
+   * @returns {void}
+   */
   closeSearchResults(): void {
     this.searchResults = [];
-    this.form.get('recipient')?.setValue(''); // Clear the input field
+    this.form.get('recipient')?.setValue('');
   }
 
-  // Getter für das Eingabefeld 'recipient'
+  /**
+   * Gets the form control for the recipient input field.
+   * 
+   * @returns {FormControl} The form control for the recipient input field.
+   */
   get recipient(): FormControl {
     return this.form.get('recipient') as FormControl;
   }
 
-  // Funktion zur Überprüfung, ob ein Ergebnis ein Benutzer ist
-  isUser(result: Channel | User): result is User {
+  /**
+   * Determines if the result is a User object.
+   * 
+   * @param {Channel | User | Post} result - The search result to check.
+   * @returns {boolean} True if the result is a User, false otherwise.
+   */
+  isUser(result: Channel | User | Post): result is User {
     return (result as User).avatar !== undefined;
   }
 
+  /**
+   * Determines if the result is a Post object.
+   * 
+   * @param {Channel | User | Post} result - The search result to check.
+   * @returns {boolean} True if the result is a Post, false otherwise.
+   */
+  isPost(result: Channel | User | Post): result is Post {
+    return (result as Post).message !== undefined;
+  }
+
+  /**
+   * Closes the side navigation.
+   * 
+   * @returns {void}
+   */
   closeSideNav() {
     this.isOpen = false;
   }
 
+  /**
+   * Closes the side navigation on mobile devices.
+   * 
+   * @returns {void}
+   */
   closeSidenavMobile() {
     this.toggleDrawer.emit();
     this.stateService.closeThread();
   }
 
+  /**
+   * Closes the side navigation on mobile devices after selecting contacts.
+   * 
+   * @returns {void}
+   */
   closeSidenavMobileAfterContacts() {
     this.toggleDrawer.emit();
     this.stateService.closeThread();
   }
 
-  // Funktion zur Suche nach Kanälen oder Benutzern basierend auf dem Suchbegriff
-  search(searchTerm: string): Observable<(Channel | User)[]> {
-    // Suche nach Kanälen
+  /**
+   * Searches for channels, users, or posts based on the provided search term.
+   * 
+   * @param {string} searchTerm - The search term to use.
+   * @returns {Observable<(Channel | User | Post)[]>} An observable of the search results.
+   */
+  search(searchTerm: string): Observable<(Channel | User | Post)[]> {
     if (searchTerm.startsWith('#')) {
       const filteredChannels = this.filteredChannels.filter((channel) =>
-        channel.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase()) && !channel.isDirectMessage // Entfernen Sie "#" aus dem Suchbegriff
+        channel.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase())
       );
       return of(filteredChannels);
-    }
-    // Suche nach Benutzern
-    else if (searchTerm.startsWith('@')) {
+    } else if (searchTerm.startsWith('@')) {
       const filteredUsers = this.allUsers.filter((user) =>
-        user.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase()) && !user.isChannel // Entfernen Sie "@" aus dem Suchbegriff
+        user.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase())
       );
-      return of(filteredUsers);
-    }
-    // Allgemeine Suche (ohne Präfix)
-    else {
+      return of(this.filterCurrentUser(filteredUsers));
+    } else {
       const filteredChannels = this.filteredChannels.filter((channel) =>
-        channel.name.toLowerCase().includes(searchTerm.toLowerCase()) && !channel.isDirectMessage
+        channel.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
       const filteredUsers = this.allUsers.filter((user) =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) && !user.isChannel
+        user.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      const filteredPosts = this.filteredPosts.filter((post) =>
+        post.message.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
-      // Zusammenführen der Suchergebnisse
-      const results = [...filteredChannels, ...filteredUsers];
-      return of(results);
+      const results = [...filteredChannels, ...filteredUsers, ...filteredPosts];
+      return of(this.filterCurrentUser(results));
     }
   }
 
-  // Funktion zum Öffnen eines Kanals
-  openChannel(x: string) {
-    this.channelsService.getDataChannel(x);
+  /**
+   * Filters out the current user from the search results.
+   * 
+   * @param {(Channel | User | Post)[]} results - The search results to filter.
+   * @returns {(Channel | User | Post)[]} The filtered search results.
+   */
+  private filterCurrentUser(results: (Channel | User | Post)[]): (Channel | User | Post)[] {
+    return results.filter(result => {
+      if (this.isUser(result)) {
+        return result.id !== this.currentUser.id;
+      }
+      return true;
+    });
+  }
+
+  /**
+   * Opens a channel based on the provided ID and resets the recipient form control.
+   * 
+   * @param {string} id - The ID of the channel to open.
+   * @returns {void}
+   */
+  openChannel(id: string) {
+    this.channelsService.getDataChannel(id);
     this.form.get('recipient')?.setValue('');
-    if (this.isOpen) { // Check if sidenav is open
+    if (this.isOpen) {
       this.toggleDrawer.emit();
       this.stateService.closeThread();
     }
   }
 
-  openDirectMessage(x: string, y: any) {
-    this.directMessagesService.getDataDirectMessage(x, y);
+  /**
+   * Opens a post based on the provided ID and resets the recipient form control.
+   * 
+   * @param {string} id - The ID of the post to open.
+   * @returns {void}
+   */
+  openPost(id: string): void {
+    console.log('Opening post with ID:', id);
     this.form.get('recipient')?.setValue('');
-    if (this.isOpen) { // Check if sidenav is open
+  }
+
+  /**
+   * Opens a direct message based on the provided ID and resets the recipient form control.
+   * 
+   * @param {string} id - The ID of the direct message to open.
+   * @param {any} data - Additional data for the direct message.
+   * @returns {void}
+   */
+  openDirectMessage(id: string, data: any) {
+    this.directMessagesService.getDataDirectMessage(id, data);
+    this.form.get('recipient')?.setValue('');
+    if (this.isOpen) {
       this.toggleDrawer.emit();
       this.stateService.closeThread();
     }
   }
 
-  // Funktion zum Schließen der Kanal- und Kontaktansicht
+  /**
+   * Closes the view of channels and contacts.
+   * 
+   * @returns {void}
+   */
   closeChannelsAndContacts() {
     this.stateService.setShowContacts(false);
     this.stateService.setShowChannels(false);
   }
 
-  // Funktion zum Abrufen aller Benutzer
+  /**
+   * Retrieves all users.
+   * 
+   * @returns {Promise<void>} A promise that resolves when all users have been retrieved.
+   */
   async getAllUsers() {
     this.usersService.getAllUsers();
   }
 
   /**
-* Extracts the first and last word of a given name.
-* @param {string} name - The full name of the user.
-* @returns {string} - The processed name containing only the first and last word.
-*/
+   * Extracts the first and last word of a given name.
+   * 
+   * @param {string} name - The full name of the user.
+   * @returns {string} - The processed name containing only the first and last word.
+   */
   getFirstAndLastName(name: string): string {
     const words = name.split(' ');
     if (words.length > 1) {
@@ -239,7 +361,11 @@ export class SideNavComponent implements OnInit {
     return name;
   }
 
-  // Funktion zum Öffnen des Dialogs für einen neuen Kanal
+  /**
+   * Opens the dialog for creating a new channel.
+   * 
+   * @returns {void}
+   */
   openNewChannelDialog(): void {
     if (this.currentUser) {
       if (window.innerWidth <= 750) {
@@ -260,7 +386,11 @@ export class SideNavComponent implements OnInit {
     }
   }
 
-  // Funktion zum Öffnen des mobilen Dialogs für einen neuen Kanal
+  /**
+   * Opens the mobile dialog for creating a new channel.
+   * 
+   * @returns {void}
+   */
   openMobileDialog(): void {
     if (this.currentUser) {
       const dialogRef = this.dialog.open(NewChannelMobileComponent, {
@@ -277,7 +407,11 @@ export class SideNavComponent implements OnInit {
     }
   }
 
-  // Aufräumarbeiten bei der Zerstörung der Komponente
+  /**
+   * Cleans up subscriptions to avoid memory leaks.
+   * 
+   * @returns {void}
+   */
   ngOnDestroy(): void {
     if (this.allUsersSubscription) {
       this.allUsersSubscription.unsubscribe();
