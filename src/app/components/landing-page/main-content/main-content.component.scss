@@ -558,6 +558,14 @@ cdk-overlay-connected-position-bounding-box {
   border-radius: 30px;
   width: 300px;
   padding: 20px;
+  p{
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 24.55px;
+    margin: 0;
+    height: 25px;
+    overflow-x: hidden;
+  }
 }
 
 .searchBar input {
