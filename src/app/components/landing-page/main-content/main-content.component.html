@@ -83,7 +83,7 @@
         <!-- Date line for messages -->
         @if (isNewDate(index, 'channel')) {
         <div class="date-line">
-          <div class="Line">
+          <div class="line">
             <span>{{ formatDate(post.timestamp) }}</span>
           </div>
         </div>
@@ -181,7 +181,7 @@
         <!-- Date line for messages -->
         @if (isNewDate(index, "directMessage")) {
         <div class="date-line">
-          <div class="Line">
+          <div class="line">
             <span>{{ formatDate(post.timestamp) }}</span>
           </div>
         </div>
@@ -195,7 +195,6 @@
           [selectedDirectMessage]="selectedDirectMessage"
           [indexPost]="index"
           [path]="'directMessages'"
-          (reactionSaved)="onReactionSaved()"
           (openThread)="openThread(post, 'directMessages')"
         >
         </app-post>

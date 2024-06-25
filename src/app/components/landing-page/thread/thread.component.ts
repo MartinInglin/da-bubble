@@ -24,6 +24,7 @@ import { PostInputComponent } from '../post-input/post-input.component';
 import { StateService } from '../../../services/stateservice.service';
 import { DirectMessage } from '../../../models/direct-message.class';
 import { DirectMessagesService } from '../../../services/firestore/direct-messages.service';
+import { Post } from '../../../models/post.class';
 
 @Component({
   selector: 'app-thread',

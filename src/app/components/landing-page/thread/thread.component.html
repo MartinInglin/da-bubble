@@ -44,7 +44,7 @@
     @for (post of selectedThread.posts | slice:1; track post; let index =
     $index) { @if (isNewDate(index)) {
     <div class="date-line">
-      <div class="Line">
+      <div class="line">
         <span>{{ formatDate(post.timestamp) }}</span>
       </div>
     </div>

@@ -85,7 +85,6 @@ export class MainContentComponent
   private channelSubscription: Subscription = new Subscription();
   private usersSubscription: Subscription = new Subscription();
   private directMessageSubscription: Subscription = new Subscription();
-  private shouldScrollToBottom = true;
 
   filteredChannels: Channel[] = [];
   currentUser: User = new User();
@@ -132,7 +131,6 @@ export class MainContentComponent
   private initializeUserSubscription(): void {
     this.userSubscription = this.usersService.currentUser$.subscribe((user: User | null) => {
       this.currentUser = user ?? new User();
-      this.scrollToBottomWithDelay();
       this.initializeFilteredChannels(this.currentUser);
     });
   }
@@ -180,7 +178,6 @@ export class MainContentComponent
     if (this.channelSelected) {
       this.chatSelected = false;
       this.getUserCount();
-      this.scrollToBottomWithDelay();
     }
   }
   
@@ -224,7 +221,6 @@ export class MainContentComponent
         this.selectedDirectMessage = directMessage ?? new DirectMessage();
         this.handleDirectMessageSelection(this.selectedDirectMessage);
         this.getOtherUserDirectMessage();
-        this.scrollToBottomWithDelay();
         this.checkNameWidth();
       }
     );
@@ -312,7 +308,6 @@ export class MainContentComponent
   ngAfterViewInit(): void {
     if (this.channelMessageContent) {
       const channelObserver = new MutationObserver(() => {
-        this.scrollToBottom(this.channelMessageContent);
       });
       channelObserver.observe(this.channelMessageContent.nativeElement, {
         childList: true,
@@ -320,7 +315,6 @@ export class MainContentComponent
     }
     if (this.directMessageContent) {
       const directMessageObserver = new MutationObserver(() => {
-        this.scrollToBottom(this.directMessageContent);
       });
       directMessageObserver.observe(this.directMessageContent.nativeElement, {
         childList: true,
@@ -371,51 +365,6 @@ export class MainContentComponent
       return `${words[0]} ${words[words.length - 1]}`;
     }
     return name;
-  }
-
-  /**
-   * Scrolls to the bottom of the message content areas (channel and direct message)
-   * after a short delay to ensure the DOM has been updated.
-   */
-  scrollToBottomWithDelay(): void {
-    setTimeout(() => {
-      if (this.channelMessageContent) {
-        this.scrollToBottom(this.channelMessageContent);
-      }
-      if (this.directMessageContent) {
-        this.scrollToBottom(this.directMessageContent);
-      }
-    }, 100); // Beispiel für eine Verzögerung von 500ms
-  }
-
-  /**
-   * Scrolls the given element reference to the bottom of its content.
-   *
-   * @param elementRef - The reference to the DOM element to scroll.
-   */
-  scrollToBottom(elementRef: ElementRef): void {
-    if (elementRef) {
-      try {
-        setTimeout(() => {
-          this.cdref.detectChanges();
-          elementRef.nativeElement.scrollTop =
-            elementRef.nativeElement.scrollHeight;
-        }, 100); // Delay to ensure DOM is fully updated
-      } catch (err) {
-        console.error('Scroll to bottom error:', err);
-      }
-    }
-  }
-
-  /**
-   * Temporarily disables automatic scrolling to the bottom when a reaction is saved,
-   * then re-enables it after a short delay.
-   */
-  onReactionSaved(): void {
-    this.shouldScrollToBottom = false; // Disable scrolling when reaction is saved
-    setTimeout(() => {
-      this.shouldScrollToBottom = true; // Re-enable scrolling after a short delay
-    }, 500); // Adjust the delay as needed
   }
 
   /**
