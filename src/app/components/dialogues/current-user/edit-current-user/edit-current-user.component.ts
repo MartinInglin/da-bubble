@@ -286,7 +286,6 @@ async updateUserData(): Promise<void> {
  * @returns {Promise<void>}
  */
 async changeMailAdress(): Promise<void> {
-  debugger;
   if (this.currentUser && this.password) {
     const isValid = await this.authService.verifyPassword(
       this.currentUser.email,
@@ -294,8 +293,9 @@ async changeMailAdress(): Promise<void> {
     );
     this.isPasswordVerified = isValid;
     if (isValid) {
-      await this.saveChanges();
       this.authService.changeEmail(this.updatedEmail, this.password);
+      this.snackbarService.openSnackBar(`Verfizierungs-Email versendet an ${this.updatedEmail}.`, 'Schließen');
+      this.dialogRef.close();
     } else {
       this.passwordIsFalse = true;
     }
