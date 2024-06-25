@@ -572,7 +572,6 @@ export class ChannelsService {
     batch.update(channelDocRef, { users: channelData.users });
 
     await batch.commit();
-    console.log('All users added to the channel.');
   }
 
   /**
