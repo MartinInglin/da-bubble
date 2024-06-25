@@ -46,8 +46,6 @@ export class ProfileDetailViewComponent implements OnInit {
     this.userName = data.userName;
     this.userEmail = data.userEmail;
     this.userAvatar = data.userAvatar;
-
-    console.log('Received data:', data);
   }
 
   /**
@@ -90,8 +88,6 @@ export class ProfileDetailViewComponent implements OnInit {
    * Sends a direct message to the user identified by userId using currentUser's information.
    */
   async sendDirectMessage() {
-    console.log('User ID:', this.userId);
-    console.log('Current User:', this.currentUser);
     if (this.currentUser) {
       try {
         await this.directMessagesService.getDataDirectMessage(this.userId, this.currentUser);

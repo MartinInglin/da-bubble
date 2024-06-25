@@ -298,7 +298,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.postsService.getPostById(id).subscribe(result => {
       if (result) {
         const { post, path, channelId } = result;
-        console.log('Post data:', post);
         if (path === 'channels') {
           this.channelsService.getDataChannel(channelId);
           this.scrollToPost(id);
