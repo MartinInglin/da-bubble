@@ -594,7 +594,6 @@ private async getPostFromCollection(collectionName: 'channels' | 'directMessages
         return [];
       }
     } catch (error) {
-      console.error('Error getting posts: ', error);
       return [];
     }
   }
