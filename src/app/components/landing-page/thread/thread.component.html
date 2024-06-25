@@ -8,7 +8,7 @@
       <span class="thread-name"># {{ selectedThread.name }}</span>
       }
       @else {
-        <span class="thread-name">&#64; {{ selectedThread.name }}</span>
+        <span class="thread-name">&#64; {{ getFirstAndLastName(selectedThread.name) }}</span>
       }
     </div>
 
