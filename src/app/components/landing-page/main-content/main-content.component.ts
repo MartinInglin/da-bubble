@@ -85,7 +85,7 @@ export class MainContentComponent
   private channelSubscription: Subscription = new Subscription();
   private usersSubscription: Subscription = new Subscription();
   private directMessageSubscription: Subscription = new Subscription();
-  private shouldScrollToBottom = true; // Add this flag
+  private shouldScrollToBottom = true;
 
   filteredChannels: Channel[] = [];
   currentUser: User = new User();
@@ -115,75 +115,157 @@ export class MainContentComponent
   }
 
   ngOnInit(): void {
-    /**
-     * Initializes the component by subscribing to various observables
-     * and setting up initial data and behaviors.
-     */
-    this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
+    this.initializeUserSubscription();
+    this.initializeChannelSubscription();
+    this.initializeUsersSubscription();
+    this.initializeDirectMessageSubscription();
+    this.initializeStateSubscriptions();
+    this.initializeSearchResultsSubscription();
+  }
+  
+  /**
+   * Initializes the subscription to the currentUser$ observable from the usersService.
+   * Sets the current user and initializes filtered channels.
+   * 
+   * @private
+   */
+  private initializeUserSubscription(): void {
+    this.userSubscription = this.usersService.currentUser$.subscribe((user: User | null) => {
       this.currentUser = user ?? new User();
       this.scrollToBottomWithDelay();
-
-      const channels: Channel[] = this.currentUser.channels.map(
-        (minimalChannel) => new Channel(minimalChannel)
-      );
-      this.filteredChannels = channels.filter((c) =>
-        c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-      );
-      this.currentUser = user ?? new User();
+      this.initializeFilteredChannels(this.currentUser);
     });
-
+  }
+  
+  /**
+   * Initializes filtered channels based on the current user's channels.
+   * 
+   * @private
+   * @param {User} user - The current user.
+   */
+  private initializeFilteredChannels(user: User): void {
+    const channels: Channel[] = user.channels.map(
+      (minimalChannel) => new Channel(minimalChannel)
+    );
+    this.filteredChannels = channels.filter((c) =>
+      c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  }
+  
+  /**
+   * Initializes the subscription to the channelSubject$ observable from the channelsService.
+   * Sets the selected channel and handles related state changes.
+   * 
+   * @private
+   */
+  private initializeChannelSubscription(): void {
     this.channelSubscription = this.channelsService.channelSubject$.subscribe(
-      (channel) => {
+      (channel: Channel | null) => {
         if (channel) {
           this.selectedChannel = channel ?? new Channel();
-
-          this.channelSelected = !!this.selectedChannel.id;
-          if (this.channelSelected) {
-            this.chatSelected = false;
-            this.getUserCount();
-            this.scrollToBottomWithDelay();
-          }
+          this.handleChannelSelection();
         }
         this.checkNameWidth();
       }
     );
-
+  }
+  
+  /**
+   * Handles channel selection related state changes.
+   * 
+   * @private
+   */
+  private handleChannelSelection(): void {
+    this.channelSelected = !!this.selectedChannel.id;
+    if (this.channelSelected) {
+      this.chatSelected = false;
+      this.getUserCount();
+      this.scrollToBottomWithDelay();
+    }
+  }
+  
+  /**
+   * Initializes the subscription to the allUsersSubject$ observable from the usersService.
+   * Sets the list of all users and initializes filtered users.
+   * 
+   * @private
+   */
+  private initializeUsersSubscription(): void {
     this.usersSubscription = this.usersService.allUsersSubject$.subscribe(
-      (users) => {
+      (users: User[] | null) => {
         if (users) {
           this.allUsers = users ?? [];
-
-          this.filteredUsers = this.allUsers.filter((u) =>
-            u.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-          );
+          this.initializeFilteredUsers();
         }
       }
     );
-
-    this.directMessageSubscription =
-      this.directMessagesService.directMessage$.subscribe((directMessage) => {
+  }
+  
+  /**
+   * Initializes filtered users based on the search term.
+   * 
+   * @private
+   */
+  private initializeFilteredUsers(): void {
+    this.filteredUsers = this.allUsers.filter((u) =>
+      u.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  }
+  
+  /**
+   * Initializes the subscription to the directMessage$ observable from the directMessagesService.
+   * Sets the selected direct message and handles related state changes.
+   * 
+   * @private
+   */
+  private initializeDirectMessageSubscription(): void {
+    this.directMessageSubscription = this.directMessagesService.directMessage$.subscribe(
+      (directMessage: DirectMessage | null) => {
         this.selectedDirectMessage = directMessage ?? new DirectMessage();
-        // delete console log after testing
-        console.log(this.selectedDirectMessage);
-        
-
-        this.chatSelected = !!directMessage;
-        if (this.chatSelected) {
-          this.channelSelected = false;
-        }
+        console.log(this.selectedDirectMessage); // delete console log after testing
+        this.handleDirectMessageSelection(this.selectedDirectMessage);
         this.getOtherUserDirectMessage();
         this.scrollToBottomWithDelay();
         this.checkNameWidth();
-      });
-
+      }
+    );
+  }
+  
+  /**
+   * Handles direct message selection related state changes.
+   * 
+   * @private
+   * @param {DirectMessage} directMessage - The selected direct message.
+   */
+  private handleDirectMessageSelection(directMessage: DirectMessage): void {
+    this.chatSelected = !!directMessage;
+    if (this.chatSelected) {
+      this.channelSelected = false;
+    }
+  }
+  
+  /**
+   * Initializes subscriptions to the state service observables for showing contacts and channels.
+   * 
+   * @private
+   */
+  private initializeStateSubscriptions(): void {
     this.stateService.showContacts$.subscribe((show) => {
       this.chatSelected = show;
     });
-
+  
     this.stateService.showChannels$.subscribe((show) => {
       this.channelSelected = show;
     });
-
+  }
+  
+  /**
+   * Initializes the subscription to the form value changes.
+   * Sets the search term and performs the search.
+   * 
+   * @private
+   */
+  private initializeSearchResultsSubscription(): void {
     this.searchResults$ = this.form.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -193,11 +275,11 @@ export class MainContentComponent
         return this.searchTerm ? this.search(this.searchTerm) : of([]);
       })
     );
-
     this.searchResults$.subscribe((results) => {
       this.searchResults = results;
     });
   }
+  
 
   /**
    * Handles click events on the document to close the search results list if the click is outside of it.
@@ -237,7 +319,6 @@ export class MainContentComponent
         childList: true,
       });
     }
-
     if (this.directMessageContent) {
       const directMessageObserver = new MutationObserver(() => {
         this.scrollToBottom(this.directMessageContent);
@@ -246,8 +327,7 @@ export class MainContentComponent
         childList: true,
       });
     }
-
-    this.cdref.detectChanges(); // Trigger change detection
+    this.cdref.detectChanges();
     this.checkNameWidth();
   }
 
@@ -406,25 +486,23 @@ export class MainContentComponent
    */
   search(searchTerm: string): Observable<(Channel | User)[]> {
     if (searchTerm.startsWith('#')) {
-      // Suche nach Kanälen
       const filteredChannels = this.filteredChannels.filter(
         (channel) =>
           channel.name
             .toLowerCase()
             .includes(searchTerm.slice(1).toLowerCase()) &&
-          !channel.isDirectMessage // Entfernen Sie "#" aus dem Suchbegriff
+          !channel.isDirectMessage
       );
       return of(filteredChannels);
     } else if (searchTerm.startsWith('@')) {
-      // Suche nach Benutzern
       const filteredUsers = this.allUsers.filter(
         (user) =>
           user.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase()) &&
-          !user.isChannel // Entfernen Sie "@" aus dem Suchbegriff
+          !user.isChannel
       );
       return of(this.filterCurrentUser(filteredUsers));
     } else {
-      return of([]); // Return an empty observable for no matches
+      return of([]);
     }
   }
 
@@ -478,9 +556,7 @@ export class MainContentComponent
           data: { channelId: channelId },
         });
         dialogRef.componentInstance.currentUser = new User(this.currentUser);
-
         this.isDialogOpen = true;
-
         dialogRef.afterClosed().subscribe(() => {
           this.isDialogOpen = false;
         });
@@ -613,19 +689,18 @@ export class MainContentComponent
       'Samstag',
     ];
     const date = new Date(timestamp);
-    const today = new Date(); // Aktuelles Datum
-    const dayOfWeekIndex = date.getDay(); // Hole den Wochentag als Zahl (0-6)
+    const today = new Date();
+    const dayOfWeekIndex = date.getDay();
 
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = String(date.getFullYear()).slice(-2);
     const formattedDate = `${day}.${month}.${year}`;
 
-    // Überprüfe, ob das Datum heute ist
     if (date.toDateString() === today.toDateString()) {
-      return 'heute'; // Gib 'heute' zurück, wenn das Datum heute ist
+      return 'heute';
     } else {
-      return `${daysOfWeek[dayOfWeekIndex]} ${formattedDate}`; // Andernfalls gib den Namen des Wochentags zurück
+      return `${daysOfWeek[dayOfWeekIndex]} ${formattedDate}`;
     }
   }
 

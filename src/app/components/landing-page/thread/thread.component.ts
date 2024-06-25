@@ -65,8 +65,8 @@ export class ThreadComponent implements OnInit {
     new EventEmitter<boolean>();
   @Output() toggleThread = new EventEmitter<void>();
   @Output() closeSideNav = new EventEmitter<void>();
-  @Input() channelId: string = ''; // Kanal-ID als Eingabe für die Thread-Komponente
-  @Input() threadId: string = ''; // Thread-ID als Eingabe für die Thread-Komponente
+  @Input() channelId: string = '';
+  @Input() threadId: string = '';
   @Input() isOpen: boolean = false;
   closeThreadSubscription: Subscription = new Subscription();
 
@@ -74,65 +74,112 @@ export class ThreadComponent implements OnInit {
 
   constructor() { }
 
+  /**
+   * Lifecycle hook that is called after the component's view has been fully initialized.
+   * Initializes various subscriptions for the component.
+   */
   ngOnInit(): void {
-    // Subscribe to currentUser observable from usersService
+    this.initializeUserSubscription();
+    this.initializeUsersSubscription();
+    this.initializeChannelSubscription();
+    this.checkAndCloseSideNav();
+    this.initializeThreadSubscription();
+    this.initializeDirectMessageSubscription();
+  }
+
+  /**
+   * Initializes the subscription to the currentUser$ observable from the usersService.
+   * Sets the current user.
+   * 
+   * @private
+   */
+  private initializeUserSubscription(): void {
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       this.currentUser = user ?? new User();
     });
+  }
 
-    // Subscribe to allUsers observable from usersService
-    this.usersSubscription = this.usersService.allUsersSubject$.subscribe(
-      (users) => {
-        this.allUsers = users ?? []; // Benutzerdaten aktualisieren
-      }
-    );
+  /**
+   * Initializes the subscription to the allUsersSubject$ observable from the usersService.
+   * Sets the list of all users.
+   * 
+   * @private
+   */
+  private initializeUsersSubscription(): void {
+    this.usersSubscription = this.usersService.allUsersSubject$.subscribe((users) => {
+      this.allUsers = users ?? [];
+    });
+  }
 
-    // Subscribe to selectedChannel observable from channelsService
-    this.channelSubscription = this.channelsService.channelSubject$.subscribe(
-      (channel) => {
-        this.selectedChannel = channel ?? new Channel();
-      }
-    );
+  /**
+   * Initializes the subscription to the channelSubject$ observable from the channelsService.
+   * Sets the selected channel.
+   * 
+   * @private
+   */
+  private initializeChannelSubscription(): void {
+    this.channelSubscription = this.channelsService.channelSubject$.subscribe((channel) => {
+      this.selectedChannel = channel ?? new Channel();
+    });
+  }
 
+  /**
+   * Checks if a thread is selected and closes the side navigation if true.
+   * 
+   * @private
+   */
+  private checkAndCloseSideNav(): void {
     if (this.selectedThread) {
       this.stateService.closeSideNav();
     }
+  }
 
-    // Subscribe to selectedThread observable from threadsService
-    this.threadSubscription = this.threadsService.threadSubject$.subscribe(
-      (thread) => {
-        this.selectedThread = thread ?? new Thread();
-        if (thread) {
-          this.closeSideNav.emit(); // Emit the event to close the SideNav when a thread is opened
-        } // Close SideNav when thread is selected
+  /**
+   * Initializes the subscription to the threadSubject$ observable from the threadsService.
+   * Sets the selected thread and closes the side navigation if a thread is selected.
+   * 
+   * @private
+   */
+  private initializeThreadSubscription(): void {
+    this.threadSubscription = this.threadsService.threadSubject$.subscribe((thread) => {
+      this.selectedThread = thread ?? new Thread();
+      if (thread) {
+        this.closeSideNav.emit();
       }
-    );
-
-    this.directMessageSubscription =
-      this.directMessagesService.directMessage$.subscribe((directMessage) => {
-        this.selectedDirectMessage = directMessage ?? new DirectMessage();
-      });
+    });
   }
 
-  // Unsubscribe from all observables
-  ngOnDestroy(): void {
-    this.userSubscription.unsubscribe();
-    this.usersSubscription.unsubscribe();
-    this.channelSubscription.unsubscribe();
-    this.threadSubscription.unsubscribe();
-    this.directMessageSubscription.unsubscribe();
-    if (this.closeThreadSubscription) {
-      this.closeThreadSubscription.unsubscribe();
-    }
+  /**
+   * Initializes the subscription to the directMessage$ observable from the directMessagesService.
+   * Sets the selected direct message.
+   * 
+   * @private
+   */
+  private initializeDirectMessageSubscription(): void {
+    this.directMessageSubscription = this.directMessagesService.directMessage$.subscribe((directMessage) => {
+      this.selectedDirectMessage = directMessage ?? new DirectMessage();
+    });
   }
 
-  // Emit toggleThread event
+  /**
+   * Closes the thread and emits an event to toggle the thread state.
+   * 
+   * @private
+   */
   closeThread(): void {
     this.isOpen = false;
     this.toggleThread.emit();
   }
 
-  // Array of days of the week in German
+  /**
+   * Formats a given timestamp into a string representing the date.
+   * The format includes the day of the week and the date in DD.MM.YY format.
+   * If the timestamp corresponds to today's date, it returns 'heute'.
+   * 
+   * @private
+   * @param {number} timestamp - The timestamp to format.
+   * @returns {string} The formatted date string.
+   */
   formatDate(timestamp: number): string {
     const daysOfWeek = [
       'Sonntag',
@@ -144,21 +191,20 @@ export class ThreadComponent implements OnInit {
       'Samstag',
     ];
     const date = new Date(timestamp);
-    const today = new Date(); // Aktuelles Datum
-    const dayOfWeekIndex = date.getDay(); // Hole den Wochentag als Zahl (0-6)
+    const today = new Date();
+    const dayOfWeekIndex = date.getDay();
 
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = String(date.getFullYear()).slice(-2);
     const formattedDate = `${day}.${month}.${year}`;
 
-    // Überprüfe, ob das Datum heute ist
     if (date.toDateString() === today.toDateString()) {
       this.dateForLine = 'heute';
-      return 'heute'; // Gib 'heute' zurück, wenn das Datum heute ist
+      return 'heute';
     } else {
       this.dateForLine = `${daysOfWeek[dayOfWeekIndex]} ${formattedDate}`;
-      return `${daysOfWeek[dayOfWeekIndex]} ${formattedDate}`; // Andernfalls gib den Namen des Wochentags zurück
+      return `${daysOfWeek[dayOfWeekIndex]} ${formattedDate}`;
     }
   }
 
@@ -194,7 +240,27 @@ export class ThreadComponent implements OnInit {
     return name;
   }
 
-  callSetFocus() {
+  /**
+   * Calls the setFocus method on the postInputComponent to set focus on the input element.
+   * 
+   * @private
+   */
+  callSetFocus(): void {
     this.postInputComponent.setFocus();
+  }
+
+  /**
+   * Angular lifecycle hook that is called when the component is destroyed.
+   * Unsubscribes from all active subscriptions to prevent memory leaks.
+   */
+  ngOnDestroy(): void {
+    this.userSubscription.unsubscribe();
+    this.usersSubscription.unsubscribe();
+    this.channelSubscription.unsubscribe();
+    this.threadSubscription.unsubscribe();
+    this.directMessageSubscription.unsubscribe();
+    if (this.closeThreadSubscription) {
+      this.closeThreadSubscription.unsubscribe();
+    }
   }
 }

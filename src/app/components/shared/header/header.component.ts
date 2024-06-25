@@ -72,60 +72,121 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Initializes the component by setting up subscriptions and form controls.
-  * 
-  * @returns {void}
-  */
+   * Lifecycle hook that is called after the component's view has been fully initialized.
+   * Initializes various subscriptions for the component.
+   */
   ngOnInit(): void {
-    // Subscribe to currentUser and filter channels based on search term
+    this.initializeUserSubscription();
+    this.initializeRouteSubscription();
+    this.initializeAllUsersSubscription();
+    this.initializeSearchResultsSubscription();
+  }
+
+  /**
+   * Initializes the subscription to the currentUser$ observable from the usersService.
+   * Sets the current user and initializes filtered channels and direct messages/posts.
+   * 
+   * @private
+   */
+  private initializeUserSubscription(): void {
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       this.currentUser = user ?? new User();
-      const channels: Channel[] = this.currentUser.channels.map(
-        (minimalChannel) => new Channel(minimalChannel)
-      );
-      this.filteredChannels = channels.filter((c) =>
-        c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-      );
-
-      // Fetch posts for the channels and direct messages the user is part of
-      const userChannelIds = this.currentUser.channels.map(channel => channel.id);
-      const userDirectMessageIds = [this.currentUser.privateDirectMessageId];
-
-      // Fetch all direct messages the user is part of
-      this.directMessagesService.getDirectMessagesCollection().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          const directMessage = doc.data() as DirectMessage;
-          if (directMessage.users.some(user => user.id === this.currentUser.id)) {
-            userDirectMessageIds.push(doc.id);
-          }
-        });
-
-        this.postsService.getAllPostsForUser(userChannelIds, userDirectMessageIds)
-          .subscribe((posts) => {
-            this.filteredPosts = posts;
-
-            this.filteredPosts.forEach(post => {
-              const channel = this.filteredChannels.find(c => c.id === post.channelId);
-              if (channel) {
-                post.channelName = channel.name;
-              }
-              const user = this.allUsers.find(u => u.id === post.userId);
-              if (user) {
-                post.userName = user.name;
-              }
-            });
-          });
-      });
+      this.initializeFilteredChannels();
+      this.initializeDirectMessagesAndPosts();
     });
+  }
 
-    // Subscribe to router events to show or hide register element based on the URL
+  /**
+   * Initializes the filtered channels based on the current user's channels.
+   * Filters the channels by the search term.
+   * 
+   * @private
+   */
+  private initializeFilteredChannels(): void {
+    const channels: Channel[] = this.currentUser.channels.map(
+      (minimalChannel) => new Channel(minimalChannel)
+    );
+    this.filteredChannels = channels.filter((c) =>
+      c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  }
+
+  /**
+   * Initializes the direct messages and posts for the current user.
+   * Retrieves direct messages and then initializes the posts.
+   * 
+   * @private
+   */
+  private initializeDirectMessagesAndPosts(): void {
+    const userChannelIds = this.currentUser.channels.map(channel => channel.id);
+    const userDirectMessageIds = [this.currentUser.privateDirectMessageId];
+
+    this.directMessagesService.getDirectMessagesCollection().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const directMessage = doc.data() as DirectMessage;
+        if (directMessage.users.some(user => user.id === this.currentUser.id)) {
+          userDirectMessageIds.push(doc.id);
+        }
+      });
+      this.initializePosts(userChannelIds, userDirectMessageIds);
+    });
+  }
+
+  /**
+   * Initializes the posts for the current user based on channel and direct message IDs.
+   * Populates the post details with channel and user names.
+   * 
+   * @private
+   * @param {string[]} userChannelIds - Array of channel IDs for the current user.
+   * @param {string[]} userDirectMessageIds - Array of direct message IDs for the current user.
+   */
+  private initializePosts(userChannelIds: string[], userDirectMessageIds: string[]): void {
+    this.postsService.getAllPostsForUser(userChannelIds, userDirectMessageIds)
+      .subscribe((posts) => {
+        this.filteredPosts = posts;
+        this.populatePostDetails();
+      });
+  }
+
+  /**
+   * Populates the details of each post with the corresponding channel and user names.
+   * 
+   * @private
+   */
+  private populatePostDetails(): void {
+    this.filteredPosts.forEach(post => {
+      const channel = this.filteredChannels.find(c => c.id === post.channelId);
+      if (channel) {
+        post.channelName = channel.name;
+      }
+      const user = this.allUsers.find(u => u.id === post.userId);
+      if (user) {
+        post.userName = user.name;
+      }
+    });
+  }
+
+  /**
+   * Initializes the subscription to the router events.
+   * Updates the visibility of the register element based on the current URL.
+   * 
+   * @private
+   */
+  private initializeRouteSubscription(): void {
     this.routeSubscription = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.showRegisterElement = event.url === '/' || event.url === '/login';
       }
     });
+  }
 
-    // Subscribe to allUsers and filter users based on search term
+  /**
+   * Initializes the subscription to the allUsersSubject$ observable from the usersService.
+   * Sets the all users list and filters the users by the search term.
+   * 
+   * @private
+   */
+  private initializeAllUsersSubscription(): void {
     this.userSubscription = this.usersService.allUsersSubject$.subscribe(
       (users) => {
         if (users) {
@@ -136,8 +197,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
         }
       }
     );
+  }
 
-    // Listen for form value changes and update search results
+  /**
+   * Initializes the subscription to the form value changes.
+   * Sets the search term and performs the search.
+   * 
+   * @private
+   */
+  private initializeSearchResultsSubscription(): void {
     this.searchResults$ = this.form.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -147,13 +215,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
         return this.searchTerm ? this.search(this.searchTerm) : of([]);
       })
     );
-
-    // Subscribe to search results and update the component's state
     this.searchResults$.subscribe((results) => {
       this.searchResults = results;
     });
   }
-
 
   /**
   * Handles click events outside the search results list to close the results.
@@ -240,6 +305,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     console.log('Opening post with ID:', id);
     this.form.get('recipient')?.setValue('');
   }
+
   /**
      * Selects a recipient (channel, user, or post) and updates the form control value.
      * 
@@ -259,7 +325,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
    * @returns {Observable<(Channel | User | Post)[]>} An observable of the search results.
    */
   search(searchTerm: string): Observable<(Channel | User | Post)[]> {
-    // Separate Suchanfragen basierend auf dem Präfix im Suchbegriff
     if (searchTerm.startsWith('#')) {
       return this.searchChannels(searchTerm.slice(1));
     } else if (searchTerm.startsWith('@')) {
@@ -269,16 +334,37 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Searches for channels whose names contain the specified term.
+   * 
+   * @private
+   * @param {string} term - The term to search for.
+   * @returns {Observable<Channel[]>} An observable that returns a list of filtered channels.
+   */
   private searchChannels(term: string): Observable<Channel[]> {
     return of(this.filteredChannels.filter(channel =>
       channel.name.toLowerCase().includes(term.toLowerCase())));
   }
 
+  /**
+   * Searches for users whose names contain the specified term.
+   * 
+   * @private
+   * @param {string} term - The term to search for.
+   * @returns {Observable<User[]>} An observable that returns a list of filtered users.
+   */
   private searchUsers(term: string): Observable<User[]> {
     return of(this.allUsers.filter(user =>
       user.name.toLowerCase().includes(term.toLowerCase())));
   }
 
+  /**
+   * Searches for channels, users, and posts that contain the specified term.
+   * 
+   * @private
+   * @param {string} term - The term to search for.
+   * @returns {Observable<(Channel | User | Post)[]>} An observable that returns a list of filtered channels, users, and posts.
+   */
   private searchAll(term: string): Observable<(Channel | User | Post)[]> {
     const filteredChannels = this.filteredChannels.filter(channel =>
       channel.name.toLowerCase().includes(term.toLowerCase()));
@@ -303,20 +389,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
       return true;
     });
-  }
-
-  /**
-   * Unsubscribes from all subscriptions to prevent memory leaks.
-   * 
-   * @returns {void}
-   */
-  ngOnDestroy(): void {
-    if (this.userSubscription) {
-      this.userSubscription.unsubscribe();
-    }
-    if (this.routeSubscription) {
-      this.routeSubscription.unsubscribe();
-    }
   }
 
   /**
@@ -430,4 +502,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Unsubscribes from all subscriptions to prevent memory leaks.
+   * 
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
+    }
+  }
 }
