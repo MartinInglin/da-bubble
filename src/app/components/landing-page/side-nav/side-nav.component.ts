@@ -253,13 +253,13 @@ export class SideNavComponent implements OnInit {
     this.isOpen = false;
   }
 
-   /**
-   * Checks if the screen width is below the specified threshold.
-   * 
-   * @param {number} width - The screen width threshold.
-   * @returns {boolean} True if the screen width is below the threshold, false otherwise.
-   */
-   isScreenWidthBelow(width: number): boolean {
+  /**
+  * Checks if the screen width is below the specified threshold.
+  * 
+  * @param {number} width - The screen width threshold.
+  * @returns {boolean} True if the screen width is below the threshold, false otherwise.
+  */
+  isScreenWidthBelow(width: number): boolean {
     return window.innerWidth < width;
   }
 
@@ -375,15 +375,63 @@ export class SideNavComponent implements OnInit {
     }
   }
 
+/**
+ * Opens a post based on the provided ID and resets the recipient form control.
+ * 
+ * @param {string} id - The ID of the post to open.
+ * @returns {void}
+ */
+openPost(id: string): void {
+  this.closeSidenavMobile();
+  this.postsService.getPostById(id).subscribe(result => {
+    if (result) {
+      const { post, path, channelId } = result;
+      if (path === 'channels') {
+        this.channelsService.getDataChannel(channelId);
+        this.scrollToPost(id);
+      } else if (path === 'directMessages') {
+        this.usersService.currentUser$.subscribe(currentUser => {
+          if (currentUser) {
+            this.directMessagesService.getDataDirectMessage(channelId, currentUser);
+            this.scrollToPost(id);
+          } else {
+            console.error('No current user found');
+          }
+        });
+      }
+    } else {
+      console.log('Post not found');
+    }
+  });
+
+  this.form.get('recipient')?.setValue('');
+}
+
   /**
-   * Opens a post based on the provided ID and resets the recipient form control.
+   * Scrolls to the post with the given ID and highlights it.
    * 
-   * @param {string} id - The ID of the post to open.
-   * @returns {void}
+   * @param {string} postId - The ID of the post to scroll to.
    */
-  openPost(id: string): void {
-    console.log('Opening post with ID:', id);
-    this.form.get('recipient')?.setValue('');
+  scrollToPost(postId: string): void {
+    setTimeout(() => {
+      const element = document.getElementById(`post-${postId}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        this.highlightPost(element);
+      }
+    }, 500);
+  }
+
+  /**
+   * Highlights the post element by adding a CSS class and removing it after 5 seconds.
+   * 
+   * @param {HTMLElement} element - The post element to highlight.
+   */
+  highlightPost(element: HTMLElement): void {
+    element.classList.add('highlight');
+    setTimeout(() => {
+      element.classList.remove('highlight');
+    }, 5000);
   }
 
   /**

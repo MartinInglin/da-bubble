@@ -79,7 +79,7 @@
       #channelMessageContent
     >
       @if (selectedChannel.posts.length > 0) {
-      <div *ngFor="let post of selectedChannel.posts; let index = index">
+      <div *ngFor="let post of selectedChannel.posts; let index = index" [id]="'post-' + post.id">
         <!-- Date line for messages -->
         @if (isNewDate(index, 'channel')) {
         <div class="date-line">
@@ -177,7 +177,7 @@
       <!-- Date line for messages -->
       @if (selectedDirectMessage.posts.length > 0 &&
       selectedDirectMessage.users.length > 0) {
-      <div *ngFor="let post of selectedDirectMessage.posts; let index = index">
+      <div *ngFor="let post of selectedDirectMessage.posts; let index = index" [id]="'post-' + post.id">
         <!-- Date line for messages -->
         @if (isNewDate(index, "directMessage")) {
         <div class="date-line">

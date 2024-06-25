@@ -498,6 +498,46 @@ export class PostsService {
     return false;
   }
 
+/**
+ * Retrieves a post by its ID from channels or directMessages collections.
+ * 
+ * @param {string} id - The ID of the post to retrieve.
+ * @returns {Observable<{ post: Post, path: string, channelId: string } | undefined>} - The post or undefined if not found.
+ */
+getPostById(id: string): Observable<{ post: Post, path: string, channelId: string } | undefined> {
+  return from(this.getPostFromCollection('channels', id)).pipe(
+    mergeMap(result => result ? of(result) : this.getPostFromCollection('directMessages', id)),
+    catchError((error) => {
+      console.error('Error getting post:', error);
+      return of(undefined);
+    })
+  );
+}
+
+private async getPostFromCollection(collectionName: 'channels' | 'directMessages', id: string): Promise<{ post: Post, path: string, channelId: string } | undefined> {
+  try {
+    const collectionRef = collection(this.firestore, collectionName);
+    const querySnapshot = await getDocs(collectionRef);
+
+    for (const docSnap of querySnapshot.docs) {
+      const docData = docSnap.data();
+      const posts: Post[] = docData['posts'];
+
+      if (posts) {
+        const post = posts.find(p => p.id === id);
+        if (post) {
+          return { post, path: collectionName, channelId: docSnap.id };
+        }
+      }
+    }
+    return undefined;
+  } catch (error) {
+    console.error(`Error getting post from ${collectionName}`, error);
+    return undefined;
+  }
+}
+
+
   /**
    * Retrieves all posts from channels and direct messages that the current user is part of.
    *
@@ -531,7 +571,7 @@ export class PostsService {
     return from(this.getPostsPromise(path, documentId)).pipe(
       catchError((error) => {
         console.error('Error getting posts: ', error);
-        return of([]); // Return an empty observable on error
+        return of([]);
       })
     );
   }

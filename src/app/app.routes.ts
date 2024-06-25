@@ -13,6 +13,7 @@ import {
   redirectLoggedInTo,
   redirectUnauthorizedTo,
 } from '@angular/fire/auth-guard';
+import { MainContentComponent } from './components/landing-page/main-content/main-content.component';
 
 const redirectSignedInToLandingPage = () =>
   redirectLoggedInTo(['/landingPage']);
@@ -55,4 +56,10 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { authGuardPipe: redirectUnauthorizedToLogin },
   },
+  {
+    path: 'mainContent',
+    component: MainContentComponent,
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+  }
 ];

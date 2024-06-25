@@ -1,6 +1,6 @@
 <!-- Current user -->
 @if (postFromCurrentUser) {
-<div class="message">
+<div class="message" [id]="'post-' + post.id">
   <div
     class="message-container-current-user"
     (mouseenter)="showMenu = true"
@@ -139,7 +139,7 @@
 
 <!--Not current User-->
 @if (!postFromCurrentUser) {
-<div class="message">
+<div class="message" [id]="'post-' + post.id">
   <div
     class="message-container"
     (mouseenter)="showMenu = true"

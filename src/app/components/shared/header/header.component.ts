@@ -295,8 +295,56 @@ export class HeaderComponent implements OnInit, OnDestroy {
   * @returns {void}
   */
   openPost(id: string): void {
-    console.log('Opening post with ID:', id);
+    this.postsService.getPostById(id).subscribe(result => {
+      if (result) {
+        const { post, path, channelId } = result;
+        console.log('Post data:', post);
+        if (path === 'channels') {
+          this.channelsService.getDataChannel(channelId);
+          this.scrollToPost(id);
+        } else if (path === 'directMessages') {
+          this.usersService.currentUser$.subscribe(currentUser => {
+            if (currentUser) {
+              this.directMessagesService.getDataDirectMessage(channelId, currentUser);
+              this.scrollToPost(id);
+            } else {
+              console.error('No current user found');
+            }
+          });
+        }
+        this.closeSearchResults();
+      } else {
+        console.log('Post not found');
+      }
+    });
     this.form.get('recipient')?.setValue('');
+  }
+
+  /**
+   * Scrolls to the post with the given ID and highlights it.
+   * 
+   * @param {string} postId - The ID of the post to scroll to.
+   */
+  scrollToPost(postId: string): void {
+    setTimeout(() => {
+      const element = document.getElementById(`post-${postId}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        this.highlightPost(element);
+      }
+    }, 500);
+  }
+
+  /**
+   * Highlights the post element by adding a CSS class and removing it after 5 seconds.
+   * 
+   * @param {HTMLElement} element - The post element to highlight.
+   */
+  highlightPost(element: HTMLElement): void {
+    element.classList.add('highlight');
+    setTimeout(() => {
+      element.classList.remove('highlight');
+    }, 3000);
   }
 
   /**
@@ -481,13 +529,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-   /**
-   * Extracts the first and last word of a given name.
-   * 
-   * @param {string} name - The full name of the user.
-   * @returns {string} - The processed name containing only the first and last word.
-   */
-   getFirstAndLastName(name: string): string {
+  /**
+  * Extracts the first and last word of a given name.
+  * 
+  * @param {string} name - The full name of the user.
+  * @returns {string} - The processed name containing only the first and last word.
+  */
+  getFirstAndLastName(name: string): string {
     const words = name.split(' ');
     if (words.length > 1) {
       return `${words[0]} ${words[words.length - 1]}`;
