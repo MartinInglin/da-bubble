@@ -250,8 +250,8 @@ cdk-overlay-connected-position-bounding-box {
   background-color: black;
 }
 
-.post-input {
-  width: 100%;
+.post-input{
+  width: 90%;
 }
 
 @media (max-width: 440px) {
@@ -278,7 +278,11 @@ cdk-overlay-connected-position-bounding-box {
 }
 
 .post-input {
-  width: 70%;
-  margin-left: 100px;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  box-sizing: border-box;
 }
+
 }
