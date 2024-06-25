@@ -79,7 +79,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.initializeUserSubscription();
     this.initializeRouteSubscription();
     this.initializeAllUsersSubscription();
-    this.initializeSearchResultsSubscription();
   }
 
   /**
@@ -200,24 +199,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Initializes the subscription to the form value changes.
-   * Sets the search term and performs the search.
+   * Handles the search operation when the Enter key is pressed.
    * 
-   * @private
+   * @returns {void}
    */
-  private initializeSearchResultsSubscription(): void {
-    this.searchResults$ = this.form.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap((formValue) => {
-        const term = formValue.recipient;
-        this.searchTerm = typeof term === 'string' ? term : '';
-        return this.searchTerm ? this.search(this.searchTerm) : of([]);
-      })
-    );
-    this.searchResults$.subscribe((results) => {
-      this.searchResults = results;
-    });
+  onSearch(): void {
+    const term = this.form.get('recipient')?.value;
+    this.searchTerm = typeof term === 'string' ? term : '';
+    if (this.searchTerm) {
+      this.search(this.searchTerm).subscribe((results) => {
+        this.searchResults = results;
+      });
+    }
   }
 
   /**
@@ -307,11 +300,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Selects a recipient (channel, user, or post) and updates the form control value.
-     * 
-     * @param {Channel | User | Post} recipient - The selected recipient.
-     * @returns {void}
-     */
+   * Selects a recipient (channel, user, or post) and updates the form control value.
+   * 
+   * @param {Channel | User | Post} recipient - The selected recipient.
+   * @returns {void}
+   */
   selectRecipient(recipient: Channel | User | Post) {
     const recipientString: any =
       recipient instanceof Channel ? `#${recipient.name}` : `@${recipient.id}`;
@@ -374,21 +367,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       post.message.toLowerCase().includes(term.toLowerCase()));
 
     return of([...filteredChannels, ...filteredUsers, ...filteredPosts]);
-  }
-
-  /**
-   * Filters out the current user from the search results.
-   * 
-   * @param {(Channel | User | Post)[]} results - The search results to filter.
-   * @returns {(Channel | User | Post)[]} The filtered search results.
-   */
-  private filterCurrentUser(results: (Channel | User | Post)[]): (Channel | User | Post)[] {
-    return results.filter(result => {
-      if (this.isUser(result)) {
-        return result.id !== this.currentUser.id;
-      }
-      return true;
-    });
   }
 
   /**
@@ -462,6 +440,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   onMouseOut(): void {
     this.menuDown = 'assets/images/icons/keyboard_arrow_down.svg';
   }
+
 
   /**
    * Lifecycle hook called after Angular has fully initialized the component's view.

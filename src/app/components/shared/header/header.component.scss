@@ -1,6 +1,6 @@
 @import "./../../../../styles.scss";
 
-// Header content
+
 header {
   width: 100%;
   display: flex;
@@ -12,7 +12,6 @@ header {
   height: 90px;
 }
 
-// User
 .user {
   height: 70px;
   padding-right: 10px;
@@ -75,7 +74,6 @@ header {
   }
 }
 
-// Animation for longer names
 @keyframes scrollName {
   0% {
     transform: translateX(0);
@@ -86,7 +84,6 @@ header {
   }
 }
 
-// Menu hover effect
 .menuDropDown {
   img {
     height: 30px !important;
@@ -109,7 +106,6 @@ header {
   cursor: pointer;
 }
 
-// SeachrBar
 .searchBar {
   width: 55%;
   max-width: 969px;
@@ -133,11 +129,13 @@ header {
     width: 30px;
     height: 35px;
     width: 35px;
-    pointer-events: none;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
 
-// Register button
 .register {
   display: flex;
   flex-direction: column;

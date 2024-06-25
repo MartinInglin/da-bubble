@@ -222,7 +222,6 @@ export class MainContentComponent
     this.directMessageSubscription = this.directMessagesService.directMessage$.subscribe(
       (directMessage: DirectMessage | null) => {
         this.selectedDirectMessage = directMessage ?? new DirectMessage();
-        console.log(this.selectedDirectMessage); // delete console log after testing
         this.handleDirectMessageSelection(this.selectedDirectMessage);
         this.getOtherUserDirectMessage();
         this.scrollToBottomWithDelay();
