@@ -76,6 +76,22 @@ export class SideNavComponent implements OnInit {
     this.subscribeToAllUsers();
     this.fetchDirectMessagesAndPosts();
     this.subscribeToSideNavState();
+    this.initializeFilteredChannels();
+  }
+
+  /**
+   * Initializes the filtered channels based on the current user's channels.
+   * Filters the channels by the search term.
+   * 
+   * @private
+   */
+  private initializeFilteredChannels(): void {
+    const channels: Channel[] = this.currentUser.channels.map(
+      (minimalChannel) => new Channel(minimalChannel)
+    );
+    this.filteredChannels = channels.filter((c) =>
+      c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
   }
 
   /**
@@ -288,11 +304,11 @@ export class SideNavComponent implements OnInit {
   }
 
   /**
-   * Searches for channels, users, or posts based on the provided search term.
-   * 
-   * @param {string} searchTerm - The search term to use.
-   * @returns {Observable<(Channel | User | Post)[]>} An observable of the search results.
-   */
+    * Searches for channels, users, or posts based on the provided search term.
+    * 
+    * @param {string} searchTerm - The search term to use.
+    * @returns {Observable<(Channel | User | Post)[]>} An observable of the search results.
+    */
   search(searchTerm: string): Observable<(Channel | User | Post)[]> {
     if (searchTerm.startsWith('#')) {
       return this.searchChannels(searchTerm.slice(1));
@@ -344,7 +360,6 @@ export class SideNavComponent implements OnInit {
 
     return of([...filteredChannels, ...filteredUsers, ...filteredPosts]);
   }
-
   /**
    * Filters out the current user from the search results.
    * 
@@ -375,37 +390,37 @@ export class SideNavComponent implements OnInit {
     }
   }
 
-/**
- * Opens a post based on the provided ID and resets the recipient form control.
- * 
- * @param {string} id - The ID of the post to open.
- * @returns {void}
- */
-openPost(id: string): void {
-  this.closeSidenavMobile();
-  this.postsService.getPostById(id).subscribe(result => {
-    if (result) {
-      const { post, path, channelId } = result;
-      if (path === 'channels') {
-        this.channelsService.getDataChannel(channelId);
-        this.scrollToPost(id);
-      } else if (path === 'directMessages') {
-        this.usersService.currentUser$.subscribe(currentUser => {
-          if (currentUser) {
-            this.directMessagesService.getDataDirectMessage(channelId, currentUser);
-            this.scrollToPost(id);
-          } else {
-            console.error('No current user found');
-          }
-        });
+  /**
+   * Opens a post based on the provided ID and resets the recipient form control.
+   * 
+   * @param {string} id - The ID of the post to open.
+   * @returns {void}
+   */
+  openPost(id: string): void {
+    this.closeSidenavMobile();
+    this.postsService.getPostById(id).subscribe(result => {
+      if (result) {
+        const { post, path, channelId } = result;
+        if (path === 'channels') {
+          this.channelsService.getDataChannel(channelId);
+          this.scrollToPost(id);
+        } else if (path === 'directMessages') {
+          this.usersService.currentUser$.subscribe(currentUser => {
+            if (currentUser) {
+              this.directMessagesService.getDataDirectMessage(channelId, currentUser);
+              this.scrollToPost(id);
+            } else {
+              console.error('No current user found');
+            }
+          });
+        }
+      } else {
+        console.log('Post not found');
       }
-    } else {
-      console.log('Post not found');
-    }
-  });
+    });
 
-  this.form.get('recipient')?.setValue('');
-}
+    this.form.get('recipient')?.setValue('');
+  }
 
   /**
    * Scrolls to the post with the given ID and highlights it.
