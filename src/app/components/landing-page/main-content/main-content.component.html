@@ -25,7 +25,7 @@
             (click)="openDirectMessage(result.id, currentUser)"
           >
             <img src="{{ result.avatar }}" alt="" />
-            <p>{{getFirstAndLastName(result.name)}}</p>
+            <p>{{ getFirstAndLastName(result.name) }}</p>
           </div>
           <!-- Name and Avatar -->
           <div
@@ -79,7 +79,10 @@
       #channelMessageContent
     >
       @if (selectedChannel.posts.length > 0) {
-      <div *ngFor="let post of selectedChannel.posts; let index = index" [id]="'post-' + post.id">
+      <div
+        *ngFor="let post of selectedChannel.posts; let index = index"
+        [id]="'post-' + post.id"
+      >
         <!-- Date line for messages -->
         @if (isNewDate(index, 'channel')) {
         <div class="date-line">
@@ -177,7 +180,10 @@
       <!-- Date line for messages -->
       @if (selectedDirectMessage.posts.length > 0 &&
       selectedDirectMessage.users.length > 0) {
-      <div *ngFor="let post of selectedDirectMessage.posts; let index = index" [id]="'post-' + post.id">
+      <div
+        *ngFor="let post of selectedDirectMessage.posts; let index = index"
+        [id]="'post-' + post.id"
+      >
         <!-- Date line for messages -->
         @if (isNewDate(index, "directMessage")) {
         <div class="date-line">
@@ -199,7 +205,6 @@
         >
         </app-post>
       </div>
-
       }
 
       <!-- Placeholder if no message is in channel -->
