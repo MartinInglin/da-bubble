@@ -30,7 +30,7 @@
           <ng-container *ngIf="isUser(result)">
               <div class="container-name-avatar" *ngIf="!isPost(result)" (click)="openDirectMessage(result.id, currentUser)">
                   <img src="{{result.avatar}}" alt="">
-                  <span>{{ result.name }}</span>
+                  <span>{{getFirstAndLastName(result.name)}}</span>
               </div>
           </ng-container>
           <ng-container *ngIf="!isUser(result)">
@@ -113,7 +113,7 @@
 <table class="contacts" *ngIf="showContacts">
   <tr class="table-row">
     <td
-      (click)="directMessagesService.getDataPrivateDirectMessage(currentUser); closeSidenavMobileAfterContacts() "
+      (click)="directMessagesService.getDataPrivateDirectMessage(currentUser); closeSidenavMobileAfterContacts()"
       class="direct-message-users-container"
     >
       <img [src]="currentUser.avatar" alt="Profilbild" />

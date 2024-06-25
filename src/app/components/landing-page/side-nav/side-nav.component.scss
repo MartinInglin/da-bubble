@@ -355,11 +355,6 @@
   color: white;
 }
 
-.container-name-avatar {
-  display: flex;
-  align-items: center;
-}
-
 .container-name-avatar img {
   width: 30px;
   height: 30px;
@@ -372,7 +367,9 @@
   align-items: center;
   justify-content: center;
   flex-direction: row;
-  height: 45px;
+  min-height: 45px;
+  height: fit-content;
+  
   span {
     font-size: 20px;
     font-weight: bold;

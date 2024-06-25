@@ -25,7 +25,7 @@
             (click)="openDirectMessage(result.id, currentUser)"
           >
             <img src="{{ result.avatar }}" alt="" />
-            <p>{{ result.name }}</p>
+            <p>{{getFirstAndLastName(result.name)}}</p>
           </div>
           <!-- Name and Avatar -->
           <div

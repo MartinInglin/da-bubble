@@ -16,7 +16,7 @@
             <ng-container *ngIf="isUser(result)">
                 <div class="container-name-avatar" *ngIf="!isPost(result)" (click)="openDirectMessage(result.id, currentUser)">
                     <img src="{{result.avatar}}" alt="">
-                    <span>{{ result.name }}</span>
+                    <span>{{getFirstAndLastName(result.name)}}</span>
                 </div>
             </ng-container>
             <ng-container *ngIf="!isUser(result)">

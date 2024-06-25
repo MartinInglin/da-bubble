@@ -66,16 +66,16 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   menuUp: any = 'assets/images/icons/menu_up.svg';
   menuDown: any = 'assets/images/icons/menu_down.svg';
 
-  constructor(private cdref: ChangeDetectorRef){
+  constructor(private cdref: ChangeDetectorRef) {
 
   }
 
-  ngOnInit(): void {
 
-      /**
-   * Initializes the component by subscribing to the currentUser$ observable 
-   * to get the current user data and checking the window width.
-   */
+  /**
+  * Initializes the component by subscribing to the currentUser$ observable 
+  * to get the current user data and checking the window width.
+  */
+  ngOnInit(): void {
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       if (user) {
         this.currentUser = user ?? new User();
@@ -131,7 +131,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     this.isThreadOpen = false;
     if (this.drawerThread) {
       this.drawerThread.close();
-    } 
+    }
   }
 
   // Unsubscribe from userSubscription if exists
