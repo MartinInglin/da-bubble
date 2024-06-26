@@ -107,17 +107,24 @@ export class PostInputComponent {
    * This function saves a post by calling the savePost function in the posts service.
    */
   savePost() {
-    this.postsService.savePost(
-      this.files,
-      this.currentUser,
-      this.message,
-      this.path,
-      this.selectedChannel,
-      this.selectedDirectMessage,
-      this.selectedThread
-    );
-    this.message = '';
-    this.files = [];
+    if (/^\s*$/.test(this.message)) {
+      this.snackbarService.openSnackBar(
+        'Bitte schreibe eine Nachricht.',
+        'Schliessen'
+      );
+    } else {
+      this.postsService.savePost(
+        this.files,
+        this.currentUser,
+        this.message,
+        this.path,
+        this.selectedChannel,
+        this.selectedDirectMessage,
+        this.selectedThread
+      );
+      this.message = '';
+      this.files = [];
+    }
   }
 
   /**
