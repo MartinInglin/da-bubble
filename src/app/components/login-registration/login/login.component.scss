@@ -231,4 +231,23 @@ button {
     flex-direction: column;
     margin-top: 10px;
   }
+
+  @media (max-width: 320px) {
+    .card{
+max-width: 300px;
+    }
+    .button-google{
+      gap: 0px;
+    }
+    .input-email{
+      padding-left: 60px;
+      font-size: 11px!important;
+      
+    }
+    .forgot-password{
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+  }
 }
