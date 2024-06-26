@@ -48,10 +48,9 @@
           <p>
             Bitte gib dein Passwort ein um die Änderung zu bestätigen! <br>
             <br>
-            <b>Achtung: </b>Bitte stelle sicher, dass du auf die neue
-            E-Mail-Adresse Zugriff hast. Du wirst automatisch abgemeldet und musst
-            zuerst deine neue E-Mail-Adresse bestätigen, bevor du dich wieder
-            anmelden kannst.
+            <b>Achtung: </b>Du musst deine Email-Adresse bestätigen. Dazu haben
+            wir dir einen Verifizierungs-Link geschickt. Solange du dich nicht
+            verifizerst, bleibt deine alte Email-Adresse gültig.
           </p>
           <input type="password" placeholder="Passwort eingeben" [(ngModel)]="password" />
           <p *ngIf="passwordIsFalse" class="wrong">
