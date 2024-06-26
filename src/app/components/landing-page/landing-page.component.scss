@@ -166,3 +166,9 @@ mat-drawer-container {
     width: 100%;
   }
 }
+
+@media (max-width: 326px) {
+  .example-sidenav{
+    padding: 0!important;
+  }
+}
