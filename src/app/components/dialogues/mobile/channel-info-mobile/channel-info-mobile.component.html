@@ -23,6 +23,15 @@
                     <span class="created-by">Erstellt von<p>{{ channel.users[0].name }}</p></span>
                 </div>
             </div>
+            <div class="user-container">
+                <p>Mitglieder</p>
+                <div *ngFor="let user of users" class="all-users">
+                    <div class="single-user">
+                        <img [src]="user.avatar">
+                        <span>{{ user.name }}</span>
+                    </div>
+                </div>
+            </div>
             <div class="button-container">
                 <div class="message-button">
                     <button (click)="leaveChannel()">Channel verlassen</button>
