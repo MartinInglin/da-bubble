@@ -647,4 +647,9 @@ cdk-overlay-connected-position-bounding-box {
   .channelMembers {
     display: none !important;
   }
+
+  .avatarName {
+    width: fit-content;
+    padding: 0;
+  }
 }
