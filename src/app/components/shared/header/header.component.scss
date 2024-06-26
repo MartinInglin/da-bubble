@@ -320,6 +320,8 @@ header {
     display: none;
   }
 
+}
+
   @media (max-width: 600px) {
     header {
       justify-content: center;
@@ -340,9 +342,9 @@ header {
     }
   }
 
-  @media (max-width: 400px) {
+  @media (max-width: 410px) {
     .logo {
-      width: 200px;
+      width: 180px;
     }
 
     .logo-name {
@@ -352,5 +354,11 @@ header {
     .user {
       margin-left: 10px;
     }
+  }
+
+
+@media (max-width: 300px) {
+  .logo {
+    width: 110px;
   }
 }
