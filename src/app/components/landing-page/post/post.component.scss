@@ -251,7 +251,7 @@
   gap: 12px;
   margin-top: 8px;
   position: relative;
-  z-index: 1000;
+  z-index: 998;
 
   &:hover .scroll-container {
     animation: scrollName 10s linear infinite;
