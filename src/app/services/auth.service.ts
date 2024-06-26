@@ -172,8 +172,8 @@ export class AuthService {
    * This function signs in the guest user with set credentials.
    */
   signInGuestUser() {
-    const email: string = 'z6nyvjs7@ei17whwl.ch';
-    const password: string = 'VFQqcJjvlOjr';
+    const email: string = 'pre92372@ilebi.com';
+    const password: string = 'Dy£9+b~WC7i4';
   
     this.signInWithEmail(email, password);
   }
