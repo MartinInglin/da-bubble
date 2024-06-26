@@ -22,7 +22,6 @@ aside {
   }
 }
 
-
 /* Header styling for the thread */
 .head-thread {
   display: flex;
@@ -58,13 +57,13 @@ aside {
     border-radius: 100%;
 
     &:hover {
-        cursor: pointer;
-        background-color: $background;
-        scale: 1.05;
+      cursor: pointer;
+      background-color: $background;
+      scale: 1.05;
 
-        img {
-            content: url("./../../../../assets/images/icons/close_blue.svg")
-        }
+      img {
+        content: url("./../../../../assets/images/icons/close_blue.svg");
+      }
     }
   }
 }
@@ -251,7 +250,7 @@ cdk-overlay-connected-position-bounding-box {
   background-color: black;
 }
 
-.post-input{
+.post-input {
   width: 90%;
 }
 
@@ -276,14 +275,19 @@ cdk-overlay-connected-position-bounding-box {
     gap: 5px;
     width: 250px;
     padding-left: 40px;
+  }
+
+  .post-input {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    box-sizing: border-box;
+  }
 }
 
-.post-input {
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  box-sizing: border-box;
-}
-
+@media (max-width: 320px) {
+  .message-content {
+    align-items: end;
+  }
 }
