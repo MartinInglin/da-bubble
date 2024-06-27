@@ -15,6 +15,7 @@ import { PostsService } from '../../../services/firestore/posts.service';
 import { Post } from '../../../models/post.class';
 import { DirectMessage } from '../../../models/direct-message.class';
 
+
 @Component({
   selector: 'app-side-nav',
   standalone: true,
@@ -55,6 +56,7 @@ export class SideNavComponent implements OnInit {
   isDialogOpen: boolean = false;
   isSideNavOpen: boolean = true;
   isOpen: boolean = false;
+  showNoResults: boolean = false;
 
   arrowOpen: any = 'assets/images/icons/arrow_drop_down.svg';
   arrowClosed: any = 'assets/images/icons/arrow_drop_right.svg';
@@ -65,11 +67,6 @@ export class SideNavComponent implements OnInit {
     });
   }
 
-  /**
-   * Initializes the component, subscribes to relevant data sources, and sets up the search logic.
-   * 
-   * @returns {void}
-   */
   ngOnInit(): void {
     this.subscribeToShowContacts();
     this.subscribeToShowChannels();
@@ -79,12 +76,6 @@ export class SideNavComponent implements OnInit {
     this.initializeFilteredChannels();
   }
 
-  /**
-   * Initializes the filtered channels based on the current user's channels.
-   * Filters the channels by the search term.
-   * 
-   * @private
-   */
   private initializeFilteredChannels(): void {
     const channels: Channel[] = this.currentUser.channels.map(
       (minimalChannel) => new Channel(minimalChannel)
@@ -94,33 +85,18 @@ export class SideNavComponent implements OnInit {
     );
   }
 
-  /**
-   * Subscribes to the showContacts observable from the state service.
-   * 
-   * @returns {void}
-   */
   subscribeToShowContacts(): void {
     this.stateService.showContacts$.subscribe((show) => {
       this.showContacts = show;
     });
   }
 
-  /**
-   * Subscribes to the showChannels observable from the state service.
-   * 
-   * @returns {void}
-   */
   subscribeToShowChannels(): void {
     this.stateService.showChannels$.subscribe((show) => {
       this.showChannels = show;
     });
   }
 
-  /**
-   * Subscribes to the allUsers observable from the users service and filters users based on the search term.
-   * 
-   * @returns {void}
-   */
   subscribeToAllUsers(): void {
     this.allUsersSubscription = this.usersService.allUsersSubject$.subscribe(
       (users) => {
@@ -134,11 +110,6 @@ export class SideNavComponent implements OnInit {
     );
   }
 
-  /**
-   * Fetches all direct messages the user is part of and their posts.
-   * 
-   * @returns {void}
-   */
   fetchDirectMessagesAndPosts(): void {
     const userChannelIds = this.currentUser.channels.map(channel => channel.id);
     const userDirectMessageIds = [this.currentUser.privateDirectMessageId];
@@ -169,11 +140,6 @@ export class SideNavComponent implements OnInit {
     });
   }
 
-  /**
-   * Subscribes to the sideNavOpen observable from the state service.
-   * 
-   * @returns {void}
-   */
   subscribeToSideNavState(): void {
     this.sideNavSubscription = this.stateService.sideNavOpen$.subscribe((isOpen) => {
       this.isSideNavOpen = isOpen;
@@ -183,12 +149,6 @@ export class SideNavComponent implements OnInit {
     });
   }
 
-  /**
-   * Handles click events outside the search results list to close the results.
-   * 
-   * @param {MouseEvent} event - The mouse event object.
-   * @returns {void}
-   */
   @HostListener('document:click', ['$event'])
   handleClickOutside(event: MouseEvent): void {
     if (this.searchResultsList && !this.searchResultsList.nativeElement.contains(event.target)) {
@@ -196,94 +156,55 @@ export class SideNavComponent implements OnInit {
     }
   }
 
-  /**
-   * Handles the search operation when the Enter key is pressed.
-   * 
-   * @returns {void}
-   */
   onSearch(): void {
     const term = this.form.get('recipient')?.value;
     this.searchTerm = typeof term === 'string' ? term : '';
     if (this.searchTerm) {
       this.search(this.searchTerm).subscribe((results) => {
         this.searchResults = results;
+        if (results.length === 0) {
+          this.showNoResultsMessage();
+        }
       });
     }
   }
 
-  /**
-   * Retrieves data for the specified channel.
-   * 
-   * @param {string} channelId - The ID of the channel to retrieve data for.
-   * @returns {void}
-   */
+  private showNoResultsMessage(): void {
+    this.showNoResults = true;
+    setTimeout(() => {
+      this.showNoResults = false;
+    }, 5000);
+  }
+
   getDataChannel(channelId: string) {
     this.channelsService.getDataChannel(channelId);
   }
 
-  /**
-   * Closes the search results by clearing the search results array and resetting the form control.
-   * 
-   * @returns {void}
-   */
   closeSearchResults(): void {
     this.searchResults = [];
     this.form.get('recipient')?.setValue('');
   }
 
-  /**
-   * Gets the form control for the recipient input field.
-   * 
-   * @returns {FormControl} The form control for the recipient input field.
-   */
   get recipient(): FormControl {
     return this.form.get('recipient') as FormControl;
   }
 
-  /**
-   * Determines if the result is a User object.
-   * 
-   * @param {Channel | User | Post} result - The search result to check.
-   * @returns {boolean} True if the result is a User, false otherwise.
-   */
   isUser(result: Channel | User | Post): result is User {
     return (result as User).avatar !== undefined;
   }
 
-  /**
-   * Determines if the result is a Post object.
-   * 
-   * @param {Channel | User | Post} result - The search result to check.
-   * @returns {boolean} True if the result is a Post, false otherwise.
-   */
   isPost(result: Channel | User | Post): result is Post {
     return (result as Post).message !== undefined;
   }
 
-  /**
-   * Closes the side navigation.
-   * 
-   * @returns {void}
-   */
   closeSideNav() {
     this.isOpen = false;
   }
 
-  /**
-  * Checks if the screen width is below the specified threshold.
-  * 
-  * @param {number} width - The screen width threshold.
-  * @returns {boolean} True if the screen width is below the threshold, false otherwise.
-  */
   isScreenWidthBelow(width: number): boolean {
     return window.innerWidth < width;
   }
 
-  /**
-   * Closes the side navigation on mobile devices if the screen width is below 1360px.
-   * 
-   * @returns {void}
-   */
   closeSidenavMobile() {
     if (this.isScreenWidthBelow(1360)) {
       this.toggleDrawer.emit();
@@ -291,11 +212,6 @@ export class SideNavComponent implements OnInit {
     }
   }
 
-  /**
-   * Closes the side navigation on mobile devices after selecting contacts if the screen width is below 1360px.
-   * 
-   * @returns {void}
-   */
   closeSidenavMobileAfterContacts() {
     if (this.isScreenWidthBelow(1360)) {
       this.toggleDrawer.emit();
@@ -303,12 +219,6 @@ export class SideNavComponent implements OnInit {
     }
   }
 
-  /**
-    * Searches for channels, users, or posts based on the provided search term.
-    * 
-    * @param {string} searchTerm - The search term to use.
-    * @returns {Observable<(Channel | User | Post)[]>} An observable of the search results.
-    */
   search(searchTerm: string): Observable<(Channel | User | Post)[]> {
     if (searchTerm.startsWith('#')) {
       return this.searchChannels(searchTerm.slice(1));
@@ -319,37 +229,16 @@ export class SideNavComponent implements OnInit {
     }
   }
 
-  /**
-   * Searches for channels whose names contain the specified term.
-   * 
-   * @private
-   * @param {string} term - The term to search for.
-   * @returns {Observable<Channel[]>} An observable that returns a list of filtered channels.
-   */
   private searchChannels(term: string): Observable<Channel[]> {
     return of(this.filteredChannels.filter(channel =>
       channel.name.toLowerCase().includes(term.toLowerCase())));
   }
 
-  /**
-   * Searches for users whose names contain the specified term.
-   * 
-   * @private
-   * @param {string} term - The term to search for.
-   * @returns {Observable<User[]>} An observable that returns a list of filtered users.
-   */
   private searchUsers(term: string): Observable<User[]> {
     return of(this.allUsers.filter(user =>
       user.name.toLowerCase().includes(term.toLowerCase())));
   }
 
-  /**
-   * Searches for channels, users, and posts that contain the specified term.
-   * 
-   * @private
-   * @param {string} term - The term to search for.
-   * @returns {Observable<(Channel | User | Post)[]>} An observable that returns a list of filtered channels, users, and posts.
-   */
   private searchAll(term: string): Observable<(Channel | User | Post)[]> {
     const filteredChannels = this.filteredChannels.filter(channel =>
       channel.name.toLowerCase().includes(term.toLowerCase()));
@@ -360,12 +249,7 @@ export class SideNavComponent implements OnInit {
 
     return of([...filteredChannels, ...filteredUsers, ...filteredPosts]);
   }
-  /**
-   * Filters out the current user from the search results.
-   * 
-   * @param {(Channel | User | Post)[]} results - The search results to filter.
-   * @returns {(Channel | User | Post)[]} The filtered search results.
-   */
+
   private filterCurrentUser(results: (Channel | User | Post)[]): (Channel | User | Post)[] {
     return results.filter(result => {
       if (this.isUser(result)) {
@@ -375,12 +259,6 @@ export class SideNavComponent implements OnInit {
     });
   }
 
-  /**
-   * Opens a channel based on the provided ID and resets the recipient form control.
-   * 
-   * @param {string} id - The ID of the channel to open.
-   * @returns {void}
-   */
   openChannel(id: string) {
     this.channelsService.getDataChannel(id);
     this.form.get('recipient')?.setValue('');
@@ -390,12 +268,6 @@ export class SideNavComponent implements OnInit {
     }
   }
 
-  /**
-   * Opens a post based on the provided ID and resets the recipient form control.
-   * 
-   * @param {string} id - The ID of the post to open.
-   * @returns {void}
-   */
   openPost(id: string): void {
     this.closeSidenavMobile();
     this.postsService.getPostById(id).subscribe(result => {
@@ -422,11 +294,6 @@ export class SideNavComponent implements OnInit {
     this.form.get('recipient')?.setValue('');
   }
 
-  /**
-   * Scrolls to the post with the given ID and highlights it.
-   * 
-   * @param {string} postId - The ID of the post to scroll to.
-   */
   scrollToPost(postId: string): void {
     setTimeout(() => {
       const element = document.getElementById(`post-${postId}`);
@@ -437,11 +304,6 @@ export class SideNavComponent implements OnInit {
     }, 500);
   }
 
-  /**
-   * Highlights the post element by adding a CSS class and removing it after 5 seconds.
-   * 
-   * @param {HTMLElement} element - The post element to highlight.
-   */
   highlightPost(element: HTMLElement): void {
     element.classList.add('highlight');
     setTimeout(() => {
@@ -449,13 +311,6 @@ export class SideNavComponent implements OnInit {
     }, 5000);
   }
 
-  /**
-   * Opens a direct message based on the provided ID and resets the recipient form control.
-   * 
-   * @param {string} id - The ID of the direct message to open.
-   * @param {any} data - Additional data for the direct message.
-   * @returns {void}
-   */
   openDirectMessage(id: string, data: any) {
     this.directMessagesService.getDataDirectMessage(id, data);
     this.form.get('recipient')?.setValue('');
@@ -465,31 +320,15 @@ export class SideNavComponent implements OnInit {
     }
   }
 
-  /**
-   * Closes the view of channels and contacts.
-   * 
-   * @returns {void}
-   */
   closeChannelsAndContacts() {
     this.stateService.setShowContacts(false);
     this.stateService.setShowChannels(false);
   }
 
-  /**
-   * Retrieves all users.
-   * 
-   * @returns {Promise<void>} A promise that resolves when all users have been retrieved.
-   */
   async getAllUsers() {
     this.usersService.getAllUsers();
   }
 
-  /**
-   * Extracts the first and last word of a given name.
-   * 
-   * @param {string} name - The full name of the user.
-   * @returns {string} - The processed name containing only the first and last word.
-   */
   getFirstAndLastName(name: string): string {
     const words = name.split(' ');
     if (words.length > 1) {
@@ -498,11 +337,6 @@ export class SideNavComponent implements OnInit {
     return name;
   }
 
-  /**
-   * Opens the dialog for creating a new channel.
-   * 
-   * @returns {void}
-   */
   openNewChannelDialog(): void {
     if (this.currentUser) {
       if (window.innerWidth <= 750) {
@@ -523,11 +357,6 @@ export class SideNavComponent implements OnInit {
     }
   }
 
-  /**
-   * Opens the mobile dialog for creating a new channel.
-   * 
-   * @returns {void}
-   */
   openMobileDialog(): void {
     if (this.currentUser) {
       const dialogRef = this.dialog.open(NewChannelMobileComponent, {
@@ -544,11 +373,6 @@ export class SideNavComponent implements OnInit {
     }
   }
 
-  /**
-   * Cleans up subscriptions to avoid memory leaks.
-   * 
-   * @returns {void}
-   */
   ngOnDestroy(): void {
     if (this.allUsersSubscription) {
       this.allUsersSubscription.unsubscribe();

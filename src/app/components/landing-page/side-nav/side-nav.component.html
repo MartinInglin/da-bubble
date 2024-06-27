@@ -1,139 +1,115 @@
 <section [ngClass]="{ 'side-nav-open': isSideNavOpen, 'side-nav-closed': !isSideNavOpen }">
 
-<!-- head of sidenav -->
-<div class="head-side-menu">
-  <div class="head-side-menu-first" (click)="closeChannelsAndContacts()">
-    <img src="assets/images/icons/workspace_logo.png" alt="" />
-    <span>DevSpace</span>
+  <!-- head of sidenav -->
+  <div class="head-side-menu">
+    <div class="head-side-menu-first" (click)="closeChannelsAndContacts()">
+      <img src="assets/images/icons/workspace_logo.png" alt="" />
+      <span>DevSpace</span>
+    </div>
+    <div class="head-side-menu-link">
+      <img (click)="closeChannelsAndContacts()" class="edit-square-button" src="assets/images/icons/16. edit_square.svg" alt="" />
+    </div>
   </div>
-  <div class="head-side-menu-link">
-    <img
-      (click)="closeChannelsAndContacts()"
-      class="edit-square-button"
-      src="assets/images/icons/16. edit_square.svg"
-      alt=""
-    />
-  </div>
-</div>
 
-<!-- searchBar -->
-<div class="searchBar d-none" id="searchBar" [formGroup]="form">
-  <input
-    type="text"
-    formControlName="recipient"
-    placeholder="Code learning durchsuchen..."
-    (keydown.enter)="onSearch()"
-  />
-  <div *ngIf="searchResults && searchResults.length" class="list">
-    <ul #searchResultsList *ngIf="searchResults && searchResults.length > 0">
-      <li *ngFor="let result of searchResults">
+  <!-- searchBar -->
+  <div class="searchBar d-none" id="searchBar" [formGroup]="form">
+    <input
+      type="text"
+      formControlName="recipient"
+      placeholder="Code learning durchsuchen..."
+      (keydown.enter)="onSearch()"
+    />
+    <div *ngIf="searchResults && searchResults.length" class="list">
+      <ul #searchResultsList *ngIf="searchResults && searchResults.length > 0">
+        <li *ngFor="let result of searchResults">
           <ng-container *ngIf="isUser(result)">
-              <div class="container-name-avatar" *ngIf="!isPost(result)" (click)="openDirectMessage(result.id, currentUser)">
-                  <img src="{{result.avatar}}" alt="">
-                  <span>{{getFirstAndLastName(result.name)}}</span>
-              </div>
+            <div class="container-name-avatar" *ngIf="!isPost(result)" (click)="openDirectMessage(result.id, currentUser)">
+              <img src="{{result.avatar}}" alt="">
+              <span>{{getFirstAndLastName(result.name)}}</span>
+            </div>
           </ng-container>
           <ng-container *ngIf="!isUser(result)">
-              <div class="container-name-avatar" (click)="openChannel(result.id)">
-                  <span># {{ result.name }}</span>
-              </div>
+            <div class="container-name-avatar" (click)="openChannel(result.id)">
+              <span># {{ result.name }}</span>
+            </div>
           </ng-container>
           <ng-container *ngIf="isPost(result)">
             <div class="container-name-avatar" (click)="openPost(result.id)">
-              <div class=post-result>
+              <div class="post-result">
                 <span class="result-chanel">{{ result.channelName }}</span>
                 <div class="result-name-post"><span>{{ result.userName }}:</span><span>{{ result.message }}</span></div>
               </div>
             </div>
           </ng-container>
-      </li>
-  </ul>
-  </div>
-</div>
-
-<!-- Channel-List -->
-<div class="channels-head">
-  <div class="channel-head-first" (click)="showChannels = !showChannels">
-    <img
-      class="drop-down-img"
-      [src]="showChannels ? arrowOpen : arrowClosed"
-      alt="Toggle Contacts"
-    />
-    <div class="channels-list">
-      <img src="assets/images/icons/workspaces.svg" alt="" />
-      <span>Channels</span>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="searchResults && searchResults.length === 0" class="no-results">
+      <p>Keine Suchergebnisse gefunden.</p>
     </div>
   </div>
-  <div class="head-side-menu-link">
-    <img
-      (click)="openNewChannelDialog()"
-      class="add-channel-button"
-      src="assets/images/icons/add_icon.svg"
-      alt=""
-    />
-  </div>
-</div>
-<!-- Channels -->
-<table class="channels" *ngIf="showChannels">
-  <tr *ngFor="let channel of currentUser.channels; let i = index">
-    <td (click)="getDataChannel(channel.id); closeSidenavMobile()">
-      <span class="span-hashtag">#</span>
-      <span class="current-user-name">{{ currentUser.channels[i].name }}</span>
-    </td>
-  </tr>
-  <tr>
-    <td class="channel-add">
-      <img src="assets/images/icons/add_circle.svg" alt="" />
-      <span (click)="openNewChannelDialog()">Channel hinzufügen</span>
-    </td>
-  </tr>
-</table>
+  
 
-<!-- Strich -->
-<div class="channels-head" id="contacts-head">
-
-  <!-- Contacts-List -->
-  <div class="channel-head-first" (click)="showContacts = !showContacts">
-    <img
-      class="arrow-drop-down"
-      [src]="showContacts ? arrowOpen : arrowClosed"
-      alt="Toggle Contacts"
-    />
-    <div class="contacts-list">
-      <img
-        class="contact-list-account-img"
-        src="assets/images/icons/account_circle.svg"
-        alt=""
-      />
-      <span>Direktnachrichten</span>
+  <!-- Channel-List -->
+  <div class="channels-head">
+    <div class="channel-head-first" (click)="showChannels = !showChannels">
+      <img class="drop-down-img" [src]="showChannels ? arrowOpen : arrowClosed" alt="Toggle Contacts" />
+      <div class="channels-list">
+        <img src="assets/images/icons/workspaces.svg" alt="" />
+        <span>Channels</span>
+      </div>
+    </div>
+    <div class="head-side-menu-link">
+      <img (click)="openNewChannelDialog()" class="add-channel-button" src="assets/images/icons/add_icon.svg" alt="" />
     </div>
   </div>
-</div>
-<!-- Contacts -->
-<table class="contacts" *ngIf="showContacts">
-  <tr class="table-row">
-    <td
-      (click)="directMessagesService.getDataPrivateDirectMessage(currentUser); closeSidenavMobileAfterContacts()"
-      class="direct-message-users-container"
-    >
-      <img [src]="currentUser.avatar" alt="Profilbild" />
-      <span>{{getFirstAndLastName(currentUser.name)}} (Du)</span>
-      <div class="online"></div>
-    </td>
+  <!-- Channels -->
+  <table class="channels" *ngIf="showChannels">
+    <tr *ngFor="let channel of currentUser.channels; let i = index">
+      <td (click)="getDataChannel(channel.id); closeSidenavMobile()">
+        <span class="span-hashtag">#</span>
+        <span class="current-user-name">{{ currentUser.channels[i].name }}</span>
+      </td>
+    </tr>
+    <tr>
+      <td class="channel-add">
+        <img src="assets/images/icons/add_circle.svg" alt="" />
+        <span (click)="openNewChannelDialog()">Channel hinzufügen</span>
+      </td>
+    </tr>
+  </table>
 
-    @for (user of allUsers; track user) { @if (user.id != currentUser.id) {
-    <td
-      (click)="directMessagesService.getDataDirectMessage(user.id, currentUser); closeSidenavMobileAfterContacts()"
-      class="direct-message-users-container"
-    >
-      <img [src]="user.avatar" alt="Profilbild" />
-      <span>{{getFirstAndLastName(user.name)}}</span>
-      <div *ngIf="user.isSignedIn" class="online"></div>
-      <div *ngIf="!user.isSignedIn" class="offline"></div>
-    </td>
-    } }
-  </tr>
-</table>
+  <!-- Strich -->
+  <div class="channels-head" id="contacts-head">
+
+    <!-- Contacts-List -->
+    <div class="channel-head-first" (click)="showContacts = !showContacts">
+      <img class="arrow-drop-down" [src]="showContacts ? arrowOpen : arrowClosed" alt="Toggle Contacts" />
+      <div class="contacts-list">
+        <img class="contact-list-account-img" src="assets/images/icons/account_circle.svg" alt="" />
+        <span>Direktnachrichten</span>
+      </div>
+    </div>
+  </div>
+  <!-- Contacts -->
+  <table class="contacts" *ngIf="showContacts">
+    <tr class="table-row">
+      <td (click)="directMessagesService.getDataPrivateDirectMessage(currentUser); closeSidenavMobileAfterContacts()" class="direct-message-users-container">
+        <img [src]="currentUser.avatar" alt="Profilbild" />
+        <span>{{getFirstAndLastName(currentUser.name)}} (Du)</span>
+        <div class="online"></div>
+      </td>
+
+      @for (user of allUsers; track user) { @if (user.id != currentUser.id) {
+      <td (click)="directMessagesService.getDataDirectMessage(user.id, currentUser); closeSidenavMobileAfterContacts()" class="direct-message-users-container">
+        <img [src]="user.avatar" alt="Profilbild" />
+        <span>{{getFirstAndLastName(user.name)}}</span>
+        <div *ngIf="user.isSignedIn" class="online"></div>
+        <div *ngIf="!user.isSignedIn" class="offline"></div>
+      </td>
+      } }
+    </tr>
+  </table>
 
 
 </section>

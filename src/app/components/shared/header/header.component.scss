@@ -279,6 +279,18 @@ header {
   color: white;
 }
 
+.no-results {
+  color: rgb(255, 62, 62);
+  font-weight: bold;
+  transition: opacity 0.5s;
+  opacity: 1;
+}
+
+.no-results.hidden {
+  opacity: 0;
+}
+
+
 // Media querries from 1180px
 @media (max-width: 1180px) {
   .searchBar input::placeholder {
