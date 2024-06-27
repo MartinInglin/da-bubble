@@ -236,6 +236,9 @@ button {
     .button-google{
       gap: 0px;
     }
+    .card{
+      max-width: 330px!important;
+    }
     .input-email{
       padding-left: 60px;
       font-size: 11px!important;
@@ -250,5 +253,12 @@ button {
     .card {
       max-width: 100%;
     }
+  }
+}
+
+@media (max-width: 340px) {
+ 
+  .card{
+    max-width: 290px!important;
   }
 }
