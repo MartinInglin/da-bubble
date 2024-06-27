@@ -643,10 +643,13 @@ cdk-overlay-connected-position-bounding-box {
   }
 }
 
-@media (max-width: 440px) {
+@media (max-width: 620px) {
   .channelMembers {
     display: none !important;
   }
+}
+
+@media (max-width: 440px) {
 
   .avatarName {
     width: fit-content;

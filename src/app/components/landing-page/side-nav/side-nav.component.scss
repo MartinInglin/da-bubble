@@ -420,6 +420,18 @@
   }
 }
 
+.no-results {
+  color: rgb(255, 62, 62);
+  font-weight: bold;
+  transition: opacity 0.5s;
+  opacity: 1;
+}
+
+.no-results.hidden {
+  opacity: 0;
+}
+
+
 @media (max-width: 440px) {
   .contacts,
   .channels {

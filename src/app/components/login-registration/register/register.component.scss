@@ -75,8 +75,7 @@
 }
 
 .input-name {
-  background: url(./../../../../assets/images/icons/person_filled.svg) no-repeat
-    28px 17px;
+  background: url(./../../../../assets/images/icons/person_filled.svg) no-repeat 28px 17px;
   padding-left: 80px;
   box-sizing: border-box;
 }
@@ -219,11 +218,11 @@ button {
 }
 
 /* On mouse-over, add a grey background color */
-.container:hover input ~ .checkmark {
+.container:hover input~.checkmark {
   background-color: #f2f3f4;
 }
 
-input:focus ~ .checkmark {
+input:focus~.checkmark {
   border-color: $purple1;
   box-shadow: 0px 0px 8px $purple2;
 }
@@ -236,7 +235,7 @@ input:focus ~ .checkmark {
 }
 
 /* Show the checkmark when checked */
-.container input:checked ~ .checkmark:after {
+.container input:checked~.checkmark:after {
   display: block;
 }
 
@@ -251,4 +250,19 @@ input:focus ~ .checkmark {
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
+}
+
+
+@media (max-width: 400px) {
+  .input-section {
+    input {
+      font-size: 12px;
+    }
+  }
+
+  .card {
+    max-width: 400px;
+    width: 100%;
+  }
+
 }

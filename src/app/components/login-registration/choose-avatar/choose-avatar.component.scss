@@ -151,3 +151,18 @@ button {
     }
   }
 }
+
+@media (max-width: 600px) {
+  form {
+    width: 100%;
+  }
+
+  .card {
+    width: 100%;
+  }
+
+  .images-avatars {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}

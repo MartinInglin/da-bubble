@@ -12,6 +12,7 @@ import { Channel } from '../../../../models/channel.class';
 import { ChannelsService } from '../../../../services/firestore/channels.service';
 import { User } from '../../../../models/user.class';
 import { UsersService } from '../../../../services/firestore/users.service';
+import { MinimalUser } from '../../../../models/minimal_user.class';
 
 @Component({
   selector: 'app-channel-info-mobile',
@@ -30,10 +31,13 @@ import { UsersService } from '../../../../services/firestore/users.service';
 export class ChannelInfoMobileComponent {
   channel: Channel | null = null;
   currentUser: User | null = null;
+  users: User[] = [];
 
   channelSubscription: any;
 
   private userSubscription: Subscription = new Subscription();
+  private allUsersSubscription: Subscription = new Subscription();
+  
 
   constructor(
     private dialog: MatDialog,
@@ -49,9 +53,27 @@ export class ChannelInfoMobileComponent {
    */
   ngOnInit(): void {
     this.loadChannelData();
+    this.loadChannelMembers();
     this.userSubscription = this.usersService.currentUser$.subscribe(user => {
       this.currentUser = user;
     });
+  }
+
+    /**
+  * Asynchronously loads the members of the channel by fetching minimal user information and then
+  * retrieving full user details for each member.
+  * @returns {Promise<void>}
+  */
+  async loadChannelMembers(): Promise<void> {
+    try {
+      const minimalUsers: MinimalUser[] = await this.channelsService.getUsersInChannel(this.data.channelId);
+      this.users = await Promise.all(minimalUsers.map(async (minimalUser) => {
+        const user = await this.channelsService.getUserById(minimalUser.id);
+        return new User(user);
+      }));
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
   }
 
   /**

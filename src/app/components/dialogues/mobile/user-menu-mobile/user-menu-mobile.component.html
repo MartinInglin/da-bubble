@@ -1,6 +1,6 @@
 <mat-card>
     <mat-card-content>
-        <div (click)="openDialog()" #profile><img class="profile" src="assets/images/icons/account_circle.svg">Profil</div>
+        <div *ngIf="currentUser.id !== 'lc5lC7JT8pdykCMw4R4h9lbrq6z1'" (click)="openDialog()" #profile><img class="profile" src="assets/images/icons/account_circle.svg">Profil</div>
         <div (click)="onNoClick(); signOUt()"><img  class="logout" src="assets/images/icons/logout.svg">Logout</div>
     </mat-card-content>
 </mat-card>
