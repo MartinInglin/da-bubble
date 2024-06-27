@@ -279,6 +279,24 @@ header {
   color: white;
 }
 
+.no-results {
+  padding: 10px;
+  text-align: center;
+  font-size: 24px;
+  height: fit-content;
+  width: fit-content;
+  position: absolute;
+  top: 40%;
+  left: 44%;
+  background-color: $background;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  border-radius: 30px;
+  padding: 20px;
+}
+
 // Media querries from 1180px
 @media (max-width: 1180px) {
   .searchBar input::placeholder {

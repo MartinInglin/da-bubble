@@ -8,33 +8,38 @@
 
   <!-- searchBar -->
   <div class="searchBar" *ngIf="currentUser?.isSignedIn" [formGroup]="form">
-    <input (keydown.enter)="onSearch()" type="text" formControlName="recipient" placeholder="Code learning durchsuchen..."/>
+    <input (keydown.enter)="onSearch()" type="text" formControlName="recipient" placeholder="Code learning durchsuchen..." />
     <img class="searchImg" src="assets/images/icons/search.svg" alt="">
     <div *ngIf="searchResults && searchResults.length" class="list">
-      <ul #searchResultsList *ngIf="searchResults && searchResults.length > 0">
+      <ul #searchResultsList *ngIf="searchResults.length > 0">
         <li *ngFor="let result of searchResults">
-            <ng-container *ngIf="isUser(result)">
-                <div class="container-name-avatar" *ngIf="!isPost(result)" (click)="openDirectMessage(result.id, currentUser)">
-                    <img src="{{result.avatar}}" alt="">
-                    <span>{{getFirstAndLastName(result.name)}}</span>
-                </div>
-            </ng-container>
-            <ng-container *ngIf="!isUser(result)">
-                <div class="container-name-avatar" (click)="openChannel(result.id)">
-                    <span># {{ result.name }}</span>
-                </div>
-            </ng-container>
-            <ng-container *ngIf="isPost(result)">
-              <div class="container-name-avatar" (click)="openPost(result.id)">
-                <div class=post-result>
-                  <span class="result-chanel">{{ result.channelName }}</span>
-                  <div class="result-name-post"><span>{{ result.userName }}:</span><span>{{ result.message }}</span></div>
-                </div>
+          <ng-container *ngIf="isUser(result)">
+            <div class="container-name-avatar" *ngIf="!isPost(result)" (click)="openDirectMessage(result.id, currentUser)">
+              <img src="{{result.avatar}}" alt="">
+              <span>{{getFirstAndLastName(result.name)}}</span>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="!isUser(result)">
+            <div class="container-name-avatar" (click)="openChannel(result.id)">
+              <span># {{ result.name }}</span>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="isPost(result)">
+            <div class="container-name-avatar" (click)="openPost(result.id)">
+              <div class=post-result>
+                <span class="result-chanel">{{ result.channelName }}</span>
+                <div class="result-name-post"><span>{{ result.userName }}:</span><span>{{ result.message }}</span></div>
               </div>
-            </ng-container>
+            </div>
+          </ng-container>
         </li>
-    </ul>
+      </ul>
+    
     </div>
+  </div>
+
+  <div *ngIf="noResults">
+    <div class="no-results">Keine Suchergebnisse gefunden</div>
   </div>
 
   <!-- Name and Avatar if signed in -->
@@ -51,7 +56,7 @@
     <!-- menu for logOut -->
     <img class="menuDropDown" [src]="menuDown" alt="MENU" #userDiv />
   </div>
-  
+
 
   <!-- If not registered -->
   <div *ngIf="showRegisterElement" class="register">
