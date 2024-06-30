@@ -44,7 +44,7 @@
         </li>
       </ul>
     </div>
-    <div *ngIf="searchResults && searchTerm.length >= 2" class="no-results">
+    <div *ngIf="searchResults && searchResults.length === 0 && searchTerm.length >= 1" class="no-results">
       <p>Keine Suchergebnisse gefunden.</p>
     </div>
   </div>

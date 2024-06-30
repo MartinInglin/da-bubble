@@ -60,7 +60,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   searchResults: (Channel | User | Post)[] | undefined;
   allUsers: User[] = [];
   currentUser: User = new User();
-  noResults : boolean = false;
+  showNoResults: boolean = false;
 
 
   constructor(private dialog: MatDialog,
@@ -208,10 +208,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const term = this.form.get('recipient')?.value;
     this.searchTerm = typeof term === 'string' ? term : '';
 
-    if (this.searchTerm.length >= 3 && (this.searchTerm.startsWith('#') || this.searchTerm.startsWith('@'))) {
+    if (this.searchTerm.length >= 2 && (this.searchTerm.startsWith('#') || this.searchTerm.startsWith('@'))) {
       this.onSearch();
     } else {
-      this.noResults = false;
       this.searchResults = [];
     }
   }
@@ -221,7 +220,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
    * 
    */ 
   onBlur(): void {
-    this.noResults = false;
     this.searchResults = [];
     this.form.get('recipient')?.setValue('');
   }
@@ -237,14 +235,30 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     if (this.searchTerm.length >= 2 && (this.searchTerm.startsWith('#') || this.searchTerm.startsWith('@'))) {
       this.search(this.searchTerm).subscribe((results) => {
-        this.searchResults = results.length ? results : [];
-        this.noResults = results.length === 0;
+        this.searchResults = results;
+        if (results.length === 0) {
+          this.showNoResultsMessage();
+        }
       });
     } else {
-      this.noResults = false;
       this.searchResults = [];
     }
   }
+
+
+  /**
+   * This function shows the no results container
+   * 
+   * @returns {void}
+   */
+  private showNoResultsMessage(): void {
+    this.showNoResults = true;
+    setTimeout(() => {
+      this.showNoResults = false;
+      this.form.get('recipient')?.setValue('');
+    }, 3000);
+  }
+
 
   /**
    * Searches for channels, users, or posts based on the provided search term.

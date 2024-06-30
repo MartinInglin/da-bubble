@@ -199,7 +199,7 @@ export class SideNavComponent implements OnInit {
       const term = this.form.get('recipient')?.value;
       this.searchTerm = typeof term === 'string' ? term : '';
   
-      if (this.searchTerm.length >= 3 && (this.searchTerm.startsWith('#') || this.searchTerm.startsWith('@'))) {
+      if (this.searchTerm.length >= 2 && (this.searchTerm.startsWith('#') || this.searchTerm.startsWith('@'))) {
         this.search(this.searchTerm).subscribe((results) => {
           this.searchResults = results.length ? results : [];
           // this.noResults = results.length === 0;
@@ -214,7 +214,7 @@ export class SideNavComponent implements OnInit {
       const term = this.form.get('recipient')?.value;
       this.searchTerm = typeof term === 'string' ? term : '';
   
-      if (this.searchTerm.length >= 3 && (this.searchTerm.startsWith('#') || this.searchTerm.startsWith('@'))) {
+      if (this.searchTerm.length >= 2 && (this.searchTerm.startsWith('#') || this.searchTerm.startsWith('@'))) {
         this.onSearch();
       } else {
         // this.noResults = false;
@@ -562,9 +562,7 @@ export class SideNavComponent implements OnInit {
     }
   }
 
-  /**
- * Lifecycle hook that unsubscribes from all active subscriptions when the component is destroyed.
- */
+  
   ngOnDestroy(): void {
     if (this.allUsersSubscription) {
       this.allUsersSubscription.unsubscribe();
