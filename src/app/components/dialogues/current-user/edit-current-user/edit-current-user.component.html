@@ -12,22 +12,10 @@
         <div class="change-avatar-container">
           <img [src]="selectedAvatar || currentUser.avatar" alt="User Avatar" />
           <div class="choose-avatar-container">
-            <img
-              *ngFor="let avatar of availableAvatars"
-              [src]="avatar"
-              [class.selected]="avatar === selectedAvatar"
-              (click)="selectAvatar(avatar)"
-              alt="Avatar Auswahl"
-              class="avatar-option"
-            />
+            <img *ngFor="let avatar of availableAvatars" [src]="avatar" [class.selected]="avatar === selectedAvatar" (click)="selectAvatar(avatar)" alt="Avatar Auswahl" class="avatar-option" />
           </div>
           <button (click)="openFileDialog()">Profilbild hochladen</button>
-          <input
-            #fileInput
-            type="file"
-            (change)="onFileSelected($event)"
-            hidden
-          />
+          <input #fileInput type="file" (change)="onFileSelected($event)" hidden />
         </div>
       </div>
       <div class="edit-container">
@@ -35,41 +23,22 @@
           <img src="assets/images/icons/account_circle.svg" />
           <p>Vollständiger Name</p>
         </div>
-        <input
-          class="name-input"
-          placeholder="{{ currentUser.name }}"
-          [(ngModel)]="updatedName"
-        />
+        <input class="name-input" placeholder="{{ currentUser.name }}" [(ngModel)]="updatedName" />
         <div *ngIf="!currentUser.isGoogleAccount" class="name-container">
           <img src="assets/images/icons/mail_black.svg" />
           <p>E-Mail-Adresse</p>
         </div>
-        <input
-          *ngIf="!currentUser.isGoogleAccount"
-          id="mail"
-          class="name-input"
-          type="email"
-          placeholder="{{ currentUser.email }}"
-          [(ngModel)]="updatedEmail"
-        />
+        <input *ngIf="!currentUser.isGoogleAccount" id="mail" class="name-input" type="email" placeholder="{{ currentUser.email }}" [(ngModel)]="updatedEmail" />
         <p class="wrong" id="wrong-mail" *ngIf="!isValidEmail()">
           Bitte gültige E-Mail-Adresse eingeben!
         </p>
-        <button
-          class="change-passwort-button"
-          *ngIf="!currentUser.isGoogleAccount"
-          (click)="wantToChangePassword()"
-        >
+        <button class="change-passwort-button" *ngIf="!currentUser.isGoogleAccount" (click)="wantToChangePassword()">
           Passwort ändern
         </button>
       </div>
       <div class="button-container" (click)="onNoClick()">
         <button class="cancel" (click)="onNoClick()">Abbrechen</button>
-        <button
-          class="save"
-          [disabled]="!isValidEmail()"
-          (click)="saveChanges()"
-        >
+        <button class="save" [disabled]="!isValidEmail() || isNameEmpty()" (click)="saveChanges()">
           Speichern
         </button>
       </div>
@@ -83,36 +52,26 @@
           <br />
           <b>Achtung: </b>Du musst deine Email-Adresse bestätigen. Dazu haben
           wir dir einen Verifizierungs-Link geschickt. Solange du dich nicht
-          verifizerst, bleibt deine alte Email-Adresse gültig.
+          verifizierst, bleibt deine alte Email-Adresse gültig.
         </p>
-        <input
-          type="password"
-          placeholder="Passwort eingeben"
-          [(ngModel)]="password"
-        />
+        <input type="password" placeholder="Passwort eingeben" [(ngModel)]="password" />
         <p *ngIf="passwordIsFalse" class="wrong">
           Das eingegebene Passwort ist falsch!
         </p>
-        <div class="button-container">
-          <button class="cancel" (click)="cancelChanges()">Abbrechen</button>
-          <button class="save" (click)="changeMailAdress()">Bestätigen</button>
+        <div class="button-container" (click)="onNoClick()">
+          <button class="cancel" (click)="onNoClick()">Abbrechen</button>
+          <button class="save" [disabled]="!isValidEmail() || isNameEmpty()" (click)="saveChanges()">
+            Speichern
+          </button>
         </div>
       </div>
     </mat-card-content>
   </mat-card>
   <mat-card class="change-mail-card" *ngIf="wantChangePassword">
     <mat-card-content>
-      <div class="change-mail-container" *ngIf="wantChangePassword">
-        <input
-          type="password"
-          [(ngModel)]="password"
-          placeholder="Altes Passwort eingeben"
-        />
-        <input
-          type="password"
-          [(ngModel)]="newPassword"
-          placeholder="Neues Passwort eingeben"
-        />
+      <div class="change-mail-container">
+        <input type="password" [(ngModel)]="password" placeholder="Altes Passwort eingeben" />
+        <input type="password" [(ngModel)]="newPassword" placeholder="Neues Passwort eingeben" />
         <p *ngIf="passwordIsFalse" class="wrong">
           Das eingegebene Passwort ist falsch!
         </p>
@@ -123,11 +82,7 @@
           <button class="cancel" (click)="wantToChangePassword()">
             Abbrechen
           </button>
-          <button
-            class="save"
-            (click)="changePassword()"
-            [disabled]="newPassword && newPassword.length < 6"
-          >
+          <button class="save" (click)="changePassword()" [disabled]="newPassword && newPassword.length < 6">
             Bestätigen
           </button>
         </div>
