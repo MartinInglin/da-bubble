@@ -232,6 +232,13 @@ button {
     margin-top: 10px;
   }
 
+
+  @media (max-width: 465px) {
+    .card {
+      border-radius: 0px;
+    }
+  }
+
   @media (max-width: 370px) {
     .button-google{
       gap: 0px;

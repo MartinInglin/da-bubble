@@ -204,28 +204,78 @@ export class HeaderComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
    */
-  // onSearch(): void {
-  //   const term = this.form.get('recipient')?.value;
-  //   this.searchTerm = typeof term === 'string' ? term : '';
-  //   if (this.searchTerm) {
-  //     this.search(this.searchTerm).subscribe((results) => {
-  //       this.searchResults = results;
-  //     });
-  //   }
-  // }
+  onInput(): void {
+    const term = this.form.get('recipient')?.value;
+    this.searchTerm = typeof term === 'string' ? term : '';
 
+    if (this.searchTerm.length >= 3 && (this.searchTerm.startsWith('#') || this.searchTerm.startsWith('@'))) {
+      this.onSearch();
+    } else {
+      this.noResults = false;
+      this.searchResults = [];
+    }
+  }
+  
+   /**
+   * Empties the formfield if not focused
+   * 
+   */ 
+  onBlur(): void {
+    this.noResults = false;
+    this.searchResults = [];
+    this.form.get('recipient')?.setValue('');
+  }
+
+   /**
+   * Searches for channels, users, or posts based on the provided search term.
+   * 
+   * @returns {Observable<(Channel | User | Post)[]>} An observable of the search results.
+   */
   onSearch(): void {
     const term = this.form.get('recipient')?.value;
     this.searchTerm = typeof term === 'string' ? term : '';
-    if (this.searchTerm) {
+
+    if (this.searchTerm.length >= 2 && (this.searchTerm.startsWith('#') || this.searchTerm.startsWith('@'))) {
       this.search(this.searchTerm).subscribe((results) => {
         this.searchResults = results.length ? results : [];
         this.noResults = results.length === 0;
       });
     } else {
-      this.noResults = true;
+      this.noResults = false;
       this.searchResults = [];
     }
+  }
+
+  /**
+   * Searches for channels, users, or posts based on the provided search term.
+   * 
+   * @param {string} searchTerm - The search term to use.
+   * @returns {Observable<(Channel | User | Post)[]>} An observable of the search results.
+   */
+  search(searchTerm: string): Observable<(Channel | User)[]> {
+    if (searchTerm.startsWith('#')) {
+      const filteredChannels = this.filteredChannels.filter(
+        (channel) =>
+          channel.name
+            .toLowerCase()
+            .includes(searchTerm.slice(1).toLowerCase()) &&
+          !channel.isDirectMessage
+      );
+      return of(filteredChannels);
+    } else if (searchTerm.startsWith('@')) {
+      const filteredUsers = this.allUsers.filter(
+        (user) =>
+          user.name.toLowerCase().includes(searchTerm.slice(1).toLowerCase()) &&
+          !user.isChannel
+      );
+      return of(this.filterCurrentUser(filteredUsers));
+    } else {
+      return of([]);
+    }
+  }
+
+  filterCurrentUser(users: User[]): User[] {
+    return users.filter(user => user.id !== this.currentUser.id);
   }
 
   /**
@@ -373,21 +423,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.form.setValue({ recipient: recipientString });
   }
 
-  /**
-   * Searches for channels, users, or posts based on the provided search term.
-   * 
-   * @param {string} searchTerm - The search term to use.
-   * @returns {Observable<(Channel | User | Post)[]>} An observable of the search results.
-   */
-  search(searchTerm: string): Observable<(Channel | User | Post)[]> {
-    if (searchTerm.startsWith('#')) {
-      return this.searchChannels(searchTerm.slice(1));
-    } else if (searchTerm.startsWith('@')) {
-      return this.searchUsers(searchTerm.slice(1));
-    } else {
-      return this.searchAll(searchTerm);
-    }
-  }
 
   /**
    * Searches for channels whose names contain the specified term.

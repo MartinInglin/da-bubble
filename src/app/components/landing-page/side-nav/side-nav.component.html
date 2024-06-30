@@ -17,7 +17,7 @@
       type="text"
       formControlName="recipient"
       placeholder="Code learning durchsuchen..."
-      (keydown.enter)="onSearch()"
+      (input)="onInput()" (blur)="onBlur()"
     />
     <div *ngIf="searchResults && searchResults.length" class="list">
       <ul #searchResultsList *ngIf="searchResults && searchResults.length > 0">
@@ -44,7 +44,7 @@
         </li>
       </ul>
     </div>
-    <div *ngIf="searchResults && searchResults.length === 0" class="no-results">
+    <div *ngIf="searchResults && searchTerm.length >= 2" class="no-results">
       <p>Keine Suchergebnisse gefunden.</p>
     </div>
   </div>

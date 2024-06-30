@@ -520,6 +520,12 @@ cdk-overlay-connected-position-bounding-box {
   object-fit: cover;
 }
 
+
+@media (max-width: 750px) {
+  .main-content-container {
+    border-radius: 0px;
+  }
+}
 @media (max-width: 580px) {
   .newMessage {
     span {

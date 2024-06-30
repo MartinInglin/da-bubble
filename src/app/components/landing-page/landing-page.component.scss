@@ -114,6 +114,8 @@ mat-drawer-container {
    width: 100%;
   }
 
+  
+
   .Content {
     display: flex;
     align-items: center;
@@ -159,6 +161,13 @@ mat-drawer-container {
     min-width: 0; /* Allow it to shrink to fit */
   }
   
+}
+
+
+@media (max-width: 750px) {
+  mat-drawer-container {
+    border-radius: 0px;
+  }
 }
 
 @media (max-width: 440px) {

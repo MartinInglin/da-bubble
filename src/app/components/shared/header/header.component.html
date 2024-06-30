@@ -8,7 +8,7 @@
 
   <!-- searchBar -->
   <div class="searchBar" *ngIf="currentUser?.isSignedIn" [formGroup]="form">
-    <input (keydown.enter)="onSearch()" type="text" formControlName="recipient" placeholder="Code learning durchsuchen..." />
+    <input  (input)="onInput()" (blur)="onBlur()" type="text" formControlName="recipient" placeholder="Code learning durchsuchen..." />
     <img class="searchImg" src="assets/images/icons/search.svg" alt="">
     <div *ngIf="searchResults && searchResults.length" class="list">
       <ul #searchResultsList *ngIf="searchResults.length > 0">
@@ -38,7 +38,7 @@
     </div>
   </div>
 
-  <div *ngIf="noResults">
+  <div *ngIf="noResults && searchTerm.length >= 2">
     <div class="no-results">Keine Suchergebnisse gefunden</div>
   </div>
 
