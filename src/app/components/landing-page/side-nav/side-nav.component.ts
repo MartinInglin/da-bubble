@@ -384,10 +384,7 @@ export class SideNavComponent implements OnInit {
   openChannel(id: string) {
     this.channelsService.getDataChannel(id);
     this.form.get('recipient')?.setValue('');
-    if (this.isOpen) {
-      this.toggleDrawer.emit();
-      this.stateService.closeThread();
-    }
+    this.closeSidenavMobile();
   }
 
   /**
@@ -417,7 +414,6 @@ export class SideNavComponent implements OnInit {
         console.log('Post not found');
       }
     });
-
     this.form.get('recipient')?.setValue('');
   }
 
@@ -457,10 +453,7 @@ export class SideNavComponent implements OnInit {
   openDirectMessage(id: string, data: any) {
     this.directMessagesService.getDataDirectMessage(id, data);
     this.form.get('recipient')?.setValue('');
-    if (this.isOpen) {
-      this.toggleDrawer.emit();
-      this.stateService.closeThread();
-    }
+    this.closeSidenavMobile();
   }
 
   /**
