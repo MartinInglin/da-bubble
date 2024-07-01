@@ -130,17 +130,15 @@ export class AuthService {
    * @param password string
    * @returns Calls the fire auth function to sign in with email and password.
    */
-  signInWithEmail(email: string, password: string): Promise<void> {
+  signInWithEmail(email: string, password: string): Promise<boolean> {
     return this.auth.setPersistence(browserSessionPersistence).then(() => {
       return signInWithEmailAndPassword(this.auth, email, password)
         .then((userCredential) => {
           this.signIn(userCredential);
+          return false; // Login succeeded, so return false for no error
         })
         .catch((error) => {
-          this.snackbarService.openSnackBar(
-            'Passwort und / oder E-Mail-Adresse stimmen nicht überein.',
-            'Schliessen'
-          );
+          return true; // Login failed, so return true for error
         });
     });
   }
@@ -174,7 +172,7 @@ export class AuthService {
   signInGuestUser() {
     const email: string = 'pre92372@ilebi.com';
     const password: string = 'Dy£9+b~WC7i4';
-  
+
     this.signInWithEmail(email, password);
   }
 

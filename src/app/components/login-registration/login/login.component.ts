@@ -35,8 +35,9 @@ export class LoginComponent {
     password: new FormControl(''),
   });
 
-  submitted = false;
+  submitted: boolean = false;
   animationFinished: boolean = false;
+  loginFailed: boolean = false;
 
   constructor(private formBuilder: FormBuilder) {}
 
@@ -68,7 +69,9 @@ export class LoginComponent {
     this.authService.signInWithEmail(
       this.form.value.email,
       this.form.value.password
-    );
+    ).then((loginFailed: boolean) => {
+      this.loginFailed = loginFailed;
+    })
   }
 
   /**

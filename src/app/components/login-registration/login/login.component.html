@@ -5,7 +5,6 @@
   ></app-start-animation>
   } @if(animationFinished) {
 
-      
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="card">
       <div class="title">
@@ -54,6 +53,8 @@
             <div>Bitte gib ein Passwort ein.</div>
             }
           </div>
+          } @if (loginFailed) {
+          <div class="invalid-feedback">Login fehlgeschlagen. Bitte überprüfe deine Angaben.</div>
           }
         </div>
       </div>
@@ -103,7 +104,7 @@
     </div>
   </form>
 
-  <div class="register-responsive d-none ">
+  <div class="register-responsive d-none">
     <p>Neu bei DABubble?</p>
     <a routerLink="/register">Konto erstellen</a>
   </div>
