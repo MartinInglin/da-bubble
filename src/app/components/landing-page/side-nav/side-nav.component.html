@@ -17,7 +17,7 @@
       type="text"
       formControlName="recipient"
       placeholder="Code learning durchsuchen..."
-      (input)="onInput()" (blur)="onBlur()"
+      (input)="onSearch()"
     />
     <div *ngIf="searchResults && searchResults.length" class="list">
       <ul #searchResultsList *ngIf="searchResults && searchResults.length > 0">
@@ -48,7 +48,6 @@
       <p>Keine Suchergebnisse gefunden.</p>
     </div>
   </div>
-  
 
   <!-- Channel-List -->
   <div class="channels-head">
@@ -110,6 +109,5 @@
       } }
     </tr>
   </table>
-
 
 </section>

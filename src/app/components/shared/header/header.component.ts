@@ -147,7 +147,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.filteredPosts = posts;
         this.populatePostDetails();
       });
-  }  
+  }
 
   /**
    * Populates the details of each post with the corresponding channel and user names.
@@ -201,56 +201,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Handles the search operation when the Enter key is pressed.
-   * 
+   * Performs a search based on the current search term and updates the search results.
+   * Clears the search results if the input field is empty.
    * @returns {void}
    */
-  onInput(): void {
+  onSearch(): void {
     const term = this.form.get('recipient')?.value;
     this.searchTerm = typeof term === 'string' ? term : '';
-
-    if (this.searchTerm.length >= 1 && (this.searchTerm.startsWith('#') || this.searchTerm.startsWith('@'))) {
-      this.onSearch();
-    } else {
-      this.searchResults = [];
-    }
-  }
-  
-   /**
-   * Empties the formfield if not focused
-   * 
-   */ 
-  onBlur(): void {
-    this.searchResults = [];
-    this.form.get('recipient')?.setValue('');
-  }
-
-   /**
-   * Searches for channels, users, or posts based on the provided search term.
-   * 
-   * @returns {Observable<(Channel | User | Post)[]>} An observable of the search results.
-   */
-   onSearch(): void {
-    const term = this.form.get('recipient')?.value;
-    this.searchTerm = typeof term === 'string' ? term : '';
-  
-    if (this.searchTerm.length >= 1) {
+    if (this.searchTerm) {
       this.search(this.searchTerm).subscribe((results) => {
         this.searchResults = results;
-        console.log(`Search results: ${JSON.stringify(results)}`);
-  
         if (results.length === 0) {
           this.showNoResultsMessage();
-        } else {
-          this.showNoResults = false;
         }
       });
     } else {
       this.searchResults = [];
     }
   }
-  
-  
+
   /**
    * This function shows the no results container
    * 
@@ -298,7 +267,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       return of([]);
     }
   }
-  
+
 
 
   filterCurrentUser(users: User[]): User[] {
@@ -366,6 +335,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   openChannel(id: string): void {
     this.channelsService.getDataChannel(id);
     this.form.get('recipient')?.setValue('');
+    this.searchResults = [];
   }
 
   /**
@@ -378,6 +348,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   openDirectMessage(id: string, data: any): void {
     this.directMessagesService.getDataDirectMessage(id, data);
     this.form.get('recipient')?.setValue('');
+    this.searchResults = [];
   }
 
   /**
@@ -403,7 +374,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
             }
           });
         }
-        this.closeSearchResults();
+        this.searchResults = [];
       } else {
         console.log('Post not found');
       }
