@@ -61,15 +61,13 @@ mat-form-field {
 }
 
 .input-email {
-  background: url(./../../../../assets/images/icons/mail.svg) no-repeat 28px
-    17px;
+  background: url(./../../../../assets/images/icons/mail.svg) no-repeat 28px 17px;
   padding-left: 80px;
   box-sizing: border-box;
 }
 
 .input-password {
-  background: url(./../../../../assets/images/icons/lock.svg) no-repeat 28px
-    17px;
+  background: url(./../../../../assets/images/icons/lock.svg) no-repeat 28px 17px;
   padding-left: 80px;
   box-sizing: border-box;
 }
@@ -138,17 +136,21 @@ button {
     background-color: $text-gray;
     color: white;
     border: none;
-    transition: 75ms ease-in-out;
     font-weight: 700;
 
     &:hover {
-      opacity: 0.5;
-      transition: 75ms ease-in-out;
+      cursor: not-allowed;
     }
   }
 
   .enable-button {
     background-color: $purple1;
+    transition: 75ms ease-in-out;
+
+    &:hover {
+      opacity: 0.5;
+      cursor: pointer;
+    }
   }
 
   .button-guest-login {
@@ -199,13 +201,15 @@ button {
 
 
 @media (max-width: 650px) {
-  .card-container{
+  .card-container {
     height: 90%;
     justify-content: start;
   }
+
   .d-none {
     display: flex;
   }
+
   .card {
     max-width: 460px;
     gap: 15px;
@@ -213,17 +217,21 @@ button {
     height: 95%;
     margin-top: 10px;
     margin-bottom: 10px;
+
     h1 {
       font-size: 36px;
       line-height: 0px;
     }
+
     span {
       font-size: 18px;
     }
   }
+
   .legal {
     display: none;
   }
+
   .register-responsive {
     display: flex;
     align-items: center;
@@ -240,18 +248,21 @@ button {
   }
 
   @media (max-width: 370px) {
-    .button-google{
+    .button-google {
       gap: 0px;
     }
-    .card{
-      max-width: 330px!important;
+
+    .card {
+      max-width: 330px !important;
     }
-    .input-email{
+
+    .input-email {
       padding-left: 60px;
-      font-size: 11px!important;
-      
+      font-size: 11px !important;
+
     }
-    .forgot-password{
+
+    .forgot-password {
       display: flex;
       justify-content: center;
       width: 100%;
@@ -264,8 +275,8 @@ button {
 }
 
 @media (max-width: 340px) {
- 
-  .card{
-    max-width: 290px!important;
+
+  .card {
+    max-width: 290px !important;
   }
 }
