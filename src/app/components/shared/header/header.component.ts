@@ -132,6 +132,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
   }
 
+
   /**
    * Initializes the posts for the current user based on channel and direct message IDs.
    * Populates the post details with channel and user names.
@@ -146,7 +147,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.filteredPosts = posts;
         this.populatePostDetails();
       });
-  }
+  }  
 
   /**
    * Populates the details of each post with the corresponding channel and user names.
@@ -208,7 +209,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const term = this.form.get('recipient')?.value;
     this.searchTerm = typeof term === 'string' ? term : '';
 
-    if (this.searchTerm.length >= 2 && (this.searchTerm.startsWith('#') || this.searchTerm.startsWith('@'))) {
+    if (this.searchTerm.length >= 1 && (this.searchTerm.startsWith('#') || this.searchTerm.startsWith('@'))) {
       this.onSearch();
     } else {
       this.searchResults = [];
@@ -229,23 +230,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
    * 
    * @returns {Observable<(Channel | User | Post)[]>} An observable of the search results.
    */
-  onSearch(): void {
+   onSearch(): void {
     const term = this.form.get('recipient')?.value;
     this.searchTerm = typeof term === 'string' ? term : '';
-
-    if (this.searchTerm.length >= 2 && (this.searchTerm.startsWith('#') || this.searchTerm.startsWith('@'))) {
+  
+    if (this.searchTerm.length >= 2) {
       this.search(this.searchTerm).subscribe((results) => {
         this.searchResults = results;
+        console.log(`Search results: ${JSON.stringify(results)}`); // Debugging
+  
         if (results.length === 0) {
           this.showNoResultsMessage();
+        } else {
+          this.showNoResults = false;
         }
       });
     } else {
       this.searchResults = [];
     }
   }
-
-
+  
+  
   /**
    * This function shows the no results container
    * 
@@ -266,7 +271,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
    * @param {string} searchTerm - The search term to use.
    * @returns {Observable<(Channel | User | Post)[]>} An observable of the search results.
    */
-  search(searchTerm: string): Observable<(Channel | User)[]> {
+  search(searchTerm: string): Observable<(Channel | User | Post)[]> {
     if (searchTerm.startsWith('#')) {
       const filteredChannels = this.filteredChannels.filter(
         (channel) =>
@@ -283,10 +288,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
           !user.isChannel
       );
       return of(this.filterCurrentUser(filteredUsers));
+    } else if (searchTerm.startsWith('')) {
+      const searchTermWithoutPrefix = searchTerm.slice(1).toLowerCase();
+      const filteredPosts = this.filteredPosts.filter(
+        (post) => post.message.toLowerCase().includes(searchTermWithoutPrefix)
+      );
+      return of(filteredPosts);
     } else {
       return of([]);
     }
   }
+  
+
 
   filterCurrentUser(users: User[]): User[] {
     return users.filter(user => user.id !== this.currentUser.id);
