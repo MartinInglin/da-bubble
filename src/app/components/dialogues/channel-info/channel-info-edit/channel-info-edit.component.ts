@@ -11,6 +11,7 @@ import { Channel } from '../../../../models/channel.class';
 import { ChannelsService } from '../../../../services/firestore/channels.service';
 import { User } from '../../../../models/user.class';
 import { UsersService } from '../../../../services/firestore/users.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-channel-info-edit',
@@ -41,6 +42,7 @@ export class ChannelInfoEditComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef<ChannelInfoEditComponent>,
     private channelsService: ChannelsService,
     private usersService: UsersService,
+    private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: { channelId: string, channelName: string, channelDescription: string }
   ) {
     this.updatedName = data.channelName;
@@ -107,6 +109,10 @@ export class ChannelInfoEditComponent implements OnInit, OnDestroy {
       })
       .catch(error => {
         console.error('Error leaving channel:', error);
+      });
+
+      this.router.navigate(['/landingPage']).then(() => {
+        window.location.reload();
       });
   }
 

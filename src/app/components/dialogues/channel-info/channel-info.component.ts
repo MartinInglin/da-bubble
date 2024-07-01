@@ -12,6 +12,7 @@ import { Channel } from '../../../models/channel.class';
 import { ChannelsService } from '../../../services/firestore/channels.service';
 import { User } from '../../../models/user.class';
 import { UsersService } from '../../../services/firestore/users.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-channel-info',
@@ -42,6 +43,7 @@ export class ChannelInfoComponent implements OnInit, OnDestroy {
     private channelsService: ChannelsService,
     private usersService: UsersService,
     private stateService: StateService,
+    private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: { channelId: string }
   ) { }
 
@@ -106,8 +108,9 @@ export class ChannelInfoComponent implements OnInit, OnDestroy {
           console.error('Error leaving channel:', error);
         });
   
-      this.stateService.setShowContacts(false);
-      this.stateService.setShowChannels(false);
+        this.router.navigate(['/landingPage']).then(() => {
+          window.location.reload();
+        });
     }
   
     /**
