@@ -137,7 +137,6 @@ export class SideNavComponent implements OnInit {
     );
   }
 
-
   /**
    * Fetches direct messages and posts for the current user and updates the filteredPosts property.
    * @returns {void}
