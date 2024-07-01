@@ -234,10 +234,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const term = this.form.get('recipient')?.value;
     this.searchTerm = typeof term === 'string' ? term : '';
   
-    if (this.searchTerm.length >= 2) {
+    if (this.searchTerm.length >= 1) {
       this.search(this.searchTerm).subscribe((results) => {
         this.searchResults = results;
-        console.log(`Search results: ${JSON.stringify(results)}`); // Debugging
+        console.log(`Search results: ${JSON.stringify(results)}`);
   
         if (results.length === 0) {
           this.showNoResultsMessage();
