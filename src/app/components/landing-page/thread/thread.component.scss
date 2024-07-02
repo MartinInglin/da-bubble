@@ -286,8 +286,25 @@ cdk-overlay-connected-position-bounding-box {
   }
 }
 
+@media (max-width: 420px) {
+  aside{
+    width: 330px;
+  }
+  .head-thread-text {
+    span {
+      margin-left: 50px !important;
+    }
+  }
+  .post-input {
+    width: 100%;
+  }
+}
+
 @media (max-width: 320px) {
   .message-content {
     align-items: end;
+  }
+  aside{
+    width: 280px;
   }
 }
