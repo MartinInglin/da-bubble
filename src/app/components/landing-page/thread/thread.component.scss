@@ -288,7 +288,7 @@ cdk-overlay-connected-position-bounding-box {
 
 @media (max-width: 420px) {
   aside{
-    width: 330px;
+    width: 100vw;
   }
   .head-thread-text {
     span {
@@ -305,6 +305,6 @@ cdk-overlay-connected-position-bounding-box {
     align-items: end;
   }
   aside{
-    width: 280px;
+    width: 100vw;
   }
 }
