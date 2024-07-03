@@ -104,7 +104,7 @@ export class UsersService {
       isGoogleAccount: false,
       isSignedIn: false,
       isChannel: false,
-      savedEmojis: [],
+      savedEmojis: ['😊', '❤️',],
     };
   }
 
@@ -132,7 +132,7 @@ export class UsersService {
         isGoogleAccount: true,
         isSignedIn: false,
         isChannel: false,
-        savedEmojis: [],
+        savedEmojis: ['😊', '❤️',],
       };
       await setDoc(doc(this.firestore, 'users', userId), user);
     }

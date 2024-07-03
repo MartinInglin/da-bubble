@@ -10,7 +10,7 @@ export class User {
   isGoogleAccount: boolean;
   isSignedIn: boolean;
   isChannel: boolean;
-  savedEmojis: [];
+  savedEmojis: string[];
 
   constructor(obj?: any) {
     this.id = obj?.id || '';
