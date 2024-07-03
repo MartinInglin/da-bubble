@@ -8,6 +8,7 @@ import {
   Validators,
   ReactiveFormsModule,
   FormsModule,
+  ValidationErrors,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
@@ -30,6 +31,7 @@ import { StartAnimationComponent } from '../start-animation/start-animation.comp
 })
 export class LoginComponent {
   authService = inject(AuthService);
+
   form: FormGroup = new FormGroup({
     email: new FormControl(''),
     password: new FormControl(''),
@@ -43,7 +45,7 @@ export class LoginComponent {
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email, this.validateEmail]],
       password: ['', [Validators.required]],
     });
 
@@ -52,6 +54,17 @@ export class LoginComponent {
 
   get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
+  }
+
+  validateEmail(control: AbstractControl): ValidationErrors | null {
+    const email = control.value;
+    if (email) {
+      const domainPattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+      if (!domainPattern.test(email)) {
+        return { invalidDomain: true };
+      }
+    }
+    return null;
   }
 
   /**

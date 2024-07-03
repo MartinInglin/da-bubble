@@ -8,6 +8,7 @@ import {
   Validators,
   ReactiveFormsModule,
   FormsModule,
+  ValidationErrors,
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { RegistrationService } from '../../../services/registration.service';
@@ -37,14 +38,11 @@ export class RegisterComponent {
     this.form = this.formBuilder.group({
       name: [
         this.registrationService.getName() || '',
-        [
-          Validators.required,
-          Validators.minLength(3),
-        ],
+        [Validators.required, Validators.minLength(3)],
       ],
       email: [
         this.registrationService.getEmail() || '',
-        [Validators.required, Validators.email],
+        [Validators.required, Validators.email, this.validateEmail],
       ],
       password: [
         this.registrationService.getPassword() || '',
@@ -62,9 +60,20 @@ export class RegisterComponent {
     return this.form.controls;
   }
 
+  validateEmail(control: AbstractControl): ValidationErrors | null {
+    const email = control.value;
+    if (email) {
+      const domainPattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+      if (!domainPattern.test(email)) {
+        return { invalidDomain: true };
+      }
+    }
+    return null;
+  }
+
   /**
    * This function saves the user credentials in the registration service. This is needed if the user navigates back and forth from the registration and choose avatar page.
-   * 
+   *
    * @returns if the form is invalid
    */
   onSubmit(): void {

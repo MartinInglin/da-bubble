@@ -31,7 +31,7 @@
           <div class="invalid-feedback">
             @if (f['email'].errors['required']) {
             <div>Email-Adresse wird benötigt.</div>
-            } @if (f['email'].errors['email']) {
+            } @if (f['email'].errors['email'] || !form.valid) {
             <div>Email-Adresse ist ungültig.</div>
             }
           </div>
