@@ -113,16 +113,24 @@
   @if (post.files.length > 0) {
   <div class="documents-container">
     @for (file of post.files; track file; let index = $index) {
-    <div class="document" (click)="downloadFile(file.url, $event)">
-      {{ file.name }}
-
-      <img
-        class="delete-file"
-        src="assets/images/icons/close.svg"
-        alt=""
-        matTooltip="Diese Datei löschen"
-        (click)="deleteFile(file.name, $event, index)"
-      />
+    <div class="document">
+      <div>
+        {{ file.name }}
+      </div>
+      <div class="icons-files">
+        <img src="assets/images/icons/eye.svg" alt="" />
+        <img
+          src="assets/images/icons/download.svg"
+          alt=""
+          (click)="downloadFile(file.url, $event)"
+        />
+        <img
+          class="delete-file"
+          src="assets/images/icons/delete.svg"
+          alt=""
+          (click)="deleteFile(file.name, $event, index)"
+        />
+      </div>
     </div>
     }
   </div>
@@ -219,8 +227,18 @@
   @if (post.files.length > 0) {
   <div class="documents-container">
     @for (file of post.files; track file; let index = $index) {
-    <div class="document" (click)="downloadFile(file.url, $event)">
-      {{ file.name }}
+    <div class="document">
+      <div>
+        {{ file.name }}
+      </div>
+      <div class="icons-files">
+        <img src="assets/images/icons/eye.svg" alt="" />
+        <img
+          src="assets/images/icons/download.svg"
+          alt=""
+          (click)="downloadFile(file.url, $event)"
+        />
+      </div>
     </div>
     }
   </div>

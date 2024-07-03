@@ -1,13 +1,30 @@
 <!-- input Content -->
 <div class="input-content">
   <div class="textArea">
-    <textarea name="" id="message-textarea" #messageTextarea (keyup.enter)="savePost()" placeholder="Nachricht an #{{ selectedChannel.name }}" [(ngModel)]="message"></textarea>
+    <textarea
+      name=""
+      id="message-textarea"
+      #messageTextarea
+      (keyup.enter)="savePost()"
+      placeholder="Nachricht an #{{ selectedChannel.name }}"
+      [(ngModel)]="message"
+    ></textarea>
 
     @if (files.length > 0) {
     <div class="documents-container">
       @for (file of files; track file; let index = $index) {
-      <div class="document" (click)="removeFile(index)">
-        {{ file.name }}
+      <div class="document">
+        <div>
+          {{ file.name }}
+        </div>
+        <div class="icons-files">
+          <img src="assets/images/icons/eye.svg" alt="" />
+          <img
+            src="assets/images/icons/close.svg"
+            alt=""
+            (click)="removeFile(index)"
+          />
+        </div>
       </div>
       }
     </div>
@@ -19,8 +36,13 @@
         <a class="addIcon" (click)="openFileDialog()">
           <img src="assets/images/icons/add_icon.svg" alt="" />
         </a>
-        <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)" />
-<!-- seperator -->
+        <input
+          type="file"
+          #fileInput
+          style="display: none"
+          (change)="onFileSelected($event)"
+        />
+        <!-- seperator -->
         <div class="seperator"></div>
 
         <!-- Liste für Emojis -->
@@ -30,7 +52,13 @@
           </button>
           <mat-menu #aboveMenu="matMenu" yPosition="above">
             <div class="emoji-container">
-              <span *ngFor="let emoji of emojis" class="emoji" mat-menu-item (click)="addEmojiToMessage(emoji)">{{ emoji }}</span>
+              <span
+                *ngFor="let emoji of emojis"
+                class="emoji"
+                mat-menu-item
+                (click)="addEmojiToMessage(emoji)"
+                >{{ emoji }}</span
+              >
             </div>
           </mat-menu>
           <!-- Liste für Verlinkungen von Kontakten -->

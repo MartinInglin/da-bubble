@@ -1,3 +1,5 @@
+@import "./../../../../styles.scss";
+
 /* Styling for the input field */
 .input-content {
   width: 100%;
@@ -188,10 +190,24 @@ cdk-overlay-connected-position-bounding-box {
     width: fit-content;
     padding: 4px 16px;
     height: 20px;
+    display: flex;
+    gap: 8px;
 
-    &:hover {
-      background-color: rgb(165 165 165 / 40%);
-      cursor: pointer;
+    .icons-files {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      img {
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        padding: 4px;
+
+        &:hover {
+          cursor: pointer;
+          background-color: $light-purple-lines;
+        }
+      }
     }
   }
 }
