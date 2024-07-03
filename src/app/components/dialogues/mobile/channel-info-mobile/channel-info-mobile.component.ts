@@ -114,20 +114,19 @@ export class ChannelInfoMobileComponent {
    */
   leaveChannel(): void {
     if (!this.currentUser || !this.channel) return;
-
     const channelId = this.channel.id;
     const currentUserId = this.currentUser.id;
 
     this.channelsService.removeUserFromChannel(channelId, currentUserId)
       .then(() => {
         this.dialogRef.close();
+        return this.router.navigate(['/landingPage']);
+      })
+      .then(() => {
+        window.location.reload();
       })
       .catch(error => {
         console.error('Error leaving channel:', error);
-      });
-
-      this.router.navigate(['/landingPage']).then(() => {
-        window.location.reload();
       });
   }
 

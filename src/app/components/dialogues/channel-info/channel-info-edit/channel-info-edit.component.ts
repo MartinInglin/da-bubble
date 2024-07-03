@@ -96,7 +96,7 @@ export class ChannelInfoEditComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Removes the current user from the channel.
+   * Removes the current user from the channel and updates the state.
    */
   leaveChannel(): void {
     if (!this.currentUser || !this.channel) return;
@@ -106,13 +106,13 @@ export class ChannelInfoEditComponent implements OnInit, OnDestroy {
     this.channelsService.removeUserFromChannel(channelId, currentUserId)
       .then(() => {
         this.dialogRef.close();
+        return this.router.navigate(['/landingPage']);
+      })
+      .then(() => {
+        window.location.reload();
       })
       .catch(error => {
         console.error('Error leaving channel:', error);
-      });
-
-      this.router.navigate(['/landingPage']).then(() => {
-        window.location.reload();
       });
   }
 

@@ -32,7 +32,7 @@ import { Router } from '@angular/router';
 export class ChannelInfoComponent implements OnInit, OnDestroy {
   channel: Channel | null = null;
   currentUser: User | null = null;
-  
+
   channelSubscription: any;
 
   private userSubscription: Subscription = new Subscription();
@@ -50,85 +50,86 @@ export class ChannelInfoComponent implements OnInit, OnDestroy {
   /**
    * Initializes the component by loading channel data and subscribing to the current user.
    */
-    ngOnInit(): void {
-      this.loadChannelData();
-      this.userSubscription = this.usersService.currentUser$.subscribe(user => {
-        this.currentUser = user;
-      });
-    }
-  
-    /**
-     * Loads the data of the current channel.
-     * Subscribes to the channelSubject$ to receive updates about the channel.
-     */
-    loadChannelData(): void {
-      if (!this.data.channelId) return;
-      this.channelSubscription = this.channelsService.channelSubject$.subscribe(
-        (channel) => {
-          this.channel = channel;
-        },
-        (error) => {
-          console.error('Error loading channel data:', error);
-        }
-      );
-      this.channelsService.getDataChannel(this.data.channelId);
-    }
-  
-    /**
-     * Opens a dialog to edit channel information.
-     */
-    openDialog(): void {
-      if (!this.channel) return;
-      const dialogRef = this.dialog.open(ChannelInfoEditComponent, {
-        width: '872px',
-        position: {
-          top: '185px',
-          right: '180px',
-        },
-        data: {
-          channelId: this.channel.id,
-          name: this.channel.name,
-          description: this.channel.description
-        }
-      });
-    }
-  
-    /**
-     * Removes the current user from the channel and updates the state.
-     */
-    leaveChannel(): void {
-      if (!this.currentUser || !this.channel) return;
-      const channelId = this.channel.id;
-      const currentUserId = this.currentUser.id;
-      this.channelsService.removeUserFromChannel(channelId, currentUserId)
-        .then(() => {
-          this.dialogRef.close();
-        })
-        .catch(error => {
-          console.error('Error leaving channel:', error);
-        });
-  
-        this.router.navigate(['/landingPage']).then(() => {
-          window.location.reload();
-        });
-    }
-  
-    /**
-     * Closes the dialog without making any changes.
-     */
-    onNoClick(): void {
-      this.dialogRef.close();
-    }
-  
-    /**
-     * Cleans up subscriptions when the component is destroyed.
-     */
-    ngOnDestroy(): void {
-      if (this.userSubscription) {
-        this.userSubscription.unsubscribe();
+  ngOnInit(): void {
+    this.loadChannelData();
+    this.userSubscription = this.usersService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+    });
+  }
+
+  /**
+   * Loads the data of the current channel.
+   * Subscribes to the channelSubject$ to receive updates about the channel.
+   */
+  loadChannelData(): void {
+    if (!this.data.channelId) return;
+    this.channelSubscription = this.channelsService.channelSubject$.subscribe(
+      (channel) => {
+        this.channel = channel;
+      },
+      (error) => {
+        console.error('Error loading channel data:', error);
       }
-      if (this.channelSubscription) {
-        this.channelSubscription.unsubscribe();
+    );
+    this.channelsService.getDataChannel(this.data.channelId);
+  }
+
+  /**
+   * Opens a dialog to edit channel information.
+   */
+  openDialog(): void {
+    if (!this.channel) return;
+    const dialogRef = this.dialog.open(ChannelInfoEditComponent, {
+      width: '872px',
+      position: {
+        top: '185px',
+        right: '180px',
+      },
+      data: {
+        channelId: this.channel.id,
+        name: this.channel.name,
+        description: this.channel.description
       }
+    });
+  }
+
+  /**
+   * Removes the current user from the channel and updates the state.
+   */
+  leaveChannel(): void {
+    if (!this.currentUser || !this.channel) return;
+    const channelId = this.channel.id;
+    const currentUserId = this.currentUser.id;
+
+    this.channelsService.removeUserFromChannel(channelId, currentUserId)
+      .then(() => {
+        this.dialogRef.close();
+        return this.router.navigate(['/landingPage']);
+      })
+      .then(() => {
+        window.location.reload();
+      })
+      .catch(error => {
+        console.error('Error leaving channel:', error);
+      });
+  }
+
+  /**
+   * Closes the dialog without making any changes.
+   */
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  /**
+   * Cleans up subscriptions when the component is destroyed.
+   */
+  ngOnDestroy(): void {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
+    if (this.channelSubscription) {
+      this.channelSubscription.unsubscribe();
     }
   }
+}
