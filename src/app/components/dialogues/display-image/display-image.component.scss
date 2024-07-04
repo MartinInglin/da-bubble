@@ -1,0 +1,59 @@
+@import "./../../../../styles.scss";
+
+mat-card {
+    width: fit-content;
+    height: fit-content;
+    padding: 40px;
+    font-family: 'Nunito';
+    border-radius: 30px ;
+}
+
+mat-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 45px;
+}
+
+.detail-view-header {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    height: 40px;
+
+    button {
+        height: 40px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: scale 75ms ease-in-out;
+        background-color: rgba(0, 0, 0, 0);
+        border: none;
+        border-radius: 100%;
+
+        &:hover {
+            cursor: pointer;
+            background-color: $background;
+            scale: 1.05;
+
+            img {
+                content: url("./../../../../assets/images/icons/close_blue.svg")
+            }
+        }
+
+        img {
+            height: 13.5px;
+            width: 13.5px;
+        }
+    }
+
+    .image-container {
+        height: fit-content;
+        width: fit-content;
+
+        .img {
+            height: fit-content;
+            width: fit-content;
+        }
+    }
+}
