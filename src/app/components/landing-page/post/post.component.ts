@@ -13,13 +13,23 @@ import { User } from '../../../models/user.class';
 import { SortedReaction } from '../../../models/sorted-reaction.class';
 import { EditingStateService } from '../../../services/editing-post.service';
 import { DirectMessage } from '../../../models/direct-message.class';
-import { MatDialog, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogModule,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import { DisplayImageComponent } from '../../dialogues/display-image/display-image.component';
 
 @Component({
   selector: 'app-post',
   standalone: true,
-  imports: [CommonModule, MatMenuModule, MatTooltipModule, FormsModule, MatDialogModule],
+  imports: [
+    CommonModule,
+    MatMenuModule,
+    MatTooltipModule,
+    FormsModule,
+    MatDialogModule,
+  ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss',
 })
@@ -61,13 +71,14 @@ export class PostComponent {
   @Output() openThread = new EventEmitter();
   @Output() reactionSaved = new EventEmitter<void>();
 
-  constructor(private editingStateService: EditingStateService, private dialog: MatDialog,) {
-  }
+  constructor(
+    private editingStateService: EditingStateService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit() {
     this.checkIfPostFromCurrentUser();
     this.sortReactions();
-    
   }
 
   /**
@@ -685,10 +696,10 @@ export class PostComponent {
     this.reactionIndex = index;
   }
 
-  openDisplayImageDialog(): void {
-    const dialogRef = this.dialog.open(DisplayImageComponent, {
-      height: 'fit-content',
-      width: 'fit-content'
+  openDisplayImageDialog(fileUrl: string): void {
+    const isPdf = fileUrl.includes('.pdf') || fileUrl.toLowerCase().includes('pdf');
+    this.dialog.open(DisplayImageComponent, {
+      data: { fileUrl: fileUrl, isPdf: isPdf },
     });
   }
 

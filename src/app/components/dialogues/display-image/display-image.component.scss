@@ -1,59 +1,62 @@
 @import "./../../../../styles.scss";
 
 mat-card {
-    width: fit-content;
-    height: fit-content;
-    padding: 40px;
-    font-family: 'Nunito';
-    border-radius: 30px ;
+  width: fit-content;
+  height: fit-content;
+  padding: 40px;
+  font-family: "Nunito";
+  border-radius: 30px;
+  max-height: 100vh;
 }
 
 mat-card-content {
-    display: flex;
-    flex-direction: column;
-    gap: 45px;
+  display: flex;
+  flex-direction: column;
+  gap: 45px;
+  height: 100%;
 }
 
 .detail-view-header {
-    display: flex;
-    justify-content: end;
-    align-items: center;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  height: 40px;
+
+  button {
     height: 40px;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: scale 75ms ease-in-out;
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    border-radius: 100%;
 
-    button {
-        height: 40px;
-        width: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: scale 75ms ease-in-out;
-        background-color: rgba(0, 0, 0, 0);
-        border: none;
-        border-radius: 100%;
+    &:hover {
+      cursor: pointer;
+      background-color: $background;
+      scale: 1.05;
 
-        &:hover {
-            cursor: pointer;
-            background-color: $background;
-            scale: 1.05;
-
-            img {
-                content: url("./../../../../assets/images/icons/close_blue.svg")
-            }
-        }
-
-        img {
-            height: 13.5px;
-            width: 13.5px;
-        }
+      img {
+        content: url("./../../../../assets/images/icons/close_blue.svg");
+      }
     }
 
-    .image-container {
-        height: fit-content;
-        width: fit-content;
-
-        .img {
-            height: fit-content;
-            width: fit-content;
-        }
+    img {
+      height: 13.5px;
+      width: 13.5px;
     }
+  }
 }
+
+.image-container {
+    max-height: 600px;
+    width: fit-content;
+    overflow: auto;
+
+    img {
+      width: 100%;
+      max-width: 600px;
+    }
+  }
