@@ -35,6 +35,52 @@
     }
   }
 
+  .user-list, .channel-list {
+    position: absolute;
+    bottom: 25%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    max-height: 400px;
+    border-radius: 20px;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    z-index: 10;
+
+    ul {
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+
+      li {
+        font-size: 18px;
+        font-weight: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        gap: 8px;
+        padding: 10px;
+        border-radius: 30px;
+
+        &:hover {
+          background-color: $purple2;
+          color: white;
+          cursor: pointer;
+        }
+
+        img {
+          height: 30px;
+          width: 30px;
+          border-radius: 100%;
+        }
+      }
+    }
+  }
+
   /* Styling for the icons */
   .icons {
     display: flex;
@@ -229,5 +275,17 @@ cdk-overlay-connected-position-bounding-box {
   img {
     height: 45px;
     width: 45px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .user-list {
+    bottom: 26% !important;
+  }
+}
+
+@media (max-width: 750px) {
+  .user-list {
+    bottom: 28% !important;
   }
 }

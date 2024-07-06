@@ -6,10 +6,25 @@
       id="message-textarea"
       #messageTextarea
       (keyup.enter)="savePost()"
+      (keyup)="onKeyUp($event)"
       placeholder="Nachricht an #{{ selectedChannel.name }}"
       [(ngModel)]="message"
     ></textarea>
-
+    <div *ngIf="showUserList" class="user-list">
+      <ul>
+        <li *ngFor="let user of filteredUsers" (click)="selectUser(user)">
+          <img [src]="user.avatar" alt="Profilbild" />
+          <span>{{ user.name }}</span>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="showChannelList" class="channel-list">
+      <ul>
+        <li *ngFor="let channel of filteredChannels" (click)="selectChannel(channel)">
+          <span>#{{ channel.name }}</span>
+        </li>
+      </ul>
+    </div>
     @if (files.length > 0) {
     <div class="documents-container">
       @for (file of files; track file; let index = $index) {
