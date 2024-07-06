@@ -492,8 +492,9 @@ export class MainContentComponent
    */
   openChannelInfoDialog(channelId: string): void {
     if (this.currentUser) {
-      if (window.innerWidth <= 750) {
+      if (window.innerWidth <= 1200) {
         this.openChannelInfoMobileDialog(channelId);
+        
       } else {
         const dialogRef = this.dialog.open(ChannelInfoComponent, {
           width: '872px',
