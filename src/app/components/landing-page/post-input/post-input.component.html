@@ -33,7 +33,11 @@
           {{ file.name }}
         </div>
         <div class="icons-files">
-          <img src="assets/images/icons/eye.svg" alt="" />
+          <img
+            src="assets/images/icons/eye.svg"
+            alt=""
+            (click)="openDisplayImageDialog(files[index])"
+          />
           <img
             src="assets/images/icons/close.svg"
             alt=""

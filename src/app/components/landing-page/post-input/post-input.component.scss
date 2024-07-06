@@ -228,6 +228,7 @@ cdk-overlay-connected-position-bounding-box {
   gap: 8px;
   padding: 8px;
   box-sizing: border-box;
+  white-space: nowrap;
 
   .document {
     background-color: rgb(165 165 165 / 24%);

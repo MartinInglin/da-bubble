@@ -1,4 +1,12 @@
-import { Component, ElementRef, Input, SimpleChanges, ViewChild, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  SimpleChanges,
+  ViewChild,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,6 +20,8 @@ import { Thread } from '../../../models/thread.class';
 import { DirectMessage } from '../../../models/direct-message.class';
 import { PostsService } from '../../../services/firestore/posts.service';
 import { SnackbarService } from '../../../services/snackbar.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DisplayImageComponent } from '../../dialogues/display-image/display-image.component';
 
 @Component({
   selector: 'app-post-input',
@@ -41,7 +51,16 @@ export class PostInputComponent implements OnInit {
 
   files: File[] = [];
   emojis: string[] = [
-    '😊', '❤️', '😂', '🎉', '🌟', '🎈', '🌈', '🍕', '🚀', '⚡',
+    '😊',
+    '❤️',
+    '😂',
+    '🎉',
+    '🌟',
+    '🎈',
+    '🌈',
+    '🍕',
+    '🚀',
+    '⚡',
   ];
   message: string = '';
 
@@ -50,6 +69,8 @@ export class PostInputComponent implements OnInit {
   showChannelList: boolean = false;
   filteredUsers: User[] = [];
   filteredChannels: Channel[] = [];
+
+  constructor(private dialog: MatDialog) {}
 
   /**
    * Lifecycle hook that is called after the component is initialized.
@@ -60,19 +81,19 @@ export class PostInputComponent implements OnInit {
   }
 
   /**
-  * Lifecycle hook that is called after the component's view has been fully initialized.
-  * Sets the focus on the message text area.
-  */
+   * Lifecycle hook that is called after the component's view has been fully initialized.
+   * Sets the focus on the message text area.
+   */
   ngAfterViewInit(): void {
     this.setFocus();
   }
 
   /**
-  * Lifecycle hook that is called when any data-bound property of a directive changes.
-  * If there are changes in the selected IDs, it sets the focus on the message text area.
-  * 
-  * @param changes - The changes in the data-bound properties.
-  */
+   * Lifecycle hook that is called when any data-bound property of a directive changes.
+   * If there are changes in the selected IDs, it sets the focus on the message text area.
+   *
+   * @param changes - The changes in the data-bound properties.
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (this.idChanges(changes)) {
       this.setFocus();
@@ -80,26 +101,29 @@ export class PostInputComponent implements OnInit {
   }
 
   /**
-  * Checks if there are changes in the selected IDs for channel, direct message, or thread.
-  * 
-  * @param changes - The changes in the data-bound properties.
-  * @returns A boolean indicating whether there are changes in the selected IDs.
-  */
+   * Checks if there are changes in the selected IDs for channel, direct message, or thread.
+   *
+   * @param changes - The changes in the data-bound properties.
+   * @returns A boolean indicating whether there are changes in the selected IDs.
+   */
   idChanges(changes: SimpleChanges): boolean {
     return (
       (changes['selectedChannel'] &&
-        changes['selectedChannel'].currentValue.id !== changes['selectedChannel'].previousValue?.id) ||
+        changes['selectedChannel'].currentValue.id !==
+          changes['selectedChannel'].previousValue?.id) ||
       (changes['selectedDirectMessage'] &&
-        changes['selectedDirectMessage'].currentValue.id !== changes['selectedDirectMessage'].previousValue?.id) ||
+        changes['selectedDirectMessage'].currentValue.id !==
+          changes['selectedDirectMessage'].previousValue?.id) ||
       (changes['selectedThread'] &&
-        changes['selectedThread'].currentValue.id !== changes['selectedThread'].previousValue?.id)
+        changes['selectedThread'].currentValue.id !==
+          changes['selectedThread'].previousValue?.id)
     );
   }
 
   /**
-  * Sets the focus on the message text area after a short delay.
-  * The timeout ensures the DOM is fully rendered before setting the focus.
-  */
+   * Sets the focus on the message text area after a short delay.
+   * The timeout ensures the DOM is fully rendered before setting the focus.
+   */
   setFocus() {
     setTimeout(() => {
       if (this.messageTextarea) {
@@ -109,15 +133,24 @@ export class PostInputComponent implements OnInit {
   }
 
   /**
-  * Saves a post by calling the savePost method in the posts service.
-  * If the message is empty, shows a snackbar message.
-  */
+   * Saves a post by calling the savePost method in the posts service.
+   * If the message is empty, shows a snackbar message.
+   */
   savePost() {
     if (/^\s*$/.test(this.message)) {
-      this.snackbarService.openSnackBar('Bitte schreibe eine Nachricht.', 'Schliessen');
+      this.snackbarService.openSnackBar(
+        'Bitte schreibe eine Nachricht.',
+        'Schliessen'
+      );
     } else {
       this.postsService.savePost(
-        this.files, this.currentUser, this.message, this.path, this.selectedChannel, this.selectedDirectMessage, this.selectedThread
+        this.files,
+        this.currentUser,
+        this.message,
+        this.path,
+        this.selectedChannel,
+        this.selectedDirectMessage,
+        this.selectedThread
       );
       this.message = '';
       this.files = [];
@@ -125,18 +158,18 @@ export class PostInputComponent implements OnInit {
   }
 
   /**
-  * Opens the file dialog to allow the user to select files.
-  */
+   * Opens the file dialog to allow the user to select files.
+   */
   openFileDialog() {
     this.fileInput.nativeElement.click();
   }
 
   /**
-  * Handles the file selection event.
-  * Adds the selected file to the local files array if it meets the criteria.
-  * 
-  * @param event - The file selection event.
-  */
+   * Handles the file selection event.
+   * Adds the selected file to the local files array if it meets the criteria.
+   *
+   * @param event - The file selection event.
+   */
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -165,39 +198,47 @@ export class PostInputComponent implements OnInit {
     }
   }
 
+  openDisplayImageDialog(file: File): void {
+    const fileUrl = URL.createObjectURL(file);
+    const isPdf = file.type === 'application/pdf';
+    this.dialog.open(DisplayImageComponent, {
+      data: { fileUrl: fileUrl, isPdf: isPdf },
+    });
+  }
+
   /**
-  * Removes a file from the local files array.
-  * 
-  * @param index - The index of the file to be removed.
-  */
+   * Removes a file from the local files array.
+   *
+   * @param index - The index of the file to be removed.
+   */
   removeFile(index: number) {
     this.files.splice(index, 1);
   }
 
   /**
-  * Adds an emoji to the message.
-  * 
-  * @param emoji - The emoji to be added.
-  */
+   * Adds an emoji to the message.
+   *
+   * @param emoji - The emoji to be added.
+   */
   addEmojiToMessage(emoji: string): void {
     this.message += emoji;
   }
 
   /**
-  * Adds a user's mention to the message.
-  * 
-  * @param userName - The username to be mentioned.
-  */
+   * Adds a user's mention to the message.
+   *
+   * @param userName - The username to be mentioned.
+   */
   linkContactInMessage(userName: string) {
     this.message += '@' + userName + ' ';
   }
 
   /**
-  * Handles the key up event in the message text area.
-  * Filters the users or channels based on the input query.
-  * 
-  * @param event - The keyboard event.
-  */
+   * Handles the key up event in the message text area.
+   * Filters the users or channels based on the input query.
+   *
+   * @param event - The keyboard event.
+   */
   onKeyUp(event: KeyboardEvent) {
     const target = event.target as HTMLTextAreaElement;
     const cursorPosition = target.selectionStart;
@@ -205,12 +246,17 @@ export class PostInputComponent implements OnInit {
     const lastAtSymbol = textBeforeCursor.lastIndexOf('@');
     const lastHashSymbol = textBeforeCursor.lastIndexOf('#');
 
-    if (lastAtSymbol !== -1 && (lastHashSymbol === -1 || lastAtSymbol > lastHashSymbol)) {
+    if (
+      lastAtSymbol !== -1 &&
+      (lastHashSymbol === -1 || lastAtSymbol > lastHashSymbol)
+    ) {
       const query = textBeforeCursor.substring(lastAtSymbol + 1);
       if (query.length > 0) {
         this.showUserList = true;
         this.showChannelList = false;
-        this.filteredUsers = this.allUsers.filter(user => user.name.toLowerCase().includes(query.toLowerCase()));
+        this.filteredUsers = this.allUsers.filter((user) =>
+          user.name.toLowerCase().includes(query.toLowerCase())
+        );
       } else {
         this.showUserList = false;
       }
@@ -219,7 +265,9 @@ export class PostInputComponent implements OnInit {
       if (query.length > 0) {
         this.showChannelList = true;
         this.showUserList = false;
-        this.filteredChannels = this.allChannels.filter(channel => channel.name.toLowerCase().includes(query.toLowerCase()));
+        this.filteredChannels = this.allChannels.filter((channel) =>
+          channel.name.toLowerCase().includes(query.toLowerCase())
+        );
       } else {
         this.showChannelList = false;
       }
@@ -230,10 +278,10 @@ export class PostInputComponent implements OnInit {
   }
 
   /**
-  * Selects a user from the filtered list and adds their mention to the message.
-  * 
-  * @param user - The selected user.
-  */
+   * Selects a user from the filtered list and adds their mention to the message.
+   *
+   * @param user - The selected user.
+   */
   selectUser(user: User) {
     const cursorPosition = this.messageTextarea.nativeElement.selectionStart;
     const textBeforeCursor = this.message.substring(0, cursorPosition);
@@ -255,10 +303,10 @@ export class PostInputComponent implements OnInit {
   }
 
   /**
-  * Selects a channel from the filtered list and adds its mention to the message.
-  * 
-  * @param channel - The selected channel.
-  */
+   * Selects a channel from the filtered list and adds its mention to the message.
+   *
+   * @param channel - The selected channel.
+   */
   selectChannel(channel: Channel) {
     const cursorPosition = this.messageTextarea.nativeElement.selectionStart;
     const textBeforeCursor = this.message.substring(0, cursorPosition);
@@ -267,7 +315,8 @@ export class PostInputComponent implements OnInit {
 
     if (lastHashSymbol !== -1) {
       const textBeforeHash = this.message.substring(0, lastHashSymbol);
-      this.message = textBeforeHash + '#' + channel.name + ' ' + textAfterCursor;
+      this.message =
+        textBeforeHash + '#' + channel.name + ' ' + textAfterCursor;
       this.showChannelList = false;
       this.filteredChannels = [];
       setTimeout(() => {
@@ -280,10 +329,10 @@ export class PostInputComponent implements OnInit {
   }
 
   /**
-  * Loads all available channels using the ChannelsService.
-  */
+   * Loads all available channels using the ChannelsService.
+   */
   loadChannels() {
-    this.channelsService.getAllChannels().subscribe(channels => {
+    this.channelsService.getAllChannels().subscribe((channels) => {
       this.allChannels = channels;
     });
   }
