@@ -66,15 +66,12 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   menuUp: any = 'assets/images/icons/menu_up.svg';
   menuDown: any = 'assets/images/icons/menu_down.svg';
 
-  constructor(private cdref: ChangeDetectorRef) {
-
-  }
-
+  constructor(private cdref: ChangeDetectorRef) {}
 
   /**
-  * Initializes the component by subscribing to the currentUser$ observable 
-  * to get the current user data and checking the window width.
-  */
+   * Initializes the component by subscribing to the currentUser$ observable
+   * to get the current user data and checking the window width.
+   */
   ngOnInit(): void {
     this.userSubscription = this.usersService.currentUser$.subscribe((user) => {
       if (user) {
@@ -87,7 +84,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
 
   /**
    * Handles the window resize event.
-   * 
+   *
    * @param event - The resize event triggered when the window is resized.
    */
   @HostListener('window:resize', ['$event'])
@@ -96,7 +93,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Checks the current window width and sets the isUnderWidth property 
+   * Checks the current window width and sets the isUnderWidth property
    * based on whether the width is less than or equal to 1360 pixels.
    */
   checkWidth(): void {
@@ -139,5 +136,12 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
     }
+  }
+
+  scrollToBottomChannel() {
+    setTimeout(() => {
+      this.mainContentComponent.scrollToBottomChannelMessageContent();
+    }, 200);
+
   }
 }

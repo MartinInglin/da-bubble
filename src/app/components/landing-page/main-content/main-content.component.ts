@@ -64,7 +64,8 @@ import { PostInputComponent } from '../post-input/post-input.component';
   styleUrls: ['./main-content.component.scss'],
 })
 export class MainContentComponent
-  implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
+  implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked
+{
   @Output() toggleThread = new EventEmitter<void>();
 
   @ViewChild('fileInput') fileInput!: ElementRef;
@@ -124,19 +125,21 @@ export class MainContentComponent
   /**
    * Initializes the subscription to the currentUser$ observable from the usersService.
    * Sets the current user and initializes filtered channels.
-   * 
+   *
    * @private
    */
   private initializeUserSubscription(): void {
-    this.userSubscription = this.usersService.currentUser$.subscribe((user: User | null) => {
-      this.currentUser = user ?? new User();
-      this.initializeFilteredChannels(this.currentUser);
-    });
+    this.userSubscription = this.usersService.currentUser$.subscribe(
+      (user: User | null) => {
+        this.currentUser = user ?? new User();
+        this.initializeFilteredChannels(this.currentUser);
+      }
+    );
   }
 
   /**
    * Initializes filtered channels based on the current user's channels.
-   * 
+   *
    * @private
    * @param {User} user - The current user.
    */
@@ -152,7 +155,7 @@ export class MainContentComponent
   /**
    * Initializes the subscription to the channelSubject$ observable from the channelsService.
    * Sets the selected channel and handles related state changes.
-   * 
+   *
    * @private
    */
   private initializeChannelSubscription(): void {
@@ -169,7 +172,7 @@ export class MainContentComponent
 
   /**
    * Handles channel selection related state changes.
-   * 
+   *
    * @private
    */
   private handleChannelSelection(): void {
@@ -183,7 +186,7 @@ export class MainContentComponent
   /**
    * Initializes the subscription to the allUsersSubject$ observable from the usersService.
    * Sets the list of all users and initializes filtered users.
-   * 
+   *
    * @private
    */
   private initializeUsersSubscription(): void {
@@ -199,7 +202,7 @@ export class MainContentComponent
 
   /**
    * Initializes filtered users based on the search term.
-   * 
+   *
    * @private
    */
   private initializeFilteredUsers(): void {
@@ -211,23 +214,24 @@ export class MainContentComponent
   /**
    * Initializes the subscription to the directMessage$ observable from the directMessagesService.
    * Sets the selected direct message and handles related state changes.
-   * 
+   *
    * @private
    */
   private initializeDirectMessageSubscription(): void {
-    this.directMessageSubscription = this.directMessagesService.directMessage$.subscribe(
-      (directMessage: DirectMessage | null) => {
-        this.selectedDirectMessage = directMessage ?? new DirectMessage();
-        this.handleDirectMessageSelection(this.selectedDirectMessage);
-        this.getOtherUserDirectMessage();
-        this.checkNameWidth();
-      }
-    );
+    this.directMessageSubscription =
+      this.directMessagesService.directMessage$.subscribe(
+        (directMessage: DirectMessage | null) => {
+          this.selectedDirectMessage = directMessage ?? new DirectMessage();
+          this.handleDirectMessageSelection(this.selectedDirectMessage);
+          this.getOtherUserDirectMessage();
+          this.checkNameWidth();
+        }
+      );
   }
 
   /**
    * Handles direct message selection related state changes.
-   * 
+   *
    * @private
    * @param {DirectMessage} directMessage - The selected direct message.
    */
@@ -240,7 +244,7 @@ export class MainContentComponent
 
   /**
    * Initializes subscriptions to the state service observables for showing contacts and channels.
-   * 
+   *
    * @private
    */
   private initializeStateSubscriptions(): void {
@@ -256,7 +260,7 @@ export class MainContentComponent
   /**
    * Initializes the subscription to the form value changes.
    * Sets the search term and performs the search.
-   * 
+   *
    * @private
    */
   private initializeSearchResultsSubscription(): void {
@@ -273,7 +277,6 @@ export class MainContentComponent
       this.searchResults = results;
     });
   }
-
 
   /**
    * Handles click events on the document to close the search results list if the click is outside of it.
@@ -495,7 +498,6 @@ export class MainContentComponent
     if (this.currentUser) {
       if (window.innerWidth <= 1200) {
         this.openChannelInfoMobileDialog(channelId);
-
       } else {
         const dialogRef = this.dialog.open(ChannelInfoComponent, {
           width: '872px',
@@ -737,19 +739,17 @@ export class MainContentComponent
    * Scrolls the channel message content to the bottom.
    */
   scrollToBottomChannelMessageContent(): void {
-    if (this.channelMessageContent) {
-      setTimeout(() => {
-        this.channelMessageContent.nativeElement.scrollTop = this.channelMessageContent.nativeElement.scrollHeight;
-      }, 2000);
+        this.channelMessageContent.nativeElement.scrollTop =
+          this.channelMessageContent.nativeElement.scrollHeight;
     }
-  }
 
   /**
    * Scrolls the direct message content to the bottom.
    */
   scrollToBottomDirectMessageContent(): void {
     if (this.directMessageContent) {
-      this.directMessageContent.nativeElement.scrollTop = this.directMessageContent.nativeElement.scrollHeight;
+      this.directMessageContent.nativeElement.scrollTop =
+        this.directMessageContent.nativeElement.scrollHeight;
     }
   }
 

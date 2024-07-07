@@ -8,13 +8,12 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ChannelsService } from '../../../services/firestore/channels.service';
 import { DirectMessagesService } from '../../../services/firestore/direct-messages.service';
 import { UsersService } from '../../../services/firestore/users.service';
-import { Observable, Subscription, debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Channel } from '../../../models/channel.class';
 import { PostsService } from '../../../services/firestore/posts.service';
 import { Post } from '../../../models/post.class';
 import { DirectMessage } from '../../../models/direct-message.class';
-import { MainContentComponent } from '../main-content/main-content.component';
 
 @Component({
   selector: 'app-side-nav',
@@ -34,9 +33,9 @@ export class SideNavComponent implements OnInit {
   @Output() contactClicked = new EventEmitter<void>();
   @Output() toggleDrawer = new EventEmitter<void>();
   @Output() closeThread = new EventEmitter<void>();
+  @Output() scrollToBottomChannel = new EventEmitter<void>();
 
   @ViewChild('searchResultsList') searchResultsList!: ElementRef;
-  @ViewChild(MainContentComponent) mainContentComponent!: MainContentComponent;
 
   private allUsersSubscription: Subscription = new Subscription();
   private showContactsSubscription: Subscription = new Subscription();
@@ -236,8 +235,8 @@ export class SideNavComponent implements OnInit {
    * @returns {void}
    */
    getDataChannel(channelId: string) {
-    this.channelsService.getDataChannel(channelId);
-    this.mainContentComponent.scrollToBottomChannelMessageContent();
+    this.channelsService.getDataChannel(channelId);    
+    this.scrollToBottomChannel.emit();
   }
 
   /**
@@ -387,7 +386,6 @@ export class SideNavComponent implements OnInit {
   openChannel(id: string) {
     this.channelsService.getDataChannel(id);
     this.form.get('recipient')?.setValue('');
-    this.mainContentComponent.scrollToBottomChannelMessageContent();
     this.closeSidenavMobile();
   }
 
@@ -457,7 +455,6 @@ export class SideNavComponent implements OnInit {
   openDirectMessage(id: string, data: any) {
     this.directMessagesService.getDataDirectMessage(id, data);
     this.form.get('recipient')?.setValue('');
-    this.mainContentComponent.scrollToBottomDirectMessageContent();
     this.closeSidenavMobile();
   }
 
