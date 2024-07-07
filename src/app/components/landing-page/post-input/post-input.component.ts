@@ -6,6 +6,8 @@ import {
   ViewChild,
   inject,
   OnInit,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -43,8 +45,9 @@ export class PostInputComponent implements OnInit {
   @Input() selectedThread!: Thread;
   @Input() allUsers!: User[];
   @Input() currentUser!: User;
-
   @Input() path!: 'directMessages' | 'threads' | 'channels';
+
+  @Output() scrollToBottom = new EventEmitter<void>();
 
   @ViewChild('fileInput') fileInput!: ElementRef;
   @ViewChild('messageTextarea') messageTextarea!: ElementRef;
@@ -154,6 +157,9 @@ export class PostInputComponent implements OnInit {
       );
       this.message = '';
       this.files = [];
+      setTimeout(() => {
+        this.scrollToBottom.emit();
+      }, 200);
     }
   }
 
