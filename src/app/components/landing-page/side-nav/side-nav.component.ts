@@ -1,4 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output, inject, HostListener, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  inject,
+  HostListener,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StateService } from '../../../services/stateservice.service';
 import { NewChannelComponent } from '../../dialogues/new-channel/new-channel.component';
@@ -9,7 +19,13 @@ import { ChannelsService } from '../../../services/firestore/channels.service';
 import { DirectMessagesService } from '../../../services/firestore/direct-messages.service';
 import { UsersService } from '../../../services/firestore/users.service';
 import { Observable, Subscription, of } from 'rxjs';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Channel } from '../../../models/channel.class';
 import { PostsService } from '../../../services/firestore/posts.service';
 import { Post } from '../../../models/post.class';
@@ -18,7 +34,13 @@ import { DirectMessage } from '../../../models/direct-message.class';
 @Component({
   selector: 'app-side-nav',
   standalone: true,
-  imports: [CommonModule, NewChannelComponent, MatDialogModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    NewChannelComponent,
+    MatDialogModule,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
   templateUrl: './side-nav.component.html',
   styleUrls: ['./side-nav.component.scss'],
 })
@@ -34,6 +56,7 @@ export class SideNavComponent implements OnInit {
   @Output() toggleDrawer = new EventEmitter<void>();
   @Output() closeThread = new EventEmitter<void>();
   @Output() scrollToBottomChannel = new EventEmitter<void>();
+  @Output() scrollToBottomDirectMessage = new EventEmitter<void>();
 
   @ViewChild('searchResultsList') searchResultsList!: ElementRef;
 
@@ -57,18 +80,18 @@ export class SideNavComponent implements OnInit {
   isSideNavOpen: boolean = true;
   isOpen: boolean = false;
   showNoResults: boolean = false;
-  userChannelIds = this.currentUser.channels.map(channel => channel.id);
+  userChannelIds = this.currentUser.channels.map((channel) => channel.id);
   userDirectMessageIds = [this.currentUser.privateDirectMessageId];
 
   arrowOpen: any = 'assets/images/icons/arrow_drop_down.svg';
   arrowClosed: any = 'assets/images/icons/arrow_drop_right.svg';
 
   /**
- * Constructor to initialize the component with necessary services and form builder.
- * @param dialog - MatDialog service for opening dialogs
- * @param fb - FormBuilder service for creating form groups
- */
-  constructor(private dialog: MatDialog, private fb: FormBuilder,) {
+   * Constructor to initialize the component with necessary services and form builder.
+   * @param dialog - MatDialog service for opening dialogs
+   * @param fb - FormBuilder service for creating form groups
+   */
+  constructor(private dialog: MatDialog, private fb: FormBuilder) {
     this.form = this.fb.group({
       recipient: [''],
     });
@@ -143,33 +166,42 @@ export class SideNavComponent implements OnInit {
    * @returns {void}
    */
   fetchDirectMessagesAndPosts(): void {
-    const userChannelIds = this.currentUser.channels.map(channel => channel.id);
+    const userChannelIds = this.currentUser.channels.map(
+      (channel) => channel.id
+    );
     const userDirectMessageIds = [this.currentUser.privateDirectMessageId];
 
-    this.directMessagesService.getDirectMessagesCollection().then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        const directMessage = doc.data() as DirectMessage;
-        if (directMessage.users.some(user => user.id === this.currentUser.id)) {
-          userDirectMessageIds.push(doc.id);
-        }
-      });
-
-      this.postsService.getAllPostsForUser(userChannelIds, userDirectMessageIds)
-        .subscribe((posts) => {
-          this.filteredPosts = posts;
-
-          this.filteredPosts.forEach(post => {
-            const channel = this.filteredChannels.find(c => c.id === post.channelId);
-            if (channel) {
-              post.channelName = channel.name;
-            }
-            const user = this.allUsers.find(u => u.id === post.userId);
-            if (user) {
-              post.userName = user.name;
-            }
-          });
+    this.directMessagesService
+      .getDirectMessagesCollection()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const directMessage = doc.data() as DirectMessage;
+          if (
+            directMessage.users.some((user) => user.id === this.currentUser.id)
+          ) {
+            userDirectMessageIds.push(doc.id);
+          }
         });
-    });
+
+        this.postsService
+          .getAllPostsForUser(userChannelIds, userDirectMessageIds)
+          .subscribe((posts) => {
+            this.filteredPosts = posts;
+
+            this.filteredPosts.forEach((post) => {
+              const channel = this.filteredChannels.find(
+                (c) => c.id === post.channelId
+              );
+              if (channel) {
+                post.channelName = channel.name;
+              }
+              const user = this.allUsers.find((u) => u.id === post.userId);
+              if (user) {
+                post.userName = user.name;
+              }
+            });
+          });
+      });
   }
 
   /**
@@ -178,12 +210,14 @@ export class SideNavComponent implements OnInit {
    * @returns {void}
    */
   subscribeToSideNavState(): void {
-    this.sideNavSubscription = this.stateService.sideNavOpen$.subscribe((isOpen) => {
-      this.isSideNavOpen = isOpen;
-      if (isOpen) {
-        this.stateService.closeThread();
+    this.sideNavSubscription = this.stateService.sideNavOpen$.subscribe(
+      (isOpen) => {
+        this.isSideNavOpen = isOpen;
+        if (isOpen) {
+          this.stateService.closeThread();
+        }
       }
-    });
+    );
   }
 
   /**
@@ -193,7 +227,10 @@ export class SideNavComponent implements OnInit {
    */
   @HostListener('document:click', ['$event'])
   handleClickOutside(event: MouseEvent): void {
-    if (this.searchResultsList && !this.searchResultsList.nativeElement.contains(event.target)) {
+    if (
+      this.searchResultsList &&
+      !this.searchResultsList.nativeElement.contains(event.target)
+    ) {
       this.closeSearchResults();
     }
   }
@@ -229,14 +266,19 @@ export class SideNavComponent implements OnInit {
     }, 5000);
   }
 
-   /**
+  /**
    * Retrieves data for a specific channel.
    * @param {string} channelId - The ID of the channel to retrieve data for.
    * @returns {void}
    */
-   getDataChannel(channelId: string) {
-    this.channelsService.getDataChannel(channelId);    
+  getDataChannel(channelId: string) {
+    this.channelsService.getDataChannel(channelId);
     this.scrollToBottomChannel.emit();
+  }
+
+  getDataDirectMessage(userId: string, currentUser: User) {
+    this.directMessagesService.getDataDirectMessage(userId, currentUser);
+    this.scrollToBottomDirectMessage.emit();
   }
 
   /**
@@ -334,8 +376,11 @@ export class SideNavComponent implements OnInit {
    * @returns {Observable<Channel[]>} An observable of channels.
    */
   private searchChannels(term: string): Observable<Channel[]> {
-    return of(this.filteredChannels.filter(channel =>
-      channel.name.toLowerCase().includes(term.toLowerCase())));
+    return of(
+      this.filteredChannels.filter((channel) =>
+        channel.name.toLowerCase().includes(term.toLowerCase())
+      )
+    );
   }
 
   /**
@@ -344,8 +389,11 @@ export class SideNavComponent implements OnInit {
    * @returns {Observable<User[]>} An observable of users.
    */
   private searchUsers(term: string): Observable<User[]> {
-    return of(this.allUsers.filter(user =>
-      user.name.toLowerCase().includes(term.toLowerCase())));
+    return of(
+      this.allUsers.filter((user) =>
+        user.name.toLowerCase().includes(term.toLowerCase())
+      )
+    );
   }
 
   /**
@@ -354,12 +402,15 @@ export class SideNavComponent implements OnInit {
    * @returns {Observable<(Channel | User | Post)[]>} An observable of search results.
    */
   private searchAll(term: string): Observable<(Channel | User | Post)[]> {
-    const filteredChannels = this.filteredChannels.filter(channel =>
-      channel.name.toLowerCase().includes(term.toLowerCase()));
-    const filteredUsers = this.allUsers.filter(user =>
-      user.name.toLowerCase().includes(term.toLowerCase()));
-    const filteredPosts = this.filteredPosts.filter(post =>
-      post.message.toLowerCase().includes(term.toLowerCase()));
+    const filteredChannels = this.filteredChannels.filter((channel) =>
+      channel.name.toLowerCase().includes(term.toLowerCase())
+    );
+    const filteredUsers = this.allUsers.filter((user) =>
+      user.name.toLowerCase().includes(term.toLowerCase())
+    );
+    const filteredPosts = this.filteredPosts.filter((post) =>
+      post.message.toLowerCase().includes(term.toLowerCase())
+    );
 
     return of([...filteredChannels, ...filteredUsers, ...filteredPosts]);
   }
@@ -369,8 +420,10 @@ export class SideNavComponent implements OnInit {
    * @param {(Channel | User | Post)[]} results - The search results to filter.
    * @returns {(Channel | User | Post)[]} The filtered search results.
    */
-  private filterCurrentUser(results: (Channel | User | Post)[]): (Channel | User | Post)[] {
-    return results.filter(result => {
+  private filterCurrentUser(
+    results: (Channel | User | Post)[]
+  ): (Channel | User | Post)[] {
+    return results.filter((result) => {
       if (this.isUser(result)) {
         return result.id !== this.currentUser.id;
       }
@@ -396,16 +449,19 @@ export class SideNavComponent implements OnInit {
    */
   openPost(id: string): void {
     this.closeSidenavMobile();
-    this.postsService.getPostById(id).subscribe(result => {
+    this.postsService.getPostById(id).subscribe((result) => {
       if (result) {
         const { post, path, channelId } = result;
         if (path === 'channels') {
           this.channelsService.getDataChannel(channelId);
           this.scrollToPost(id);
         } else if (path === 'directMessages') {
-          this.usersService.currentUser$.subscribe(currentUser => {
+          this.usersService.currentUser$.subscribe((currentUser) => {
             if (currentUser) {
-              this.directMessagesService.getDataDirectMessage(channelId, currentUser);
+              this.directMessagesService.getDataDirectMessage(
+                channelId,
+                currentUser
+              );
               this.scrollToPost(id);
             } else {
               console.error('No current user found');
@@ -487,7 +543,6 @@ export class SideNavComponent implements OnInit {
     }
     return name;
   }
-
 
   /**
    * Opens a dialog for creating a new channel. Opens a mobile dialog if the screen width is below 750 pixels.

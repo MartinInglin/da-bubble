@@ -142,6 +142,11 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.mainContentComponent.scrollToBottomChannelMessageContent();
     }, 200);
+  }
 
+  scrollToBottomDirectMessage() {
+    setTimeout(() => {
+      this.mainContentComponent.scrollToBottomDirectMessageContent();
+    }, 200);
   }
 }
