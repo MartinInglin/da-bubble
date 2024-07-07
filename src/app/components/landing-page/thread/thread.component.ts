@@ -7,6 +7,7 @@ import {
   inject,
   Output,
   ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { User } from '../../../models/user.class';
 import { ThreadsService } from '../../../services/firestore/threads.service';
@@ -72,6 +73,7 @@ export class ThreadComponent implements OnInit {
   closeThreadSubscription: Subscription = new Subscription();
 
   @ViewChild(PostInputComponent) postInputComponent!: PostInputComponent;
+  @ViewChild('threadMessageContent') threadMessageContent!: ElementRef;
 
   constructor() { }
 
@@ -249,6 +251,11 @@ export class ThreadComponent implements OnInit {
   callSetFocus(): void {
     this.postInputComponent.setFocus();
   }
+
+  scrollToBottomThread(): void {
+    this.threadMessageContent.nativeElement.scrollTop =
+      this.threadMessageContent.nativeElement.scrollHeight;
+}
 
   /**
    * Angular lifecycle hook that is called when the component is destroyed.

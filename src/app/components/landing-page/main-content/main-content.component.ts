@@ -64,7 +64,7 @@ import { PostInputComponent } from '../post-input/post-input.component';
   styleUrls: ['./main-content.component.scss'],
 })
 export class MainContentComponent
-  implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked
+  implements OnInit, OnDestroy, AfterViewChecked
 {
   @Output() toggleThread = new EventEmitter<void>();
 
@@ -300,32 +300,6 @@ export class MainContentComponent
   closeSearchResults(): void {
     this.searchResults = [];
     this.form.get('recipient')?.setValue('');
-  }
-
-  /**
-   * Lifecycle hook that is called after Angular has fully initialized a component's view.
-   * Sets up mutation observers for the channel and direct message content areas to
-   * automatically scroll to the bottom when new content is added.
-   */
-  ngAfterViewInit(): void {
-    if (this.channelMessageContent) {
-      const channelObserver = new MutationObserver(() => {
-        this.scrollToBottomChannelMessageContent();
-      });
-      channelObserver.observe(this.channelMessageContent.nativeElement, {
-        childList: true,
-      });
-    }
-    if (this.directMessageContent) {
-      const directMessageObserver = new MutationObserver(() => {
-        this.scrollToBottomDirectMessageContent();
-      });
-      directMessageObserver.observe(this.directMessageContent.nativeElement, {
-        childList: true,
-      });
-    }
-    this.cdref.detectChanges();
-    this.checkNameWidth();
   }
 
   /**

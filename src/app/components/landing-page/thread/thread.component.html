@@ -18,7 +18,7 @@
   </div>
 
   <!-- First post within the thread -->
-  <div class="message-content">
+  <div class="message-content" #threadMessageContent>
     @for (post of selectedThread.posts | slice:0:1; track post) {
     <app-post
       [post]="selectedThread.posts[0]"

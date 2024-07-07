@@ -119,6 +119,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     this.isThreadOpen = true;
     this.drawerThread.open();
     this.threadComponent.callSetFocus();
+    this.threadComponent.scrollToBottomThread();
   }
 
   /**
