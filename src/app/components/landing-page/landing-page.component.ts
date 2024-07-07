@@ -22,6 +22,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { StateService } from '../../services/stateservice.service';
 import { SideNavComponent } from './side-nav/side-nav.component';
 import { AuthService } from '../../services/auth.service';
+import { ScrollDownService } from '../../services/scroll-down.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -53,8 +54,11 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   authService = inject(AuthService);
   usersService = inject(UsersService);
   stateService = inject(StateService);
+  scrollDownService = inject(ScrollDownService);
 
   private userSubscription: Subscription = new Subscription();
+  private scrollSubscriptionChannel!: Subscription;
+  private scrollSubscriptionDirectMessage!: Subscription;
 
   currentUser: User = new User();
   isOpen: boolean = false;
@@ -80,6 +84,16 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     });
     this.cdref.detectChanges();
     this.checkWidth();
+
+    this.scrollSubscriptionChannel =
+      this.scrollDownService.scrollDownChannel$.subscribe(() => {
+        this.scrollToBottomChannel();
+      });
+
+    this.scrollSubscriptionDirectMessage =
+      this.scrollDownService.scrollDownDirectMessage$.subscribe(() => {
+        this.scrollToBottomDirectMessage();
+      });
   }
 
   /**
@@ -137,17 +151,23 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
     }
+    if (this.scrollSubscriptionChannel) {
+      this.scrollSubscriptionChannel.unsubscribe();
+    }
+    if (this.scrollSubscriptionDirectMessage) {
+      this.scrollSubscriptionDirectMessage.unsubscribe();
+    }
   }
 
   scrollToBottomChannel() {
     setTimeout(() => {
       this.mainContentComponent.scrollToBottomChannelMessageContent();
-    }, 200);
+    }, 300);
   }
 
   scrollToBottomDirectMessage() {
     setTimeout(() => {
       this.mainContentComponent.scrollToBottomDirectMessageContent();
-    }, 200);
+    }, 300);
   }
 }

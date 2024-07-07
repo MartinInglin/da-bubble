@@ -5,7 +5,6 @@ import {
   inject,
   OnInit,
   OnDestroy,
-  AfterViewInit,
   AfterViewChecked,
   ViewChild,
   ElementRef,
@@ -363,6 +362,9 @@ export class MainContentComponent
   openChannel(id: string) {
     this.channelsService.getDataChannel(id);
     this.form.get('recipient')?.setValue('');
+    setTimeout(() => {
+      this.scrollToBottomChannelMessageContent()
+    }, 300);
   }
 
   /**
@@ -374,6 +376,9 @@ export class MainContentComponent
   openDirectMessage(id: string, currentUser: User) {
     this.directMessagesService.getDataDirectMessage(id, currentUser);
     this.form.get('recipient')?.setValue('');
+    setTimeout(() => {
+      this.scrollToBottomDirectMessageContent();
+    }, 300);
   }
 
   /**
@@ -713,9 +718,9 @@ export class MainContentComponent
    * Scrolls the channel message content to the bottom.
    */
   scrollToBottomChannelMessageContent(): void {
-        this.channelMessageContent.nativeElement.scrollTop =
-          this.channelMessageContent.nativeElement.scrollHeight;
-    }
+    this.channelMessageContent.nativeElement.scrollTop =
+      this.channelMessageContent.nativeElement.scrollHeight;
+  }
 
   /**
    * Scrolls the direct message content to the bottom.

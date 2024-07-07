@@ -1,9 +1,9 @@
-import { Component, inject, OnInit, OnDestroy, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, HostListener, ElementRef, ViewChild, output, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { User } from '../../../models/user.class';
-import { Observable, Subscription, debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { UsersService } from '../../../services/firestore/users.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
@@ -37,6 +37,9 @@ import { DirectMessage } from '../../../models/direct-message.class';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
+  @Output() scrollToBottomChannel = new EventEmitter<void>();
+  @Output() scrollToBottomDirectMessage = new EventEmitter<void>();
+
   @ViewChild('searchResultsList') searchResultsList!: ElementRef;
   @ViewChild('userDiv') userDiv!: ElementRef;
 
@@ -336,6 +339,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.channelsService.getDataChannel(id);
     this.form.get('recipient')?.setValue('');
     this.searchResults = [];
+    this.scrollToBottomChannel.emit();
   }
 
   /**
@@ -349,6 +353,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.directMessagesService.getDataDirectMessage(id, data);
     this.form.get('recipient')?.setValue('');
     this.searchResults = [];
+    this.scrollToBottomDirectMessage.emit();
   }
 
   /**
