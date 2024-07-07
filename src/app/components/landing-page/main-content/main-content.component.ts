@@ -64,8 +64,7 @@ import { PostInputComponent } from '../post-input/post-input.component';
   styleUrls: ['./main-content.component.scss'],
 })
 export class MainContentComponent
-  implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked
-{
+  implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
   @Output() toggleThread = new EventEmitter<void>();
 
   @ViewChild('fileInput') fileInput!: ElementRef;
@@ -121,7 +120,7 @@ export class MainContentComponent
     this.initializeStateSubscriptions();
     this.initializeSearchResultsSubscription();
   }
-  
+
   /**
    * Initializes the subscription to the currentUser$ observable from the usersService.
    * Sets the current user and initializes filtered channels.
@@ -134,7 +133,7 @@ export class MainContentComponent
       this.initializeFilteredChannels(this.currentUser);
     });
   }
-  
+
   /**
    * Initializes filtered channels based on the current user's channels.
    * 
@@ -149,7 +148,7 @@ export class MainContentComponent
       c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
-  
+
   /**
    * Initializes the subscription to the channelSubject$ observable from the channelsService.
    * Sets the selected channel and handles related state changes.
@@ -167,7 +166,7 @@ export class MainContentComponent
       }
     );
   }
-  
+
   /**
    * Handles channel selection related state changes.
    * 
@@ -180,7 +179,7 @@ export class MainContentComponent
       this.getUserCount();
     }
   }
-  
+
   /**
    * Initializes the subscription to the allUsersSubject$ observable from the usersService.
    * Sets the list of all users and initializes filtered users.
@@ -197,7 +196,7 @@ export class MainContentComponent
       }
     );
   }
-  
+
   /**
    * Initializes filtered users based on the search term.
    * 
@@ -208,7 +207,7 @@ export class MainContentComponent
       u.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
-  
+
   /**
    * Initializes the subscription to the directMessage$ observable from the directMessagesService.
    * Sets the selected direct message and handles related state changes.
@@ -225,7 +224,7 @@ export class MainContentComponent
       }
     );
   }
-  
+
   /**
    * Handles direct message selection related state changes.
    * 
@@ -238,7 +237,7 @@ export class MainContentComponent
       this.channelSelected = false;
     }
   }
-  
+
   /**
    * Initializes subscriptions to the state service observables for showing contacts and channels.
    * 
@@ -248,12 +247,12 @@ export class MainContentComponent
     this.stateService.showContacts$.subscribe((show) => {
       this.chatSelected = show;
     });
-  
+
     this.stateService.showChannels$.subscribe((show) => {
       this.channelSelected = show;
     });
   }
-  
+
   /**
    * Initializes the subscription to the form value changes.
    * Sets the search term and performs the search.
@@ -274,7 +273,7 @@ export class MainContentComponent
       this.searchResults = results;
     });
   }
-  
+
 
   /**
    * Handles click events on the document to close the search results list if the click is outside of it.
@@ -308,6 +307,7 @@ export class MainContentComponent
   ngAfterViewInit(): void {
     if (this.channelMessageContent) {
       const channelObserver = new MutationObserver(() => {
+        this.scrollToBottomChannelMessageContent();
       });
       channelObserver.observe(this.channelMessageContent.nativeElement, {
         childList: true,
@@ -315,6 +315,7 @@ export class MainContentComponent
     }
     if (this.directMessageContent) {
       const directMessageObserver = new MutationObserver(() => {
+        this.scrollToBottomDirectMessageContent();
       });
       directMessageObserver.observe(this.directMessageContent.nativeElement, {
         childList: true,
@@ -494,7 +495,7 @@ export class MainContentComponent
     if (this.currentUser) {
       if (window.innerWidth <= 1200) {
         this.openChannelInfoMobileDialog(channelId);
-        
+
       } else {
         const dialogRef = this.dialog.open(ChannelInfoComponent, {
           width: '872px',
@@ -729,6 +730,26 @@ export class MainContentComponent
         titleThread = '(Du)';
       }
       this.threadsService.getDataThread(titleThread, post);
+    }
+  }
+
+  /**
+   * Scrolls the channel message content to the bottom.
+   */
+  scrollToBottomChannelMessageContent(): void {
+    if (this.channelMessageContent) {
+      setTimeout(() => {
+        this.channelMessageContent.nativeElement.scrollTop = this.channelMessageContent.nativeElement.scrollHeight;
+      }, 2000);
+    }
+  }
+
+  /**
+   * Scrolls the direct message content to the bottom.
+   */
+  scrollToBottomDirectMessageContent(): void {
+    if (this.directMessageContent) {
+      this.directMessageContent.nativeElement.scrollTop = this.directMessageContent.nativeElement.scrollHeight;
     }
   }
 

@@ -14,6 +14,7 @@ import { Channel } from '../../../models/channel.class';
 import { PostsService } from '../../../services/firestore/posts.service';
 import { Post } from '../../../models/post.class';
 import { DirectMessage } from '../../../models/direct-message.class';
+import { MainContentComponent } from '../main-content/main-content.component';
 
 @Component({
   selector: 'app-side-nav',
@@ -35,6 +36,7 @@ export class SideNavComponent implements OnInit {
   @Output() closeThread = new EventEmitter<void>();
 
   @ViewChild('searchResultsList') searchResultsList!: ElementRef;
+  @ViewChild(MainContentComponent) mainContentComponent!: MainContentComponent;
 
   private allUsersSubscription: Subscription = new Subscription();
   private showContactsSubscription: Subscription = new Subscription();
@@ -228,13 +230,14 @@ export class SideNavComponent implements OnInit {
     }, 5000);
   }
 
-  /**
+   /**
    * Retrieves data for a specific channel.
    * @param {string} channelId - The ID of the channel to retrieve data for.
    * @returns {void}
    */
-  getDataChannel(channelId: string) {
+   getDataChannel(channelId: string) {
     this.channelsService.getDataChannel(channelId);
+    this.mainContentComponent.scrollToBottomChannelMessageContent();
   }
 
   /**
@@ -384,6 +387,7 @@ export class SideNavComponent implements OnInit {
   openChannel(id: string) {
     this.channelsService.getDataChannel(id);
     this.form.get('recipient')?.setValue('');
+    this.mainContentComponent.scrollToBottomChannelMessageContent();
     this.closeSidenavMobile();
   }
 
@@ -453,6 +457,7 @@ export class SideNavComponent implements OnInit {
   openDirectMessage(id: string, data: any) {
     this.directMessagesService.getDataDirectMessage(id, data);
     this.form.get('recipient')?.setValue('');
+    this.mainContentComponent.scrollToBottomDirectMessageContent();
     this.closeSidenavMobile();
   }
 
